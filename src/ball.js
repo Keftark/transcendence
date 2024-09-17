@@ -5,6 +5,7 @@ export function createBall(scene, ballRadius, boundXMin, boundXMax, boundYMin, b
     const ballMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
     const ball = new THREE.Mesh(ballGeometry, ballMaterial);
     scene.add(ball);
+    const ballVelocitySpeedUp = new THREE.Vector3(0.15, 0.15, 0);
 
     function getRandomVelocityComponent() {return Math.random() < 0.5 ? 0.5 : -0.5;}
     function resetVelocity()
@@ -16,7 +17,6 @@ export function createBall(scene, ballRadius, boundXMin, boundXMax, boundYMin, b
     // Initialize ball velocity with random components
     let ballVelocity;
     resetVelocity();
-    const ballVelocitySpeedUp = new THREE.Vector3(0.3, 0.3, 0);
 
     function playerGetPoint(playerNbr)
     {
@@ -35,7 +35,7 @@ export function createBall(scene, ballRadius, boundXMin, boundXMax, boundYMin, b
             ballVelocity.y = -ballVelocity.y; // Reverse the Y direction
 
         // Check collision with left paddle
-        if (ball.position.x - ballRadius <= player1.position.x + player1.geometry.parameters.radiusTop &&
+        if (ball.position.x - ballRadius <= player1.position.x + player1.geometry.parameters.radiusTop * 1.5 &&
             ball.position.y >= player1.position.y - player1.geometry.parameters.height / 2 &&
             ball.position.y <= player1.position.y + player1.geometry.parameters.height / 2)
         {
@@ -45,7 +45,7 @@ export function createBall(scene, ballRadius, boundXMin, boundXMax, boundYMin, b
         }
 
         // Check collision with right paddle
-        if (ball.position.x + ballRadius >= player2.position.x - player2.geometry.parameters.radiusTop &&
+        if (ball.position.x + ballRadius >= player2.position.x - player2.geometry.parameters.radiusTop * 1.5 &&
             ball.position.y >= player2.position.y - player2.geometry.parameters.height / 2 &&
             ball.position.y <= player2.position.y + player2.geometry.parameters.height / 2)
         {

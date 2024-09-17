@@ -45,6 +45,21 @@ body {
     transition: opacity 0.5s ease, visibility 0.5s ease;
 }
 
+#score-left, #score-right {
+    position: absolute;
+    font-size: 52px;
+    color: white;
+    font-family: 'MyCustomFont', Arial, sans-serif;
+}
+#score-left {
+    top: 120px;
+    left: 310px;
+}
+#score-right {
+    top: 120px; 
+    right: 310px;
+}
+
 /* Glitch effect */
 #message span {
     display: inline-block; /* Ensure the text element can animate properly */

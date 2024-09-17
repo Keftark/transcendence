@@ -6,6 +6,9 @@ export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
     let moveUp2 = false;
     let moveDown2 = false;
 
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('keyup', onKeyUp);
+
     function onKeyDown(event)
     {
         if (event.key === 'w')
@@ -29,9 +32,6 @@ export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
         if (event.key === 'ArrowDown')
             moveDown2 = false;
     }
-
-    document.addEventListener('keydown', onKeyDown);
-    document.addEventListener('keyup', onKeyUp);
 
     function updatePlayers()
     {

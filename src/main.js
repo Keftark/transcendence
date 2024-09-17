@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import { animateCamera } from './cameranim.js';
 import { setupPlayerMovement } from './playerMovement.js'; // Import the player movement module
 import { createBall } from './ball.js'; // Import the ball module
+import { startFPSCounter } from './fpsCounter.js';
+import { ScreenShake } from './screenShake.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -15,14 +17,14 @@ const cylinderTexture = textureLoader.load('mat/player1.jpg');
 
 const boundYMin = -25;
 const boundYMax = 25;
-const boundXMin = -60;
-const boundXMax = 60;
+const boundXMin = -50;
+const boundXMax = 50;
 
 // Create a cylinder geometry
 const radiusTop = 1;
 const radiusBottom = 1;
 const height = 10;
-const radialSegments = 32;
+const radialSegments = 8;
 const heightSegments = 1;
 const openEnded = false;
 const geometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, height, radialSegments, heightSegments, openEnded);
@@ -33,7 +35,8 @@ const material = new THREE.MeshBasicMaterial({ map: cylinderTexture });
 // Create the cylinder mesh
 const player1 = new THREE.Mesh(geometry, material);
 const player2 = new THREE.Mesh(geometry, material);
-
+var player1Score = 0;
+var player2Score = 0;
 player1.position.set(boundXMin, 0, 0);
 player2.position.set(boundXMax, 0, 0);
 // Add the cylinder to the scene
@@ -70,23 +73,39 @@ let isBallMoving = false; // Track if ball is moving
 // Get the message element
 const messageDiv = document.getElementById('message');
 
-hideMessage();
+const screenShake = new ScreenShake(camera);
+
+hidePlayMessage();
+startFPSCounter();
 
 function ResetScreen(playerNbr)
 {
     isCameraAnimationComplete = false;
     isBallMoving = false;
+    screenShake.start(0.5, 200);
     if (playerNbr === 1)
     {
+        player2Score += 1;
+        document.getElementById('score-right').innerText = `${player2Score}`;
         // on verifie quel est le joueur a gauche
         // on ajoute un point au joueur 2
     }
     else
     {
+        player1Score += 1;
+        document.getElementById('score-left').innerText = `${player1Score}`;
         // on verifie quel est le joueur a droite
-        // on ajoute un point au joueur 2
+        // on ajoute un point au joueur 1
     }
 }
+
+function setVisiblePlay()
+{
+    messageDiv.style.opacity = '1';
+    messageDiv.style.visibility = 'visible';
+    messageDiv.style.display = 'block'; 
+}
+
 // Animation loop
 function animate(time)
 {
@@ -100,12 +119,10 @@ function animate(time)
         if (camera.position.y < 0.3)
         {
             isCameraAnimationComplete = true;
-            messageDiv.style.opacity = '1';
-            messageDiv.style.visibility = 'visible';
-            messageDiv.style.display = 'block'; 
+            setVisiblePlay();
         }
     }
-    
+    screenShake.update();
     if (isCameraAnimationComplete && isBallMoving)
         updateBall(ball, player1, player2);
     
@@ -120,7 +137,7 @@ document.addEventListener('keydown', (event) =>{
     if (!isBallMoving && event.key === ' ' && isCameraAnimationComplete)
     {
         isBallMoving = true;
-        hideMessage();
+        hidePlayMessage();
     }
 });
 
@@ -140,7 +157,7 @@ document.addEventListener('visibilitychange', () => {
     }
 });
 
-function hideMessage()
+function hidePlayMessage()
 {
     messageDiv.style.display = 'none';
 }
