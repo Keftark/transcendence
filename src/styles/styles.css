@@ -1,0 +1,106 @@
+@font-face {
+    font-family: 'MyCustomFont';
+    src: url('../fonts/PixelGame.otf') format('opentype');
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000; /* Optional: Set a background color */
+    overflow: hidden;
+}
+
+#top-text {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px 20px;
+    font-size: 96px; /* Adjust size as needed */
+    font-family: 'MyCustomFont', Arial, sans-serif; /* Apply the custom font */
+    text-align: center;
+    z-index: 1000; /* Ensure it's on top */
+    width: 100%;
+}
+
+#message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 20px;
+    font-size: 50px;
+    font-family: 'MyCustomFont', Arial, sans-serif; /* Apply the custom font */
+    text-align: center;
+    z-index: 1000; /* Ensure the message is on top */
+    overflow: hidden; /* Ensure content doesn't overflow */
+    visibility: hidden; /* Hide initially */
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+/* Glitch effect */
+#message span {
+    display: inline-block; /* Ensure the text element can animate properly */
+    font-size: 80px; /* Make the "PLAY" text larger */
+    color: white; /* Ensure the text color is set correctly */
+    position: relative; /* Position relative for pseudo-elements */
+    overflow: hidden; /* Hide any overflow from the glitch effect */
+    animation: glitch 1.5s infinite;
+}
+
+/* Keyframes for glitch animation */
+@keyframes glitch {
+    0% {
+        text-shadow: 
+            1px 0 cyan, 
+           -1px 0 red;
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+    20% {
+        text-shadow: 
+            -1px 0 cyan, 
+            1px 0 red;
+        transform: translate(-2px, 0);
+        opacity: 0.8;
+    }
+    40% {
+        text-shadow: 
+            1px 0 cyan, 
+            -1px 0 red;
+        transform: translate(2px, 2px);
+        opacity: 0.6;
+    }
+    60% {
+        text-shadow: 
+            -1px 0 cyan, 
+            1px 0 red;
+        transform: translate(-2px, -2px);
+        opacity: 0.8;
+    }
+    80% {
+        text-shadow: 
+            1px 0 cyan, 
+            -1px 0 red;
+        transform: translate(0, 2px);
+        opacity: 1;
+    }
+    100% {
+        text-shadow: 
+            -1px 0 cyan, 
+            1px 0 red;
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+}
+
+#message span {
+    animation: glitch 1.5s infinite;
+}
