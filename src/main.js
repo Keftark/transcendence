@@ -1,163 +1,185 @@
 import * as THREE from 'three';
-import { animateCamera } from './cameranim.js';
-import { setupPlayerMovement } from './playerMovement.js'; // Import the player movement module
-import { createBall } from './ball.js'; // Import the ball module
-import { startFPSCounter } from './fpsCounter.js';
+import { animateCamera, resetCamera } from './cameranim.js';
+import { setupPlayerMovement } from './playerMovement.js';
+import { createBall } from './ball.js';
 import { ScreenShake } from './screenShake.js';
 
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const SCREEN_WIDTH = window.innerWidth;
+const SCREEN_HEIGHT = window.innerHeight;
+const BOUNDARY = {
+  Y_MIN: -25,
+  Y_MAX: 25,
+  X_MIN: -50,
+  X_MAX: 50
+};
 
+const PLAYER_RADIUS = 1;
+const PLAYER_HEIGHT = 10;
+const BALL_RADIUS = 0.5;
+const MOVE_SPEED = 0.7;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, SCREEN_WIDTH / SCREEN_HEIGHT, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 document.body.appendChild(renderer.domElement);
 
 const textureLoader = new THREE.TextureLoader();
 const cylinderTexture = textureLoader.load('mat/player1.jpg');
-
-const boundYMin = -25;
-const boundYMax = 25;
-const boundXMin = -50;
-const boundXMax = 50;
-
-// Create a cylinder geometry
-const radiusTop = 1;
-const radiusBottom = 1;
-const height = 10;
-const radialSegments = 8;
-const heightSegments = 1;
-const openEnded = false;
-const geometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, height, radialSegments, heightSegments, openEnded);
-
-// Create a material
 const material = new THREE.MeshBasicMaterial({ map: cylinderTexture });
+const geometry = new THREE.CylinderGeometry(PLAYER_RADIUS, PLAYER_RADIUS, PLAYER_HEIGHT, 8, 1, false);
 
-// Create the cylinder mesh
 const player1 = new THREE.Mesh(geometry, material);
 const player2 = new THREE.Mesh(geometry, material);
-var player1Score = 0;
-var player2Score = 0;
-player1.position.set(boundXMin, 0, 0);
-player2.position.set(boundXMax, 0, 0);
-// Add the cylinder to the scene
+resetPlayersPositions();
 scene.add(player1);
 scene.add(player2);
 
-const moveSpeed = 0.7;
 const materialLine = new THREE.LineBasicMaterial({ color: 0xffffff });
-
-const points = [];
-points.push(new THREE.Vector3(boundXMin - 2.5, boundYMax, 0));
-points.push(new THREE.Vector3(boundXMax + 2.5, boundYMax, 0));
-points.push(new THREE.Vector3(boundXMax + 2.5, boundYMin, 0));
-points.push(new THREE.Vector3(boundXMin - 2.5, boundYMin, 0));
-points.push(new THREE.Vector3(boundXMin - 2.5, boundYMax, 0));
-
+const points = [
+  new THREE.Vector3(BOUNDARY.X_MIN - 2.5, BOUNDARY.Y_MAX, 0),
+  new THREE.Vector3(BOUNDARY.X_MAX + 2.5, BOUNDARY.Y_MAX, 0),
+  new THREE.Vector3(BOUNDARY.X_MAX + 2.5, BOUNDARY.Y_MIN, 0),
+  new THREE.Vector3(BOUNDARY.X_MIN - 2.5, BOUNDARY.Y_MIN, 0),
+  new THREE.Vector3(BOUNDARY.X_MIN - 2.5, BOUNDARY.Y_MAX, 0)
+];
 const geometryLine = new THREE.BufferGeometry().setFromPoints(points);
-
 const line = new THREE.Line(geometryLine, materialLine);
 scene.add(line);
 
-// Set up player movement
-const { updatePlayers } = setupPlayerMovement(player1, player2, boundYMin, boundYMax, moveSpeed);
-
-// Create and set up the ball
-const ballRadius = 0.5;
-const { ball, update: updateBall, resetVelocity: resetBall } = createBall(scene, ballRadius, boundXMin, boundXMax, boundYMin, boundYMax, ResetScreen);
+const { updatePlayers } = setupPlayerMovement(player1, player2, BOUNDARY.Y_MIN, BOUNDARY.Y_MAX, MOVE_SPEED);
+const { ball, updateBall, resetBall } = createBall(scene, BALL_RADIUS, BOUNDARY.X_MIN, BOUNDARY.X_MAX, BOUNDARY.Y_MIN, BOUNDARY.Y_MAX, resetScreen);
 
 camera.position.z = 50;
-let animationId; // Track the animation frame ID
-let isCameraAnimationComplete = false; // Track if camera animation is complete
-let isBallMoving = false; // Track if ball is moving
-
-// Get the message element
-const messageDiv = document.getElementById('message');
 
 const screenShake = new ScreenShake(camera);
+const scoreRight = document.getElementById('score-right');
+const scoreLeft = document.getElementById('score-left');
+const messageDiv = document.getElementById('message');
 
-hidePlayMessage();
-startFPSCounter();
+let animationId = null;
+let isCameraAnimationComplete = false;
+let isBallMoving = false;
+let first = false;
+let toggleReset = false;
+let player1Score = 0;
+let player2Score = 0;
 
-function ResetScreen(playerNbr)
+function resetScreen(playerNbr)
 {
-    isCameraAnimationComplete = false;
-    isBallMoving = false;
     screenShake.start(0.5, 200);
+    resetGame(false);
     if (playerNbr === 1)
     {
         player2Score += 1;
-        document.getElementById('score-right').innerText = `${player2Score}`;
-        // on verifie quel est le joueur a gauche
-        // on ajoute un point au joueur 2
+        scoreRight.innerText = `${player2Score}`;
     }
     else
     {
         player1Score += 1;
-        document.getElementById('score-left').innerText = `${player1Score}`;
-        // on verifie quel est le joueur a droite
-        // on ajoute un point au joueur 1
+        scoreLeft.innerText = `${player1Score}`;
     }
 }
 
 function setVisiblePlay()
 {
-    messageDiv.style.opacity = '1';
+    if (!first)
+    {
+        messageDiv.classList.remove('fade-active');
+        void messageDiv.offsetWidth; // Reset animation
+        messageDiv.classList.add('fade-active');
+        first = true;
+    }
+    else
+        messageDiv.style.opacity = '1';
+    scoreRight.style.display = 'block';
+    scoreLeft.style.display = 'block';
     messageDiv.style.visibility = 'visible';
     messageDiv.style.display = 'block'; 
 }
 
-// Animation loop
+function resetPlayersPositions()
+{
+    player1.position.set(BOUNDARY.X_MIN, 0, 0);
+    player2.position.set(BOUNDARY.X_MAX, 0, 0);
+}
+
+function resetGame(resetCam, time)
+{
+    resetPlayersPositions();
+    hidePlayMessage();
+    scoreRight.style.display = 'none';
+    scoreLeft.style.display = 'none';
+    first = false;
+    toggleReset = false;
+    isCameraAnimationComplete = false;
+    isBallMoving = false;
+    resetAnim();
+    resetBall();
+    if (resetCam)
+    {
+        player1Score = player2Score = 0;
+        scoreLeft.innerText = `${player1Score}`;
+        scoreRight.innerText = `${player2Score}`;
+        resetCamera(time);
+    }
+    animate();
+}
+
 function animate(time)
 {
-    animationId = requestAnimationFrame(animate);
-    
     if (!isCameraAnimationComplete)
     {
-        // Perform camera animation
-        animateCamera(time, camera);
-        
+        animateCamera(time, camera, setVisiblePlay);
         if (camera.position.y < 0.3)
         {
             isCameraAnimationComplete = true;
             setVisiblePlay();
         }
     }
-    screenShake.update();
-    if (isCameraAnimationComplete && isBallMoving)
-        updateBall(ball, player1, player2);
-    
-    updatePlayers();
-
+    else
+    {
+        screenShake.update();
+        if (isBallMoving) updateBall(ball, player1, player2);
+        updatePlayers();
+    }
     renderer.render(scene, camera);
+    if (!toggleReset)
+        animationId = requestAnimationFrame(animate);
+    else
+        resetGame(true);
 }
 
-animate();
+function resetAnim()
+{
+    if (animationId)
+    {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+    }
+}
 
-document.addEventListener('keydown', (event) =>{
+function hidePlayMessage()
+{
+    messageDiv.style.display = 'none';
+    messageDiv.style.opacity = '0';
+}
+
+document.addEventListener('keydown', (event) => {
     if (!isBallMoving && event.key === ' ' && isCameraAnimationComplete)
     {
         isBallMoving = true;
         hidePlayMessage();
     }
+    if (event.key === 'Escape')
+        resetGame(true);
 });
 
 document.addEventListener('visibilitychange', () => {
     if (document.hidden)
-    {
-        if (animationId)
-        {
-            cancelAnimationFrame(animationId);
-            animationId = null;
-        }
-    }
+        resetAnim();
     else
-    {
-        if (!animationId)
-            animate();
-    }
+        if (!animationId) animate();
 });
 
-function hidePlayMessage()
-{
-    messageDiv.style.display = 'none';
-}
+animate();

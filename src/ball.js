@@ -14,19 +14,38 @@ export function createBall(scene, ballRadius, boundXMin, boundXMax, boundYMin, b
         let rnd2 = getRandomVelocityComponent();
         ballVelocity = new THREE.Vector3(rnd1, rnd2, 0); 
     }
-    // Initialize ball velocity with random components
     let ballVelocity;
     resetVelocity();
 
+    function resetBall()
+    {
+        colorStep = 0;
+        ball.position.set(0, 0, 0);
+        resetVelocity();
+        ball.material.color.set(`rgb(255, 255, 255)`);
+    }
+
     function playerGetPoint(playerNbr)
     {
-        ball.position.set(0, 0, 0); // Reset the ball to the center
-        resetVelocity();
+        resetBall();
         callBack(playerNbr);
         // on file un point au joueur concerne. Ca depend du cote ou va la balle.
     }
 
-    function update(ball, player1, player2)
+    let colorStep = 0;
+    const totalSteps = 10;
+    const colorIncrement = 255 / totalSteps;
+
+    function updateBallColor() {
+        if (colorStep >= totalSteps)
+            return;
+        const redValue = 255;
+        const newColor = Math.round(255 - (colorStep * colorIncrement));
+        ball.material.color.set(`rgb(${redValue}, ${newColor}, ${newColor})`);
+        colorStep++;
+    }
+
+    function updateBall(ball, player1, player2)
     {
         ball.position.add(ballVelocity);
 
@@ -39,16 +58,17 @@ export function createBall(scene, ballRadius, boundXMin, boundXMax, boundYMin, b
             ball.position.y >= player1.position.y - player1.geometry.parameters.height / 2 &&
             ball.position.y <= player1.position.y + player1.geometry.parameters.height / 2)
         {
+            updateBallColor();
             ballVelocity.x = -ballVelocity.x; // Reverse the X direction
             ballVelocity.x += ballVelocitySpeedUp.x;
             ballVelocity.y += ballVelocitySpeedUp.y;
         }
-
         // Check collision with right paddle
-        if (ball.position.x + ballRadius >= player2.position.x - player2.geometry.parameters.radiusTop * 1.5 &&
+        else if (ball.position.x + ballRadius >= player2.position.x - player2.geometry.parameters.radiusTop * 1.5 &&
             ball.position.y >= player2.position.y - player2.geometry.parameters.height / 2 &&
             ball.position.y <= player2.position.y + player2.geometry.parameters.height / 2)
         {
+            updateBallColor();
             ballVelocity.x = -ballVelocity.x; // Reverse the X direction
             ballVelocity.x -= ballVelocitySpeedUp.x;
             ballVelocity.y -= ballVelocitySpeedUp.y;
@@ -61,5 +81,5 @@ export function createBall(scene, ballRadius, boundXMin, boundXMax, boundYMin, b
             playerGetPoint(2);
     }
 
-    return { ball, update, resetVelocity };
+    return { ball, updateBall, resetBall };
 }

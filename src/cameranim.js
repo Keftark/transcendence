@@ -2,7 +2,13 @@ let cameraAnimationActive = true; // Flag to control camera animation
 let startTime; // Track the start time of the animation
 const animationDuration = 2000; // Duration of the animation in milliseconds
 
-export function animateCamera(time, camera)
+export function resetCamera(time)
+{
+    startTime = time;
+    cameraAnimationActive = true;
+}
+
+export function animateCamera(time, camera, callBack)
 {
     if (!cameraAnimationActive) return; // Stop animation if the flag is false
 
@@ -19,6 +25,9 @@ export function animateCamera(time, camera)
     camera.lookAt(0, 0, 0);
 
     // End the animation after the duration
-    if (t === 1)
+    if (t >= 1)
+    {
         cameraAnimationActive = false; // Stop the camera animation
+        callBack();
+    }
 }
