@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 export function createBall(scene, ballRadius, boundXMin, boundXMax, boundYMin, boundYMax, callBack) {
     const ballGeometry = new THREE.SphereGeometry(ballRadius, 32, 32);
-    const ballMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const ballMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
     const ball = new THREE.Mesh(ballGeometry, ballMaterial);
     scene.add(ball);
     const ballVelocitySpeedUp = new THREE.Vector3(0.15, 0.15, 0);

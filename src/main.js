@@ -26,11 +26,18 @@ document.body.appendChild(renderer.domElement);
 
 const textureLoader = new THREE.TextureLoader();
 const cylinderTexture = textureLoader.load('mat/player1.jpg');
-const material = new THREE.MeshBasicMaterial({ map: cylinderTexture });
+const material = new THREE.MeshStandardMaterial({ map: cylinderTexture });
 const geometry = new THREE.CylinderGeometry(PLAYER_RADIUS, PLAYER_RADIUS, PLAYER_HEIGHT, 8, 1, false);
 
 const player1 = new THREE.Mesh(geometry, material);
 const player2 = new THREE.Mesh(geometry, material);
+
+const ambientLight = new THREE.AmbientLight(0x888888);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+directionalLight.position.set(5, 5, 5).normalize();
+
+scene.add(ambientLight);
+scene.add(directionalLight);
 resetPlayersPositions();
 scene.add(player1);
 scene.add(player2);
