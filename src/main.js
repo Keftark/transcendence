@@ -16,7 +16,7 @@ const BOUNDARY = {
 
 const PLAYER_RADIUS = 1;
 const PLAYER_HEIGHT = 10;
-const BALL_RADIUS = 0.5;
+const BALL_RADIUS = 0.8;
 const MOVE_SPEED = 0.7;
 
 const scene = new THREE.Scene();
@@ -39,6 +39,7 @@ directionalLight.position.set(5, 5, 5).normalize();
 
 scene.add(ambientLight);
 scene.add(directionalLight);
+
 resetPlayersPositions();
 scene.add(player1);
 scene.add(player2);

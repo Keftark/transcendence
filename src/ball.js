@@ -1,7 +1,9 @@
 import * as THREE from 'three';
+import { Sparks } from './sparks.js';
 
 export function createBall(scene, ballRadius, boundXMin, boundXMax, boundYMin, boundYMax, callBack) {
     const ballGeometry = new THREE.SphereGeometry(ballRadius, 32, 32);
+    const sparks = new Sparks(scene);
     
     // Create material with emissive properties
     const ballMaterial = new THREE.MeshStandardMaterial({ 
@@ -57,7 +59,8 @@ export function createBall(scene, ballRadius, boundXMin, boundXMax, boundYMin, b
     function updateBall(ball, player1, player2) {
         ball.position.add(ballVelocity);
         pointLight.position.copy(ball.position); // Update light position to follow the ball
-
+        
+        sparks.updateSparks();
         // Check collision with top and bottom (y-axis bounds)
         if (ball.position.y + ballRadius > boundYMax || ball.position.y - ballRadius < boundYMin)
             ballVelocity.y = -ballVelocity.y; // Reverse the Y direction
@@ -67,6 +70,11 @@ export function createBall(scene, ballRadius, boundXMin, boundXMax, boundYMin, b
             ball.position.y >= player1.position.y - player1.geometry.parameters.height / 2 &&
             ball.position.y <= player1.position.y + player1.geometry.parameters.height / 2)
         {
+            if (-ballVelocity.x > 1.5)
+            {
+                let count = Math.trunc(-ballVelocity.x * 10);
+                sparks.spawnSparks(ball.position.clone(), count);
+            }
             updateBallLight();
             ballVelocity.x = -ballVelocity.x; // Reverse the X direction
             ballVelocity.x += ballVelocitySpeedUp.x;
@@ -77,6 +85,11 @@ export function createBall(scene, ballRadius, boundXMin, boundXMax, boundYMin, b
             ball.position.y >= player2.position.y - player2.geometry.parameters.height / 2 &&
             ball.position.y <= player2.position.y + player2.geometry.parameters.height / 2)
         {
+            if (ballVelocity.x > 1.5)
+            {
+                let count = Math.trunc(ballVelocity.x * 10);
+                sparks.spawnSparks(ball.position.clone(), count);
+            }
             updateBallLight();
             ballVelocity.x = -ballVelocity.x; // Reverse the X direction
             ballVelocity.x -= ballVelocitySpeedUp.x;
