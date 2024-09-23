@@ -20,7 +20,6 @@ export function createBall(scene, ballRadius, boundXMin, boundXMax, boundYMin, b
     const pointLight = new THREE.PointLight(0xff0000, 0, 100); // Red light, intensity: 0 (starts from 0), distance: 100
     pointLight.position.copy(ball.position);
     scene.add(pointLight);
-
     const ballVelocitySpeedUp = new THREE.Vector3(0.15, 0.15, 0);
 
     function getRandomVelocityComponent() {return Math.random() < 0.5 ? 0.5 : -0.5;}

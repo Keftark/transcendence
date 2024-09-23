@@ -25,6 +25,13 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 document.body.appendChild(renderer.domElement);
 
+const background = new THREE.PlaneGeometry(1000, 1000);
+const bgMaterial = new THREE.MeshStandardMaterial({ 
+    color: 0x000000, // Base color
+});
+const bg = new THREE.Mesh(background, bgMaterial);
+scene.add(bg);
+bg.position.set(0, 0, -1);
 const textureLoader = new THREE.TextureLoader();
 const cylinderTexture = textureLoader.load('mat/player1.jpg');
 const material = new THREE.MeshStandardMaterial({ map: cylinderTexture });
