@@ -2,14 +2,27 @@ import * as THREE from 'three';
 
 export function createBall(scene, ballRadius, boundXMin, boundXMax, boundYMin, boundYMax, callBack) {
     const ballGeometry = new THREE.SphereGeometry(ballRadius, 32, 32);
-    const ballMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+    
+    // Create material with emissive properties
+    const ballMaterial = new THREE.MeshStandardMaterial({ 
+        color: 0xffffff, 
+        emissive: new THREE.Color(0xff0000), // Initial emissive color (red)
+        emissiveIntensity: 0 // Start with no emissive intensity
+    });
+
+    // Create the ball mesh
     const ball = new THREE.Mesh(ballGeometry, ballMaterial);
     scene.add(ball);
+
+    // Create and configure the PointLight
+    const pointLight = new THREE.PointLight(0xff0000, 0, 100); // Red light, intensity: 0 (starts from 0), distance: 100
+    pointLight.position.copy(ball.position);
+    scene.add(pointLight);
+
     const ballVelocitySpeedUp = new THREE.Vector3(0.15, 0.15, 0);
 
     function getRandomVelocityComponent() {return Math.random() < 0.5 ? 0.5 : -0.5;}
-    function resetVelocity()
-    { 
+    function resetVelocity() { 
         let rnd1 = getRandomVelocityComponent();
         let rnd2 = getRandomVelocityComponent();
         ballVelocity = new THREE.Vector3(rnd1, rnd2, 0); 
@@ -17,37 +30,33 @@ export function createBall(scene, ballRadius, boundXMin, boundXMax, boundYMin, b
     let ballVelocity;
     resetVelocity();
 
-    function resetBall()
-    {
-        colorStep = 0;
+    function resetBall() {
         ball.position.set(0, 0, 0);
+        pointLight.position.copy(ball.position); // Update light position
+        pointLight.intensity = 0; // Reset light intensity
+        ball.material.emissiveIntensity = 0; // Reset emissive intensity
         resetVelocity();
-        ball.material.color.set(`rgb(255, 255, 255)`);
     }
 
-    function playerGetPoint(playerNbr)
-    {
+    function playerGetPoint(playerNbr) {
         resetBall();
         callBack(playerNbr);
-        // on file un point au joueur concerne. Ca depend du cote ou va la balle.
     }
 
-    let colorStep = 0;
-    const totalSteps = 10;
-    const colorIncrement = 255 / totalSteps;
+    const maxIntensity = 10; // Maximum intensity value
+    const intensityIncrement = 0.05; // Amount to increase intensity with each bounce
 
-    function updateBallColor() {
-        if (colorStep >= totalSteps)
-            return;
-        const redValue = 255;
-        const newColor = Math.round(255 - (colorStep * colorIncrement));
-        ball.material.color.set(`rgb(${redValue}, ${newColor}, ${newColor})`);
-        colorStep++;
+    function updateBallLight() {
+        // Increment emissive intensity and light intensity
+        if (pointLight.intensity < maxIntensity) {
+            pointLight.intensity = Math.min(maxIntensity, pointLight.intensity + 0.5);
+            ball.material.emissiveIntensity = Math.min(maxIntensity, ball.material.emissiveIntensity + intensityIncrement);
+        }
     }
 
-    function updateBall(ball, player1, player2)
-    {
+    function updateBall(ball, player1, player2) {
         ball.position.add(ballVelocity);
+        pointLight.position.copy(ball.position); // Update light position to follow the ball
 
         // Check collision with top and bottom (y-axis bounds)
         if (ball.position.y + ballRadius > boundYMax || ball.position.y - ballRadius < boundYMin)
@@ -58,7 +67,7 @@ export function createBall(scene, ballRadius, boundXMin, boundXMax, boundYMin, b
             ball.position.y >= player1.position.y - player1.geometry.parameters.height / 2 &&
             ball.position.y <= player1.position.y + player1.geometry.parameters.height / 2)
         {
-            updateBallColor();
+            updateBallLight();
             ballVelocity.x = -ballVelocity.x; // Reverse the X direction
             ballVelocity.x += ballVelocitySpeedUp.x;
             ballVelocity.y += ballVelocitySpeedUp.y;
@@ -68,7 +77,7 @@ export function createBall(scene, ballRadius, boundXMin, boundXMax, boundYMin, b
             ball.position.y >= player2.position.y - player2.geometry.parameters.height / 2 &&
             ball.position.y <= player2.position.y + player2.geometry.parameters.height / 2)
         {
-            updateBallColor();
+            updateBallLight();
             ballVelocity.x = -ballVelocity.x; // Reverse the X direction
             ballVelocity.x -= ballVelocitySpeedUp.x;
             ballVelocity.y -= ballVelocitySpeedUp.y;

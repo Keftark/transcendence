@@ -3,6 +3,7 @@ import { animateCamera, resetCamera } from './cameranim.js';
 import { setupPlayerMovement } from './playerMovement.js';
 import { createBall } from './ball.js';
 import { ScreenShake } from './screenShake.js';
+import { setScores, addScore, setVisibleScore } from './scoreManager.js';
 
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
@@ -32,7 +33,7 @@ const geometry = new THREE.CylinderGeometry(PLAYER_RADIUS, PLAYER_RADIUS, PLAYER
 const player1 = new THREE.Mesh(geometry, material);
 const player2 = new THREE.Mesh(geometry, material);
 
-const ambientLight = new THREE.AmbientLight(0x888888);
+const ambientLight = new THREE.AmbientLight(0xaaaaaa);
 const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 directionalLight.position.set(5, 5, 5).normalize();
 
@@ -60,8 +61,6 @@ const { ball, updateBall, resetBall } = createBall(scene, BALL_RADIUS, BOUNDARY.
 camera.position.z = 50;
 
 const screenShake = new ScreenShake(camera);
-const scoreRight = document.getElementById('score-right');
-const scoreLeft = document.getElementById('score-left');
 const messageDiv = document.getElementById('message');
 
 let animationId = null;
@@ -69,38 +68,20 @@ let isCameraAnimationComplete = false;
 let isBallMoving = false;
 let first = false;
 let toggleReset = false;
-let player1Score = 0;
-let player2Score = 0;
 
 function resetScreen(playerNbr)
 {
     screenShake.start(0.5, 200);
+    addScore(playerNbr);
     resetGame(false);
-    if (playerNbr === 1)
-    {
-        player2Score += 1;
-        scoreRight.innerText = `${player2Score}`;
-    }
-    else
-    {
-        player1Score += 1;
-        scoreLeft.innerText = `${player1Score}`;
-    }
 }
 
 function setVisiblePlay()
 {
-    if (!first)
-    {
-        messageDiv.classList.remove('fade-active');
-        void messageDiv.offsetWidth; // Reset animation
-        messageDiv.classList.add('fade-active');
-        first = true;
-    }
-    else
-        messageDiv.style.opacity = '1';
-    scoreRight.style.display = 'block';
-    scoreLeft.style.display = 'block';
+    messageDiv.classList.remove('fade-active');
+    void messageDiv.offsetWidth; // Reset animation
+    messageDiv.classList.add('fade-active');
+    setVisibleScore(true);
     messageDiv.style.visibility = 'visible';
     messageDiv.style.display = 'block'; 
 }
@@ -113,24 +94,21 @@ function resetPlayersPositions()
 
 function resetGame(resetCam, time)
 {
-    resetPlayersPositions();
+    resetAnim();
     hidePlayMessage();
-    scoreRight.style.display = 'none';
-    scoreLeft.style.display = 'none';
+    resetPlayersPositions();
+    setVisibleScore(false);
     first = false;
     toggleReset = false;
     isCameraAnimationComplete = false;
     isBallMoving = false;
-    resetAnim();
     resetBall();
     if (resetCam)
     {
-        player1Score = player2Score = 0;
-        scoreLeft.innerText = `${player1Score}`;
-        scoreRight.innerText = `${player2Score}`;
+        setScores(0, 0);
         resetCamera(time);
     }
-    animate();
+    // animate();
 }
 
 function animate(time)
@@ -179,7 +157,11 @@ document.addEventListener('keydown', (event) => {
         hidePlayMessage();
     }
     if (event.key === 'Escape')
+    {
         resetGame(true);
+        resetScreen(0);
+        animate();
+    }
 });
 
 document.addEventListener('visibilitychange', () => {
