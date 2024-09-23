@@ -108,7 +108,6 @@ function resetGame(resetCam, time)
         setScores(0, 0);
         resetCamera(time);
     }
-    // animate();
 }
 
 function animate(time)
