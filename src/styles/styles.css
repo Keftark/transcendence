@@ -14,6 +14,7 @@ body {
 }
 
 #top-text {
+    pointer-events: none;
     position: absolute;
     top: 0;
     left: 50%;
@@ -177,4 +178,64 @@ body {
 
 #message span {
     animation: glitch 1s infinite;
+}
+
+#settingsButton img {
+    width: 30px; /* Set icon size */
+    height: 30px; /* Set icon size */
+}
+
+#settingsButton:hover {
+    opacity: 0.8; /* Optional: add hover effect */
+}
+
+#settingsButton {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 5px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+#settingsPanel {
+    display: none; /* Hidden by default */
+    position: absolute;
+    top: 65px;
+    left: 20px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 10px;
+    z-index: 10;
+    opacity: 0; /* Start with an opacity of 0 */
+    transition: opacity 0.15s ease, visibility 0.15s ease; /* Transition properties */
+    visibility: hidden;
+}
+#settingsPanel.show {
+    display: block; /* Show the panel */
+    opacity: 1; /* Fade in */
+    visibility: visible; /* Make it visible */
+}
+
+.panelButton {
+    display: block;
+    width: 100px; /* Set a fixed width */
+    height: 30px; /* Set a fixed height */
+    padding: 10px; /* Padding inside the button */
+    margin: 5px 0; /* Margin between buttons */
+    background-color: #3498db; /* Background color */
+    color: white; /* Text color */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    text-align: center; /* Center text */
+    line-height: 10px; /* Vertically center text */
+}
+
+.panelButton:hover {
+    opacity: 0.8; /* Optional: add hover effect */
 }
