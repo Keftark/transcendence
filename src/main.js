@@ -70,7 +70,7 @@ const { ball, updateBall, resetBall } = createBall(scene, BALL_RADIUS, BOUNDARY.
 camera.position.z = 50;
 
 const screenShake = new ScreenShake(camera);
-const messageDiv = document.getElementById('message');
+const pressPlayDiv = document.getElementById('pressplay');
 
 let animationId = null;
 let isCameraAnimationComplete = false;
@@ -87,12 +87,12 @@ function resetScreen(playerNbr)
 
 function setVisiblePlay()
 {
-    messageDiv.classList.remove('fade-active');
-    void messageDiv.offsetWidth; // Reset animation
-    messageDiv.classList.add('fade-active');
+    pressPlayDiv.classList.remove('fade-active');
+    void pressPlayDiv.offsetWidth; // Reset animation
+    pressPlayDiv.classList.add('fade-active');
     setVisibleScore(true);
-    messageDiv.style.visibility = 'visible';
-    messageDiv.style.display = 'block'; 
+    pressPlayDiv.style.visibility = 'visible';
+    pressPlayDiv.style.display = 'block'; 
 }
 
 function resetPlayersPositions()
@@ -154,8 +154,8 @@ function resetAnim()
 
 function hidePlayMessage()
 {
-    messageDiv.style.display = 'none';
-    messageDiv.style.opacity = '0';
+    pressPlayDiv.style.display = 'none';
+    pressPlayDiv.style.opacity = '0';
 }
 
 document.addEventListener('keydown', (event) => {

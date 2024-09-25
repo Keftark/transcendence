@@ -29,7 +29,7 @@ body {
     width: 100%;
 }
 
-#message {
+#pressplay {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -80,7 +80,7 @@ body {
     animation: rise-up 0.5s forwards;
 }
 
-#message span {
+#pressplay span {
     display: inline-block;
     font-size: 80px;
     color: white;
@@ -99,6 +99,6 @@ body {
     animation: fade 2s forwards;
 }
 
-#message span {
+#pressplay span {
     animation: glitch 1s infinite;
 }
