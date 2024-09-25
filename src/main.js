@@ -5,20 +5,25 @@ import { createBall } from './ball.js';
 import { ScreenShake } from './screenShake.js';
 import { setScores, addScore, setVisibleScore } from './scoreManager.js';
 import { closeMenu, closeProfile, closeSettings, mainMenu, openMenu, openProfile, openSettings } from './menu.js';
+import { createLights, createPlayers, drawBackground, drawLine } from './objects.js';
 
+const PLAYER_RADIUS = 1;
+const PLAYER_HEIGHT = 10;
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
 const BOUNDARY = {
   Y_MIN: -25,
   Y_MAX: 25,
-  X_MIN: -50,
-  X_MAX: 50
+  X_MIN: -40,
+  X_MAX: 40
 };
 
-const PLAYER_RADIUS = 1;
-const PLAYER_HEIGHT = 10;
-const BALL_RADIUS = 0.8;
-const MOVE_SPEED = 0.7;
+const ballStats = 
+{
+    BALL_RADIUS: 0.8,
+    MOVE_SPEED: 0.7,
+
+}
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, SCREEN_WIDTH / SCREEN_HEIGHT, 0.1, 1000);
@@ -26,51 +31,20 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 document.body.appendChild(renderer.domElement);
 
-const background = new THREE.PlaneGeometry(1000, 1000);
-const bgMaterial = new THREE.MeshStandardMaterial({ 
-    color: 0x000000, // Base color
-});
-const bg = new THREE.Mesh(background, bgMaterial);
-scene.add(bg);
-bg.position.set(0, 0, -1);
-const textureLoader = new THREE.TextureLoader();
-const cylinderTexture = textureLoader.load('mat/player1.jpg');
-const material = new THREE.MeshStandardMaterial({ map: cylinderTexture });
-const geometry = new THREE.CylinderGeometry(PLAYER_RADIUS, PLAYER_RADIUS, PLAYER_HEIGHT, 8, 1, false);
-
-const player1 = new THREE.Mesh(geometry, material);
-const player2 = new THREE.Mesh(geometry, material);
-
-const ambientLight = new THREE.AmbientLight(0xaaaaaa);
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-directionalLight.position.set(5, 5, 5).normalize();
-
-scene.add(ambientLight);
-scene.add(directionalLight);
-
+drawBackground(scene);
+const {player1, player2} = createPlayers(scene, PLAYER_RADIUS, PLAYER_HEIGHT);
+createLights(scene);
 resetPlayersPositions();
-scene.add(player1);
-scene.add(player2);
+drawLine(scene, BOUNDARY);
 
-const materialLine = new THREE.LineBasicMaterial({ color: 0xffffff });
-const points = [
-  new THREE.Vector3(BOUNDARY.X_MIN - 2.5, BOUNDARY.Y_MAX, 0),
-  new THREE.Vector3(BOUNDARY.X_MAX + 2.5, BOUNDARY.Y_MAX, 0),
-  new THREE.Vector3(BOUNDARY.X_MAX + 2.5, BOUNDARY.Y_MIN, 0),
-  new THREE.Vector3(BOUNDARY.X_MIN - 2.5, BOUNDARY.Y_MIN, 0),
-  new THREE.Vector3(BOUNDARY.X_MIN - 2.5, BOUNDARY.Y_MAX, 0)
-];
-const geometryLine = new THREE.BufferGeometry().setFromPoints(points);
-const line = new THREE.Line(geometryLine, materialLine);
-scene.add(line);
-
-const { updatePlayers } = setupPlayerMovement(player1, player2, BOUNDARY.Y_MIN, BOUNDARY.Y_MAX, MOVE_SPEED);
-const { ball, updateBall, resetBall } = createBall(scene, BALL_RADIUS, BOUNDARY.X_MIN, BOUNDARY.X_MAX, BOUNDARY.Y_MIN, BOUNDARY.Y_MAX, resetScreen);
+const { updatePlayers } = setupPlayerMovement(player1, player2, BOUNDARY.Y_MIN, BOUNDARY.Y_MAX, ballStats.MOVE_SPEED);
+const { ball, updateBall, resetBall } = createBall(scene, ballStats, BOUNDARY, resetScreen);
 
 camera.position.z = 50;
 
 const screenShake = new ScreenShake(camera);
 const pressPlayDiv = document.getElementById('pressplay');
+setScores(0, 0);
 
 let animationId = null;
 let isCameraAnimationComplete = false;

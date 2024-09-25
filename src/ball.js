@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { Sparks } from './sparks.js';
 
-export function createBall(scene, ballRadius, boundXMin, boundXMax, boundYMin, boundYMax, callBack) {
-    const ballGeometry = new THREE.SphereGeometry(ballRadius, 32, 32);
+export function createBall(scene, ballStats, BOUNDARIES, callBack) {
+    const ballGeometry = new THREE.SphereGeometry(ballStats.BALL_RADIUS, 32, 32);
     const sparks = new Sparks(scene);
     
     // Create material with emissive properties
@@ -61,11 +61,11 @@ export function createBall(scene, ballRadius, boundXMin, boundXMax, boundYMin, b
         
         sparks.updateSparks();
         // Check collision with top and bottom (y-axis bounds)
-        if (ball.position.y + ballRadius > boundYMax || ball.position.y - ballRadius < boundYMin)
+        if (ball.position.y + ballStats.BALL_RADIUS > BOUNDARIES.Y_MAX || ball.position.y - ballStats.BALL_RADIUS < BOUNDARIES.Y_MIN)
             ballVelocity.y = -ballVelocity.y; // Reverse the Y direction
 
         // Check collision with left paddle
-        if (ball.position.x - ballRadius <= player1.position.x + player1.geometry.parameters.radiusTop * 1.5 &&
+        if (ball.position.x - ballStats.BALL_RADIUS <= player1.position.x + player1.geometry.parameters.radiusTop * 1.5 &&
             ball.position.y >= player1.position.y - player1.geometry.parameters.height / 2 &&
             ball.position.y <= player1.position.y + player1.geometry.parameters.height / 2)
         {
@@ -80,7 +80,7 @@ export function createBall(scene, ballRadius, boundXMin, boundXMax, boundYMin, b
             ballVelocity.y += ballVelocitySpeedUp.y;
         }
         // Check collision with right paddle
-        else if (ball.position.x + ballRadius >= player2.position.x - player2.geometry.parameters.radiusTop * 1.5 &&
+        else if (ball.position.x + ballStats.BALL_RADIUS >= player2.position.x - player2.geometry.parameters.radiusTop * 1.5 &&
             ball.position.y >= player2.position.y - player2.geometry.parameters.height / 2 &&
             ball.position.y <= player2.position.y + player2.geometry.parameters.height / 2)
         {
@@ -96,9 +96,9 @@ export function createBall(scene, ballRadius, boundXMin, boundXMax, boundYMin, b
         }
 
         // Check if the ball is out of bounds (game over conditions, if needed)
-        if (ball.position.x < boundXMin)
+        if (ball.position.x < BOUNDARIES.X_MIN)
             playerGetPoint(1);
-        else if (ball.position.x > boundXMax)
+        else if (ball.position.x > BOUNDARIES.X_MAX)
             playerGetPoint(2);
     }
 

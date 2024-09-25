@@ -85,6 +85,12 @@ export function closeSettings()
     }, 150); // Match the transition duration
 }
 
+export function setNewColor(color)
+{
+    // mettre tous les textes d'une autre couleur
+    // faire des themes, plutot ?
+}
+
 export function mainMenu()
 {
     

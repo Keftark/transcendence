@@ -1,5 +1,7 @@
 const scoreRight = document.getElementById('score-right');
 const scoreLeft = document.getElementById('score-left');
+const playernameRight = document.getElementById('playername-right');
+const playernameLeft = document.getElementById('playername-left');
 let player1Score = 0;
 let player2Score = 0;
 
@@ -52,4 +54,6 @@ export function setVisibleScore(boolean)
 {
     scoreRight.style.display = boolean === true ? 'block' : 'none';
     scoreLeft.style.display = boolean === true ? 'block' : 'none';
+    playernameRight.style.display = boolean === true ? 'block' : 'none';
+    playernameLeft.style.display = boolean === true ? 'block' : 'none';
 }

@@ -46,21 +46,49 @@ body {
     transition: opacity 0.5s ease, visibility 0.5s ease;
 }
 
-#score-left, #score-right {
+#score-left, #score-right{
     position: absolute;
     font-size: 52px;
     color: white;
     font-family: 'MyCustomFont', Arial, sans-serif;
 }
+
+#playername-left, #playername-right {
+    position: absolute;
+    color: rgb(0, 94, 89);
+    font-size: 35px;
+    font-family: 'MyCustomFont', Arial, sans-serif;
+}
+
+#playername-left {
+    top: 130px;
+    left: 50%;
+    transform: translateX(-180px);
+    display: none;
+}
+
+#playername-right {
+    top: 130px; 
+    right: 50%;
+    transform: translateX(180px);
+    display: none;
+}
+
+.playername {
+    display: inline-block;
+    position: relative;
+    transition: transform 0.3s ease-in-out;
+}
+
 #score-left {
     top: 120px;
-    left: 320px;
+    left: calc(50% - 40px);
     display: none;
 }
 
 #score-right {
     top: 120px; 
-    right: 320px;
+    right: calc(50% - 40px);
     display: none;
 }
 

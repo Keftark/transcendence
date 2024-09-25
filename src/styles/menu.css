@@ -12,11 +12,12 @@
     position: absolute;
     top: 20px;
     left: 20px;
-    color: white;
+    color: rgb(0, 0, 0);
     border: none;
     border-radius: 5px;
     cursor: pointer;
     z-index: 10;
+    background-color: #005c57; /* Background color */
 }
 
 #menuPanel {
@@ -24,8 +25,8 @@
     position: absolute;
     top: 20px;
     left: 20px;
-    background-color: rgba(255, 255, 255, 0.301);
-    border: 1px solid #ccc;
+    background-color: rgba(0, 27, 27, 0.301);
+    border: 1px solid #005c57;
     border-radius: 3px;
     padding: 50px 10px 10px 10px;
     z-index: 11;
@@ -47,7 +48,7 @@
     padding: 10px; /* Padding inside the button */
     margin: 5px 0; /* Margin between buttons */
     background-color: #005c57; /* Background color */
-    color: white; /* Text color */
+    color: rgb(255, 255, 255); /* Text color */
     border: none; /* No border */
     border-radius: 5px; /* Rounded corners */
     cursor: pointer; /* Pointer cursor on hover */
@@ -87,7 +88,7 @@
     transform: translate(-50%, -50%); /* Adjust position to center properly */
     width: 90%; /* Responsive width */
     max-width: 400px; /* Maximum width */
-    background-color: white;
+    background-color: #00948d;
     border: 1px solid #ccc;
     border-radius: 10px; /* Slightly larger border radius for modern look */
     padding: 20px;
@@ -108,6 +109,7 @@
     margin-top: 0;
     text-align: center; /* Center align the title */
     font-size: 60px;
+    color: white;
     font-family: 'MyCustomFont', Arial, sans-serif;
 }
 
@@ -115,6 +117,7 @@
     margin: 5px 0;
     text-align: left;
     font-size: 30px;
+    color: white;
     font-family: 'MyCustomFont', Arial, sans-serif;
 }
 
@@ -122,7 +125,7 @@
     margin-top: 20px;
     padding: 10px;
     width: 100%;
-    background-color: #e74c3c;
+    background-color: #005c57;
     color: white;
     border: none;
     border-radius: 5px;
@@ -140,7 +143,7 @@
     transform: translate(-50%, -50%); /* Adjust position to center properly */
     width: 90%; /* Responsive width */
     max-width: 400px; /* Maximum width */
-    background-color: white;
+    background-color: #00948d;
     border: 1px solid #ccc;
     border-radius: 10px; /* Slightly larger border radius for modern look */
     padding: 20px;
@@ -161,6 +164,7 @@
     margin-top: 0;
     text-align: center; /* Center align the title */
     font-size: 60px;
+    color: white;
     font-family: 'MyCustomFont', Arial, sans-serif;
 }
 
@@ -168,6 +172,7 @@
     margin: 5px 0;
     text-align: left;
     font-size: 30px;
+    color: white;
     font-family: 'MyCustomFont', Arial, sans-serif;
 }
 
@@ -175,7 +180,7 @@
     margin-top: 20px;
     padding: 10px;
     width: 100%;
-    background-color: #e74c3c;
+    background-color: #005c57;
     color: white;
     border: none;
     border-radius: 5px;
@@ -183,4 +188,34 @@
     text-align: center;
     font-size: 30px;
     font-family: 'MyCustomFont', Arial, sans-serif;
+}
+
+#color1Button, #color2Button, #color3Button, #color4Button, #color5Button {
+    margin-bottom: 20px;
+    width: 64px;
+    height: 64px;
+    background-color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#color2Button
+{
+    background-color: #9e009e;
+}
+
+#color3Button
+{
+    background-color: #ffbb00;
+}
+
+#color4Button
+{
+    background-color: #ac0000;
+}
+
+#color5Button
+{
+    background-color: #005c57;
 }

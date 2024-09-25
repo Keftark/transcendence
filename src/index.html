@@ -5,7 +5,7 @@
     <title>Untitled Game</title>
     <link rel="stylesheet" href="./styles/styles.css"> <!-- Link to the external CSS file -->
     <link rel="stylesheet" href="./styles/menu.css">
-    <link rel="stylesheet" href="./styles/animations.css">
+    <link rel="stylesheet" href="./styles/anims.css">
 </head>
 <body>
     <div id="top-text">ft_transcendence</div>
@@ -14,6 +14,8 @@
     </div>
     <div id="score-left">0</div>
     <div id="score-right">0</div>
+    <div id="playername-left">Player 1</div>
+    <div id="playername-right">Player 2</div>
     <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
     <script type="module" src="/main.js"></script>
     <script type="module" src="/menu.js"></script>
@@ -36,7 +38,13 @@
     <div id="settingsPanel">
         <h2>Settings</h2>
         <p>Option 1</p>
-        <p>Option 2</p>
+        <p style="margin-bottom: 20px;">Option 2</p>
+        <p>Colors:</p>
+        <button id="color1Button"></button>
+        <button id="color2Button"></button>
+        <button id="color3Button"></button>
+        <button id="color4Button"></button>
+        <button id="color5Button"></button>
         <button id="closeSettingsButton">Close</button>
     </div>
 </body>
