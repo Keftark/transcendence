@@ -4,7 +4,7 @@ import { setupPlayerMovement } from './playerMovement.js';
 import { createBall } from './ball.js';
 import { ScreenShake } from './screenShake.js';
 import { setScores, addScore, setVisibleScore } from './scoreManager.js';
-import { closeMenu, closeProfile, closeSettings, openMenu, openProfile, openSettings } from './menu.js';
+import { closeMenu, closeProfile, closeSettings, mainMenu, openMenu, openProfile, openSettings } from './menu.js';
 
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
@@ -201,6 +201,10 @@ document.getElementById('settingsButton').addEventListener('click', () => {
 
 document.getElementById('closeSettingsButton').addEventListener('click', () => {
     closeSettings();
+});
+
+document.getElementById('mainButton').addEventListener('click', () => {
+    mainMenu();
 });
 
 

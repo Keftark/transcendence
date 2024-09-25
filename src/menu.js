@@ -51,7 +51,7 @@ export function closeProfile()
     setTimeout(() => {
         overlay.style.display = 'none';
         profilePanel.style.display = 'none';
-    }, 300); // Match the transition duration
+    }, 150); // Match the transition duration
 }
 
 export function openSettings()
@@ -82,5 +82,10 @@ export function closeSettings()
     setTimeout(() => {
         overlay.style.display = 'none';
         settingsPanel.style.display = 'none';
-    }, 300); // Match the transition duration
+    }, 150); // Match the transition duration
+}
+
+export function mainMenu()
+{
+    
 }

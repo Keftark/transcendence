@@ -1,0 +1,76 @@
+@keyframes fall-down {
+    0% {
+        opacity: 1;
+        transform: translate(0px, 0px);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(0px, 30px);
+    }
+}
+
+@keyframes rise-up {
+    0% {
+        opacity: 0;
+        transform: translate(0px, -30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0px, 0px);
+    }
+}
+
+@keyframes fade {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Keyframes for glitch animation */
+@keyframes glitch {
+    0% {
+        text-shadow: 
+            1px 0 cyan, 
+           -1px 0 red;
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+    20% {
+        text-shadow: 
+            -1px 0 cyan, 
+            1px 0 red;
+        transform: translate(-2px, 0);
+        opacity: 0.8;
+    }
+    40% {
+        text-shadow: 
+            1px 0 cyan, 
+            -1px 0 red;
+        transform: translate(2px, 2px);
+        opacity: 0.6;
+    }
+    60% {
+        text-shadow: 
+            -1px 0 cyan, 
+            1px 0 red;
+        transform: translate(-2px, -2px);
+        opacity: 0.8;
+    }
+    80% {
+        text-shadow: 
+            1px 0 cyan, 
+            -1px 0 red;
+        transform: translate(0, 2px);
+        opacity: 1;
+    }
+    100% {
+        text-shadow: 
+            -1px 0 cyan, 
+            1px 0 red;
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+}
