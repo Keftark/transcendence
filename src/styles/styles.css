@@ -25,7 +25,7 @@ body {
     font-size: 96px; /* Adjust size as needed */
     font-family: 'MyCustomFont', Arial, sans-serif; /* Apply the custom font */
     text-align: center;
-    z-index: 1000; /* Ensure it's on top */
+    z-index: 100; /* Ensure it's on top */
     width: 100%;
 }
 
@@ -40,7 +40,7 @@ body {
     font-size: 50px;
     font-family: 'MyCustomFont', Arial, sans-serif;
     text-align: center;
-    z-index: 1000;
+    z-index: 100;
     overflow: hidden;
     visibility: hidden;
     transition: opacity 0.5s ease, visibility 0.5s ease;
@@ -180,20 +180,19 @@ body {
     animation: glitch 1s infinite;
 }
 
-#settingsButton img {
+#mainMenuButton img {
     width: 30px; /* Set icon size */
     height: 30px; /* Set icon size */
 }
 
-#settingsButton:hover {
+#mainMenuButton:hover {
     opacity: 0.8; /* Optional: add hover effect */
 }
 
-#settingsButton {
+#mainMenuButton {
     position: absolute;
     top: 20px;
     left: 20px;
-    padding: 5px;
     color: white;
     border: none;
     border-radius: 5px;
@@ -201,33 +200,34 @@ body {
     z-index: 10;
 }
 
-#settingsPanel {
+#menuPanel {
     display: none; /* Hidden by default */
     position: absolute;
-    top: 65px;
+    top: 20px;
     left: 20px;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.301);
     border: 1px solid #ccc;
     border-radius: 3px;
-    padding: 10px;
-    z-index: 10;
+    padding: 50px 10px 10px 10px;
+    z-index: 11;
     opacity: 0; /* Start with an opacity of 0 */
-    transition: opacity 0.15s ease, visibility 0.15s ease; /* Transition properties */
+    transition: opacity 0.05s ease; /* Transition properties */
     visibility: hidden;
 }
-#settingsPanel.show {
+
+#menuPanel.show {
     display: block; /* Show the panel */
     opacity: 1; /* Fade in */
     visibility: visible; /* Make it visible */
 }
 
-.panelButton {
+.menuButton {
     display: block;
     width: 100px; /* Set a fixed width */
     height: 30px; /* Set a fixed height */
     padding: 10px; /* Padding inside the button */
     margin: 5px 0; /* Margin between buttons */
-    background-color: #3498db; /* Background color */
+    background-color: #005c57; /* Background color */
     color: white; /* Text color */
     border: none; /* No border */
     border-radius: 5px; /* Rounded corners */
@@ -236,6 +236,118 @@ body {
     line-height: 10px; /* Vertically center text */
 }
 
-.panelButton:hover {
+.menuButton:hover {
     opacity: 0.8; /* Optional: add hover effect */
+}
+
+#overlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    z-index: 11; /* Behind the profile panel but above everything else */
+    opacity: 0; /* Start with opacity 0 for fade effect */
+    transition: opacity 0.3s ease; /* Transition for smooth fade */
+}
+
+#overlay.show {
+    display: block;
+    opacity: 1; /* Fade in */
+}
+
+#profilePanel {
+    display: none; /* Hidden by default */
+    position: fixed; /* Fixed positioning to stay in the center */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust position to center properly */
+    width: 90%; /* Responsive width */
+    max-width: 400px; /* Maximum width */
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px; /* Slightly larger border radius for modern look */
+    padding: 20px;
+    z-index: 200;
+    opacity: 0; /* Start with an opacity of 0 for fade effect */
+    transition: opacity 0.3s ease, visibility 0.3s ease; /* Transition for smooth fade */
+    visibility: hidden; /* Hidden for transitions */
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Add a shadow for better appearance */
+}
+
+#profilePanel.show {
+    display: block; /* Show the panel */
+    opacity: 1; /* Fade in */
+    visibility: visible; /* Make it visible */
+}
+
+#profilePanel h2 {
+    margin-top: 0;
+    text-align: center; /* Center align the title */
+}
+
+#profilePanel p {
+    margin: 5px 0;
+    text-align: center; /* Center align the content */
+}
+
+#closeProfileButton {
+    margin-top: 20px;
+    padding: 10px;
+    width: 100%;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+}
+
+#settingsPanel {
+    display: none; /* Hidden by default */
+    position: fixed; /* Fixed positioning to stay in the center */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust position to center properly */
+    width: 90%; /* Responsive width */
+    max-width: 400px; /* Maximum width */
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px; /* Slightly larger border radius for modern look */
+    padding: 20px;
+    z-index: 200;
+    opacity: 0; /* Start with an opacity of 0 for fade effect */
+    transition: opacity 0.3s ease, visibility 0.3s ease; /* Transition for smooth fade */
+    visibility: hidden; /* Hidden for transitions */
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Add a shadow for better appearance */
+}
+
+#settingsPanel.show {
+    display: block; /* Show the panel */
+    opacity: 1; /* Fade in */
+    visibility: visible; /* Make it visible */
+}
+
+#settingsPanel h2 {
+    margin-top: 0;
+    text-align: center; /* Center align the title */
+}
+
+#settingsPanel p {
+    margin: 5px 0;
+    text-align: center; /* Center align the content */
+}
+
+#closeSettingsButton {
+    margin-top: 20px;
+    padding: 10px;
+    width: 100%;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
 }

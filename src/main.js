@@ -4,7 +4,7 @@ import { setupPlayerMovement } from './playerMovement.js';
 import { createBall } from './ball.js';
 import { ScreenShake } from './screenShake.js';
 import { setScores, addScore, setVisibleScore } from './scoreManager.js';
-import { openMenu } from './menu.js';
+import { closeMenu, closeProfile, closeSettings, openMenu, openProfile, openSettings } from './menu.js';
 
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
@@ -179,31 +179,28 @@ document.addEventListener('visibilitychange', () => {
         if (!animationId) animate();
 });
 
-document.getElementById('settingsButton').addEventListener('click', () => {
-    const panel = document.getElementById('settingsPanel');
-    
-    if (panel.classList.contains('show')) {
-        panel.classList.remove('show'); // Remove the show class to fade out
-        setTimeout(() => {
-            panel.style.display = 'none'; // Hide the panel after fading out
-        }, 50); // Match the timeout with the CSS transition duration
-    } else {
-        panel.style.display = 'block'; // Show the panel first
-        setTimeout(() => {
-            panel.classList.add('show'); // Add the show class to fade in
-        }, 0); // Small delay to allow the display to take effect
-    }
+document.getElementById('mainMenuButton').addEventListener('mouseenter', () => {
+    openMenu();
 });
 
-// Optional: Add functionality for profile and settings buttons
+document.getElementById('menuPanel').addEventListener('mouseleave', () => {
+    closeMenu();
+});
+
 document.getElementById('profileButton').addEventListener('click', () => {
-    alert('Profile button clicked!');
-    // Add your profile functionality here
+    openProfile();
 });
 
-document.getElementById('settingsMenuButton').addEventListener('click', () => {
-    alert('Settings button clicked!');
-    // Add your settings functionality here
+document.getElementById('closeProfileButton').addEventListener('click', () => {
+    closeProfile();
+});
+
+document.getElementById('settingsButton').addEventListener('click', () => {
+    openSettings();
+});
+
+document.getElementById('closeSettingsButton').addEventListener('click', () => {
+    closeSettings();
 });
 
 
