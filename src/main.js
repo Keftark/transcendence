@@ -4,7 +4,7 @@ import { setupPlayerMovement } from './playerMovement.js';
 import { createBall } from './ball.js';
 import { ScreenShake } from './screenShake.js';
 import { setScores, addScore, setVisibleScore } from './scoreManager.js';
-import { closeMenu, closeProfile, closeSettings, mainMenu, openMenu, openProfile, openSettings } from './menu.js';
+import { closeMenu, closeProfile, closeSettings, mainMenu, openMenu, openProfile, openSettings, setNewColor } from './menu.js';
 import { createLights, createPlayers, drawBackground, drawLine } from './objects.js';
 
 const PLAYER_RADIUS = 1;
@@ -45,6 +45,7 @@ camera.position.z = 50;
 const screenShake = new ScreenShake(camera);
 const pressPlayDiv = document.getElementById('pressplay');
 setScores(0, 0);
+setNewColor();
 
 let animationId = null;
 let isCameraAnimationComplete = false;
@@ -153,7 +154,7 @@ document.addEventListener('visibilitychange', () => {
         if (!animationId) animate();
 });
 
-document.getElementById('mainMenuButton').addEventListener('mouseenter', () => {
+document.getElementById('menuPanel').addEventListener('mouseenter', () => {
     openMenu();
 });
 

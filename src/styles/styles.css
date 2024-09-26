@@ -11,6 +11,12 @@ body {
     align-items: center;
     background-color: #000; /* Optional: Set a background color */
     overflow: hidden;
+    font-family: 'MyCustomFont', Arial, sans-serif;
+}
+
+button
+{
+    font-family: 'MyCustomFont', Arial, sans-serif;
 }
 
 #top-text {
@@ -23,7 +29,6 @@ body {
     color: white;
     padding: 10px 20px;
     font-size: 96px; /* Adjust size as needed */
-    font-family: 'MyCustomFont', Arial, sans-serif; /* Apply the custom font */
     text-align: center;
     z-index: 100; /* Ensure it's on top */
     width: 100%;
@@ -38,7 +43,6 @@ body {
     color: white;
     padding: 20px;
     font-size: 50px;
-    font-family: 'MyCustomFont', Arial, sans-serif;
     text-align: center;
     z-index: 100;
     overflow: hidden;
@@ -50,14 +54,12 @@ body {
     position: absolute;
     font-size: 52px;
     color: white;
-    font-family: 'MyCustomFont', Arial, sans-serif;
 }
 
 #playername-left, #playername-right {
     position: absolute;
-    color: rgb(0, 94, 89);
+    color: white;
     font-size: 35px;
-    font-family: 'MyCustomFont', Arial, sans-serif;
 }
 
 #playername-left {

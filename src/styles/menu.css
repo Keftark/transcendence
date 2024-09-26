@@ -1,44 +1,39 @@
 
-#mainMenuButton img {
-    width: 30px; /* Set icon size */
-    height: 30px; /* Set icon size */
-}
-
-#mainMenuButton:hover {
-    opacity: 0.8; /* Optional: add hover effect */
-}
-
-#mainMenuButton {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    color: rgb(0, 0, 0);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    z-index: 10;
-    background-color: #005c57; /* Background color */
-}
-
 #menuPanel {
-    display: none; /* Hidden by default */
     position: absolute;
     top: 20px;
-    left: 20px;
+    left: -130px;
     background-color: rgba(0, 27, 27, 0.301);
     border: 1px solid #005c57;
     border-radius: 3px;
-    padding: 50px 10px 10px 10px;
+    padding: 10px 50px 10px 10px;
     z-index: 11;
-    opacity: 0; /* Start with an opacity of 0 */
-    transition: opacity 0.05s ease; /* Transition properties */
-    visibility: hidden;
+    transition: left 0.4s ease;
+}
+
+#menu-label {
+    position: absolute;
+    top: 50%;
+    right: 0px; /* Adjust this based on panel width */
+    transform: translateY(-50%); /* Center vertically */
+    display: flex;
+    flex-direction: column; /* Stack the letters vertically */
+    align-items: center;
+  }
+  
+#menu-label span {
+    display: block;
+    color: white;
+    padding: 0px 8px;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 3px;
+    letter-spacing: 2px;
+    margin-bottom: 0px;
 }
 
 #menuPanel.show {
-    display: block; /* Show the panel */
-    opacity: 1; /* Fade in */
-    visibility: visible; /* Make it visible */
+    left: 0;
 }
 
 .menuButton {
@@ -55,7 +50,6 @@
     text-align: center; /* Center text */
     line-height: 10px; /* Vertically center text */
     font-size: 20px;
-    font-family: 'MyCustomFont', Arial, sans-serif;
 }
 
 .menuButton:hover {
@@ -110,7 +104,6 @@
     text-align: center; /* Center align the title */
     font-size: 60px;
     color: white;
-    font-family: 'MyCustomFont', Arial, sans-serif;
 }
 
 #profilePanel p {
@@ -118,7 +111,6 @@
     text-align: left;
     font-size: 30px;
     color: white;
-    font-family: 'MyCustomFont', Arial, sans-serif;
 }
 
 #closeProfileButton {
@@ -132,7 +124,6 @@
     cursor: pointer;
     text-align: center;
     font-size: 30px;
-    font-family: 'MyCustomFont', Arial, sans-serif;
 }
 
 #settingsPanel {
@@ -165,7 +156,6 @@
     text-align: center; /* Center align the title */
     font-size: 60px;
     color: white;
-    font-family: 'MyCustomFont', Arial, sans-serif;
 }
 
 #settingsPanel p {
@@ -173,7 +163,6 @@
     text-align: left;
     font-size: 30px;
     color: white;
-    font-family: 'MyCustomFont', Arial, sans-serif;
 }
 
 #closeSettingsButton {
@@ -187,7 +176,6 @@
     cursor: pointer;
     text-align: center;
     font-size: 30px;
-    font-family: 'MyCustomFont', Arial, sans-serif;
 }
 
 #color1Button, #color2Button, #color3Button, #color4Button, #color5Button {
@@ -218,4 +206,21 @@
 #color5Button
 {
     background-color: #005c57;
+}
+
+#lang1Button img, #lang2Button img
+{
+    width: 90px; /* Set icon size */
+    height: 45px; /* Set icon size */
+}
+
+#lang1Button, #lang2Button
+{
+    background: none;       /* No background color */
+    border: none;          /* No border */
+    padding: 0;            /* No padding */
+    margin: 0;             /* No margin */
+    cursor: pointer;       /* Pointer cursor on hover */
+    outline: none;         /* No outline on focus */
+    display: inline-block;
 }

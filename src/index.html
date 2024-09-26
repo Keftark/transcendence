@@ -19,10 +19,13 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
     <script type="module" src="/main.js"></script>
     <script type="module" src="/menu.js"></script>
-    <button id="mainMenuButton">
-        <img src="./icons/settings.png" alt="Icon" id="icon" />
-    </button>
     <div id="menuPanel">
+        <div id="menu-label">
+            <span>M</span>
+            <span>E</span>
+            <span>N</span>
+            <span>U</span>
+          </div>
         <button class="menuButton" id="profileButton">Profile</button>
         <button class="menuButton" id="settingsButton">Settings</button>
         <button class="menuButton" id="mainButton">Main menu</button>
@@ -40,12 +43,20 @@
         <p>Option 1</p>
         <p style="margin-bottom: 20px;">Option 2</p>
         <p>Colors:</p>
-        <button id="color1Button"></button>
-        <button id="color2Button"></button>
-        <button id="color3Button"></button>
-        <button id="color4Button"></button>
-        <button id="color5Button"></button>
+        <button class="colorize-btn" id="color1Button" data-color="white"></button>
+        <button class="colorize-btn" id="color2Button" data-color="#9e009e"></button>
+        <button class="colorize-btn" id="color3Button" data-color="#ffbb00"></button>
+        <button class="colorize-btn" id="color4Button" data-color="#ac0000"></button>
+        <button class="colorize-btn" id="color5Button" data-color="#005c57"></button>
+        <p>Language:</p>
+        <button class="language" id="lang1Button" data-lang="en">
+            <img src="./icons/lang-en.png" id="lang-icon" />
+        </button>
+        <button class="language" id="lang2Button" data-lang="fr">
+            <img src="./icons/lang-fr.png" id="lang-icon" />
+        </button>
         <button id="closeSettingsButton">Close</button>
+
     </div>
 </body>
 </html>
