@@ -38,7 +38,7 @@ button
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, calc(-50% - 20px));
     background: rgba(0, 0, 0, 0);
     color: white;
     padding: 20px;
@@ -47,7 +47,24 @@ button
     z-index: 100;
     overflow: hidden;
     visibility: hidden;
+}
+
+#play {
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, calc(-50% + 20px));
+    background: rgba(0, 0, 0, 0);
+    color: white;
+    padding: 20px;
+    font-size: 80px;
+    text-align: center;
+    z-index: 100;
+    overflow: hidden;
+    visibility: hidden;
     transition: opacity 0.5s ease, visibility 0.5s ease;
+    animation: glitch 1.5s infinite;
 }
 
 #score-left, #score-right{
@@ -110,15 +127,6 @@ button
     animation: rise-up 0.5s forwards;
 }
 
-#pressplay span {
-    display: inline-block;
-    font-size: 80px;
-    color: white;
-    position: relative;
-    overflow: hidden;
-    animation: glitch 1.5s infinite;
-}
-
 .fade {
     opacity: 0;
     animation: none;
@@ -127,8 +135,4 @@ button
 
 .fade-active {
     animation: fade 2s forwards;
-}
-
-#pressplay span {
-    animation: glitch 1s infinite;
 }

@@ -87,7 +87,7 @@ export function setNewColor()
         button.addEventListener('click', function() {
             const selectedColor = this.getAttribute('data-color');
             const textElements = document.querySelectorAll(' \
-                h1, h2, p, #top-text, #menu-label span, #pressplay, #pressplay span, #score-left, #score-right, #playername-left, \
+                h1, h2, p, #top-text, #menu-label span, #pressplay, #play, #score-left, #score-right, #playername-left, \
                 #playername-right, #closeProfileButton, #closeSettingsButton, .menuButton');
             textElements.forEach(element => {
                 element.style.color = selectedColor;

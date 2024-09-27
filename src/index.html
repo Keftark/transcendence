@@ -9,54 +9,55 @@
 </head>
 <body>
     <div id="top-text">ft_transcendence</div>
-    <div id="pressplay">
-        Press space to<br><span>PLAY</span>
-    </div>
+    <div id="pressplay"></div>
+    <div id="play"></div>
     <div id="score-left">0</div>
     <div id="score-right">0</div>
-    <div id="playername-left">Player 1</div>
-    <div id="playername-right">Player 2</div>
+    <div id="playername-left"></div>
+    <div id="playername-right"></div>
     <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
     <script type="module" src="/main.js"></script>
     <script type="module" src="/menu.js"></script>
+    <script type="module" src="/translate.js"></script>
+    <script type="module" src="/vars.js"></script>
     <div id="menuPanel">
         <div id="menu-label">
             <span>M</span>
             <span>E</span>
             <span>N</span>
             <span>U</span>
-          </div>
+        </div>
         <button class="menuButton" id="profileButton">Profile</button>
         <button class="menuButton" id="settingsButton">Settings</button>
         <button class="menuButton" id="mainButton">Main menu</button>
     </div>
     <div id="overlay"></div>
     <div id="profilePanel">
-        <h2>Profile</h2>
-        <p>Name: John Doe</p>
-        <p>Email: johndoe@example.com</p>
+        <h2 id="profile">Profile</h2>
+        <p id="name">Name: John Doe</p>
+        <p id="email">Email: johndoe@example.com</p>
         <button id="closeProfileButton">Close</button>
     </div>
     <div id="overlay"></div>
     <div id="settingsPanel">
-        <h2>Settings</h2>
+        <h2 id="settings">Settings</h2>
         <p>Option 1</p>
         <p style="margin-bottom: 20px;">Option 2</p>
-        <p>Colors:</p>
+        <p id="colors">Colors:</p>
         <button class="colorize-btn" id="color1Button" data-color="white"></button>
         <button class="colorize-btn" id="color2Button" data-color="#9e009e"></button>
         <button class="colorize-btn" id="color3Button" data-color="#ffbb00"></button>
         <button class="colorize-btn" id="color4Button" data-color="#ac0000"></button>
-        <button class="colorize-btn" id="color5Button" data-color="#005c57"></button>
-        <p>Language:</p>
-        <button class="language" id="lang1Button" data-lang="en">
+        <button class="colorize-btn" id="color5Button" data-color="#08ec00"></button>
+        <p id="language">Language:</p>
+        <button class="language" id="lang1Button" onclick="changeLanguage('en')">
             <img src="./icons/lang-en.png" id="lang-icon" />
         </button>
-        <button class="language" id="lang2Button" data-lang="fr">
+        <button class="language" id="lang2Button" onclick="changeLanguage('fr')">
             <img src="./icons/lang-fr.png" id="lang-icon" />
         </button>
         <button id="closeSettingsButton">Close</button>
-
+        
     </div>
 </body>
 </html>

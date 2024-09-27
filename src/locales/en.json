@@ -1,0 +1,17 @@
+{
+    "pressplay": "Press space to",
+    "play": "PLAY",
+    "playernameleft": "Player 1", 
+    "playernameright": "Player 2", 
+    "profileButton": "Profile", 
+    "settingsButton": "Settings", 
+    "mainButton": "Main menu", 
+    "settings": "Settings", 
+    "profile": "Profile", 
+    "name": "Name: ", 
+    "email": "Mail: ", 
+    "colors": "Colors", 
+    "closeProfileButton": "Close", 
+    "closeSettingsButton": "Close", 
+    "language": "Language"
+}

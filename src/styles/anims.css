@@ -32,45 +32,33 @@
 /* Keyframes for glitch animation */
 @keyframes glitch {
     0% {
-        text-shadow: 
-            1px 0 cyan, 
-           -1px 0 red;
-        transform: translate(0, 0);
+        transform: translate(-50%, calc(-50% + 30px)); /* Keep the text centered */
+        text-shadow: 1px 0 cyan, -1px 0 red;
         opacity: 1;
     }
-    20% {
-        text-shadow: 
-            -1px 0 cyan, 
-            1px 0 red;
-        transform: translate(-2px, 0);
+    30% {
+        transform: translate(-50%, calc(-49% + 30px)); /* Slightly move up */
+        text-shadow: -1px 0 cyan, 1px 0 red;
         opacity: 0.8;
     }
     40% {
-        text-shadow: 
-            1px 0 cyan, 
-            -1px 0 red;
-        transform: translate(2px, 2px);
+        transform: translate(-48%, calc(-50% + 30px)); /* Slightly move left */
+        text-shadow: 1px 0 cyan, -1px 0 red;
         opacity: 0.6;
     }
     60% {
-        text-shadow: 
-            -1px 0 cyan, 
-            1px 0 red;
-        transform: translate(-2px, -2px);
+        transform: translate(-52%, calc(-52% + 30px)); /* Slightly move diagonally */
+        text-shadow: -1px 0 cyan, 1px 0 red;
         opacity: 0.8;
     }
     80% {
-        text-shadow: 
-            1px 0 cyan, 
-            -1px 0 red;
-        transform: translate(0, 2px);
+        transform: translate(-50%, calc(-49% + 30px)); /* Slightly move up */
+        text-shadow: 1px 0 cyan, -1px 0 red;
         opacity: 1;
     }
     100% {
-        text-shadow: 
-            -1px 0 cyan, 
-            1px 0 red;
-        transform: translate(0, 0);
+        transform: translate(-50%, calc(-50% + 30px)); /* Back to center */
+        text-shadow: -1px 0 cyan, 1px 0 red;
         opacity: 1;
     }
 }

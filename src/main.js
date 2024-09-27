@@ -6,23 +6,24 @@ import { ScreenShake } from './screenShake.js';
 import { setScores, addScore, setVisibleScore } from './scoreManager.js';
 import { closeMenu, closeProfile, closeSettings, mainMenu, openMenu, openProfile, openSettings, setNewColor } from './menu.js';
 import { createLights, createPlayers, drawBackground, drawLine } from './objects.js';
+import { initTranslation, changeLanguage} from './translate.js';
 
 const PLAYER_RADIUS = 1;
 const PLAYER_HEIGHT = 10;
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
-const BOUNDARY = {
+const BOUNDARY =
+{
   Y_MIN: -25,
   Y_MAX: 25,
   X_MIN: -40,
   X_MAX: 40
-};
+}
 
 const ballStats = 
 {
     BALL_RADIUS: 0.8,
-    MOVE_SPEED: 0.7,
-
+    MOVE_SPEED: 0.7
 }
 
 const scene = new THREE.Scene();
@@ -44,8 +45,11 @@ camera.position.z = 50;
 
 const screenShake = new ScreenShake(camera);
 const pressPlayDiv = document.getElementById('pressplay');
+const playDiv = document.getElementById('play');
 setScores(0, 0);
 setNewColor();
+initTranslation();
+window.changeLanguage = changeLanguage;
 
 let animationId = null;
 let isCameraAnimationComplete = false;
@@ -63,11 +67,15 @@ function resetScreen(playerNbr)
 function setVisiblePlay()
 {
     pressPlayDiv.classList.remove('fade-active');
-    void pressPlayDiv.offsetWidth; // Reset animation
+    playDiv.classList.remove('fade-active');
+    void playDiv.offsetWidth; // Reset animation
     pressPlayDiv.classList.add('fade-active');
+    playDiv.classList.add('fade-active');
     setVisibleScore(true);
     pressPlayDiv.style.visibility = 'visible';
     pressPlayDiv.style.display = 'block'; 
+    playDiv.style.visibility = 'visible';
+    playDiv.style.display = 'block'; 
 }
 
 function resetPlayersPositions()
@@ -131,6 +139,8 @@ function hidePlayMessage()
 {
     pressPlayDiv.style.display = 'none';
     pressPlayDiv.style.opacity = '0';
+    playDiv.style.display = 'none';
+    playDiv.style.opacity = '0';
 }
 
 document.addEventListener('keydown', (event) => {

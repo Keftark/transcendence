@@ -1,0 +1,17 @@
+{
+    "pressplay": "Appuyez sur espace pour",
+    "play": "JOUER",
+    "playernameleft": "Joueur 1", 
+    "playernameright": "Joueur 2", 
+    "profileButton": "Profile", 
+    "settingsButton": "Options", 
+    "mainButton": "Menu principal", 
+    "settings": "Options", 
+    "profile": "Profile", 
+    "name": "Nom: ", 
+    "email": "Mail: ", 
+    "colors": "Couleurs", 
+    "closeProfileButton": "Fermer", 
+    "closeSettingsButton": "Fermer", 
+    "language": "Langue"
+}
