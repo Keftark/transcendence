@@ -5,8 +5,8 @@ import { createBall } from './ball.js';
 import { ScreenShake } from './screenShake.js';
 import { setScores, addScore, setVisibleScore } from './scoreManager.js';
 import { closeMenu, closeProfile, closeSettings, mainMenu, openMenu, openProfile, openSettings, setNewColor } from './menu.js';
-import { createLights, createPlayers, drawBackground, drawLine } from './objects.js';
-import { initTranslation, changeLanguage} from './translate.js';
+import { createLights, createPlayers, drawBackground, drawLine, createWalls } from './objects.js';
+import { initTranslation, changeLanguage } from './translate.js';
 
 const PLAYER_RADIUS = 1;
 const PLAYER_HEIGHT = 10;
@@ -32,11 +32,12 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 document.body.appendChild(renderer.domElement);
 
-drawBackground(scene);
 const {player1, player2} = createPlayers(scene, PLAYER_RADIUS, PLAYER_HEIGHT);
 createLights(scene);
 resetPlayersPositions();
-drawLine(scene, BOUNDARY);
+createWalls(scene);
+drawBackground(scene);
+// drawLine(scene, BOUNDARY);
 
 const { updatePlayers } = setupPlayerMovement(player1, player2, BOUNDARY.Y_MIN, BOUNDARY.Y_MAX, ballStats.MOVE_SPEED);
 const { ball, updateBall, resetBall } = createBall(scene, ballStats, BOUNDARY, resetScreen);

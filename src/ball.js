@@ -55,51 +55,77 @@ export function createBall(scene, ballStats, BOUNDARIES, callBack) {
         }
     }
 
-    function updateBall(ball, player1, player2) {
-        ball.position.add(ballVelocity);
-        pointLight.position.copy(ball.position); // Update light position to follow the ball
-        
-        sparks.updateSparks();
-        // Check collision with top and bottom (y-axis bounds)
+    function checkCollisionTopBottom(ball, BOUNDARIES)
+    {
         if (ball.position.y + ballStats.BALL_RADIUS > BOUNDARIES.Y_MAX || ball.position.y - ballStats.BALL_RADIUS < BOUNDARIES.Y_MIN)
             ballVelocity.y = -ballVelocity.y; // Reverse the Y direction
+    }
 
-        // Check collision with left paddle
+    function checkCollisionLeftPaddle(ball, player1)
+    {
         if (ball.position.x - ballStats.BALL_RADIUS <= player1.position.x + player1.geometry.parameters.radiusTop * 1.5 &&
             ball.position.y >= player1.position.y - player1.geometry.parameters.height / 2 &&
             ball.position.y <= player1.position.y + player1.geometry.parameters.height / 2)
+            return true;
+        return false;
+    }
+    function checkCollisionRightPaddle(ball, player2)
+    {
+        if (ball.position.x + ballStats.BALL_RADIUS >= player2.position.x - player2.geometry.parameters.radiusTop * 1.5 &&
+            ball.position.y >= player2.position.y - player2.geometry.parameters.height / 2 &&
+            ball.position.y <= player2.position.y + player2.geometry.parameters.height / 2)
+            return true;
+        return false;
+    }
+
+    function bounceBallOnPaddle(isLeft)
+    {
+        updateBallLight();
+        ballVelocity.x = -ballVelocity.x;
+        if (isLeft === true)
+        {
+
+            if (ballVelocity.x > 1.5)
+            {
+                let count = Math.trunc(ballVelocity.x * 10);
+                sparks.spawnSparks(ball.position.clone(), count);
+            }
+            ballVelocity.x += ballVelocitySpeedUp.x;
+            ballVelocity.y += ballVelocitySpeedUp.y;
+        }
+        else
         {
             if (-ballVelocity.x > 1.5)
             {
                 let count = Math.trunc(-ballVelocity.x * 10);
                 sparks.spawnSparks(ball.position.clone(), count);
             }
-            updateBallLight();
-            ballVelocity.x = -ballVelocity.x; // Reverse the X direction
-            ballVelocity.x += ballVelocitySpeedUp.x;
-            ballVelocity.y += ballVelocitySpeedUp.y;
-        }
-        // Check collision with right paddle
-        else if (ball.position.x + ballStats.BALL_RADIUS >= player2.position.x - player2.geometry.parameters.radiusTop * 1.5 &&
-            ball.position.y >= player2.position.y - player2.geometry.parameters.height / 2 &&
-            ball.position.y <= player2.position.y + player2.geometry.parameters.height / 2)
-        {
-            if (ballVelocity.x > 1.5)
-            {
-                let count = Math.trunc(ballVelocity.x * 10);
-                sparks.spawnSparks(ball.position.clone(), count);
-            }
-            updateBallLight();
-            ballVelocity.x = -ballVelocity.x; // Reverse the X direction
             ballVelocity.x -= ballVelocitySpeedUp.x;
             ballVelocity.y -= ballVelocitySpeedUp.y;
         }
+    }
 
-        // Check if the ball is out of bounds (game over conditions, if needed)
-        if (ball.position.x < BOUNDARIES.X_MIN)
-            playerGetPoint(1);
-        else if (ball.position.x > BOUNDARIES.X_MAX)
-            playerGetPoint(2);
+    function updateBall(ball, player1, player2) {
+        ball.position.add(ballVelocity);
+        pointLight.position.copy(ball.position); // Update light position to follow the ball
+        
+        sparks.updateSparks();
+        // Check collision with top and bottom (y-axis bounds)
+        checkCollisionTopBottom(ball, BOUNDARIES);
+        // Check collision with left paddle
+        if (checkCollisionLeftPaddle(ball, player1) === true)
+            bounceBallOnPaddle(true);
+        else if (checkCollisionRightPaddle(ball, player2))
+            bounceBallOnPaddle(false);
+        else
+        {
+            // Check if the ball is out of bounds (game over conditions, if needed)
+            if (ball.position.x < BOUNDARIES.X_MIN)
+                playerGetPoint(1);
+            else if (ball.position.x > BOUNDARIES.X_MAX)
+                playerGetPoint(2);
+        }
+
     }
 
     return { ball, updateBall, resetBall };

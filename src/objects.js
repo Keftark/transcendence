@@ -17,9 +17,9 @@ export function drawLine(scene, BOUNDARY)
 
 export function drawBackground(scene)
 {
-    const background = new THREE.PlaneGeometry(1000, 1000);
+    const background = new THREE.BoxGeometry(1000, 1000, 0.1);
     const bgMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0x000000, // Base color
+        color: 0x000000 // Base color
     });
     const bg = new THREE.Mesh(background, bgMaterial);
     scene.add(bg);
@@ -39,6 +39,83 @@ export function createPlayers(scene, PLAYER_RADIUS, PLAYER_HEIGHT)
     scene.add(player1);
     scene.add(player2);
     return {player1, player2};
+}
+
+export function createWalls(scene)
+{   
+    const textureLoader = new THREE.TextureLoader();
+    const sideTextureHorizontal = textureLoader.load('mat/wall.jpg');
+    const topTextureHorizontal = textureLoader.load('mat/wall.jpg');
+    sideTextureHorizontal.wrapS = sideTextureHorizontal.wrapT = THREE.RepeatWrapping;
+    sideTextureHorizontal.repeat.set(12, 0.5);
+    topTextureHorizontal.wrapS = topTextureHorizontal.wrapT = THREE.RepeatWrapping;
+    topTextureHorizontal.repeat.set(12, 0.25);
+    const sideMaterial = new THREE.MeshStandardMaterial({ map: sideTextureHorizontal });
+    const topMaterial = new THREE.MeshStandardMaterial({ map: topTextureHorizontal });
+    const materialHorizontal = [
+        sideMaterial,
+        sideMaterial,
+        sideMaterial,
+        sideMaterial,
+        topMaterial,
+        topMaterial
+    ];
+    const geometryHorizontal = new THREE.BoxGeometry(87, 2, 5);
+    const wallTop = new THREE.Mesh(geometryHorizontal, materialHorizontal);
+    scene.add(wallTop);
+    wallTop.position.set(0, 25.5, 0);
+    const wallBot = new THREE.Mesh(geometryHorizontal, materialHorizontal);
+    scene.add(wallBot);
+    wallBot.position.set(0, -25.5, 0);
+
+    const sideTextureVertical = textureLoader.load('mat/wall.jpg');
+    const topTextureVertical = textureLoader.load('mat/wall.jpg');
+    sideTextureVertical.rotation = Math.PI / 2;
+    topTextureVertical.rotation = Math.PI / 2;
+    sideTextureVertical.wrapS = sideTextureVertical.wrapT = THREE.RepeatWrapping;
+    sideTextureVertical.repeat.set(7, 0.5);
+    topTextureVertical.wrapS = topTextureVertical.wrapT = THREE.RepeatWrapping;
+    topTextureVertical.repeat.set(7, 0.25);
+    const sideMaterialVertical = new THREE.MeshStandardMaterial({ map: sideTextureVertical });
+    const topMaterialVertical = new THREE.MeshStandardMaterial({ map: topTextureVertical });
+    const materialVertical = [
+        sideMaterialVertical,
+        sideMaterialVertical,
+        sideMaterialVertical,
+        sideMaterialVertical,
+        topMaterialVertical,
+        topMaterialVertical
+    ];
+    const geometryVertical = new THREE.BoxGeometry(2, 50, 5);
+    const wallLeft = new THREE.Mesh(geometryVertical, materialVertical);
+    scene.add(wallLeft);
+    wallLeft.position.set(42.5, 0, 0);
+    const wallRight = new THREE.Mesh(geometryVertical, materialVertical);
+    scene.add(wallRight);
+    wallRight.position.set(-42.5, 0, 0);
+
+
+    // const wallTexture = textureLoader.load('mat/wall.jpg');
+    // wallTexture.wrapS = THREE.RepeatWrapping; // Repeat horizontally
+    // wallTexture.wrapT = THREE.RepeatWrapping; // Repeat vertically
+    // wallTexture.repeat.set(10, 0.5);
+    // const materialHorizontal = new THREE.MeshStandardMaterial({ map: wallTexture });
+    // const geometryHorizontal = new THREE.BoxGeometry(87, 2, 5);
+    // const wallTop = new THREE.Mesh(geometryHorizontal, materialHorizontal);
+    // scene.add(wallTop);
+    // wallTop.position.set(0, 25.5, 0);
+    // const wallBot = new THREE.Mesh(geometryHorizontal, materialHorizontal);
+    // scene.add(wallBot);
+    // wallBot.position.set(0, -25.5, 0);
+    // const materialVertical = new THREE.MeshStandardMaterial({ map: wallTexture });
+    // // wallTexture.repeat.set(0.5, 10);
+    // const geometryVertical = new THREE.BoxGeometry(2, 50, 5);
+    // const wallLeft = new THREE.Mesh(geometryVertical, materialVertical);
+    // scene.add(wallLeft);
+    // wallLeft.position.set(42.5, 0, 0);
+    // const wallRight = new THREE.Mesh(geometryVertical, materialVertical);
+    // scene.add(wallRight);
+    // wallRight.position.set(-42.5, 0, 0);
 }
 
 export function createLights(scene)
