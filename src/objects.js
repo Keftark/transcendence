@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 
 export function drawLine(scene, BOUNDARY)
 {
@@ -19,7 +18,8 @@ export function drawBackground(scene)
 {
     const background = new THREE.BoxGeometry(1000, 1000, 0.1);
     const bgMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0x000000 // Base color
+        color: 0x171717,
+            roughness: 1 // Base color
     });
     const bg = new THREE.Mesh(background, bgMaterial);
     scene.add(bg);
@@ -86,36 +86,13 @@ export function createWalls(scene)
         topMaterialVertical,
         topMaterialVertical
     ];
-    const geometryVertical = new THREE.BoxGeometry(2, 50, 5);
+    const geometryVertical = new THREE.BoxGeometry(2, 49, 5);
     const wallLeft = new THREE.Mesh(geometryVertical, materialVertical);
     scene.add(wallLeft);
     wallLeft.position.set(42.5, 0, 0);
     const wallRight = new THREE.Mesh(geometryVertical, materialVertical);
     scene.add(wallRight);
     wallRight.position.set(-42.5, 0, 0);
-
-
-    // const wallTexture = textureLoader.load('mat/wall.jpg');
-    // wallTexture.wrapS = THREE.RepeatWrapping; // Repeat horizontally
-    // wallTexture.wrapT = THREE.RepeatWrapping; // Repeat vertically
-    // wallTexture.repeat.set(10, 0.5);
-    // const materialHorizontal = new THREE.MeshStandardMaterial({ map: wallTexture });
-    // const geometryHorizontal = new THREE.BoxGeometry(87, 2, 5);
-    // const wallTop = new THREE.Mesh(geometryHorizontal, materialHorizontal);
-    // scene.add(wallTop);
-    // wallTop.position.set(0, 25.5, 0);
-    // const wallBot = new THREE.Mesh(geometryHorizontal, materialHorizontal);
-    // scene.add(wallBot);
-    // wallBot.position.set(0, -25.5, 0);
-    // const materialVertical = new THREE.MeshStandardMaterial({ map: wallTexture });
-    // // wallTexture.repeat.set(0.5, 10);
-    // const geometryVertical = new THREE.BoxGeometry(2, 50, 5);
-    // const wallLeft = new THREE.Mesh(geometryVertical, materialVertical);
-    // scene.add(wallLeft);
-    // wallLeft.position.set(42.5, 0, 0);
-    // const wallRight = new THREE.Mesh(geometryVertical, materialVertical);
-    // scene.add(wallRight);
-    // wallRight.position.set(-42.5, 0, 0);
 }
 
 export function createLights(scene)

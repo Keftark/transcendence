@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+
 import { Sparks } from './sparks.js';
 
 export function createBall(scene, ballStats, BOUNDARIES, callBack) {
@@ -7,8 +7,8 @@ export function createBall(scene, ballStats, BOUNDARIES, callBack) {
     
     // Create material with emissive properties
     const ballMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0xffffff, 
-        emissive: new THREE.Color(0xff0000), // Initial emissive color (red)
+        color: 0xffffff,
+        emissive: new THREE.Color(0xff2200), // Initial emissive color (red)
         emissiveIntensity: 0 // Start with no emissive intensity
     });
 
@@ -17,7 +17,7 @@ export function createBall(scene, ballStats, BOUNDARIES, callBack) {
     scene.add(ball);
 
     // Create and configure the PointLight
-    const pointLight = new THREE.PointLight(0xff0000, 0, 100); // Red light, intensity: 0 (starts from 0), distance: 100
+    const pointLight = new THREE.PointLight(0xff2200, 0, 0);
     pointLight.position.copy(ball.position);
     scene.add(pointLight);
     const ballVelocitySpeedUp = new THREE.Vector3(0.15, 0.15, 0);
@@ -50,8 +50,9 @@ export function createBall(scene, ballStats, BOUNDARIES, callBack) {
     function updateBallLight() {
         // Increment emissive intensity and light intensity
         if (pointLight.intensity < maxIntensity) {
-            pointLight.intensity = Math.min(maxIntensity, pointLight.intensity + 0.5);
+            pointLight.intensity = Math.min(maxIntensity, pointLight.intensity + 0.1);
             ball.material.emissiveIntensity = Math.min(maxIntensity, ball.material.emissiveIntensity + intensityIncrement);
+            pointLight.distance += 1;
         }
     }
 
@@ -61,20 +62,31 @@ export function createBall(scene, ballStats, BOUNDARIES, callBack) {
             ballVelocity.y = -ballVelocity.y; // Reverse the Y direction
     }
 
+    function getXContactPointPaddle(player)
+    {
+        return player.position.x < 0 ? player.position.x + player.geometry.parameters.radiusTop * 1.5 : player.position.x - player.geometry.parameters.radiusTop * 1.5;
+    }
+
     function checkCollisionLeftPaddle(ball, player1)
     {
-        if (ball.position.x - ballStats.BALL_RADIUS <= player1.position.x + player1.geometry.parameters.radiusTop * 1.5 &&
+        if (ball.position.x - ballStats.BALL_RADIUS <= getXContactPointPaddle(player1) &&
             ball.position.y >= player1.position.y - player1.geometry.parameters.height / 2 &&
             ball.position.y <= player1.position.y + player1.geometry.parameters.height / 2)
-            return true;
+            {
+                ball.position.set(getXContactPointPaddle(player1) + ballStats.BALL_RADIUS, ball.position.y, 0);
+                return true;
+            }
         return false;
     }
     function checkCollisionRightPaddle(ball, player2)
     {
-        if (ball.position.x + ballStats.BALL_RADIUS >= player2.position.x - player2.geometry.parameters.radiusTop * 1.5 &&
+        if (ball.position.x + ballStats.BALL_RADIUS >= getXContactPointPaddle(player2) &&
             ball.position.y >= player2.position.y - player2.geometry.parameters.height / 2 &&
             ball.position.y <= player2.position.y + player2.geometry.parameters.height / 2)
-            return true;
+            {
+                ball.position.set(getXContactPointPaddle(player2) - ballStats.BALL_RADIUS, ball.position.y, 0);
+                return true;
+            }
         return false;
     }
 
@@ -105,14 +117,14 @@ export function createBall(scene, ballStats, BOUNDARIES, callBack) {
         }
     }
 
-    function updateBall(ball, player1, player2) {
+    function updateBall(ball, player1, player2)
+    {
+
         ball.position.add(ballVelocity);
         pointLight.position.copy(ball.position); // Update light position to follow the ball
         
         sparks.updateSparks();
-        // Check collision with top and bottom (y-axis bounds)
         checkCollisionTopBottom(ball, BOUNDARIES);
-        // Check collision with left paddle
         if (checkCollisionLeftPaddle(ball, player1) === true)
             bounceBallOnPaddle(true);
         else if (checkCollisionRightPaddle(ball, player2))

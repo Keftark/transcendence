@@ -1,3 +1,4 @@
+import { StartLevelLocal } from './levelLocal.js';
 
 export function openMenu()
 {
@@ -88,7 +89,7 @@ export function setNewColor()
             const selectedColor = this.getAttribute('data-color');
             const textElements = document.querySelectorAll(' \
                 h1, h2, p, #top-text, #menu-label span, #pressplay, #play, #score-left, #score-right, #playername-left, \
-                #playername-right, #closeProfileButton, #closeSettingsButton, .menuButton');
+                #playername-right, #closeProfileButton, #closeSettingsButton, .menuButton, .mainMenuButton');
             textElements.forEach(element => {
                 element.style.color = selectedColor;
             });
@@ -96,7 +97,60 @@ export function setNewColor()
     });
 }
 
-export function mainMenu()
+export function loadMainMenu()
 {
-    
+    // unload the level
+    const mainMenuPanel = document.getElementById('mainMenuPanel');
+    mainMenuPanel.style.display = 'block';
+    console.log("main menu loaded");
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const playButton = document.getElementById('mainPlayButton');
+    playButton.addEventListener('click', clickPlay);
+    const settingsButton = document.getElementById('settingsButton');
+    settingsButton.addEventListener('click', openSettings);
+});
+
+document.getElementById('menuPanel').addEventListener('mouseenter', () => {
+    openMenu();
+});
+
+document.getElementById('menuPanel').addEventListener('mouseleave', () => {
+    closeMenu();
+});
+
+document.getElementById('profileButton').addEventListener('click', () => {
+    openProfile();
+});
+
+document.getElementById('mainProfileButton').addEventListener('click', () => {
+    openProfile();
+});
+
+document.getElementById('closeProfileButton').addEventListener('click', () => {
+    closeProfile();
+});
+
+document.getElementById('settingsButton').addEventListener('click', () => {
+    openSettings();
+});
+
+document.getElementById('mainSettingsButton').addEventListener('click', () => {
+    openSettings();
+});
+
+document.getElementById('closeSettingsButton').addEventListener('click', () => {
+    closeSettings();
+});
+
+document.getElementById('mainButton').addEventListener('click', () => {
+    loadMainMenu();
+});
+
+export function clickPlay()
+{
+    const mainMenuPanel = document.getElementById('mainMenuPanel');
+    mainMenuPanel.style.display = 'none';
+    StartLevelLocal();
 }

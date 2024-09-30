@@ -13,5 +13,6 @@
     "colors": "Colors", 
     "closeProfileButton": "Close", 
     "closeSettingsButton": "Close", 
-    "language": "Language"
+    "language": "Language", 
+    "mainPlayButton": "PLAY"
 }

@@ -1,4 +1,4 @@
-variables =
+const variables =
 {
     language: "en"
 }

@@ -14,6 +14,8 @@ export async function fetchTranslations(lang) {
     document.getElementById('playername-right').innerText = translations.playernameright;
     document.getElementById('profileButton').innerText = translations.profileButton;
     document.getElementById('settingsButton').innerText = translations.settingsButton;
+    document.getElementById('mainProfileButton').innerText = translations.profileButton;
+    document.getElementById('mainSettingsButton').innerText = translations.settingsButton;
     document.getElementById('mainButton').innerText = translations.mainButton;
     document.getElementById('settings').innerText = translations.settings;
     document.getElementById('profile').innerText = translations.profile;
@@ -23,6 +25,7 @@ export async function fetchTranslations(lang) {
     document.getElementById('closeProfileButton').innerText = translations.closeProfileButton;
     document.getElementById('closeSettingsButton').innerText = translations.closeSettingsButton;
     document.getElementById('language').innerText = translations.language;
+    document.getElementById('mainPlayButton').innerText = translations.mainPlayButton;
   }
   
   // Function to change language
