@@ -6,7 +6,6 @@ export async function fetchTranslations(lang) {
     return response.json();
   }
   
-  // Function to update HTML with translations
   export function updateHTML(translations) {
     document.getElementById('pressplay').innerText = translations.pressplay;
     document.getElementById('play').innerText = translations.play;
@@ -22,13 +21,17 @@ export async function fetchTranslations(lang) {
     document.getElementById('name').innerText = translations.name;
     document.getElementById('email').innerText = translations.email;
     document.getElementById('colors').innerText = translations.colors;
-    document.getElementById('closeProfileButton').innerText = translations.closeProfileButton;
-    document.getElementById('closeSettingsButton').innerText = translations.closeSettingsButton;
+    document.getElementById('closeProfileButton').innerText = translations.close;
+    document.getElementById('closeSettingsButton').innerText = translations.close;
     document.getElementById('language').innerText = translations.language;
     document.getElementById('mainPlayButton').innerText = translations.mainPlayButton;
+    document.getElementById('modeSelectionText').innerText = translations.modeSelectionText;
+    document.getElementById('modeLocal').innerText = translations.modeLocal;
+    document.getElementById('modeComputer').innerText = translations.modeComputer;
+    document.getElementById('mainMenuText').innerText = translations.mainMenuText;
+    document.getElementById('backButton').innerText = translations.backText;
   }
   
-  // Function to change language
   export async function changeLanguage(lang) {
     try {
       const translations = await fetchTranslations(lang);
@@ -38,7 +41,6 @@ export async function fetchTranslations(lang) {
     }
   }
   
-  // Initialize with default language
   export async function initTranslation() {
-    await changeLanguage('en'); // Set default language to English
+    await changeLanguage('en');
   }

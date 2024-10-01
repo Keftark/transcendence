@@ -112,7 +112,6 @@ export function StartLevelLocal()
         if (resetCam)
         {
             setScores(0, 0);
-            console.log("resetting");
             resetCamera(time);
         }
     }
@@ -178,6 +177,6 @@ export function StartLevelLocal()
         else
             if (!animationId) animate();
     });
-    
+
     animate();
 }

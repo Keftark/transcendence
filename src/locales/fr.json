@@ -11,8 +11,12 @@
     "name": "Nom: ", 
     "email": "Mail: ", 
     "colors": "Couleurs", 
-    "closeProfileButton": "Fermer", 
-    "closeSettingsButton": "Fermer", 
+    "close": "Fermer", 
     "language": "Langue", 
-    "mainPlayButton": "JOUER"
+    "mainPlayButton": "JOUER", 
+    "modeSelectionText": "Modes de jeu", 
+    "modeLocal": "1 contre 1", 
+    "modeComputer": "Contre l'ordinateur", 
+    "mainMenuText": "Menu principal", 
+    "backText": "Retour"
 }

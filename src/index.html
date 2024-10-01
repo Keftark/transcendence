@@ -17,10 +17,17 @@
     <script type="module" src="/vars.js"></script>
     <div id="top-text">ft_transcendence</div>
     <div class="mainMenuPanel" id="mainMenuPanel">
-        <div class="panel">
+        <div class="mainPanel" id="mainPanel">
+            <h3 id="mainMenuText"></h3>
             <button class="mainMenuButton" id="mainPlayButton"></button>
             <button class="mainMenuButton" id="mainProfileButton"></button>
             <button class="mainMenuButton" id="mainSettingsButton"></button>
+        </div>
+        <div class="modeSelectionPanel" id="modeSelection">
+            <h3 id="modeSelectionText"></h3>
+            <button class="modeSelectionButton" id="modeLocal"></button>
+            <button class="modeSelectionButton" id="modeComputer"></button>
+            <button class="modeSelectionButtonBack" id="backButton"></button>
         </div>
     </div>
     <div id="pressplay"></div>
@@ -47,7 +54,6 @@
         <p id="email">Email: johndoe@example.com</p>
         <button id="closeProfileButton">Close</button>
     </div>
-    <div id="overlay"></div>
     <div id="settingsPanel">
         <h2 id="settings">Settings</h2>
         <p>Option 1</p>
@@ -66,7 +72,6 @@
             <img src="./icons/lang-fr.png" id="lang-icon" />
         </button>
         <button id="closeSettingsButton">Close</button>
-        
     </div>
 </body>
 </html>

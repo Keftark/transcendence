@@ -136,3 +136,20 @@ button
 .fade-active {
     animation: fade 2s forwards;
 }
+
+#loadingScreen {
+    height: 100vh;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    background-color: #000; /* Optional: Set a background color */
+    overflow: hidden;
+    z-index: 100;
+}
+
+#loadingScreen p {
+    font-size: 30px;
+    color: white;
+    font-family: 'MyCustomFont', Arial, sans-serif;
+}
