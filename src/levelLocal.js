@@ -5,6 +5,8 @@ import { ScreenShake } from './screenShake.js';
 import { setScores, addScore, setVisibleScore } from './scoreManager.js';
 import { closeMenu, closeProfile, closeSettings, openMenu, openProfile, openSettings } from './menu.js';
 import { createLights, createPlayers, drawBackground, drawLine, createWalls } from './objects.js';
+import { setLevelState, LevelMode } from './main.js';
+import { unloadScene } from './unloadScene.js';
 
 const PLAYER_RADIUS = 1;
 const PLAYER_HEIGHT = 10;
@@ -24,11 +26,23 @@ const ballStats =
     MOVE_SPEED: 0.7
 }
 
+var scene;
+let animationId;
+let renderer;
+let resetFunction;
+
+export function unloadLevel()
+{
+    unloadScene(scene, renderer, animationId);
+    resetFunction(true);
+}
+
 export function StartLevelLocal()
 {
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, SCREEN_WIDTH / SCREEN_HEIGHT, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer();
+    setLevelState(LevelMode.LOCAL);
+    scene = new THREE.Scene();
+    let camera = new THREE.PerspectiveCamera(75, SCREEN_WIDTH / SCREEN_HEIGHT, 0.1, 1000);
+    renderer = new THREE.WebGLRenderer();
     renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     document.body.appendChild(renderer.domElement);
     
@@ -51,7 +65,7 @@ export function StartLevelLocal()
     const playDiv = document.getElementById('play');
     setScores(0, 0);
     
-    let animationId = null;
+    animationId = null;
     let isCameraAnimationComplete = false;
     let isBallMoving = false;
     let first = false;
@@ -61,7 +75,7 @@ export function StartLevelLocal()
     {
         screenShake.start(0.5, 200);
         addScore(playerNbr);
-        resetGame(false);
+        resetFunction(false);
     }
     
     function setVisiblePlay()
@@ -84,7 +98,7 @@ export function StartLevelLocal()
         player2.position.set(BOUNDARY.X_MAX, 0, 0);
     }
     
-    function resetGame(resetCam, time)
+    resetFunction = function resetGame(resetCam, time)
     {
         resetAnim();
         hidePlayMessage();
@@ -98,6 +112,7 @@ export function StartLevelLocal()
         if (resetCam)
         {
             setScores(0, 0);
+            console.log("resetting");
             resetCamera(time);
         }
     }
@@ -123,7 +138,7 @@ export function StartLevelLocal()
         if (!toggleReset)
             animationId = requestAnimationFrame(animate);
         else
-            resetGame(true);
+            resetFunction(true);
     }
     
     function resetAnim()
@@ -151,7 +166,7 @@ export function StartLevelLocal()
         }
         if (event.key === 'Escape')
         {
-            resetGame(true);
+            resetFunction(true);
             resetScreen(0);
             animate();
         }
@@ -164,5 +179,5 @@ export function StartLevelLocal()
             if (!animationId) animate();
     });
     
-    animate();    
+    animate();
 }

@@ -1,4 +1,47 @@
-import { StartLevelLocal } from './levelLocal.js';
+import { StartLevelLocal, unloadLevel } from './levelLocal.js';
+
+document.addEventListener('DOMContentLoaded', () => {
+    const playButton = document.getElementById('mainPlayButton');
+    playButton.addEventListener('click', clickPlay);
+    const settingsButton = document.getElementById('settingsButton');
+    settingsButton.addEventListener('click', openSettings);
+});
+
+document.getElementById('menuPanel').addEventListener('mouseenter', () => {
+    openMenu();
+});
+
+document.getElementById('menuPanel').addEventListener('mouseleave', () => {
+    closeMenu();
+});
+
+document.getElementById('profileButton').addEventListener('click', () => {
+    openProfile();
+});
+
+document.getElementById('mainProfileButton').addEventListener('click', () => {
+    openProfile();
+});
+
+document.getElementById('closeProfileButton').addEventListener('click', () => {
+    closeProfile();
+});
+
+document.getElementById('settingsButton').addEventListener('click', () => {
+    openSettings();
+});
+
+document.getElementById('mainSettingsButton').addEventListener('click', () => {
+    openSettings();
+});
+
+document.getElementById('closeSettingsButton').addEventListener('click', () => {
+    closeSettings();
+});
+
+document.getElementById('mainButton').addEventListener('click', () => {
+    loadMainMenu();
+});
 
 export function openMenu()
 {
@@ -99,54 +142,10 @@ export function setNewColor()
 
 export function loadMainMenu()
 {
-    // unload the level
+    unloadLevel();
     const mainMenuPanel = document.getElementById('mainMenuPanel');
-    mainMenuPanel.style.display = 'block';
-    console.log("main menu loaded");
+    mainMenuPanel.style.display = 'flex';
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    const playButton = document.getElementById('mainPlayButton');
-    playButton.addEventListener('click', clickPlay);
-    const settingsButton = document.getElementById('settingsButton');
-    settingsButton.addEventListener('click', openSettings);
-});
-
-document.getElementById('menuPanel').addEventListener('mouseenter', () => {
-    openMenu();
-});
-
-document.getElementById('menuPanel').addEventListener('mouseleave', () => {
-    closeMenu();
-});
-
-document.getElementById('profileButton').addEventListener('click', () => {
-    openProfile();
-});
-
-document.getElementById('mainProfileButton').addEventListener('click', () => {
-    openProfile();
-});
-
-document.getElementById('closeProfileButton').addEventListener('click', () => {
-    closeProfile();
-});
-
-document.getElementById('settingsButton').addEventListener('click', () => {
-    openSettings();
-});
-
-document.getElementById('mainSettingsButton').addEventListener('click', () => {
-    openSettings();
-});
-
-document.getElementById('closeSettingsButton').addEventListener('click', () => {
-    closeSettings();
-});
-
-document.getElementById('mainButton').addEventListener('click', () => {
-    loadMainMenu();
-});
 
 export function clickPlay()
 {

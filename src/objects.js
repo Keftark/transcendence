@@ -33,7 +33,6 @@ export function createPlayers(scene, PLAYER_RADIUS, PLAYER_HEIGHT)
     const material = new THREE.MeshStandardMaterial({ map: cylinderTexture });
     const geometry = new THREE.CylinderGeometry(PLAYER_RADIUS, PLAYER_RADIUS, PLAYER_HEIGHT, 8, 1, false);
 
-
     const player1 = new THREE.Mesh(geometry, material);
     const player2 = new THREE.Mesh(geometry, material);
     scene.add(player1);
