@@ -1,11 +1,17 @@
 import { StartLevelLocal, unloadLevel } from './levelLocal.js';
-import { LevelMode, setLevelState } from './main.js';
+import { getLevelState, LevelMode, setLevelState } from './main.js';
 
-document.addEventListener('DOMContentLoaded', () => {
-    const playButton = document.getElementById('mainPlayButton');
-    playButton.addEventListener('click', clickPlay);
-    const settingsButton = document.getElementById('settingsButton');
-    settingsButton.addEventListener('click', openSettings);
+// document.addEventListener('DOMContentLoaded', () => {
+//     const playButton = document.getElementById('mainPlayButton');
+//     playButton.addEventListener('click', clickPlay);
+// });
+
+document.getElementById('mainPlayButton').addEventListener('click', () => {
+    clickPlay();
+});
+
+document.getElementById('settingsButton').addEventListener('click', () => {
+    openSettings();
 });
 
 document.getElementById('menuPanel').addEventListener('mouseenter', () => {
@@ -52,6 +58,8 @@ document.getElementById('backButton').addEventListener('click', () => {
     clickBackButtonMenu();
 });
 
+let oldButton = null;
+
 export function openMenu()
 {
     const panel = document.getElementById('menuPanel');
@@ -75,67 +83,41 @@ export function closeMenu()
 export function openProfile()
 {
     const profilePanel = document.getElementById('profilePanel');
-    const overlay = document.getElementById('overlay');
-    
-    overlay.style.display = 'block'; // Show the overlay first
-    profilePanel.style.display = 'block'; // Show the profile panel
-
-    // Small delay for fade-in effect
-    setTimeout(() => {
-        overlay.classList.add('show'); // Fade in the overlay
-        profilePanel.classList.add('show'); // Fade in the profile panel
-        setTimeout(() => {
-            document.getElementById('closeProfileButton').focus();
-        }, 50);
-    }, 10);
+    profilePanel.style.display = 'block';
+    if (getLevelState() === LevelMode.MENU)
+        oldButton = document.getElementById('mainProfileButton');
+    document.getElementById('closeProfileButton').focus();
 }
 
 export function closeProfile()
 {
     const profilePanel = document.getElementById('profilePanel');
-    const overlay = document.getElementById('overlay');
-
-    // Fade out the overlay and profile panel
-    overlay.classList.remove('show');
-    profilePanel.classList.remove('show');
-
-    // Wait for the transition to finish, then hide them
-    setTimeout(() => {
-        overlay.style.display = 'none';
-        profilePanel.style.display = 'none';
-    }, 150); // Match the transition duration
+    profilePanel.style.display = 'none';
+    if (oldButton != null)
+    {
+        oldButton.focus();
+        oldButton = null;
+    }
 }
 
 export function openSettings()
 {
     const settingsPanel = document.getElementById('settingsPanel');
-    const overlay = document.getElementById('overlay');
-    
-    overlay.style.display = 'block'; // Show the overlay first
     settingsPanel.style.display = 'block'; // Show the profile panel
-
-    // Small delay for fade-in effect
-    setTimeout(() => {
-        overlay.classList.add('show'); // Fade in the overlay
-        settingsPanel.classList.add('show'); // Fade in the profile panel
-        setTimeout(() => {
-            document.getElementById('closeSettingsButton').focus();
-        }, 50); // Delay to ensure rendering is complete
-    }, 10);
+    if (getLevelState() === LevelMode.MENU)
+        oldButton = document.getElementById('mainSettingsButton');
+    document.getElementById('closeSettingsButton').focus();
 }
 
 export function closeSettings()
 {
     const settingsPanel = document.getElementById('settingsPanel');
-    const overlay = document.getElementById('overlay');
-
-    overlay.classList.remove('show');
-    settingsPanel.classList.remove('show');
-
-    setTimeout(() => {
-        overlay.style.display = 'none';
-        settingsPanel.style.display = 'none';
-    }, 150);
+    settingsPanel.style.display = 'none';
+    if (oldButton != null)
+    {
+        oldButton.focus();
+        oldButton = null;
+    }
 }
 
 export function setNewColor()

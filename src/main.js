@@ -16,6 +16,11 @@ export function setLevelState(newLevelMode)
     levelMode = newLevelMode;
 }
 
+export function getLevelState()
+{
+    return levelMode;
+}
+
 function checkEscapeKey()
 {
     if (levelMode === LevelMode.MODESELECTION)

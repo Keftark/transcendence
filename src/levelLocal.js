@@ -5,7 +5,7 @@ import { ScreenShake } from './screenShake.js';
 import { setScores, addScore, setVisibleScore } from './scoreManager.js';
 import { closeMenu, closeProfile, closeSettings, openMenu, openProfile, openSettings } from './menu.js';
 import { createLights, createPlayers, drawBackground, drawLine, createWalls } from './objects.js';
-import { setLevelState, LevelMode } from './main.js';
+import { setLevelState, LevelMode, getLevelState } from './main.js';
 import { unloadScene } from './unloadScene.js';
 
 const PLAYER_RADIUS = 1;
@@ -163,7 +163,7 @@ export function StartLevelLocal()
             isBallMoving = true;
             hidePlayMessage();
         }
-        if (event.key === 'Escape')
+        if (event.key === 'Escape' && getLevelState === LevelMode.LOCAL)
         {
             resetFunction(true);
             resetScreen(0);
