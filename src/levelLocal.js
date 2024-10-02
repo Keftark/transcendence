@@ -30,11 +30,21 @@ var scene;
 let animationId;
 let renderer;
 let resetFunction;
+let pressEscapeFunction = null;
+let pressSpaceFunction = null;
 
 export function unloadLevel()
 {
     unloadScene(scene, renderer, animationId);
     resetFunction(true);
+}
+
+export function eventsListener(event)
+{
+    if (pressEscapeFunction === null)
+        return;
+    pressSpaceFunction(event);
+    pressEscapeFunction(event);
 }
 
 export function StartLevelLocal()
@@ -156,20 +166,25 @@ export function StartLevelLocal()
         playDiv.style.display = 'none';
         playDiv.style.opacity = '0';
     }
-    
-    document.addEventListener('keydown', (event) => {
+
+    pressSpaceFunction = function pressSpaceStart(event)
+    {
         if (!isBallMoving && event.key === ' ' && isCameraAnimationComplete)
         {
             isBallMoving = true;
             hidePlayMessage();
         }
-        if (event.key === 'Escape' && getLevelState === LevelMode.LOCAL)
+    }
+
+    pressEscapeFunction = function pressEscapeReinitLevel(event)
+    {
+        if (event.key === 'Escape' && getLevelState() === LevelMode.LOCAL)
         {
             resetFunction(true);
             resetScreen(0);
             animate();
         }
-    });
+    }
     
     document.addEventListener('visibilitychange', () => {
         if (document.hidden)

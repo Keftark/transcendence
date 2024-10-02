@@ -3,6 +3,10 @@
     src: url('../fonts/PixelGame.otf') format('opentype');
 }
 
+.hide-cursor {
+    cursor: none;
+}
+
 body {
     margin: 0;
     height: 100vh;
@@ -28,7 +32,7 @@ button
     background: rgba(0, 0, 0, 0);
     color: white;
     padding: 10px 20px;
-    font-size: 96px; /* Adjust size as needed */
+    font-size: 64px; /* Adjust size as needed */
     text-align: center;
     z-index: 100; /* Ensure it's on top */
     width: 100%;
@@ -68,29 +72,29 @@ button
 }
 
 #score-left, #score-right{
+    top: 80px;
     position: absolute;
     font-size: 52px;
     color: white;
+    display: none;
 }
 
 #playername-left, #playername-right {
+    top: 90px;
     position: absolute;
     color: white;
     font-size: 35px;
+    display: none;
 }
 
 #playername-left {
-    top: 130px;
     left: 50%;
     transform: translateX(-180px);
-    display: none;
 }
 
 #playername-right {
-    top: 130px; 
     right: 50%;
     transform: translateX(180px);
-    display: none;
 }
 
 .playername {
@@ -100,15 +104,11 @@ button
 }
 
 #score-left {
-    top: 120px;
     left: calc(50% - 40px);
-    display: none;
 }
 
 #score-right {
-    top: 120px; 
     right: calc(50% - 40px);
-    display: none;
 }
 
 .score {

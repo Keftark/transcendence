@@ -130,7 +130,7 @@ export function setNewColor()
             const textElements = document.querySelectorAll(' \
                 h1, h2, p, #top-text, #menu-label span, #pressplay, #play, #score-left, #score-right, #playername-left, \
                 #playername-right, #closeProfileButton, #closeSettingsButton, .menuButton, .mainMenuButton, \
-                modeSelectionText, modeLocal, modeComputer');
+                #modeSelectionText, #modeLocal, #modeComputer, #modeSelectionText, #mainMenuText, #backButton');
             textElements.forEach(element => {
                 element.style.color = selectedColor;
             });
