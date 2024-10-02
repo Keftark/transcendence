@@ -16,7 +16,7 @@ export function drawLine(scene, BOUNDARY)
 
 export function drawBackground(scene)
 {
-    const background = new THREE.BoxGeometry(1000, 1000, 0.1);
+    const background = new THREE.PlaneGeometry(1000, 1000);
     const bgMaterial = new THREE.MeshStandardMaterial({ 
         color: 0x171717,
             roughness: 1 // Base color

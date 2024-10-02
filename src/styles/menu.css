@@ -3,13 +3,18 @@
     display: none;
     position: absolute;
     top: 20px;
-    left: -130px;
+    left: 0;
     background-color: rgba(0, 27, 27, 0.301);
     border: 1px solid #005c57;
     border-radius: 3px;
     padding: 10px 50px 10px 10px;
     z-index: 11;
-    transition: left 0.4s ease;
+    transform: translateX(-130px);
+    transition: transform 0.3s ease;
+}
+
+#menuPanel.show {
+    transform: translateX(0);
 }
 
 #menu-label {
@@ -33,10 +38,6 @@
     margin-bottom: 0px;
 }
 
-#menuPanel.show {
-    left: 0;
-}
-
 .menuButton {
     display: flex;
     justify-content: center;
@@ -56,24 +57,6 @@
 
 .menuButton:hover {
     opacity: 0.8; /* Optional: add hover effect */
-}
-
-#overlay {
-    display: none; /* Hidden by default */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
-    z-index: 11; /* Behind the profile panel but above everything else */
-    opacity: 0; /* Start with opacity 0 for fade effect */
-    transition: opacity 0.15s ease; /* Transition for smooth fade */
-}
-
-#overlay.show {
-    display: block;
-    opacity: 1; /* Fade in */
 }
 
 #profilePanel {

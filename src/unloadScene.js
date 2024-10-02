@@ -1,3 +1,5 @@
+import { addPlayerMovementKeyDown, addPlayerMovementKeyUp } from "./playerMovement";
+
 function hideUiElements()
 {
     const pressPlayDiv = document.getElementById('pressplay');
@@ -22,32 +24,36 @@ export function unloadScene(scene, renderer, animationId)
         if (object instanceof THREE.Mesh)
         {
             if (object.geometry) object.geometry.dispose();
-            if (object.material) {
-            if (Array.isArray(object.material)) {
-                object.material.forEach((material) => {
-                if (material.map) material.map.dispose();
-                material.dispose();
-                });
-            } else {
-                if (object.material.map) object.material.map.dispose();
-                object.material.dispose();
-            }
+            if (object.material)
+            {
+                if (Array.isArray(object.material))
+                {
+                    object.material.forEach((material) => {
+                        if (material.map) material.map.dispose();
+                        material.dispose();
+                    });
+                }
+                else
+                {
+                    if (object.material.map) object.material.map.dispose();
+                    object.material.dispose();
+                }
             }
         }
     });
 
-    while (scene.children.length > 0) {
-    scene.remove(scene.children[0]);
-    }
+    while (scene.children.length > 0)
+        scene.remove(scene.children[0]);
 
     cancelAnimationFrame(animationId);
     renderer.clear();
     renderer.dispose();
     const canvas = renderer.domElement;
-    if (canvas && canvas.parentNode) {
+    if (canvas && canvas.parentNode)
         canvas.parentNode.removeChild(canvas);
-    }
     scene.clear();
     scene = null;
+    document.removeEventListener('keydown', addPlayerMovementKeyDown);
+    document.removeEventListener('keyup', addPlayerMovementKeyUp);
     hideUiElements();
 }

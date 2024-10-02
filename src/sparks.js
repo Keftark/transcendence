@@ -1,3 +1,4 @@
+import { BOUNDARY } from "./levelLocal";
 
 export class Sparks {
     constructor(scene) {
@@ -19,9 +20,9 @@ export class Sparks {
             positions.push(x, y, z);
 
             const velocity = new THREE.Vector3(
-                (Math.random() - 0.5) * 0.1,
-                (Math.random() - 0.5) * 0.1,
-                (Math.random() - 0.5) * 0.1
+                (Math.random() - 0.5) * 0.1 * count/30,
+                (Math.random() - 0.5) * 0.1 * count/30,
+                (Math.random() - 0.5) * 0.1 * count/30
             );
             velocities.push(velocity);
         }
@@ -52,22 +53,24 @@ export class Sparks {
             for (let j = 0; j < velocities.length; j++) {
                 const velocity = velocities[j];
 
-                // Update particle positions based on velocity
-                positions[j * 3] += velocity.x * 10;
+                positions[j * 3] += velocity.x * 15;
                 positions[j * 3 + 1] += velocity.y * 5;
                 positions[j * 3 + 2] += velocity.z;
-
-                // Optionally decrease velocity over time
+                if (positions[j * 3] > BOUNDARY.X_MAX || positions[j * 3] < BOUNDARY.X_MIN || 
+                    positions[j * 3 + 1] > BOUNDARY.Y_MAX || positions[j * 3 + 1] < BOUNDARY.Y_MIN)
+                {
+                    positions[j * 3] = NaN;
+                    positions[j * 3 + 1] = NaN;
+                    positions[j * 3 + 2] = NaN;
+                }
                 velocity.multiplyScalar(0.98);
             }
 
             sparkGroup.geometry.attributes.position.needsUpdate = true;
 
-            // Reduce opacity for fading effect
-            sparkGroup.material.opacity = Math.max(0, sparkGroup.material.opacity - 0.04);
+            sparkGroup.material.opacity = Math.max(0, sparkGroup.material.opacity - 0.075);
 
-            // Reduce lifetime and remove group if expired
-            sparkGroup.userData.lifetime -= 0.04;
+            sparkGroup.userData.lifetime -= 0.04 * velocities.x;
             if (sparkGroup.userData.lifetime <= 0) {
                 this.scene.remove(sparkGroup);
                 this.particleGroups.splice(i, 1);

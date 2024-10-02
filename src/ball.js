@@ -45,13 +45,14 @@ export function createBall(scene, ballStats, BOUNDARIES, callBack) {
     }
 
     const maxIntensity = 10; // Maximum intensity value
-    const intensityIncrement = 0.05; // Amount to increase intensity with each bounce
+    let intensityIncrement = 0.05; // Amount to increase intensity with each bounce
 
     function updateBallLight() {
         // Increment emissive intensity and light intensity
         if (pointLight.intensity < maxIntensity) {
             pointLight.intensity = Math.min(maxIntensity, pointLight.intensity + 0.1);
             ball.material.emissiveIntensity = Math.min(maxIntensity, ball.material.emissiveIntensity + intensityIncrement);
+            intensityIncrement *= 1.05;
             pointLight.distance += 1;
         }
     }
@@ -96,10 +97,10 @@ export function createBall(scene, ballStats, BOUNDARIES, callBack) {
         ballVelocity.x = -ballVelocity.x;
         if (isLeft === true)
         {
-
-            if (ballVelocity.x > 1.5)
+            if (ballVelocity.x > 5) ballVelocity.x = 5;
+            if (ballVelocity.x > 1.1)
             {
-                let count = Math.trunc(ballVelocity.x * 10);
+                let count = Math.trunc(ballVelocity.x * 15);
                 sparks.spawnSparks(ball.position.clone(), count);
             }
             ballVelocity.x += ballVelocitySpeedUp.x;
@@ -107,9 +108,10 @@ export function createBall(scene, ballStats, BOUNDARIES, callBack) {
         }
         else
         {
-            if (-ballVelocity.x > 1.5)
+            if (ballVelocity.x < -5) ballVelocity.x = -5;
+            if (-ballVelocity.x > 1.1)
             {
-                let count = Math.trunc(-ballVelocity.x * 10);
+                let count = Math.trunc(-ballVelocity.x * 15);
                 sparks.spawnSparks(ball.position.clone(), count);
             }
             ballVelocity.x -= ballVelocitySpeedUp.x;

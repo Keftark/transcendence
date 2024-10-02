@@ -3,7 +3,6 @@ import { setupPlayerMovement } from './playerMovement.js';
 import { createBall } from './ball.js';
 import { ScreenShake } from './screenShake.js';
 import { setScores, addScore, setVisibleScore } from './scoreManager.js';
-import { closeMenu, closeProfile, closeSettings, openMenu, openProfile, openSettings } from './menu.js';
 import { createLights, createPlayers, drawBackground, drawLine, createWalls } from './objects.js';
 import { setLevelState, LevelMode, getLevelState } from './main.js';
 import { unloadScene } from './unloadScene.js';
@@ -12,7 +11,7 @@ const PLAYER_RADIUS = 1;
 const PLAYER_HEIGHT = 10;
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
-const BOUNDARY =
+export const BOUNDARY =
 {
   Y_MIN: -25,
   Y_MAX: 25,
@@ -125,12 +124,14 @@ export function StartLevelLocal()
             resetCamera(time);
         }
     }
-    
-    function animate(time)
+    let lastTimestamp = 0;
+    function animate(timestamp)
     {
+        const deltaTime = timestamp - lastTimestamp; // Calculate the time since the last frame
+        lastTimestamp = timestamp;
         if (!isCameraAnimationComplete)
         {
-            animateCamera(time, camera, setVisiblePlay);
+            animateCamera(timestamp, camera, setVisiblePlay);
             if (camera.position.y < 0.3)
             {
                 isCameraAnimationComplete = true;
@@ -141,7 +142,7 @@ export function StartLevelLocal()
         {
             screenShake.update();
             if (isBallMoving) updateBall(ball, player1, player2);
-            updatePlayers();
+            updatePlayers(deltaTime);
         }
         renderer.render(scene, camera);
         if (!toggleReset)
