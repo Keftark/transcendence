@@ -1,7 +1,8 @@
 import { checkEscapeKey } from "./main";
 import { eventsListener } from "./levelLocal";
 
-document.addEventListener('keydown', function(event) {
+function mainMenuEvents(event)
+{
     const focusableElements = document.querySelectorAll('button, input, a, textarea, select');
     const focusable = Array.prototype.slice.call(focusableElements);
     const currentIndex = focusable.indexOf(document.activeElement);
@@ -20,10 +21,24 @@ document.addEventListener('keydown', function(event) {
         document.body.classList.add('hide-cursor');
         checkEscapeKey();
     }
-});
+}
 
-document.addEventListener('mousemove', function() {
+function mouseMoveMenu()
+{
     document.body.classList.remove('hide-cursor');
-});
+}
+
+export function removeMainEvents()
+{
+    document.removeEventListener('keydown', mainMenuEvents);
+    document.removeEventListener('mousemove', mouseMoveMenu);
+}
+
+export function addMainEvents()
+{
+    document.addEventListener('keydown', mainMenuEvents);
+    document.addEventListener('mousemove', mouseMoveMenu);
+}
+
 
 document.addEventListener('keydown',  eventsListener);

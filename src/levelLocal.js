@@ -6,6 +6,7 @@ import { setScores, addScore, setVisibleScore } from './scoreManager.js';
 import { createLights, createPlayers, drawBackground, drawLine, createWalls } from './objects.js';
 import { setLevelState, LevelMode, getLevelState } from './main.js';
 import { unloadScene } from './unloadScene.js';
+import { removeMainEvents } from './eventsListener.js';
 
 const PLAYER_RADIUS = 1;
 const PLAYER_HEIGHT = 10;
@@ -31,6 +32,11 @@ let renderer;
 let resetFunction;
 let pressEscapeFunction = null;
 let pressSpaceFunction = null;
+let player1, player2;
+let camera = null;
+let screenShake = null;
+let pressPlayDiv = null;
+let playDiv = null;
 
 export function unloadLevel()
 {
@@ -46,32 +52,85 @@ export function eventsListener(event)
     pressEscapeFunction(event);
 }
 
-export function StartLevelLocal()
+export function setUpCamera()
 {
-    setLevelState(LevelMode.LOCAL);
-    scene = new THREE.Scene();
     let camera = new THREE.PerspectiveCamera(75, SCREEN_WIDTH / SCREEN_HEIGHT, 0.1, 1000);
+    if (getLevelState() === LevelMode.LOCAL)
+    {
+        camera.position.z = 50;
+    }
+    return camera;
+}
+
+export function setUpScene()
+{
+    scene = new THREE.Scene();
+    camera = setUpCamera();
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     document.body.appendChild(renderer.domElement);
-    
-    const menuPanel = document.getElementById('menuPanel');
-    menuPanel.style.display = 'block';
-    const {player1, player2} = createPlayers(scene, PLAYER_RADIUS, PLAYER_HEIGHT);
+}
+
+export function setUpLevel(scene)
+{
+    document.getElementById('menuPanel').style.display = 'block';
+    [player1, player2] = createPlayers(scene, PLAYER_RADIUS, PLAYER_HEIGHT);
     createLights(scene);
     resetPlayersPositions();
     createWalls(scene);
     drawBackground(scene);
+}
+
+function setUpConsts()
+{
+    if (screenShake != null)
+        return;
+    screenShake = new ScreenShake(camera);
+    pressPlayDiv = document.getElementById('pressplay');
+    playDiv = document.getElementById('play');
+}
+  
+function resetPlayersPositions()
+{
+    player1.position.set(BOUNDARY.X_MIN, 0, 0);
+    player2.position.set(BOUNDARY.X_MAX, 0, 0);
+}
+ 
+function setVisiblePlay()
+{
+    pressPlayDiv.classList.remove('fade-active');
+    playDiv.classList.remove('fade-active');
+    void playDiv.offsetWidth; // Reset animation
+    pressPlayDiv.classList.add('fade-active');
+    playDiv.classList.add('fade-active');
+    setVisibleScore(true);
+    pressPlayDiv.style.visibility = 'visible';
+    pressPlayDiv.style.display = 'block'; 
+    playDiv.style.visibility = 'visible';
+    playDiv.style.display = 'block'; 
+}
+
+function hidePlayMessage()
+{
+    pressPlayDiv.style.display = 'none';
+    pressPlayDiv.style.opacity = '0';
+    playDiv.style.display = 'none';
+    playDiv.style.opacity = '0';
+}
+
+export function StartLevelLocal()
+{
+    setLevelState(LevelMode.LOCAL);
+    removeMainEvents();
+    setUpScene();
+    
+    setUpLevel(scene);
     // drawLine(scene, BOUNDARY);
     
     const { updatePlayers } = setupPlayerMovement(player1, player2, BOUNDARY.Y_MIN, BOUNDARY.Y_MAX, ballStats.MOVE_SPEED);
     const { ball, updateBall, resetBall } = createBall(scene, ballStats, BOUNDARY, resetScreen);
     
-    camera.position.z = 50;
-    
-    const screenShake = new ScreenShake(camera);
-    const pressPlayDiv = document.getElementById('pressplay');
-    const playDiv = document.getElementById('play');
+    setUpConsts();
     setScores(0, 0);
     
     animationId = null;
@@ -85,26 +144,6 @@ export function StartLevelLocal()
         screenShake.start(0.5, 200);
         addScore(playerNbr);
         resetFunction(false);
-    }
-    
-    function setVisiblePlay()
-    {
-        pressPlayDiv.classList.remove('fade-active');
-        playDiv.classList.remove('fade-active');
-        void playDiv.offsetWidth; // Reset animation
-        pressPlayDiv.classList.add('fade-active');
-        playDiv.classList.add('fade-active');
-        setVisibleScore(true);
-        pressPlayDiv.style.visibility = 'visible';
-        pressPlayDiv.style.display = 'block'; 
-        playDiv.style.visibility = 'visible';
-        playDiv.style.display = 'block'; 
-    }
-    
-    function resetPlayersPositions()
-    {
-        player1.position.set(BOUNDARY.X_MIN, 0, 0);
-        player2.position.set(BOUNDARY.X_MAX, 0, 0);
     }
     
     resetFunction = function resetGame(resetCam, time)
@@ -158,14 +197,6 @@ export function StartLevelLocal()
             cancelAnimationFrame(animationId);
             animationId = null;
         }
-    }
-    
-    function hidePlayMessage()
-    {
-        pressPlayDiv.style.display = 'none';
-        pressPlayDiv.style.opacity = '0';
-        playDiv.style.display = 'none';
-        playDiv.style.opacity = '0';
     }
 
     pressSpaceFunction = function pressSpaceStart(event)

@@ -37,7 +37,7 @@ export function createPlayers(scene, PLAYER_RADIUS, PLAYER_HEIGHT)
     const player2 = new THREE.Mesh(geometry, material);
     scene.add(player1);
     scene.add(player2);
-    return {player1, player2};
+    return [player1, player2];
 }
 
 export function createWalls(scene)

@@ -1,3 +1,4 @@
+import { addMainEvents } from './eventsListener.js';
 import { StartLevelLocal, unloadLevel } from './levelLocal.js';
 import { getLevelState, LevelMode, setLevelState } from './main.js';
 
@@ -142,6 +143,7 @@ export function loadMainMenu()
 {
     unloadLevel();
     showMainMenu();
+    addMainEvents();
 }
 
 function showMainMenu()

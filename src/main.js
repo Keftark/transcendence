@@ -1,6 +1,7 @@
 import { clickBackButtonMenu, loadMainMenu } from './menu.js';
 import { initTranslation, changeLanguage } from './translate.js';
 import { setNewColor,  } from './menu.js';
+import { addMainEvents } from './eventsListener.js';
 
 export const LevelMode = {
     MENU: 0,
@@ -27,6 +28,7 @@ export function checkEscapeKey()
         clickBackButtonMenu();
 }
 
+addMainEvents();
 initTranslation();
 setNewColor();
 window.changeLanguage = changeLanguage;
