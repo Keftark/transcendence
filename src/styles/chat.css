@@ -1,0 +1,150 @@
+/* Chat box container */
+.chat-box {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 350px;
+    max-height: 400px;
+    background-color: #292b37;
+    border: 3px solid #4c4f67;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.301); /* Neon shadow */
+    transition: all 0.4s ease-in-out;
+    overflow: hidden;
+}
+
+/* Messages container */
+.messages {
+    flex-grow: 1;
+    padding: 10px;
+    overflow-y: auto;
+    max-height: 300px;
+    border-bottom: 2px solid #4c4f67;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    color: #f2f2f2;
+    font-size: 14px;
+}
+
+/* Message bubble */
+.message {
+    font-family: Arial, sans-serif;
+    background-color: #20222c;
+    color: #00ffff;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    max-width: 80%;
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
+}
+
+/* Input container */
+.input-container {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #20222c;
+}
+
+/* Input field */
+input[type="text"] {
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #1c1e26;
+    color: #00ffff;
+    border: 2px solid #4c4f67;
+    border-radius: 5px;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+}
+
+input[type="text"]::placeholder {
+    color: #70727f;
+}
+
+/* Send button */
+button {
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #00ffff;
+    color: #1c1e26;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #4ef5f5;
+}
+
+/* Shrink/Grow chat box */
+.chat-box.shrunk {
+    width: 25px;
+    height: 25px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(255, 0, 127, 0.8);
+    transition: width 0.4s ease, height 0.4s ease;
+}
+
+/* Hide elements after shrinking is done */
+.chat-box.shrunk.hide-elements .messages,
+.chat-box.shrunk.hide-elements .input-container {
+    display: none;
+}
+
+/* Expanded state */
+.chat-box.expanded {
+    width: 350px;
+    height: 400px;
+}
+
+/* Toggle button inside chat box */
+#toggleSizeButton {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    top: 5px;
+    right: 5px;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(255, 0, 127, 0.8);
+    transition: all 0.3s ease-in-out;
+}
+
+#toggleSizeButton img {
+    width: 25px;
+    height: 25px;
+    transition: all 0.3s ease;
+    color: rgba(255, 0, 127, 0.8);
+}
+
+#toggleSizeButton:hover {
+    background-color: #ff66b2;
+}
+
+/* Keep the grow button visible in the shrunk state */
+.chat-box.shrunk #toggleSizeButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 25px;
+    height: 25px;
+    background-color: transparent;
+    border-radius: 5px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 15px rgba(255, 0, 127, 0.8);
+}
