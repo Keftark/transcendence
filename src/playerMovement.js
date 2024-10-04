@@ -14,6 +14,7 @@ export function addPlayerMovementKeyUp(event)
     onKeyUpFunction(event);
 }
 
+const myInput = document.getElementById('myInput');
 export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
 {
     let moveUp1 = false;
@@ -25,6 +26,8 @@ export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
     {
         if (getLevelState() === LevelMode.LOCAL)
         {
+            if (document.activeElement === myInput)
+                return;
             if (event.key === 'w')
                 moveUp1 = true;
             else if (event.key === 's')
@@ -40,6 +43,8 @@ export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
     {
         if (getLevelState() === LevelMode.LOCAL)
         {
+            if (document.activeElement === myInput)
+                return;
             if (event.key === 'w')
                 moveUp1 = false;
             else if (event.key === 's')

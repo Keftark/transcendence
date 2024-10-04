@@ -199,9 +199,10 @@ export function StartLevelLocal()
         }
     }
 
+    const myInput = document.getElementById('myInput');
     pressSpaceFunction = function pressSpaceStart(event)
     {
-        if (!isBallMoving && event.key === ' ' && isCameraAnimationComplete)
+        if (!isBallMoving && event.key === ' ' && isCameraAnimationComplete && document.activeElement != myInput)
         {
             isBallMoving = true;
             hidePlayMessage();
