@@ -130,7 +130,7 @@ button:hover {
 }
 
 #toggleSizeButton:hover {
-    background-color: #ff66b2;
+    background-color: #ff66b37a;
 }
 
 /* Keep the grow button visible in the shrunk state */
@@ -147,4 +147,9 @@ button:hover {
     align-items: center;
     justify-content: center;
     box-shadow: 0 0 15px rgba(255, 0, 127, 0.8);
+}
+
+.chat-box.shrunk #toggleSizeButton:hover {
+    background-color: #ff66b37a;
+    transform: scale(1.2); /* Slightly increase size */
 }
