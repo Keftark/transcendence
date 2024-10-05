@@ -1,7 +1,7 @@
-
+import { ballStats, BOUNDARY } from './levelLocal.js';
 import { Sparks } from './sparks.js';
 
-export function createBall(scene, ballStats, BOUNDARIES, callBack) {
+export function createBall(scene, callBack) {
     const ballGeometry = new THREE.SphereGeometry(ballStats.BALL_RADIUS, 32, 32);
     const sparks = new Sparks(scene);
     
@@ -57,10 +57,26 @@ export function createBall(scene, ballStats, BOUNDARIES, callBack) {
         }
     }
 
-    function checkCollisionTopBottom(ball, BOUNDARIES)
+    function checkCollisionTopBottom(ball)
     {
-        if (ball.position.y + ballStats.BALL_RADIUS > BOUNDARIES.Y_MAX || ball.position.y - ballStats.BALL_RADIUS < BOUNDARIES.Y_MIN)
+        const radius = ballStats.BALL_RADIUS;
+        const posY = ball.position.y;
+        if (posY + radius > BOUNDARY.Y_MAX - 1)
+        {
+            console.log("top");
             ballVelocity.y = -ballVelocity.y; // Reverse the Y direction
+            console.log("ball position y: " + posY);
+            console.log("ball radius: " + radius);
+            console.log("boundaries: " + BOUNDARY.Y_MIN + ", " + BOUNDARY.Y_MAX);
+        }
+        else if (posY - radius < BOUNDARY.Y_MIN + 1)
+        {
+            console.log("bottom");
+            ballVelocity.y = -ballVelocity.y; // Reverse the Y direction
+            console.log("ball position y: " + posY);
+            console.log("ball radius: " + radius);
+            console.log("boundaries: " + BOUNDARY.Y_MIN + ", " + BOUNDARY.Y_MAX);
+        }
     }
 
     function getXContactPointPaddle(player)
@@ -70,22 +86,36 @@ export function createBall(scene, ballStats, BOUNDARIES, callBack) {
 
     function checkCollisionLeftPaddle(ball, player1)
     {
-        if (ball.position.x - ballStats.BALL_RADIUS <= getXContactPointPaddle(player1) &&
-            ball.position.y >= player1.position.y - player1.geometry.parameters.height / 2 &&
-            ball.position.y <= player1.position.y + player1.geometry.parameters.height / 2)
+        const radius = ballStats.BALL_RADIUS;
+        const dividedPlayerSize = player1.geometry.parameters.height / 2;
+        if (ball.position.x - radius <= getXContactPointPaddle(player1) &&
+            ball.position.y >= player1.position.y - dividedPlayerSize &&
+            ball.position.y <= player1.position.y + dividedPlayerSize)
             {
-                ball.position.set(getXContactPointPaddle(player1) + ballStats.BALL_RADIUS, ball.position.y, 0);
+                console.log("left");
+                console.log("ball position x: " + ball.position.x);
+                console.log("ball radius: " + radius);
+                console.log("ball velocity x: " + ballVelocity.x);
+                console.log("boundaries: " + BOUNDARY.X_MIN + ", " + BOUNDARY.X_MAX);
+                // ball.position.set(getXContactPointPaddle(player1) + getBallStats().BALL_RADIUS, ball.position.y, 0);
                 return true;
             }
         return false;
     }
     function checkCollisionRightPaddle(ball, player2)
     {
-        if (ball.position.x + ballStats.BALL_RADIUS >= getXContactPointPaddle(player2) &&
-            ball.position.y >= player2.position.y - player2.geometry.parameters.height / 2 &&
-            ball.position.y <= player2.position.y + player2.geometry.parameters.height / 2)
+        const radius = ballStats.BALL_RADIUS;
+        const dividedPlayerSize = player2.geometry.parameters.height / 2;
+        if (ball.position.x + radius >= getXContactPointPaddle(player2) &&
+            ball.position.y >= player2.position.y - dividedPlayerSize &&
+            ball.position.y <= player2.position.y + dividedPlayerSize)
             {
-                ball.position.set(getXContactPointPaddle(player2) - ballStats.BALL_RADIUS, ball.position.y, 0);
+                console.log("right");
+                console.log("ball position x: " + ball.position.x);
+                console.log("ball radius: " + radius);
+                console.log("ball velocity x: " + ballVelocity.x);
+                console.log("boundaries: " + BOUNDARY.X_MIN + ", " + BOUNDARY.X_MAX);
+                // ball.position.set(getXContactPointPaddle(player2) - getBallStats().BALL_RADIUS, ball.position.y, 0);
                 return true;
             }
         return false;
@@ -121,26 +151,36 @@ export function createBall(scene, ballStats, BOUNDARIES, callBack) {
 
     function updateBall(ball, player1, player2)
     {
-
+        // console.log("update");
         ball.position.add(ballVelocity);
+        // console.log("after: " + ball.position.x + ", " + ball.position.y + ", " + ball.position.z);
         pointLight.position.copy(ball.position); // Update light position to follow the ball
         
         sparks.updateSparks();
-        checkCollisionTopBottom(ball, BOUNDARIES);
+        checkCollisionTopBottom(ball);
         if (checkCollisionLeftPaddle(ball, player1) === true)
             bounceBallOnPaddle(true);
         else if (checkCollisionRightPaddle(ball, player2))
             bounceBallOnPaddle(false);
         else
         {
-            // Check if the ball is out of bounds (game over conditions, if needed)
-            if (ball.position.x < BOUNDARIES.X_MIN)
+            if (ball.position.x - ballStats.BALL_RADIUS < BOUNDARY.X_MIN)
                 playerGetPoint(1);
-            else if (ball.position.x > BOUNDARIES.X_MAX)
+            else if (ball.position.x + ballStats.BALL_RADIUS > BOUNDARY.X_MAX)
                 playerGetPoint(2);
         }
-
     }
 
-    return { ball, updateBall, resetBall };
+    function changeBallSize(newRadius) {
+        ballStats.BALL_RADIUS = newRadius;
+        //setBallStats(newRadius, ballStats.MOVE_SPEED); // Update the ball radius in the stats
+        // Create a new geometry with the updated radius
+        const newBallGeometry = new THREE.SphereGeometry(newRadius, 32, 32);
+        ball.geometry.dispose(); // Dispose of the old geometry to free up memory
+        ball.geometry = newBallGeometry; // Assign the new geometry to the ball mesh
+        // ball.geometry.computeBoundingSphere();
+        // ball.geometry.computeBoundingBox();
+    }
+
+    return { ball, updateBall, resetBall, changeBallSize };
 }

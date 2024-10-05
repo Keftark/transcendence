@@ -20,7 +20,7 @@ export const BOUNDARY =
   X_MAX: 40
 }
 
-const ballStats = 
+export let ballStats = 
 {
     BALL_RADIUS: 0.8,
     MOVE_SPEED: 0.7
@@ -37,6 +37,18 @@ let camera = null;
 let screenShake = null;
 let pressPlayDiv = null;
 let playDiv = null;
+let changeBallSizeFunction = null;
+
+export function getBallStats()
+{
+    return ballStats;
+}
+
+export function setBallStats(newRadius, newSpeed)
+{
+    ballStats.BALL_RADIUS = newRadius;
+    ballStats.MOVE_SPEED = newSpeed;
+}
 
 export function unloadLevel()
 {
@@ -77,8 +89,13 @@ export function setUpLevel(scene)
     [player1, player2] = createPlayers(scene, PLAYER_RADIUS, PLAYER_HEIGHT);
     createLights(scene);
     resetPlayersPositions();
-    createWalls(scene);
+    createWalls(scene, BOUNDARY);
     drawBackground(scene);
+}
+
+export function changeBallSizeInstance(newSize)
+{
+    changeBallSizeFunction(newSize);
 }
 
 function setUpConsts()
@@ -128,8 +145,7 @@ export function StartLevelLocal()
     // drawLine(scene, BOUNDARY);
     
     const { updatePlayers } = setupPlayerMovement(player1, player2, BOUNDARY.Y_MIN, BOUNDARY.Y_MAX, ballStats.MOVE_SPEED);
-    const { ball, updateBall, resetBall } = createBall(scene, ballStats, BOUNDARY, resetScreen);
-    
+    const { ball, updateBall, resetBall, changeBallSize } = createBall(scene, BOUNDARY, resetScreen);
     setUpConsts();
     setScores(0, 0);
     
@@ -138,6 +154,8 @@ export function StartLevelLocal()
     let isBallMoving = false;
     let first = false;
     let toggleReset = false;
+
+    changeBallSizeFunction = changeBallSize;
     
     function resetScreen(playerNbr)
     {

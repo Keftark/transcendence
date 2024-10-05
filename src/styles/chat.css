@@ -26,6 +26,7 @@
     gap: 5px;
     color: #f2f2f2;
     font-size: 14px;
+    position: relative;
 }
 
 .messages div {
@@ -36,14 +37,33 @@
 }
 
 .message {
+    position: relative;
     font-family: Arial, sans-serif;
-    background-color: #26293b;
-    color: #00ffff;
     padding: 10px;
     border-radius: 8px;
     font-size: 14px;
     max-width: 80%;
     box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
+    
+    /* Handle word truncation */
+    overflow: hidden;            /* Hide overflow content */
+    text-overflow: ellipsis;      /* Add '...' to truncated text */
+    white-space: nowrap;          /* Prevent text from wrapping onto a new line */
+    word-break: break-all;        /* Break long words that don't fit */
+}
+
+.message-left {
+    background-color: #2e333a;
+    color: #ffffff;
+    align-self: flex-start; /* Aligns the message to the left */
+}
+
+/* Messages aligned to the right */
+.message-right {
+    background-color: #26293b;
+    color: #00ffff;
+    align-self: flex-end; /* Aligns the message to the right */
+    right: 30px;
 }
 
 .input-container {

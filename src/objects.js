@@ -40,15 +40,17 @@ export function createPlayers(scene, PLAYER_RADIUS, PLAYER_HEIGHT)
     return [player1, player2];
 }
 
-export function createWalls(scene)
+export function createWalls(scene, BOUNDARY)
 {   
+    const wallSizeHorizontal = BOUNDARY.X_MAX * 2 + 7;
+    const wallSizeVertical = BOUNDARY.Y_MAX * 2 - 1;
     const textureLoader = new THREE.TextureLoader();
     const sideTextureHorizontal = textureLoader.load('mat/wall.jpg');
     const topTextureHorizontal = textureLoader.load('mat/wall.jpg');
     sideTextureHorizontal.wrapS = sideTextureHorizontal.wrapT = THREE.RepeatWrapping;
-    sideTextureHorizontal.repeat.set(12, 0.5);
+    sideTextureHorizontal.repeat.set(BOUNDARY.X_MAX * 2 / 9, 1);
     topTextureHorizontal.wrapS = topTextureHorizontal.wrapT = THREE.RepeatWrapping;
-    topTextureHorizontal.repeat.set(12, 0.25);
+    topTextureHorizontal.repeat.set(BOUNDARY.X_MAX * 2 / 8, 0.25);
     const sideMaterial = new THREE.MeshStandardMaterial({ map: sideTextureHorizontal });
     const topMaterial = new THREE.MeshStandardMaterial({ map: topTextureHorizontal });
     const materialHorizontal = [
@@ -59,22 +61,22 @@ export function createWalls(scene)
         topMaterial,
         topMaterial
     ];
-    const geometryHorizontal = new THREE.BoxGeometry(87, 2, 5);
+    const geometryHorizontal = new THREE.BoxGeometry(wallSizeHorizontal, 2, 5);
     const wallTop = new THREE.Mesh(geometryHorizontal, materialHorizontal);
     scene.add(wallTop);
-    wallTop.position.set(0, 25.5, 0);
+    wallTop.position.set(0, BOUNDARY.Y_MAX + 0.5, 0);
     const wallBot = new THREE.Mesh(geometryHorizontal, materialHorizontal);
     scene.add(wallBot);
-    wallBot.position.set(0, -25.5, 0);
+    wallBot.position.set(0, BOUNDARY.Y_MIN - 0.5, 0);
 
     const sideTextureVertical = textureLoader.load('mat/wall.jpg');
     const topTextureVertical = textureLoader.load('mat/wall.jpg');
     sideTextureVertical.rotation = Math.PI / 2;
     topTextureVertical.rotation = Math.PI / 2;
     sideTextureVertical.wrapS = sideTextureVertical.wrapT = THREE.RepeatWrapping;
-    sideTextureVertical.repeat.set(7, 0.5);
+    sideTextureVertical.repeat.set(BOUNDARY.Y_MAX * 2 / 10, 1);
     topTextureVertical.wrapS = topTextureVertical.wrapT = THREE.RepeatWrapping;
-    topTextureVertical.repeat.set(7, 0.25);
+    topTextureVertical.repeat.set(BOUNDARY.Y_MAX * 2 / 10, 0.25);
     const sideMaterialVertical = new THREE.MeshStandardMaterial({ map: sideTextureVertical });
     const topMaterialVertical = new THREE.MeshStandardMaterial({ map: topTextureVertical });
     const materialVertical = [
@@ -85,13 +87,13 @@ export function createWalls(scene)
         topMaterialVertical,
         topMaterialVertical
     ];
-    const geometryVertical = new THREE.BoxGeometry(2, 49, 5);
+    const geometryVertical = new THREE.BoxGeometry(2, wallSizeVertical, 5);
     const wallLeft = new THREE.Mesh(geometryVertical, materialVertical);
     scene.add(wallLeft);
-    wallLeft.position.set(42.5, 0, 0);
+    wallLeft.position.set(BOUNDARY.X_MAX + 2.5, 0, 0);
     const wallRight = new THREE.Mesh(geometryVertical, materialVertical);
     scene.add(wallRight);
-    wallRight.position.set(-42.5, 0, 0);
+    wallRight.position.set(BOUNDARY.X_MIN - 2.5, 0, 0);
 }
 
 export function createLights(scene)
