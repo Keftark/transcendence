@@ -90,20 +90,25 @@ input[type="text"]::placeholder {
 }
 
 button {
-    padding: 10px 15px;
-    font-size: 14px;
+    width: 40px;
+    height: 30px;
     cursor: pointer;
-    background-color: #00ffff;
-    color: #1c1e26;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #00000000;
     border: none;
     border-radius: 5px;
-    outline: none;
-    text-transform: uppercase;
     transition: background-color 0.3s ease;
+}
+.button-send-img {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
 }
 
 button:hover {
-    background-color: #4ef5f5;
+    background-color: #00ffff25;
 }
 
 .chat-box.shrunk {

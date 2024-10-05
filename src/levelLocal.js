@@ -7,9 +7,10 @@ import { createLights, createPlayers, drawBackground, drawLine, createWalls } fr
 import { setLevelState, LevelMode, getLevelState } from './main.js';
 import { unloadScene } from './unloadScene.js';
 import { removeMainEvents } from './eventsListener.js';
+import { changeBallSpeed } from './cheats.js';
 
 const PLAYER_RADIUS = 1;
-const PLAYER_HEIGHT = 10;
+export let PLAYER_HEIGHT = 10;
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
 export const BOUNDARY =
@@ -38,6 +39,7 @@ let screenShake = null;
 let pressPlayDiv = null;
 let playDiv = null;
 let changeBallSizeFunction = null;
+let changeBallSpeedFunction = null;
 
 export function getBallStats()
 {
@@ -98,6 +100,11 @@ export function changeBallSizeInstance(newSize)
     changeBallSizeFunction(newSize);
 }
 
+export function changeBallSpeedInstance(newSize)
+{
+    changeBallSpeedFunction(newSize);
+}
+
 function setUpConsts()
 {
     if (screenShake != null)
@@ -145,7 +152,7 @@ export function StartLevelLocal()
     // drawLine(scene, BOUNDARY);
     
     const { updatePlayers } = setupPlayerMovement(player1, player2, BOUNDARY.Y_MIN, BOUNDARY.Y_MAX, ballStats.MOVE_SPEED);
-    const { ball, updateBall, resetBall, changeBallSize } = createBall(scene, BOUNDARY, resetScreen);
+    const { ball, updateBall, resetBall, changeBallSize, changeBallSpeed } = createBall(scene, resetScreen);
     setUpConsts();
     setScores(0, 0);
     
@@ -156,6 +163,7 @@ export function StartLevelLocal()
     let toggleReset = false;
 
     changeBallSizeFunction = changeBallSize;
+    changeBallSpeedFunction = changeBallSpeed;
     
     function resetScreen(playerNbr)
     {

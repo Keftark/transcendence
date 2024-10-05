@@ -22,13 +22,13 @@ export function createBall(scene, callBack) {
     scene.add(pointLight);
     const ballVelocitySpeedUp = new THREE.Vector3(0.15, 0.15, 0);
 
+    let ballVelocity;
     function getRandomVelocityComponent() {return Math.random() < 0.5 ? 0.5 : -0.5;}
     function resetVelocity() { 
         let rnd1 = getRandomVelocityComponent();
         let rnd2 = getRandomVelocityComponent();
         ballVelocity = new THREE.Vector3(rnd1, rnd2, 0); 
     }
-    let ballVelocity;
     resetVelocity();
 
     function resetBall() {
@@ -172,15 +172,20 @@ export function createBall(scene, callBack) {
     }
 
     function changeBallSize(newRadius) {
-        ballStats.BALL_RADIUS = newRadius;
-        //setBallStats(newRadius, ballStats.MOVE_SPEED); // Update the ball radius in the stats
-        // Create a new geometry with the updated radius
-        const newBallGeometry = new THREE.SphereGeometry(newRadius, 32, 32);
+        let radius = parseFloat(newRadius);
+        ballStats.BALL_RADIUS = radius;
+        const newBallGeometry = new THREE.SphereGeometry(radius, 32, 32);
         ball.geometry.dispose(); // Dispose of the old geometry to free up memory
         ball.geometry = newBallGeometry; // Assign the new geometry to the ball mesh
         // ball.geometry.computeBoundingSphere();
         // ball.geometry.computeBoundingBox();
     }
 
-    return { ball, updateBall, resetBall, changeBallSize };
+    function changeBallSpeed(newSpeed)
+    {
+        ballVelocity.x = ballVelocity.x * parseFloat(newSpeed);
+        ballVelocity.y = ballVelocity.y * parseFloat(newSpeed);
+    }
+
+    return { ball, updateBall, resetBall, changeBallSize, changeBallSpeed };
 }

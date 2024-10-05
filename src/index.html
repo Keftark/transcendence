@@ -36,7 +36,7 @@
         </div>
     </div>
     <div id="pressplay"></div>
-    <div id="play"></div>
+    <div class="glitch" id="play"></div>
     <div id="score-left">0</div>
     <div id="score-right">0</div>
     <div id="playername-left"></div>
@@ -57,38 +57,41 @@
         <h2 id="profile">Profile</h2>
         <p id="name">Name: John Doe</p>
         <p id="email">Email: johndoe@example.com</p>
-        <button id="closeProfileButton">Close</button>
+        <button id="closeProfileButton"></button>
     </div>
     <div id="settingsPanel">
         <h2 id="settings">Settings</h2>
-        <p>Option 1</p>
-        <p style="margin-bottom: 20px;">Option 2</p>
-        <p id="colors">Colors:</p>
-        <button class="colorize-btn" id="color1Button" data-color="white"></button>
-        <button class="colorize-btn" id="color2Button" data-color="#9e009e"></button>
-        <button class="colorize-btn" id="color3Button" data-color="#ffbb00"></button>
-        <button class="colorize-btn" id="color4Button" data-color="#ac0000"></button>
-        <button class="colorize-btn" id="color5Button" data-color="#08ec00"></button>
-        <p id="language">Language:</p>
-        <button class="language" id="lang1Button" onclick="changeLanguage('en')">
-            <img src="./icons/lang-en.png" id="lang-icon" />
-        </button>
-        <button class="language" id="lang2Button" onclick="changeLanguage('fr')">
-            <img src="./icons/lang-fr.png" id="lang-icon" />
-        </button>
-        <button id="closeSettingsButton">Close</button>
+        <p id="colors"></p>
+        <div id="options">
+            <button class="colorize-btn" id="color1Button" data-color="white"></button>
+            <button class="colorize-btn" id="color2Button" data-color="#9e009e"></button>
+            <button class="colorize-btn" id="color3Button" data-color="#ffbb00"></button>
+            <button class="colorize-btn" id="color4Button" data-color="#ac0000"></button>
+            <button class="colorize-btn" id="color5Button" data-color="#08ec00"></button>
+        </div>
+        <p id="language"></p>
+        <div id="options">
+            <button class="language" id="lang1Button" onclick="changeLanguage('en')">
+                <img src="./icons/lang-en.png" id="lang-icon" />
+            </button>
+            <button class="language" id="lang2Button" onclick="changeLanguage('fr')">
+                <img src="./icons/lang-fr.png" id="lang-icon" />
+            </button>
+        </div>
+        <button id="closeSettingsButton"></button>
     </div>
     <div class="chat-box" id="chatBox">
-        <!-- Shrink/Grow button inside the chat box -->
-        <button id="toggleSizeButton">
-            <img src="icons/shrink.png" id="toggleIcon"/>
-        </button>
 
         <div class="messages" id="messages"></div>
         <div class="input-container" id="inputContainer">
             <input type="text" id="myInput" placeholder="...">
-            <button id="sendButton">Send</button>
+            <button id="sendButton">
+                <img src="icons/send.png" class="button-send-img" />
+            </button>
         </div>
+        <button id="toggleSizeButton">
+            <img src="icons/shrink.png" id="toggleIcon"/>
+        </button>
     </div>
 </body>
 </html>

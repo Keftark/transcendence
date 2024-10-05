@@ -1,7 +1,16 @@
-import { changeBallSizeInstance } from "./levelLocal";
+import { changeBallSizeInstance, changeBallSpeedInstance } from "./levelLocal";
 
 export function changeBallSize(newSize)
 {
-    console.log("changed the ball size to " + newSize);
     changeBallSizeInstance(newSize);
+}
+
+export function changeBallSpeed(newSpeed)
+{
+    changeBallSpeedInstance(newSpeed);
+}
+
+export function changePaddlesSize(newSize)
+{
+
 }

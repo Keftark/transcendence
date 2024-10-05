@@ -32,9 +32,9 @@ button
     background: rgba(0, 0, 0, 0);
     color: white;
     padding: 10px 20px;
-    font-size: 64px; /* Adjust size as needed */
+    font-size: 64px;
     text-align: center;
-    z-index: 100; /* Ensure it's on top */
+    z-index: 100;
     width: 100%;
 }
 
@@ -51,6 +51,11 @@ button
     z-index: 100;
     overflow: hidden;
     visibility: hidden;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.459),
+    -1px -1px 0px rgba(0, 0, 0, 0.459),
+    1px -1px 0px rgba(0, 0, 0, 0.459),
+    -1px 1px 0px rgba(0, 0, 0, 0.459),
+    2px 2px 2px rgba(0, 0, 0, 0.459); /* Add a shadow for better appearance */
 }
 
 #play {
@@ -58,7 +63,7 @@ button
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, calc(-50% + 20px));
+    transform: translate(-50%, calc(-50% + 30px));
     background: rgba(0, 0, 0, 0);
     color: white;
     padding: 20px;
@@ -67,9 +72,49 @@ button
     z-index: 100;
     overflow: hidden;
     visibility: hidden;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.459),
+    -1px -1px 0px rgba(0, 0, 0, 0.459),
+    1px -1px 0px rgba(0, 0, 0, 0.459),
+    -1px 1px 0px rgba(0, 0, 0, 0.459),
+    2px 2px 2px rgba(0, 0, 0, 0.459);
     transition: opacity 0.5s ease, visibility 0.5s ease;
-    animation: glitch 1.5s infinite;
 }
+
+.glitch:before {
+    content: attr(data-glitch);
+    position: absolute;
+    top: 0;
+    left: -2px;
+    width: 100%;
+    font-size: 70px;
+    background-color: #222;
+    overflow: hidden;
+    clip: rect(0, 900px, 0, 0);
+    text-shadow: 
+    2px 2px 2px rgba(0, 253, 232, 0.774), 
+    -2px 2px 2px rgba(255, 0, 221, 0.8), 
+    2px -2px 2px rgba(255, 0, 0, 0.8), 
+    -2px -2px 2px rgba(0, 250, 96, 0.8);
+    animation: noise-before 0.5s infinite linear alternate-reverse;
+ }
+ 
+ .glitch:after {
+    content: attr(data-glitch);
+    position: absolute;
+    top: 0;
+    left: 2px;
+    width: 100%;
+    font-size: 90px;
+    background-color: #222;
+    overflow: hidden;
+    clip: rect(0, 900px, 0, 0);
+    text-shadow: 
+    2px 2px 2px rgba(17, 0, 253, 0.774), 
+    -2px 2px 2px rgba(255, 0, 255, 0.8),   
+    2px -2px 2px rgba(255, 0, 0, 0.8), 
+    -2px -2px 2px rgba(0, 250, 96, 0.8);
+    animation: noise-after 0.5s infinite linear alternate-reverse;
+ }
 
 #score-left, #score-right{
     top: 80px;

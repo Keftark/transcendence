@@ -1,12 +1,15 @@
-import { changeBallSize } from "./cheats";
+import { changeBallSize, changeBallSpeed, changePaddlesSize } from "./cheats";
 import { getLevelState, LevelMode } from "./main";
 
 const messagesContainer = document.getElementById('messages');
 const inputField = document.querySelector('input[type="text"]');
+const inputElement = document.getElementById('myInput');
 
 const cheatCodes =
 {
-    "/ballSize" : changeBallSize
+    "/ballSize" : changeBallSize,
+    "/ballSpeed" : changeBallSpeed,
+    "/paddleSize" : changePaddlesSize
 }
 
 function resetInputFieldValue()
@@ -19,7 +22,6 @@ window.onload = function() {
 };
 
 document.addEventListener("DOMContentLoaded", function() {
-    const inputElement = document.getElementById('myInput');
     const sendButton = document.getElementById('sendButton');
     const chatBox = document.getElementById('chatBox');
     const toggleSizeButton = document.getElementById('toggleSizeButton');
@@ -73,6 +75,7 @@ function messageIsACode(message)
         if (cheatCodes[firstWord])
         {
             cheatCodes[firstWord](secondWord); // Execute the corresponding function
+            inputElement.blur();
             return true;
         }
         else

@@ -9,6 +9,7 @@ export async function fetchTranslations(lang) {
   export function updateHTML(translations) {
     document.getElementById('pressplay').innerText = translations.pressplay;
     document.getElementById('play').innerText = translations.play;
+    document.getElementById('play').setAttribute('data-glitch', translations.play);
     document.getElementById('playername-left').innerText = translations.playernameleft;
     document.getElementById('playername-right').innerText = translations.playernameright;
     document.getElementById('profileButton').innerText = translations.profileButton;
