@@ -15,6 +15,11 @@
     overflow: hidden;
 }
 
+#toggleSizeButton
+{
+    z-index: 2;
+}
+
 .messages {
     padding: 10px;
     overflow-y: auto;
@@ -22,9 +27,6 @@
     border-bottom: 2px solid #4c4f67;
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    color: #f2f2f2;
-    font-size: 14px;
     position: relative;
 }
 
@@ -39,17 +41,22 @@
 .message-container {
     display: flex; 
     flex-direction: column; /* Stack name and message vertically */
-    margin-bottom: 10px; /* Space between messages */
+    margin-bottom: 6px; /* Space between messages */
 }
 
 .message-name {
-    align-self: flex-end;
+    /* align-self: flex-end; */
     right: 4px;
-    font-weight: bold; /* Make the name bold */
+    font-size: 11px;
+    font-weight: lighter; /* Make the name bold */
     color: #f2f2f2; /* Color for the name */
-    margin-bottom: 5px; /* Space between name and message */
     box-shadow: none; /* Explicitly set box-shadow to none */
     background: transparent;
+}
+
+.message 
+{
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
 }
 
 .message, .message-left, .message-middle, .message-right {
@@ -61,16 +68,21 @@
     max-width: 80%;
 }
 
-.message {
-    color: #326e72; /* Text color */
+.message-container-left
+{
+    background-color: #2e333a;
+}
+
+.message-container-right
+{
+    background-color: #26293b;
 }
 
 .message-left {
-    background-color: #2e333a;
     color: #ffffff;
     text-align: left;
     align-self: flex-start;
-    box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
+    align-items: start;
 }
 
 .message-middle {
@@ -81,12 +93,11 @@
 
 /* Messages aligned to the right */
 .message-right {
-    background-color: #26293b;
     color: #00ffff;
     text-align: right;
     align-self: flex-end;
     right: 30px;
-    box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
+    align-items: end;
 }
 
 .input-container {

@@ -111,11 +111,15 @@ function createMessageElement(name, messageText) {
 
 function sendMessageLeft(newMessage)
 {
+    const messageContent = newMessage.querySelector('.message');
+    messageContent.classList.add('message-container-left');
     newMessage.classList.add('message-left');
 }
 
 function sendMessageRight(newMessage)
 {
+    const messageContent = newMessage.querySelector('.message');
+    messageContent.classList.add('message-container-right');
     newMessage.classList.add('message-right');
 }
 
@@ -129,7 +133,7 @@ function trySendMessage(inputElement) {
             return word.length > 30 ? word.substring(0, 30) + '...' : word;
         }).join(' ');
 
-        const newMessage = createMessageElement("Vous", truncatedMessage);
+        const newMessage = createMessageElement("Vous :", truncatedMessage);
         sendMessageRight(newMessage);
         // ici le code pour mettre le message a gauche si c'est quelqu'un d'autre ou bien a droite.
         messagesContainer.appendChild(newMessage);
