@@ -9,8 +9,9 @@ import { unloadScene } from './unloadScene.js';
 import { removeMainEvents } from './eventsListener.js';
 import { changeBallSpeed } from './cheats.js';
 
-const PLAYER_RADIUS = 1;
-export let PLAYER_HEIGHT = 10;
+export const playerBaseHeight = 10;
+export const PLAYER_RADIUS = 1;
+export const PLAYER_HEIGHT = playerBaseHeight;
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
 export const BOUNDARY =
@@ -21,10 +22,13 @@ export const BOUNDARY =
   X_MAX: 40
 }
 
+export const ballBaseRadius = 0.8;
+export const ballBaseSpeed = 0.7;
+
 export let ballStats = 
 {
-    BALL_RADIUS: 0.8,
-    MOVE_SPEED: 0.7
+    BALL_RADIUS: ballBaseRadius,
+    MOVE_SPEED: ballBaseSpeed
 }
 
 var scene;
@@ -88,10 +92,10 @@ export function setUpScene()
 export function setUpLevel(scene)
 {
     document.getElementById('menuPanel').style.display = 'block';
-    [player1, player2] = createPlayers(scene, PLAYER_RADIUS, PLAYER_HEIGHT);
+    [player1, player2] = createPlayers(scene);
     createLights(scene);
     resetPlayersPositions();
-    createWalls(scene, BOUNDARY);
+    createWalls(scene);
     drawBackground(scene);
 }
 
@@ -118,6 +122,18 @@ function resetPlayersPositions()
 {
     player1.position.set(BOUNDARY.X_MIN, 0, 0);
     player2.position.set(BOUNDARY.X_MAX, 0, 0);
+}
+
+
+export function changePlayersSize(newHeight)
+{
+    if (isNaN(newHeight))
+        newHeight = playerBaseHeight;
+    const newGeometry = new THREE.CylinderGeometry(PLAYER_RADIUS, PLAYER_RADIUS, newHeight, 8, 1, false);
+    player1.geometry.dispose(); // Dispose of the old geometry to free up memory
+    player1.geometry = newGeometry;
+    player2.geometry.dispose(); // Dispose of the old geometry to free up memory
+    player2.geometry = newGeometry;
 }
  
 function setVisiblePlay()
@@ -159,7 +175,6 @@ export function StartLevelLocal()
     animationId = null;
     let isCameraAnimationComplete = false;
     let isBallMoving = false;
-    let first = false;
     let toggleReset = false;
 
     changeBallSizeFunction = changeBallSize;
@@ -178,7 +193,6 @@ export function StartLevelLocal()
         hidePlayMessage();
         resetPlayersPositions();
         setVisibleScore(false);
-        first = false;
         toggleReset = false;
         isCameraAnimationComplete = false;
         isBallMoving = false;

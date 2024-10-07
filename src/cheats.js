@@ -1,4 +1,4 @@
-import { changeBallSizeInstance, changeBallSpeedInstance } from "./levelLocal";
+import { changeBallSizeInstance, changeBallSpeedInstance, changePlayersSize } from "./levelLocal";
 
 export function changeBallSize(newSize)
 {
@@ -12,5 +12,5 @@ export function changeBallSpeed(newSpeed)
 
 export function changePaddlesSize(newSize)
 {
-
+    changePlayersSize(newSize)
 }

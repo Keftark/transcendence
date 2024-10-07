@@ -7,9 +7,9 @@ const inputElement = document.getElementById('myInput');
 
 const cheatCodes =
 {
-    "/ballSize" : changeBallSize,
-    "/ballSpeed" : changeBallSpeed,
-    "/paddleSize" : changePaddlesSize
+    "/BALLSIZE" : changeBallSize,
+    "/BALLSPEED" : changeBallSpeed,
+    "/PADDLESIZE" : changePaddlesSize
 }
 
 function resetInputFieldValue()
@@ -27,15 +27,16 @@ document.addEventListener("DOMContentLoaded", function() {
     const toggleSizeButton = document.getElementById('toggleSizeButton');
     const toggleIcon = document.getElementById('toggleIcon');
 
-    inputElement.focus();
-
     sendButton.addEventListener('click', function() {
         trySendMessage(inputElement);
     });
 
     inputElement.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
-            sendButton.click();
+            if (document.activeElement === inputElement)
+                sendButton.click();
+            else
+                inputField.focus();
         }
     });
 
@@ -68,8 +69,8 @@ function messageIsACode(message)
 
     // Check if there are any words
     if (words.length > 0) {
-        const firstWord = words[0]; // Get the first word
-        const secondWord = words.length > 1 ? words[1] : undefined;
+        const firstWord = words[0].toUpperCase(); // Get the first word
+        const secondWord = words.length > 1 ? words[1].toUpperCase() : undefined;
         // Check if the first word is a key in the function dictionary
         resetInputFieldValue();
         if (cheatCodes[firstWord])
@@ -86,19 +87,34 @@ function messageIsACode(message)
     }
 }
 
-function createMessageElement()
-{
-    const newMessage = document.createElement('div');
-    newMessage.classList.add('message');
-    return newMessage;
+function createMessageElement(name, messageText) {
+    // Create a container for the entire message element
+    const messageContainer = document.createElement('div');
+    messageContainer.classList.add('message-container'); // Add a class for styling
+
+    // Create a header for the name
+    const nameHeader = document.createElement('div');
+    nameHeader.classList.add('message-name'); // Add a class for styling
+    nameHeader.textContent = name; // Set the text content to the name
+
+    // Create a div for the message text
+    const messageContent = document.createElement('div');
+    messageContent.classList.add('message'); // Add a class for styling
+    messageContent.textContent = messageText; // Set the text content to the message
+
+    // Append the name header and message content to the message container
+    messageContainer.appendChild(nameHeader);
+    messageContainer.appendChild(messageContent);
+
+    return messageContainer;
 }
 
-function sendMessageLeft(message)
+function sendMessageLeft(newMessage)
 {
     newMessage.classList.add('message-left');
 }
 
-function sendMessageRight(message)
+function sendMessageRight(newMessage)
 {
     newMessage.classList.add('message-right');
 }
@@ -113,8 +129,8 @@ function trySendMessage(inputElement) {
             return word.length > 30 ? word.substring(0, 30) + '...' : word;
         }).join(' ');
 
-        const newMessage = createMessageElement();
-        newMessage.textContent = truncatedMessage;
+        const newMessage = createMessageElement("Vous", truncatedMessage);
+        sendMessageRight(newMessage);
         // ici le code pour mettre le message a gauche si c'est quelqu'un d'autre ou bien a droite.
         messagesContainer.appendChild(newMessage);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;

@@ -1,3 +1,4 @@
+import { PLAYER_HEIGHT, PLAYER_RADIUS, BOUNDARY } from "./levelLocal";
 
 export function drawLine(scene, BOUNDARY)
 {
@@ -26,7 +27,7 @@ export function drawBackground(scene)
     bg.position.set(0, 0, -1);
 }
 
-export function createPlayers(scene, PLAYER_RADIUS, PLAYER_HEIGHT)
+export function createPlayers(scene)
 {   
     const textureLoader = new THREE.TextureLoader();
     const cylinderTexture = textureLoader.load('mat/player1.jpg');
@@ -40,17 +41,19 @@ export function createPlayers(scene, PLAYER_RADIUS, PLAYER_HEIGHT)
     return [player1, player2];
 }
 
-export function createWalls(scene, BOUNDARY)
-{   
-    const wallSizeHorizontal = BOUNDARY.X_MAX * 2 + 7;
-    const wallSizeVertical = BOUNDARY.Y_MAX * 2 - 1;
+export function createWalls(scene)
+{
+    const wallVerticalSize = BOUNDARY.Y_MAX * 2;
+    const wallHorizontalSize = BOUNDARY.X_MAX * 2;
+    const wallSizeHorizontal = wallHorizontalSize + 7;
+    const wallSizeVertical = wallVerticalSize - 1;
     const textureLoader = new THREE.TextureLoader();
     const sideTextureHorizontal = textureLoader.load('mat/wall.jpg');
     const topTextureHorizontal = textureLoader.load('mat/wall.jpg');
     sideTextureHorizontal.wrapS = sideTextureHorizontal.wrapT = THREE.RepeatWrapping;
-    sideTextureHorizontal.repeat.set(BOUNDARY.X_MAX * 2 / 9, 1);
+    sideTextureHorizontal.repeat.set(wallHorizontalSize / 9, 1);
     topTextureHorizontal.wrapS = topTextureHorizontal.wrapT = THREE.RepeatWrapping;
-    topTextureHorizontal.repeat.set(BOUNDARY.X_MAX * 2 / 8, 0.25);
+    topTextureHorizontal.repeat.set(wallHorizontalSize / 8, 0.25);
     const sideMaterial = new THREE.MeshStandardMaterial({ map: sideTextureHorizontal });
     const topMaterial = new THREE.MeshStandardMaterial({ map: topTextureHorizontal });
     const materialHorizontal = [
@@ -74,9 +77,9 @@ export function createWalls(scene, BOUNDARY)
     sideTextureVertical.rotation = Math.PI / 2;
     topTextureVertical.rotation = Math.PI / 2;
     sideTextureVertical.wrapS = sideTextureVertical.wrapT = THREE.RepeatWrapping;
-    sideTextureVertical.repeat.set(BOUNDARY.Y_MAX * 2 / 10, 1);
+    sideTextureVertical.repeat.set(wallVerticalSize / 10, 1);
     topTextureVertical.wrapS = topTextureVertical.wrapT = THREE.RepeatWrapping;
-    topTextureVertical.repeat.set(BOUNDARY.Y_MAX * 2 / 10, 0.25);
+    topTextureVertical.repeat.set(wallVerticalSize / 10, 0.25);
     const sideMaterialVertical = new THREE.MeshStandardMaterial({ map: sideTextureVertical });
     const topMaterialVertical = new THREE.MeshStandardMaterial({ map: topTextureVertical });
     const materialVertical = [

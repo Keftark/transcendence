@@ -16,7 +16,6 @@
 }
 
 .messages {
-    flex-grow: 1;
     padding: 10px;
     overflow-y: auto;
     max-height: 300px;
@@ -30,40 +29,64 @@
 }
 
 .messages div {
-    overflow-wrap: break-word; /* Allow long words to break onto the next line */
-    overflow: hidden; /* Hide overflow content */
-    white-space: normal; /* Allow text to wrap */
-    min-height: 15px; /* Ensure a minimum height for message boxes */
+    overflow-wrap: break-word;
+    overflow: hidden;
+    white-space: normal;
+    min-height: 15px;
+    flex-shrink: 0;
 }
 
-.message {
+.message-container {
+    display: flex; 
+    flex-direction: column; /* Stack name and message vertically */
+    margin-bottom: 10px; /* Space between messages */
+}
+
+.message-name {
+    align-self: flex-end;
+    right: 4px;
+    font-weight: bold; /* Make the name bold */
+    color: #f2f2f2; /* Color for the name */
+    margin-bottom: 5px; /* Space between name and message */
+    box-shadow: none; /* Explicitly set box-shadow to none */
+    background: transparent;
+}
+
+.message, .message-left, .message-middle, .message-right {
     position: relative;
     font-family: Arial, sans-serif;
-    padding: 10px;
+    padding: 6px;
     border-radius: 8px;
     font-size: 14px;
     max-width: 80%;
-    box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
-    
-    /* Handle word truncation */
-    overflow: hidden;            /* Hide overflow content */
-    text-overflow: ellipsis;      /* Add '...' to truncated text */
-    white-space: nowrap;          /* Prevent text from wrapping onto a new line */
-    word-break: break-all;        /* Break long words that don't fit */
+}
+
+.message {
+    color: #326e72; /* Text color */
 }
 
 .message-left {
     background-color: #2e333a;
     color: #ffffff;
-    align-self: flex-start; /* Aligns the message to the left */
+    text-align: left;
+    align-self: flex-start;
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
+}
+
+.message-middle {
+    background-color: #00000000;
+    color: #726c32;
+    text-align: center;
 }
 
 /* Messages aligned to the right */
 .message-right {
     background-color: #26293b;
     color: #00ffff;
-    align-self: flex-end; /* Aligns the message to the right */
+    text-align: right;
+    align-self: flex-end;
     right: 30px;
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
 }
 
 .input-container {
