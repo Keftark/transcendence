@@ -54,11 +54,6 @@
     background: transparent;
 }
 
-.message 
-{
-    box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
-}
-
 .message, .message-left, .message-middle, .message-right {
     position: relative;
     font-family: Arial, sans-serif;
@@ -70,11 +65,13 @@
 
 .message-container-left
 {
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
     background-color: #2e333a;
 }
 
 .message-container-right
 {
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
     background-color: #26293b;
 }
 
@@ -87,8 +84,9 @@
 
 .message-middle {
     background-color: #00000000;
-    color: #726c32;
-    text-align: center;
+    color: #b19f01;
+    align-items:center;
+    font-style: italic;
 }
 
 /* Messages aligned to the right */
@@ -123,22 +121,18 @@ input[type="text"]::placeholder {
     color: #70727f;
 }
 
-button {
-    width: 40px;
-    height: 30px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #00000000;
-    border: none;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
 .button-send-img {
     max-width: 80%;
     max-height: 80%;
     object-fit: contain;
+}
+
+#sendButton
+{
+    width: 40px;
+    height: 30px;
+    background-color: #00000000;
+    border: none;
 }
 
 button:hover {
@@ -173,7 +167,6 @@ button:hover {
     background-color: transparent;
     border: none;
     border-radius: 4px;
-    cursor: pointer;
     transition: all 0.3s ease-in-out;
 }
 

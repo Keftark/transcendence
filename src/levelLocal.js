@@ -6,7 +6,7 @@ import { setScores, addScore, setVisibleScore } from './scoreManager.js';
 import { createLights, createPlayers, drawBackground, drawLine, createWalls } from './objects.js';
 import { setLevelState, LevelMode, getLevelState } from './main.js';
 import { unloadScene } from './unloadScene.js';
-import { removeMainEvents } from './eventsListener.js';
+import { removeMainEvents, showCursor } from './eventsListener.js';
 import { changeBallSpeed } from './cheats.js';
 
 export const playerBaseHeight = 10;
@@ -160,6 +160,7 @@ function hidePlayMessage()
 
 export function StartLevelLocal()
 {
+    showCursor();
     setLevelState(LevelMode.LOCAL);
     removeMainEvents();
     setUpScene();

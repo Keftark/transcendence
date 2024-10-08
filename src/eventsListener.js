@@ -23,7 +23,7 @@ function mainMenuEvents(event)
     }
 }
 
-function mouseMoveMenu()
+export function showCursor()
 {
     document.body.classList.remove('hide-cursor');
 }
@@ -31,13 +31,13 @@ function mouseMoveMenu()
 export function removeMainEvents()
 {
     document.removeEventListener('keydown', mainMenuEvents);
-    document.removeEventListener('mousemove', mouseMoveMenu);
+    document.removeEventListener('mousemove', showCursor);
 }
 
 export function addMainEvents()
 {
     document.addEventListener('keydown', mainMenuEvents);
-    document.addEventListener('mousemove', mouseMoveMenu);
+    document.addEventListener('mousemove', showCursor);
 }
 
 

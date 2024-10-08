@@ -28,6 +28,23 @@ export function checkEscapeKey()
         clickBackButtonMenu();
 }
 
+function changeCursors()
+{
+    document.body.style.cursor = "url('./icons/cursor.png'), auto";
+    const buttons = document.querySelectorAll('button');
+    
+    // Loop through each button and change the cursor
+    buttons.forEach(button => {
+        button.style.cursor = "url('./icons/cursor-button.png'), move";
+    });
+
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(input => {
+        input.style.cursor = "url('./icons/cursor-text.png'), move";
+    });
+}
+
+changeCursors();
 addMainEvents();
 initTranslation();
 setNewColor();

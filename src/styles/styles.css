@@ -3,10 +3,6 @@
     src: url('../fonts/PixelGame.otf') format('opentype');
 }
 
-.hide-cursor {
-    cursor: none;
-}
-
 body {
     margin: 0;
     height: 100vh;
@@ -21,6 +17,14 @@ body {
 button
 {
     font-family: 'MyCustomFont', Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.hide-cursor {
+    cursor: none;
 }
 
 #top-text {

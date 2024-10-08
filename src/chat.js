@@ -1,16 +1,9 @@
-import { changeBallSize, changeBallSpeed, changePaddlesSize } from "./cheats";
+import { changeBallSize, changeBallSpeed, changePaddlesSize, cheatCodes } from "./cheats";
 import { getLevelState, LevelMode } from "./main";
 
 const messagesContainer = document.getElementById('messages');
 const inputField = document.querySelector('input[type="text"]');
 const inputElement = document.getElementById('myInput');
-
-const cheatCodes =
-{
-    "/BALLSIZE" : changeBallSize,
-    "/BALLSPEED" : changeBallSpeed,
-    "/PADDLESIZE" : changePaddlesSize
-}
 
 function resetInputFieldValue()
 {
@@ -28,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const toggleIcon = document.getElementById('toggleIcon');
 
     sendButton.addEventListener('click', function() {
-        trySendMessage(inputElement);
+        trySendMessage();
     });
 
     inputElement.addEventListener('keypress', function(e) {
@@ -64,18 +57,15 @@ function messageIsACode(message)
 {
     if (getLevelState() === LevelMode.MENU || getLevelState() === LevelMode.MODESELECTION)
         return false;
-        // Split the input string into words
-    const words = message.trim().split(/\s+/); // Split by spaces and remove extra spaces
+    const words = message.trim().split(/\s+/);
 
-    // Check if there are any words
     if (words.length > 0) {
-        const firstWord = words[0].toUpperCase(); // Get the first word
+        const firstWord = words[0].toUpperCase();
         const secondWord = words.length > 1 ? words[1].toUpperCase() : undefined;
-        // Check if the first word is a key in the function dictionary
         resetInputFieldValue();
         if (cheatCodes[firstWord])
         {
-            cheatCodes[firstWord](secondWord); // Execute the corresponding function
+            cheatCodes[firstWord](secondWord);
             inputElement.blur();
             return true;
         }
@@ -88,22 +78,21 @@ function messageIsACode(message)
 }
 
 function createMessageElement(name, messageText) {
-    // Create a container for the entire message element
     const messageContainer = document.createElement('div');
-    messageContainer.classList.add('message-container'); // Add a class for styling
+    messageContainer.classList.add('message-container');
 
-    // Create a header for the name
-    const nameHeader = document.createElement('div');
-    nameHeader.classList.add('message-name'); // Add a class for styling
-    nameHeader.textContent = name; // Set the text content to the name
+    if (name != "")
+    {
+        const nameHeader = document.createElement('div');
+        nameHeader.classList.add('message-name');
+        nameHeader.textContent = name;
+        messageContainer.appendChild(nameHeader);
+    }
 
-    // Create a div for the message text
     const messageContent = document.createElement('div');
-    messageContent.classList.add('message'); // Add a class for styling
-    messageContent.textContent = messageText; // Set the text content to the message
+    messageContent.classList.add('message');
+    messageContent.textContent = messageText;
 
-    // Append the name header and message content to the message container
-    messageContainer.appendChild(nameHeader);
     messageContainer.appendChild(messageContent);
 
     return messageContainer;
@@ -123,7 +112,45 @@ function sendMessageRight(newMessage)
     newMessage.classList.add('message-right');
 }
 
-function trySendMessage(inputElement) {
+function sendMessageMiddle(newMessage)
+{
+    newMessage.classList.add('message-middle');
+}
+
+let messageCount = 0;
+function sendRandomMessage(newMessage)
+{
+    if (messageCount % 3 === 0)
+        sendMessageRight(newMessage);
+    else if (messageCount % 3 === 1)
+        sendMessageLeft(newMessage);
+    else
+        sendMessageMiddle(newMessage);
+    messageCount++;
+}
+
+function getPlayerName()
+{
+    let name = "";
+
+    /* Bloc a supprimer, c'est juste pour des tests */
+    if (messageCount % 3 === 0)
+        name = "Vous :";
+    else if (messageCount % 3 === 1)
+        name = "Other :";
+
+    /*
+        Logique pour avoir le nom du joueur.
+        Si le joueur est celui qui ecrit, on met "Vous :" ou "You:", selon la traduction  et on envoie le message sur la droite
+    */
+
+    return name;
+}
+
+/* 
+    Faire en sorte de n'entrer un nom que si c'est un joueur qui ecrit, pas le systeme. Avec createMessageElement()
+*/
+function trySendMessage() {
     const messageText = inputElement.value.trim();
     
     if (messageText !== "") {
@@ -133,9 +160,9 @@ function trySendMessage(inputElement) {
             return word.length > 30 ? word.substring(0, 30) + '...' : word;
         }).join(' ');
 
-        const newMessage = createMessageElement("Vous :", truncatedMessage);
-        sendMessageRight(newMessage);
-        // ici le code pour mettre le message a gauche si c'est quelqu'un d'autre ou bien a droite.
+        let playerName = getPlayerName();
+        const newMessage = createMessageElement(playerName, truncatedMessage);
+        sendRandomMessage(newMessage);
         messagesContainer.appendChild(newMessage);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
