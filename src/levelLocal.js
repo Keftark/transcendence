@@ -3,11 +3,11 @@ import { setupPlayerMovement } from './playerMovement.js';
 import { createBall } from './ball.js';
 import { ScreenShake } from './screenShake.js';
 import { setScores, addScore, setVisibleScore } from './scoreManager.js';
-import { createLights, createPlayers, drawBackground, drawLine, createWalls } from './objects.js';
+import { createLights, createPlayers, drawBackground, drawLine, createWalls, removeRightWall } from './objects.js';
 import { setLevelState, LevelMode, getLevelState } from './main.js';
 import { unloadScene } from './unloadScene.js';
 import { removeMainEvents, showCursor } from './eventsListener.js';
-import { changeBallSpeed } from './cheats.js';
+import { sendSystemMessage } from './chat.js';
 
 export const playerBaseHeight = 10;
 export const PLAYER_RADIUS = 1;
@@ -21,6 +21,8 @@ export const BOUNDARY =
   X_MIN: -40,
   X_MAX: 40
 }
+
+export let balle;
 
 export const ballBaseRadius = 0.8;
 export const ballBaseSpeed = 0.7;
@@ -76,6 +78,10 @@ export function setUpCamera()
     if (getLevelState() === LevelMode.LOCAL)
     {
         camera.position.z = 50;
+    }
+    else if (getLevelState() === LevelMode.ADVENTURE)
+    {
+        camera.position.set(50, 0, 30);
     }
     return camera;
 }
@@ -158,10 +164,10 @@ function hidePlayMessage()
     playDiv.style.opacity = '0';
 }
 
-export function StartLevelLocal()
+export function StartLevel(levelMode)
 {
     showCursor();
-    setLevelState(LevelMode.LOCAL);
+    setLevelState(levelMode);
     removeMainEvents();
     setUpScene();
     
@@ -170,6 +176,7 @@ export function StartLevelLocal()
     
     const { updatePlayers } = setupPlayerMovement(player1, player2, BOUNDARY.Y_MIN, BOUNDARY.Y_MAX, ballStats.MOVE_SPEED);
     const { ball, updateBall, resetBall, changeBallSize, changeBallSpeed } = createBall(scene, resetScreen);
+    balle = ball;
     setUpConsts();
     setScores(0, 0);
     
@@ -212,8 +219,14 @@ export function StartLevelLocal()
         if (!isCameraAnimationComplete)
         {
             animateCamera(timestamp, camera, setVisiblePlay);
-            if (camera.position.y < 0.3)
+            if (getLevelState() === LevelMode.LOCAL && camera.position.y < 0.3)
             {
+                isCameraAnimationComplete = true;
+                setVisiblePlay();
+            }
+            if (getLevelState() === LevelMode.ADVENTURE && camera.position.z < 14.2)
+            {
+                removeRightWall(); // remove the wall of player1
                 isCameraAnimationComplete = true;
                 setVisiblePlay();
             }
@@ -252,7 +265,7 @@ export function StartLevelLocal()
 
     pressEscapeFunction = function pressEscapeReinitLevel(event)
     {
-        if (event.key === 'Escape' && getLevelState() === LevelMode.LOCAL)
+        if (event.key === 'Escape' && (getLevelState() != LevelMode.MENU && getLevelState() != LevelMode.MODESELECTION))
         {
             resetFunction(true);
             resetScreen(0);

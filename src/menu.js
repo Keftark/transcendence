@@ -1,5 +1,5 @@
 import { addMainEvents } from './eventsListener.js';
-import { StartLevelLocal, unloadLevel } from './levelLocal.js';
+import { StartLevel, unloadLevel } from './levelLocal.js';
 import { getLevelState, LevelMode, setLevelState } from './main.js';
 
 // document.addEventListener('DOMContentLoaded', () => {
@@ -53,6 +53,10 @@ document.getElementById('mainButton').addEventListener('click', () => {
 
 document.getElementById('modeLocal').addEventListener('click', () => {
     clickPlayLocal();
+});
+
+document.getElementById('modeComputer').addEventListener('click', () => {
+    clickPlayAdventure();
 });
 
 document.getElementById('backButton').addEventListener('click', () => {
@@ -179,7 +183,14 @@ export function clickPlayLocal()
 {
     hideMainMenu();
     hideModeChoice();
-    StartLevelLocal();
+    StartLevel(LevelMode.LOCAL);
+}
+
+export function clickPlayAdventure()
+{
+    hideMainMenu();
+    hideModeChoice();
+    StartLevel(LevelMode.ADVENTURE);
 }
 
 export function showModeChoice()

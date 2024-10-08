@@ -1,3 +1,5 @@
+import { getLevelState, LevelMode } from "./main";
+
 let cameraAnimationActive = true; // Flag to control camera animation
 let startTime; // Track the start time of the animation
 const animationDuration = 2000; // Duration of the animation in milliseconds
@@ -17,12 +19,26 @@ export function animateCamera(time, camera, callBack)
     const elapsed = time - startTime; // Elapsed time
     const t = Math.min(elapsed / animationDuration, 1); // Normalized time
 
-    // Define the zoom curve (e.g., a quadratic curve for smooth zoom)
-    const yPos = 50 - (50 * t * t); // Quadratic easing in, adjust as needed
-
-    // Update camera position
-    camera.position.y = yPos; 
-    camera.lookAt(0, 0, 0);
+    if (getLevelState() === LevelMode.LOCAL)
+    {
+        const yPos = 50 - (50 * t * t);
+    
+        // Update camera position
+        camera.position.y = yPos; 
+        camera.lookAt(0, 0, 0);
+    }
+    else if (getLevelState() === LevelMode.ADVENTURE)
+    {
+        const xPos = 100 - (43 * t * t);
+        const zPos = 100 - (93 * t * t);
+    
+        camera.position.x = -xPos;
+        camera.position.z = zPos;
+        // console.log(camera.position.x + ", " + camera.position.y + ", " + camera.position.z);
+        camera.lookAt(0, 0, 0);
+        camera.rotation.x = Math.PI / 2;
+        camera.rotation.y = -(Math.PI / 2);
+    }
 
     // End the animation after the duration
     if (t >= 1)

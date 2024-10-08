@@ -1,5 +1,8 @@
 import { PLAYER_HEIGHT, PLAYER_RADIUS, BOUNDARY } from "./levelLocal";
 
+let wallLeft;
+let wallRight;
+
 export function drawLine(scene, BOUNDARY)
 {
     const materialLine = new THREE.LineBasicMaterial({ color: 0xffffff });
@@ -91,12 +94,17 @@ export function createWalls(scene)
         topMaterialVertical
     ];
     const geometryVertical = new THREE.BoxGeometry(2, wallSizeVertical, 5);
-    const wallLeft = new THREE.Mesh(geometryVertical, materialVertical);
+    wallLeft = new THREE.Mesh(geometryVertical, materialVertical);
     scene.add(wallLeft);
     wallLeft.position.set(BOUNDARY.X_MAX + 2.5, 0, 0);
-    const wallRight = new THREE.Mesh(geometryVertical, materialVertical);
+    wallRight = new THREE.Mesh(geometryVertical, materialVertical);
     scene.add(wallRight);
     wallRight.position.set(BOUNDARY.X_MIN - 2.5, 0, 0);
+}
+
+export function removeRightWall()
+{
+    wallRight.visible = false;
 }
 
 export function createLights(scene)

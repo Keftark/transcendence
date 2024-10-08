@@ -38,8 +38,12 @@ export class ScreenShake
             this.shakeDuration = 0;
             this.shakeOffset.x = 0;
             this.shakeOffset.y = 0;
-            this.camera.position.x = 0;
-            this.camera.position.y = 0;
+            
+            // decommenter ce code pour remettre le shaking a zero ? 
+            // ca pose probleme avec les differents modes et la position initiale de la camera
+
+            // this.camera.position.x = 0;
+            // this.camera.position.y = 0;
         }
     }
   }
