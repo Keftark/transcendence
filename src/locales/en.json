@@ -18,5 +18,8 @@
     "modeLocal": "1vs1", 
     "modeComputer": "Vs computer", 
     "mainMenuText": "Main menu", 
-    "backText": "Back"
+    "backText": "Back",
+    "ballSizeChanged": "The ball size is set to ",
+    "ballSpeedChanged": "The ball speed is set to ",
+    "paddleSizeChanged": "The paddle size is set to "
 }

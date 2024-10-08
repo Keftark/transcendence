@@ -21,27 +21,25 @@
 }
 
 .messages {
-    padding: 10px;
     overflow-y: auto;
     max-height: 300px;
     border-bottom: 2px solid #4c4f67;
-    display: flex;
-    flex-direction: column;
-    position: relative;
 }
 
 .messages div {
-    overflow-wrap: break-word;
-    overflow: hidden;
-    white-space: normal;
-    min-height: 15px;
+    right: -5px;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    overflow-wrap: normal;
+    white-space: pre-wrap;
     flex-shrink: 0;
 }
 
 .message-container {
     display: flex; 
     flex-direction: column; /* Stack name and message vertically */
-    margin-bottom: 6px; /* Space between messages */
+    margin-bottom: 5px; /* Space between messages */
 }
 
 .message-name {
@@ -57,10 +55,10 @@
 .message, .message-left, .message-middle, .message-right {
     position: relative;
     font-family: Arial, sans-serif;
-    padding: 6px;
+    padding: 2px;
     border-radius: 8px;
     font-size: 14px;
-    max-width: 80%;
+    max-width: 90%;
 }
 
 .message-container-left
@@ -83,8 +81,9 @@
 }
 
 .message-middle {
-    background-color: #00000000;
-    color: #b19f01;
+    text-align: center;
+    align-self: center;
+    color: #6d6d6d;
     align-items:center;
     font-style: italic;
 }
@@ -92,7 +91,7 @@
 /* Messages aligned to the right */
 .message-right {
     color: #00ffff;
-    text-align: right;
+    text-align: left;
     align-self: flex-end;
     right: 30px;
     align-items: end;

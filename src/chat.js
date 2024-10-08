@@ -81,18 +81,14 @@ function createMessageElement(name, messageText) {
     const messageContainer = document.createElement('div');
     messageContainer.classList.add('message-container');
 
-    if (name != "")
-    {
-        const nameHeader = document.createElement('div');
-        nameHeader.classList.add('message-name');
-        nameHeader.textContent = name;
-        messageContainer.appendChild(nameHeader);
-    }
+    const nameHeader = document.createElement('div');
+    nameHeader.classList.add('message-name');
+    nameHeader.textContent = name;
+    messageContainer.appendChild(nameHeader);
 
     const messageContent = document.createElement('div');
     messageContent.classList.add('message');
     messageContent.textContent = messageText;
-
     messageContainer.appendChild(messageContent);
 
     return messageContainer;
@@ -145,6 +141,14 @@ function getPlayerName()
     */
 
     return name;
+}
+
+export function sendSystemMessage(message)
+{
+    const newMessage = createMessageElement("", message);
+    newMessage.classList.add('message-middle');
+    messagesContainer.appendChild(newMessage);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
 /* 

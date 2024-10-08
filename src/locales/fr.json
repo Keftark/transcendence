@@ -18,5 +18,8 @@
     "modeLocal": "1 contre 1", 
     "modeComputer": "Contre l'ordinateur", 
     "mainMenuText": "Menu principal", 
-    "backText": "Retour"
+    "backText": "Retour",
+    "ballSizeChanged": "La taille de la balle est maintenant de ",
+    "ballSpeedChanged": "La vitesse de la balle est maintenant de ",
+    "paddleSizeChanged": "La taille des raquettes est maintenant de "
 }
