@@ -1,9 +1,13 @@
-import { changeBallSize, changeBallSpeed, changePaddlesSize, cheatCodes } from "./cheats";
+import { cheatCodes } from "./cheats";
 import { getLevelState, LevelMode } from "./main";
 
 const messagesContainer = document.getElementById('messages');
 const inputField = document.querySelector('input[type="text"]');
 const inputElement = document.getElementById('myInput');
+const sendButton = document.getElementById('sendButton');
+const chatBox = document.getElementById('chatBox');
+const toggleSizeButton = document.getElementById('toggleSizeButton');
+const toggleIcon = document.getElementById('toggleIcon');
 
 function resetInputFieldValue()
 {
@@ -14,11 +18,32 @@ window.onload = function() {
     resetInputFieldValue();
 };
 
+function openChat()
+{
+    chatBox.classList.remove('shrunk');
+    chatBox.classList.remove('hide-elements');
+    chatBox.classList.add('expanded');
+    toggleIcon.src = 'icons/shrink.png';
+}
+
+function closeChat()
+{
+    chatBox.classList.remove('expanded');
+    chatBox.classList.add('shrunk');
+    toggleIcon.src = 'icons/grow.png';
+
+    setTimeout(function() {
+        chatBox.classList.add('hide-elements');
+    }, 400);
+}
+
+export function tryCloseChat()
+{
+    if (chatBox.classList.contains('expanded'))
+        closeChat();
+}
+
 document.addEventListener("DOMContentLoaded", function() {
-    const sendButton = document.getElementById('sendButton');
-    const chatBox = document.getElementById('chatBox');
-    const toggleSizeButton = document.getElementById('toggleSizeButton');
-    const toggleIcon = document.getElementById('toggleIcon');
 
     sendButton.addEventListener('click', function() {
         trySendMessage();
@@ -35,18 +60,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     toggleSizeButton.addEventListener('click', function() {
         if (chatBox.classList.contains('expanded')) {
-            chatBox.classList.remove('expanded');
-            chatBox.classList.add('shrunk');
-            toggleIcon.src = 'icons/grow.png';
-
-            setTimeout(function() {
-                chatBox.classList.add('hide-elements');
-            }, 400);
+            closeChat();
         } else {
-            chatBox.classList.remove('shrunk');
-            chatBox.classList.remove('hide-elements');
-            chatBox.classList.add('expanded');
-            toggleIcon.src = 'icons/shrink.png';
+            openChat();
         }
     });
 
@@ -71,7 +87,6 @@ function messageIsACode(message)
         }
         else
         {
-            console.log("Command not found.");
             return false;
         }
     }

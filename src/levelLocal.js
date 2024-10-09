@@ -7,9 +7,9 @@ import { createLights, createPlayers, drawBackground, drawLine, createWalls, rem
 import { setLevelState, LevelMode, getLevelState } from './main.js';
 import { unloadScene } from './unloadScene.js';
 import { removeMainEvents, showCursor } from './eventsListener.js';
-import { sendSystemMessage } from './chat.js';
+import { sendSystemMessage, tryCloseChat } from './chat.js';
 
-export const playerBaseHeight = 10;
+export const playerBaseHeight = 12;
 export const PLAYER_RADIUS = 1;
 export const PLAYER_HEIGHT = playerBaseHeight;
 const SCREEN_WIDTH = window.innerWidth;
@@ -96,13 +96,6 @@ export function setUpScene()
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     document.body.appendChild(renderer.domElement);
-}
-
-function hideKeys()
-{
-    player1KeysLocal.style.display = 'none';
-    player2KeysLocal.style.display = 'none';
-    playerKeysAdventure.style.display = 'none';
 }
 
 function showKeys()
@@ -201,6 +194,7 @@ export function StartLevel(levelMode)
     balle = ball;
     setUpConsts();
     setScores(0, 0);
+    tryCloseChat();
     
     animationId = null;
     let isCameraAnimationComplete = false;

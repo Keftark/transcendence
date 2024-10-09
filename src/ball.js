@@ -1,5 +1,16 @@
 import { ballBaseRadius, ballBaseSpeed, ballStats, BOUNDARY } from './levelLocal.js';
 import { Sparks } from './sparks.js';
+const speedLimit = 3;
+const maxBounceAngle = 75 * Math.PI / 180;
+
+function getDimensions(object) {
+    const boundingBox = new THREE.Box3().setFromObject(object);
+    return {
+        width: boundingBox.max.x - boundingBox.min.x,
+        height: boundingBox.max.y - boundingBox.min.y,
+        depth: boundingBox.max.z - boundingBox.min.z,
+    };
+}
 
 export function createBall(scene, callBack) {
     const ballMaterial = new THREE.MeshStandardMaterial({ 
@@ -75,7 +86,7 @@ export function createBall(scene, callBack) {
             ballPosY >= playerPosY - dividedPlayerSize &&
             ballPosY <= playerPosY + dividedPlayerSize)
             {
-                ball.position.set(getXContactPointPaddle(player1) + radius, ballPosY, 0);
+                // ball.position.set(getXContactPointPaddle(player1) + radius, ballPosY, 0);
                 return true;
             }
         return false;
@@ -91,39 +102,39 @@ export function createBall(scene, callBack) {
             ballPosY >= playerPosY - dividedPlayerSize &&
             ballPosY <= playerPosY + dividedPlayerSize)
             {
-                ball.position.set(getXContactPointPaddle(player2) - radius, ballPosY, 0);
+                // ball.position.set(getXContactPointPaddle(player2) - radius, ballPosY, 0);
                 return true;
             }
         return false;
     }
-
-    function bounceBallOnPaddle(isLeft, position)
-    {
+    function bounceBallOnPaddle(isLeft, position, paddle) {
         updateBallLight();
+    
+        const paddleCenter = paddle.position.y;
+        const paddleHeight = getDimensions(paddle).height;
+        const hitPosition = (position.y - paddleCenter) / (paddleHeight / 2); // Normalize to [-1, 1]
+        
         ballVelocity.x = -ballVelocity.x;
-        if (isLeft === true)
-        {
-            if (ballVelocity.x > 5) ballVelocity.x = 5;
-            if (ballVelocity.x > 1.1)
-            {
-                let count = Math.trunc(ballVelocity.x * 15);
-                sparks.spawnSparks(position, count);
-            }
-            ballVelocity.x += ballVelocitySpeedUp.x;
-            ballVelocity.y += ballVelocitySpeedUp.y;
+    
+        const bounceAngle = hitPosition * maxBounceAngle;
+    
+        const ballSpeed = Math.hypot(ballVelocity.x, ballVelocity.y);
+        ballVelocity.x = ballSpeed * Math.cos(bounceAngle);
+        ballVelocity.y = ballSpeed * Math.sin(bounceAngle);
+    
+        ballVelocity.x = Math.min(ballVelocity.x + ballVelocitySpeedUp.x, speedLimit);
+        if (!isLeft)
+            ballVelocity.x = -ballVelocity.x;
+    
+        const shouldSpawnSparks = (isLeft && ballVelocity.x > 1.1) || (!isLeft && -ballVelocity.x > 1.1);
+        if (shouldSpawnSparks) {
+            const count = Math.trunc(Math.abs(ballVelocity.x) * 15);
+            sparks.spawnSparks(position, count);
         }
-        else
-        {
-            if (ballVelocity.x < -5) ballVelocity.x = -5;
-            if (-ballVelocity.x > 1.1)
-            {
-                let count = Math.trunc(-ballVelocity.x * 15);
-                sparks.spawnSparks(position, count);
-            }
-            ballVelocity.x -= ballVelocitySpeedUp.x;
-            ballVelocity.y -= ballVelocitySpeedUp.y;
-        }
+        ballVelocity.y += isLeft ? ballVelocitySpeedUp.y : -ballVelocitySpeedUp.y;
+        console.log(ballVelocity.x + ", " + ballVelocity.y);
     }
+    
 
     function updateBall(ball, player1, player2)
     {
@@ -133,9 +144,9 @@ export function createBall(scene, callBack) {
         sparks.updateSparks();
         checkCollisionTopBottom(ball);
         if (checkCollisionLeftPaddle(ball, player1) === true)
-            bounceBallOnPaddle(true, new THREE.Vector3(getXContactPointPaddle(player1), ball.position.y, 0));
+            bounceBallOnPaddle(true, new THREE.Vector3(getXContactPointPaddle(player1), ball.position.y, 0), player1);
         else if (checkCollisionRightPaddle(ball, player2))
-            bounceBallOnPaddle(false, new THREE.Vector3(getXContactPointPaddle(player2), ball.position.y, 0));
+            bounceBallOnPaddle(false, new THREE.Vector3(getXContactPointPaddle(player2), ball.position.y, 0), player2);
         else
         {
             const radius = ballStats.BALL_RADIUS;
