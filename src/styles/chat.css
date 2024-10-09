@@ -1,6 +1,6 @@
 .chat-box {
     position: fixed;
-    bottom: 20px;
+    top: 20px;
     right: 20px;
     width: 350px;
     max-height: 400px;

@@ -46,6 +46,9 @@ let pressPlayDiv = null;
 let playDiv = null;
 let changeBallSizeFunction = null;
 let changeBallSpeedFunction = null;
+let player1KeysLocal = document.getElementById('controlsP1LocalImg');
+let player2KeysLocal = document.getElementById('controlsP2LocalImg');
+let playerKeysAdventure = document.getElementById('controlsAdventureImg');
 
 export function getBallStats()
 {
@@ -95,9 +98,28 @@ export function setUpScene()
     document.body.appendChild(renderer.domElement);
 }
 
+function hideKeys()
+{
+    player1KeysLocal.style.display = 'none';
+    player2KeysLocal.style.display = 'none';
+    playerKeysAdventure.style.display = 'none';
+}
+
+function showKeys()
+{
+    if (getLevelState() === LevelMode.LOCAL)
+    {
+        player1KeysLocal.style.display = 'block';
+        player2KeysLocal.style.display = 'block';
+    }
+    else if (getLevelState() === LevelMode.ADVENTURE)
+        playerKeysAdventure.style.display = 'block';
+}
+
 export function setUpLevel(scene)
 {
     document.getElementById('menuPanel').style.display = 'block';
+    showKeys();
     [player1, player2] = createPlayers(scene);
     createLights(scene);
     resetPlayersPositions();

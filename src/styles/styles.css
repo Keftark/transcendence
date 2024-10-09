@@ -198,3 +198,21 @@ button
     color: white;
     font-family: 'MyCustomFont', Arial, sans-serif;
 }
+
+#controlsP1LocalImg, #controlsP2LocalImg, #controlsAdventureImg {
+    display: none;
+    position: absolute;
+    bottom: 5%;
+    z-index: 100;
+    width: 192px;
+}
+
+#controlsP1LocalImg, #controlsAdventureImg
+{
+    left: 2%;
+}
+
+#controlsP2LocalImg
+{
+    right: 2%;
+}

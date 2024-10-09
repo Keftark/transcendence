@@ -97,7 +97,7 @@ export function createBall(scene, callBack) {
         return false;
     }
 
-    function bounceBallOnPaddle(isLeft)
+    function bounceBallOnPaddle(isLeft, position)
     {
         updateBallLight();
         ballVelocity.x = -ballVelocity.x;
@@ -107,7 +107,7 @@ export function createBall(scene, callBack) {
             if (ballVelocity.x > 1.1)
             {
                 let count = Math.trunc(ballVelocity.x * 15);
-                sparks.spawnSparks(ball.position.clone(), count);
+                sparks.spawnSparks(position, count);
             }
             ballVelocity.x += ballVelocitySpeedUp.x;
             ballVelocity.y += ballVelocitySpeedUp.y;
@@ -118,7 +118,7 @@ export function createBall(scene, callBack) {
             if (-ballVelocity.x > 1.1)
             {
                 let count = Math.trunc(-ballVelocity.x * 15);
-                sparks.spawnSparks(ball.position.clone(), count);
+                sparks.spawnSparks(position, count);
             }
             ballVelocity.x -= ballVelocitySpeedUp.x;
             ballVelocity.y -= ballVelocitySpeedUp.y;
@@ -135,9 +135,9 @@ export function createBall(scene, callBack) {
         sparks.updateSparks();
         checkCollisionTopBottom(ball);
         if (checkCollisionLeftPaddle(ball, player1) === true)
-            bounceBallOnPaddle(true);
+            bounceBallOnPaddle(true, new THREE.Vector3(getXContactPointPaddle(player1), ball.position.y, 0));
         else if (checkCollisionRightPaddle(ball, player2))
-            bounceBallOnPaddle(false);
+            bounceBallOnPaddle(false, new THREE.Vector3(getXContactPointPaddle(player2), ball.position.y, 0));
         else
         {
             const radius = ballStats.BALL_RADIUS;

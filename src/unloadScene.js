@@ -2,20 +2,16 @@ import { addPlayerMovementKeyDown, addPlayerMovementKeyUp } from "./playerMoveme
 
 function hideUiElements()
 {
-    const pressPlayDiv = document.getElementById('pressplay');
-    const playDiv = document.getElementById('play');
-    const playerLeft = document.getElementById('playername-left');
-    const playerRight = document.getElementById('playername-right');
-    const scoreLeft = document.getElementById('score-left');
-    const scoreRight = document.getElementById('score-right');
-    const menuPanel = document.getElementById('menuPanel');
-    pressPlayDiv.style.display = 'none';
-    playDiv.style.display = 'none';
-    playerLeft.style.display = 'none';
-    playerRight.style.display = 'none';
-    scoreLeft.style.display = 'none';
-    scoreRight.style.display = 'none';
-    menuPanel.style.display = 'none';
+    document.getElementById('pressplay').style.display = 'none';
+    document.getElementById('play').style.display = 'none';
+    document.getElementById('playername-left').style.display = 'none';
+    document.getElementById('playername-right').style.display = 'none';
+    document.getElementById('score-left').style.display = 'none';
+    document.getElementById('score-right').style.display = 'none';
+    document.getElementById('menuPanel').style.display = 'none';
+    document.getElementById('controlsP1LocalImg').style.display = 'none';
+    document.getElementById('controlsP2LocalImg').style.display = 'none';
+    document.getElementById('controlsAdventureImg').style.display = 'none';
 }
 
 export function unloadScene(scene, renderer, animationId)
