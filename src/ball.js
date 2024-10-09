@@ -62,7 +62,7 @@ export function createBall(scene, callBack) {
 
     function getXContactPointPaddle(player)
     {
-        return player.position.x < 0 ? player.position.x + player.geometry.parameters.radiusTop * 1.5 : player.position.x - player.geometry.parameters.radiusTop * 1.5;
+        return player.position.x < 0 ? player.position.x + player.geometry.parameters.radiusTop : player.position.x - player.geometry.parameters.radiusTop;
     }
 
     function checkCollisionLeftPaddle(ball, player1)

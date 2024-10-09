@@ -224,7 +224,7 @@ export function StartLevel(levelMode)
                 isCameraAnimationComplete = true;
                 setVisiblePlay();
             }
-            if (getLevelState() === LevelMode.ADVENTURE && camera.position.z < 14.2)
+            if (getLevelState() === LevelMode.ADVENTURE && camera.position.z < 60.1)
             {
                 removeRightWall(); // remove the wall of player1
                 isCameraAnimationComplete = true;

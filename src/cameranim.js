@@ -29,15 +29,16 @@ export function animateCamera(time, camera, callBack)
     }
     else if (getLevelState() === LevelMode.ADVENTURE)
     {
-        const xPos = 100 - (43 * t * t);
-        const zPos = 100 - (93 * t * t);
+        const xPos = 65 - (30 * t * t);
+        const zPos = 100 - (40 * t * t);
     
         camera.position.x = -xPos;
         camera.position.z = zPos;
-        // console.log(camera.position.x + ", " + camera.position.y + ", " + camera.position.z);
+        console.log(camera.position.x + ", " + camera.position.y + ", " + camera.position.z);
         camera.lookAt(0, 0, 0);
-        camera.rotation.x = Math.PI / 2;
-        camera.rotation.y = -(Math.PI / 2);
+        camera.rotation.x = 0;
+        camera.rotation.z = -(Math.PI / 2);
+        camera.rotation.y = -(Math.PI / 6);
     }
 
     // End the animation after the duration
