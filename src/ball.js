@@ -127,10 +127,8 @@ export function createBall(scene, callBack) {
 
     function updateBall(ball, player1, player2)
     {
-        // console.log("update");
         ball.position.add(ballVelocity);
-        // console.log("after: " + ball.position.x + ", " + ball.position.y + ", " + ball.position.z);
-        pointLight.position.copy(ball.position); // Update light position to follow the ball
+        pointLight.position.copy(ball.position);
         
         sparks.updateSparks();
         checkCollisionTopBottom(ball);

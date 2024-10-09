@@ -23,6 +23,8 @@ export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
     let moveUp2 = false;
     let moveDown2 = false;
     let isLocal = getLevelState() === LevelMode.LOCAL;
+    const boundymax = boundYMax - 6.5;
+    const boundymin = boundYMin + 6.5;
 
     function checkKeys(event, isTrue)
     {
@@ -57,24 +59,31 @@ export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
 
     function checkPlayer1Movements(adjustedSpeed)
     {
-        if (moveUp1 && !moveDown1 && player1.position.y < boundYMax - 5)
-            player1.position.y = lerp(player1.position.y, player1.position.y + adjustedSpeed, 0.1);
-        if (moveDown1 && !moveUp1 && player1.position.y > boundYMin + 5)
-            player1.position.y = lerp(player1.position.y, player1.position.y - adjustedSpeed, 0.1);
+        let playerposy = player1.position.y;
+        if (moveUp1 && !moveDown1 && playerposy < boundymax)
+            player1.position.y = lerp(playerposy, playerposy + adjustedSpeed, 0.1);
+        if (moveDown1 && !moveUp1 && playerposy > boundymin)
+            player1.position.y = lerp(playerposy, playerposy - adjustedSpeed, 0.1);
     }
 
     function checkPlayer2Movements(adjustedSpeed)
     {
-        if (moveUp2 && !moveDown2 && player2.position.y < boundYMax - 5)
-            player2.position.y = lerp(player2.position.y, player2.position.y + adjustedSpeed, 0.1);
-        if (moveDown2 && !moveUp2 && player2.position.y > boundYMin + 5)
-            player2.position.y = lerp(player2.position.y, player2.position.y - adjustedSpeed, 0.1);
+        let playerposy = player2.position.y;
+        if (moveUp2 && !moveDown2 && playerposy < boundymax)
+            player2.position.y = lerp(playerposy, playerposy + adjustedSpeed, 0.1);
+        else if (moveDown2 && !moveUp2 && playerposy > boundymin)
+            player2.position.y = lerp(playerposy, playerposy - adjustedSpeed, 0.1);
     }
 
     function checkBotMovements(adjustedSpeed)
     {
-        if (player2.position.y < boundYMax && player2.position.y > boundYMin)
-            player2.position.y = lerp(player2.position.y, balle.position.y, 0.1 * adjustedSpeed);
+        let playerposy = player2.position.y;
+        if (playerposy < boundYMax && playerposy > boundYMin)
+            player2.position.y = lerp(playerposy, balle.position.y, 0.02 * adjustedSpeed); // 0.02 = les reflexes du bot. voir pour changer ca en fonction de la difficulte
+        if (player2.position.y > boundymax)
+            player2.position.y = boundymax;
+        else if (player2.position.y < boundymin)
+            player2.position.y = boundymin;
     }
 
     function updatePlayers(deltaTime)
