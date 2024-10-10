@@ -58,7 +58,7 @@
     color: #a5ebf5;
 }
 
-#inputName, #inputFirstName, #inputLastName, #inputPassword, #inputConfirmPassword
+#inputName, #inputFirstName, #inputLastName, #inputMail, #inputPassword, #inputConfirmPassword
 {
     flex-grow: 1;
     padding: 10px;

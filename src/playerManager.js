@@ -1,4 +1,10 @@
+import { matchResult } from "./levelLocal";
 import { changeTextsColor } from "./menu";
+const inputNick = document.getElementById('inputName');
+const inputFirstName = document.getElementById('inputFirstName');
+const inputLastName = document.getElementById('inputLastName');
+const inputMail = document.getElementById('inputMail');
+const inputPassword = document.getElementById('inputPassword');
 
 let playerStats = 
 {
@@ -6,50 +12,45 @@ let playerStats =
     firstName: "",
     lastName: "",
     mail: "",
+    password: "",
     language: "",
     colors: "",
+    photoIndex: 0,
     matches: []
 }
 
-export function addMatchToHistory(matchResult)
+export function addMatchToHistory(scorePlayer, scoreOpponent)
 {
-    playerStats.matches.push(matchResult);
-}
-
-export function playerManager() 
-{
-    // player profile
-    // load profile pic, matches (win/loss), age (profile created 10/12/2024), skins (paddle, ball and background), exp ?
-}
-
-export function askCreateNewPlayer()
-{
-    // on met un formulaire vide et on laisse le joueur remplir ses infos
-    /*
-        pseudo
-        password
-        photo
-    */
+    // prendre le joueur depuis la base de donnees et inserer le nouveau score
+    playerStats.matches.push(matchResult(scorePlayer, scoreOpponent));
 }
 
 export function createNewPlayer()
 {
-    // on prend les infos du formulaire et on cree un nouveau joueur dans la base de donnees, puis on le sign-in.
-    // on vide et ferme le formulaire
+    playerStats.nickname = inputNick.value;
+    playerStats.firstName = inputFirstName.value;
+    playerStats.lastName = inputLastName.value;
+    playerStats.mail = inputMail.value;
+    playerStats.password = inputPassword.value;
+    playerStats.language = "en";
+    playerStats.photoIndex = 0;
+    playerStats.colors = "white";
 }
 
-export function changeProfilePicture(playerId)
+// on laisse le joueur choisir une image parmi une selection
+export function changeProfilePicture(newIndex)
 {
-    // on laisse le joueur choisir une image parmi une selection ou bien on le laisse upload une photo ?
+    playerStats.photoIndex = newIndex;
+    // update la photo sur l'UI
 }
 
-export function changePlayerName(playerId)
+export function changePlayerName(playerStats)
 {
     // on change le nom dans la base de donnees et sur le profil.
 }
 
-export function loadPlayerConfig(playerId)
+export function loadPlayerConfig(playerStats)
 {
-    changeLanguage(playerId.language);
-    changeTextsColor(playerId.colors);
+    changeLanguage(playerStats.language);
+    changeTextsColor(playerStats.colors);
 }

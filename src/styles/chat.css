@@ -116,7 +116,7 @@
     transition: all 0.3s ease-in-out;
 }
 
-input[type="text"]::placeholder {
+#myInput::placeholder {
     color: #70727f;
 }
 

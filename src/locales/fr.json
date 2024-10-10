@@ -29,6 +29,8 @@
     "inputFirstName": "Votre prenom...",
     "registerLastName": "Nom:",
     "inputLastName": "Votre nom...",
+    "registerMail": "Email:",
+    "inputMail": "Votre adresse mail...",
     "registerPassword": "Mot de passe:",
     "inputPassword": "Votre mot de passe...",
     "registerConfirmPassword": "Confirmez votre mot de passe:",

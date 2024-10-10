@@ -3,6 +3,7 @@ import { getTranslation } from "./translate";
 const inputNick = document.getElementById('inputName');
 const inputFirstName = document.getElementById('inputFirstName');
 const inputLastName = document.getElementById('inputLastName');
+const inputMail = document.getElementById('inputMail');
 const inputPassword = document.getElementById('inputPassword');
 const inputConfirmPassword = document.getElementById('inputConfirmPassword');
 const registrationPanel = document.getElementById('registering');
@@ -17,6 +18,7 @@ function  resetRegistrationInputs()
     inputNick.value = "";
     inputFirstName.value = "";
     inputLastName.value = "";
+    inputMail.value = "";
     inputPassword.value = "";
     inputConfirmPassword.value = "";
 }
@@ -51,3 +53,4 @@ export function acceptRegistration()
     // create a new user
     clickCancelRegister();
 }
+resetRegistrationInputs();
