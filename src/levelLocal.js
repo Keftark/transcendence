@@ -22,6 +22,17 @@ export const BOUNDARY =
   X_MAX: 40
 }
 
+export let matchResult =
+{
+    scorePlayer: 0,
+    scoreOpponent: 0
+}
+
+export function CreateMatchScore(newScorePlayer, newScoreOpponent)
+{
+    return {scorePlayer:newScorePlayer, scoreOpponent:newScoreOpponent};
+}
+
 export let balle;
 
 export const ballBaseRadius = 0.8;
@@ -297,4 +308,9 @@ export function StartLevel(levelMode)
     });
 
     animate();
+}
+
+export function endMatch()
+{
+
 }

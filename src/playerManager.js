@@ -7,7 +7,13 @@ let playerStats =
     lastName: "",
     mail: "",
     language: "",
-    colors: ""
+    colors: "",
+    matches: []
+}
+
+export function addMatchToHistory(matchResult)
+{
+    playerStats.matches.push(matchResult);
 }
 
 export function playerManager() 

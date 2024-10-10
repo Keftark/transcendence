@@ -10,7 +10,7 @@
     align-items: left;
     background-color:rgb(1, 56, 56);
     border: 1px solid #999999;
-    border-radius: 16px;
+    border-radius: 8px;
     font-family: Arial, sans-serif;
     transition: transform 0.3s ease-in-out;
     z-index: 3;
@@ -55,18 +55,28 @@
 {
     display: flex;
     flex-direction: column;
-    color: #ffffff;
+    color: #a5ebf5;
 }
 
 #inputName, #inputFirstName, #inputLastName, #inputPassword, #inputConfirmPassword
 {
-    height: 20px;
-    margin: -12px 0px 0px 0px;
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #002e33;
+    color: #79c8d3;
+    border: 2px solid #6b8692;
+    border-radius: 5px;
+    outline: none;
+    height: 16px;
+    margin: -14px 0px 0px 0px;
 }
 
 #registerHeader
 {
+    margin: 4px 0px 0px 0px;
     text-align: center;
+
 }
 
 #loginbuttons
