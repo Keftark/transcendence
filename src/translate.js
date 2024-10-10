@@ -34,6 +34,19 @@ export function updateHTML(translations)
 	document.getElementById('modeComputer').innerText = translations.modeComputer;
 	document.getElementById('mainMenuText').innerText = translations.mainMenuText;
 	document.getElementById('backButton').innerText = translations.backText;
+	document.getElementById('registerHeader').innerText = translations.registerHeader;
+	document.getElementById('registerName').innerText = translations.registerName;
+	document.getElementById('inputName').innerText = translations.inputName;
+	document.getElementById('registerFirstName').innerText = translations.registerFirstName;
+	document.getElementById('inputFirstName').innerText = translations.inputFirstName;
+	document.getElementById('registerLastName').innerText = translations.registerLastName;
+	document.getElementById('inputLastName').innerText = translations.inputLastName;
+	document.getElementById('registerPassword').innerText = translations.registerPassword;
+	document.getElementById('inputPassword').innerText = translations.inputPassword;
+	document.getElementById('registerConfirmPassword').innerText = translations.registerConfirmPassword;
+	document.getElementById('inputConfirmPassword').innerText = translations.inputConfirmPassword;
+	document.getElementById('registerConfirm').innerText = translations.registerConfirm;
+	document.getElementById('registerCancel').innerText = translations.registerCancel;
 }
 
 export async function changeLanguage(lang)

@@ -21,5 +21,18 @@
     "backText": "Back",
     "ballSizeChanged": "The ball size is set to ",
     "ballSpeedChanged": "The ball speed is set to ",
-    "paddleSizeChanged": "The paddle size is set to "
+    "paddleSizeChanged": "The paddle size is set to ",
+    "registerHeader": "Sign in",
+    "registerName": "Nickname:",
+    "inputName": "Your nickname...",
+    "registerFirstName": "First name:",
+    "inputFirstName": "Your first name...",
+    "registerLastName": "Last name:",
+    "inputLastName": "Your last name...",
+    "registerPassword": "Password:",
+    "inputPassword": "Your password...",
+    "registerConfirmPassword": "Confirm your password:",
+    "inputConfirmPassword": "Your password...",
+    "registerConfirm": "Confirm",
+    "registerCancel": "Cancel"
 }

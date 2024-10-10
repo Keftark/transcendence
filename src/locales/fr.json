@@ -21,5 +21,18 @@
     "backText": "Retour",
     "ballSizeChanged": "La taille de la balle est maintenant de ",
     "ballSpeedChanged": "La vitesse de la balle est maintenant de ",
-    "paddleSizeChanged": "La taille des raquettes est maintenant de "
+    "paddleSizeChanged": "La taille des raquettes est maintenant de ",
+    "registerHeader": "Inscription",
+    "registerName": "Pseudonyme:",
+    "inputName": "Votre pseudonyme...",
+    "registerFirstName": "Prenom:",
+    "inputFirstName": "Votre prenom...",
+    "registerLastName": "Nom:",
+    "inputLastName": "Votre nom...",
+    "registerPassword": "Mot de passe:",
+    "inputPassword": "Votre mot de passe...",
+    "registerConfirmPassword": "Confirmez votre mot de passe:",
+    "inputConfirmPassword": "Votre mot de passe...",
+    "registerConfirm": "Accepter",
+    "registerCancel": "Annuler"
 }

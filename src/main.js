@@ -1,6 +1,6 @@
 import { clickBackButtonMenu, loadMainMenu } from './menu.js';
 import { initTranslation, changeLanguage } from './translate.js';
-import { setNewColor,  } from './menu.js';
+import { setButtonsColors,  } from './menu.js';
 import { addMainEvents } from './eventsListener.js';
 
 export const LevelMode = {
@@ -47,7 +47,7 @@ function changeCursors()
 changeCursors();
 addMainEvents();
 initTranslation();
-setNewColor();
+setButtonsColors();
 window.changeLanguage = changeLanguage;
 const button = document.getElementById('mainPlayButton');
 button.focus();

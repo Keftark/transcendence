@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="./styles/menu.css">
     <link rel="stylesheet" href="./styles/anims.css">
     <link rel="stylesheet" href="./styles/chat.css">
+    <link rel="stylesheet" href="./styles/registration.css">
     <link rel="icon" type="image/png" href="/favicon.png">
 </head>
 <body>
@@ -95,6 +96,35 @@
             <button id="sendButton">
                 <img src="icons/send.png" class="button-send-img" />
             </button>
+        </div>
+    </div>
+    <div id="registering">
+        <div id="registeringPanel">
+            <h1 class="regItem" id="registerHeader"></h1>
+            <div id="regField" class="regItem">
+                <p id="registerName"></p>
+                <input type="text" id="inputName" placeholder="...">
+            </div>
+            <div class="regItem">
+                <p id="registerFirstName"></p>
+                <input type="text" id="inputFirstName" placeholder="...">
+            </div>
+            <div class="regItem">
+                <p id="registerLastName"></p>
+                <input type="text" id="inputLastName" placeholder="...">
+            </div>
+            <div class="regItem">
+                <p id="registerPassword"></p>
+                <input type="password" id="inputPassword" placeholder="...">
+            </div>
+            <div class="regItem">
+                <p id="registerConfirmPassword"></p>
+                <input type="password" id="inputConfirmPassword" placeholder="...">
+            </div>
+            <div id="regButtons">
+                <button class="regButton" id="registerConfirm"></button>
+                <button class="regButton" id="registerCancel"></button>
+            </div>
         </div>
     </div>
 </body>

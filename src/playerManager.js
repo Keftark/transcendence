@@ -1,3 +1,15 @@
+import { changeTextsColor } from "./menu";
+
+let playerStats = 
+{
+    nickname: "",
+    firstName: "",
+    lastName: "",
+    mail: "",
+    language: "",
+    colors: ""
+}
+
 export function playerManager() 
 {
     // player profile
@@ -11,7 +23,6 @@ export function askCreateNewPlayer()
         pseudo
         password
         photo
-
     */
 }
 
@@ -29,4 +40,10 @@ export function changeProfilePicture(playerId)
 export function changePlayerName(playerId)
 {
     // on change le nom dans la base de donnees et sur le profil.
+}
+
+export function loadPlayerConfig(playerId)
+{
+    changeLanguage(playerId.language);
+    changeTextsColor(playerId.colors);
 }
