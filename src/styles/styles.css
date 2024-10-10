@@ -38,7 +38,7 @@ button
     padding: 10px 20px;
     font-size: 64px;
     text-align: center;
-    z-index: 100;
+    z-index: 1;
     width: 100%;
 }
 
@@ -51,7 +51,7 @@ button
     color: white;
     font-size: 50px;
     text-align: center;
-    z-index: 100;
+    z-index: 1;
     visibility: hidden;
     text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.459),
     -1px -1px 0px rgba(0, 0, 0, 0.459),
@@ -70,7 +70,7 @@ button
     color: white;
     font-size: 80px;
     text-align: center;
-    z-index: 100;
+    z-index: 1;
     visibility: hidden;
     text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.459),
     -1px -1px 0px rgba(0, 0, 0, 0.459),
@@ -182,28 +182,28 @@ button
     animation: fade 2s forwards;
 }
 
-#loadingScreen {
+/* #loadingScreen {
     height: 100vh;
     display: flex;
     width: 100%;
     justify-content: center;
     align-items: center;
-    background-color: #000; /* Optional: Set a background color */
+    background-color: #000;
     overflow: hidden;
-    z-index: 100;
+    z-index: 1;
 }
 
 #loadingScreen p {
     font-size: 30px;
     color: white;
     font-family: 'MyCustomFont', Arial, sans-serif;
-}
+} */
 
 #controlsP1LocalImg, #controlsP2LocalImg, #controlsAdventureImg {
     display: none;
     position: absolute;
     bottom: 5%;
-    z-index: 100;
+    z-index: 1;
     width: 192px;
 }
 

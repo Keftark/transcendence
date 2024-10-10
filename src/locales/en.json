@@ -34,5 +34,7 @@
     "registerConfirmPassword": "Confirm your password:",
     "inputConfirmPassword": "Your password...",
     "registerConfirm": "Confirm",
-    "registerCancel": "Cancel"
+    "registerCancel": "Cancel",
+    "buttonSignIn": "Sign in",
+    "buttonLogIn": "Log in"
 }

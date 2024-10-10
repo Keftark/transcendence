@@ -21,6 +21,7 @@
     <script type="module" src="/eventsListener.js"></script>
     <script type="module" src="/chat.js"></script>
     <script type="module" src="/cheats.js"></script>
+    <script type="module" src="/registration.js"></script>
     <div id="top-text">ft_transcendence</div>
     <div class="mainMenuPanel" id="mainMenuPanel">
         <div class="mainPanel" id="mainPanel">
@@ -98,6 +99,10 @@
             </button>
         </div>
     </div>
+    <div id="loginbuttons">
+        <button id="buttonSignIn" onclick="showRegistrationPanel()"></button>
+        <button id="buttonLogIn" onclick="clickCancelRegister()"></button>
+    </div>
     <div id="registering">
         <div id="registeringPanel">
             <h1 class="regItem" id="registerHeader"></h1>
@@ -122,8 +127,8 @@
                 <input type="password" id="inputConfirmPassword" placeholder="...">
             </div>
             <div id="regButtons">
-                <button class="regButton" id="registerConfirm"></button>
-                <button class="regButton" id="registerCancel"></button>
+                <button class="regButton" id="registerConfirm" onclick="acceptRegistration()"></button>
+                <button class="regButton" id="registerCancel" onclick="clickCancelRegister()"></button>
             </div>
         </div>
     </div>

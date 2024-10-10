@@ -1,6 +1,7 @@
 import { addMainEvents } from './eventsListener.js';
 import { StartLevel, unloadLevel } from './levelLocal.js';
 import { getLevelState, LevelMode, setLevelState } from './main.js';
+const overlayPanel = document.getElementById('overlay');
 
 // document.addEventListener('DOMContentLoaded', () => {
 //     const playButton = document.getElementById('mainPlayButton');
@@ -87,6 +88,7 @@ export function closeMenu()
 
 export function openProfile()
 {
+    overlayPanel.style.display = 'block';
     const profilePanel = document.getElementById('profilePanel');
     profilePanel.style.display = 'block';
     if (getLevelState() === LevelMode.MENU)
@@ -103,10 +105,12 @@ export function closeProfile()
         oldButton.focus();
         oldButton = null;
     }
+    overlayPanel.style.display = 'none';
 }
 
 export function openSettings()
 {
+    overlayPanel.style.display = 'block';
     const settingsPanel = document.getElementById('settingsPanel');
     settingsPanel.style.display = 'block'; // Show the profile panel
     if (getLevelState() === LevelMode.MENU)
@@ -123,6 +127,7 @@ export function closeSettings()
         oldButton.focus();
         oldButton = null;
     }
+    overlayPanel.style.display = 'none';
 }
 
 const textElements = document.querySelectorAll(' \

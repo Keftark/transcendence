@@ -7,7 +7,7 @@
     border: 1px solid #005c57;
     border-radius: 3px;
     padding: 10px 50px 10px 10px;
-    z-index: 11;
+    z-index: 1;
     transform: translateX(-130px);
     transition: transform 0.3s ease;
 }
@@ -69,9 +69,10 @@
     border: 1px solid #ccc;
     border-radius: 10px;
     padding: 20px;
-    z-index: 200;
+    z-index: 3;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
 }
+
 #profilePanel h2 {
     margin-top: 0;
     text-align: center;
@@ -86,7 +87,7 @@
     color: white;
 }
 
-#closeProfileButton {
+#closeProfileButton, #closeSettingsButton {
     margin-top: 20px;
     padding: 10px;
     width: 100%;
@@ -96,6 +97,7 @@
     border-radius: 5px;
     text-align: center;
     font-size: 30px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.349);
 }
 
 #settingsPanel {
@@ -110,7 +112,7 @@
     border: 1px solid #ccc;
     border-radius: 10px;
     padding: 20px;
-    z-index: 200;
+    z-index: 3;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
 }
 
@@ -135,16 +137,12 @@
     color: white;
 }
 
-#closeSettingsButton {
-    margin-top: 20px;
-    padding: 10px;
-    width: 100%;
-    background-color: #005c57;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    text-align: center;
-    font-size: 30px;
+#closeSettingsButton:hover, #closeProfileButton:hover
+{
+    border-width: 6px;
+    background-color: rgba(0, 255, 255, 0.267);
+    opacity: 0.8;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.815);
 }
 
 #color1Button, #color2Button, #color3Button, #color4Button, #color5Button {
@@ -227,4 +225,14 @@
     background: #00ff15bd;
     border-radius: 3px;
     z-index: -1;
+}
+
+#overlay
+{
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 2;
 }
