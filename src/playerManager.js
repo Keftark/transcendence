@@ -16,6 +16,7 @@ let playerStats =
     language: "",
     colors: "",
     photoIndex: 0,
+    isRegistered: false,
     matches: []
 }
 
@@ -35,6 +36,21 @@ export function createNewPlayer()
     playerStats.language = "en";
     playerStats.photoIndex = 0;
     playerStats.colors = "white";
+    playerStats.isRegistered = true;
+}
+
+export function resetPlayerStats()
+{
+    playerStats.nickname = "";
+    playerStats.firstName = "";
+    playerStats.lastName = "";
+    playerStats.mail = "";
+    playerStats.password = "";
+    playerStats.language = "en";
+    playerStats.photoIndex = 0;
+    playerStats.colors = "white";
+    playerStats.matches = [];
+    playerStats.isRegistered = false;
 }
 
 // on laisse le joueur choisir une image parmi une selection

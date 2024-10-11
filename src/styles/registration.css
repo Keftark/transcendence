@@ -88,7 +88,16 @@
     flex-direction:row;
 }
 
-#buttonSignIn, #buttonLogIn
+#logoutbuttons
+{
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    display: none;
+    flex-direction:row;
+}
+
+#buttonSignIn, #buttonLogIn, #buttonLogOut, #buttonAccount
 {
     display: flex;
     margin: 5px;

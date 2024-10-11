@@ -38,5 +38,7 @@
     "registerConfirm": "Accepter",
     "registerCancel": "Annuler",
     "buttonSignIn": "S'enregistrer",
-    "buttonLogIn": "Se connecter"
+    "buttonLogIn": "Se connecter",
+    "buttonAccount": "Compte",
+    "buttonLogOut": "Se deconnecter"
 }

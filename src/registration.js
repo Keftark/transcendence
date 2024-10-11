@@ -1,3 +1,4 @@
+import { createNewPlayer, resetPlayerStats } from "./playerManager";
 import { getTranslation } from "./translate";
 
 const inputNick = document.getElementById('inputName');
@@ -8,10 +9,14 @@ const inputPassword = document.getElementById('inputPassword');
 const inputConfirmPassword = document.getElementById('inputConfirmPassword');
 const registrationPanel = document.getElementById('registering');
 const overlayPanel = document.getElementById('overlay');
+const logInButtons = document.getElementById('loginbuttons');
+const logOutButtons = document.getElementById('logoutbuttons');
 
 window.showRegistrationPanel = showRegistrationPanel;
 window.clickCancelRegister = clickCancelRegister;
 window.acceptRegistration = acceptRegistration;
+window.clickLogOut = clickLogOut;
+window.showAccountPanel = showAccountPanel;
 
 function  resetRegistrationInputs()
 {
@@ -50,7 +55,32 @@ export function showRegistrationPanel()
 
 export function acceptRegistration()
 {
-    // create a new user
+    createNewPlayer();
     clickCancelRegister();
+    replaceLogInButtons();
 }
+
+function replaceLogInButtons()
+{
+    logOutButtons.style.display = 'flex';
+    logInButtons.style.display = 'none';
+}
+
+function replaceLogOutButtons()
+{
+    logInButtons.style.display = 'flex';
+    logOutButtons.style.display = 'none';
+}
+
+export function clickLogOut()
+{
+    replaceLogOutButtons();
+    resetPlayerStats();
+}
+
+export function showAccountPanel()
+{
+
+}
+
 resetRegistrationInputs();
