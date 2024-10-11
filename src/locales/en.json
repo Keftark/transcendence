@@ -7,9 +7,6 @@
     "settingsButton": "Settings", 
     "mainButton": "Main menu", 
     "settings": "Settings", 
-    "profile": "Profile", 
-    "name": "Name: ", 
-    "email": "Mail: ", 
     "colors": "Colors", 
     "close": "Close", 
     "language": "Language", 
@@ -39,6 +36,6 @@
     "registerCancel": "Cancel",
     "buttonSignIn": "Sign in",
     "buttonLogIn": "Log in",
-    "buttonAccount": "Account",
-    "buttonLogOut": "Log out"
+    "buttonLogOut": "Log out",
+    "seeMatchesButton": "Match history"
 }

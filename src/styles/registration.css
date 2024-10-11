@@ -97,7 +97,7 @@
     flex-direction:row;
 }
 
-#buttonSignIn, #buttonLogIn, #buttonLogOut, #buttonAccount
+#buttonSignIn, #buttonLogIn, #buttonLogOut
 {
     display: flex;
     margin: 5px;

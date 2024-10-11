@@ -21,9 +21,6 @@ export function updateHTML(translations)
 	document.getElementById('mainSettingsButton').innerText = translations.settingsButton;
 	document.getElementById('mainButton').innerText = translations.mainButton;
 	document.getElementById('settings').innerText = translations.settings;
-	document.getElementById('profile').innerText = translations.profile;
-	document.getElementById('name').innerText = translations.name;
-	document.getElementById('email').innerText = translations.email;
 	document.getElementById('colors').innerText = translations.colors;
 	document.getElementById('closeProfileButton').innerText = translations.close;
 	document.getElementById('closeSettingsButton').innerText = translations.close;
@@ -51,8 +48,8 @@ export function updateHTML(translations)
 	document.getElementById('registerCancel').innerText = translations.registerCancel;
 	document.getElementById('buttonSignIn').innerText = translations.buttonSignIn;
 	document.getElementById('buttonLogIn').innerText = translations.buttonLogIn;
-	document.getElementById('buttonAccount').innerText = translations.buttonAccount;
 	document.getElementById('buttonLogOut').innerText = translations.buttonLogOut;
+	document.getElementById('seeMatchesButton').innerText = translations.seeMatchesButton;
 }
 
 export async function changeLanguage(lang)

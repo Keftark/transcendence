@@ -6,7 +6,7 @@ const inputLastName = document.getElementById('inputLastName');
 const inputMail = document.getElementById('inputMail');
 const inputPassword = document.getElementById('inputPassword');
 
-let playerStats = 
+export let playerStats = 
 {
     nickname: "",
     firstName: "",

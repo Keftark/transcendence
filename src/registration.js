@@ -16,7 +16,6 @@ window.showRegistrationPanel = showRegistrationPanel;
 window.clickCancelRegister = clickCancelRegister;
 window.acceptRegistration = acceptRegistration;
 window.clickLogOut = clickLogOut;
-window.showAccountPanel = showAccountPanel;
 
 function  resetRegistrationInputs()
 {
@@ -47,7 +46,7 @@ export function showRegistrationPanel()
     registrationPanel.style.display = 'block';
     if (registrationPanel.classList.contains('showReg') === false) {
         setTimeout(() => {
-            registrationPanel.classList.add('showReg'); // Add the show class to fade in
+            registrationPanel.classList.add('showReg');
         }, 10);
     }
     inputNick.focus();
@@ -76,11 +75,6 @@ export function clickLogOut()
 {
     replaceLogOutButtons();
     resetPlayerStats();
-}
-
-export function showAccountPanel()
-{
-
 }
 
 resetRegistrationInputs();

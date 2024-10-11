@@ -1,6 +1,7 @@
 import { addMainEvents } from './eventsListener.js';
 import { StartLevel, unloadLevel } from './levelLocal.js';
 import { getLevelState, LevelMode, setLevelState } from './main.js';
+import { playerStats } from './playerManager.js';
 const overlayPanel = document.getElementById('overlay');
 
 // document.addEventListener('DOMContentLoaded', () => {
@@ -88,6 +89,14 @@ export function closeMenu()
 
 export function openProfile()
 {
+    if (playerStats.isRegistered === false)
+    {
+     
+        return;
+    }
+    document.getElementById('nameProfile').innerText = playerStats.nickname;
+    document.getElementById('firstNameProfile').innerText = playerStats.firstName;
+    document.getElementById('lastNameProfile').innerText = playerStats.lastName;
     overlayPanel.style.display = 'block';
     const profilePanel = document.getElementById('profilePanel');
     profilePanel.style.display = 'block';
