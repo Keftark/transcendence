@@ -55,8 +55,8 @@
 .message, .message-left, .message-middle, .message-right {
     position: relative;
     font-family: Arial, sans-serif;
-    padding: 2px;
-    border-radius: 8px;
+    padding: 4px;
+    border-radius: 4px;
     font-size: 14px;
     max-width: 90%;
 }
@@ -88,7 +88,6 @@
     font-style: italic;
 }
 
-/* Messages aligned to the right */
 .message-right {
     color: #00ffff;
     text-align: left;

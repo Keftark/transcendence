@@ -131,8 +131,8 @@ function checkFields()
 
 export function acceptRegistration()
 {
-    if (checkFields() === false)
-        return;
+    // if (checkFields() === false)
+    //     return;
     createNewPlayer();
     clickCancelRegister();
     replaceLogInButtons();

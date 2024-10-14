@@ -167,7 +167,7 @@ export function sendSystemMessage(message)
 }
 
 /* 
-    Faire en sorte de n'entrer un nom que si c'est un joueur qui ecrit, pas le systeme. Avec createMessageElement()
+    Ne pas afficher le nom si le meme joueur ecrit plusieurs fois de suite
 */
 function trySendMessage() {
     const messageText = inputElement.value.trim();
@@ -185,7 +185,6 @@ function trySendMessage() {
         messagesContainer.appendChild(newMessage);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
-    
     inputElement.value = '';
     inputElement.focus();
 }

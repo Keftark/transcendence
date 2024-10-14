@@ -2,12 +2,8 @@ import { addMainEvents } from './eventsListener.js';
 import { StartLevel, unloadLevel } from './levelLocal.js';
 import { getLevelState, LevelMode, setLevelState } from './main.js';
 import { playerStats } from './playerManager.js';
+import { loadScores } from './scoreManager.js';
 const overlayPanel = document.getElementById('overlay');
-
-// document.addEventListener('DOMContentLoaded', () => {
-//     const playButton = document.getElementById('mainPlayButton');
-//     playButton.addEventListener('click', clickPlay);
-// });
 
 document.getElementById('mainPlayButton').addEventListener('click', () => {
     clickPlay();
@@ -129,6 +125,7 @@ export function showMatchList()
             matchListPanel.classList.add('toRight');
             matchListButton.classList.add('open');
         }, 50);
+        loadScores();
     }
     else {
             profilePanel.classList.remove('toLeft');

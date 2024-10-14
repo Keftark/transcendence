@@ -1,9 +1,20 @@
+import { playerStats } from "./playerManager";
+
 const scoreRight = document.getElementById('score-right');
 const scoreLeft = document.getElementById('score-left');
 const playernameRight = document.getElementById('playername-right');
 const playernameLeft = document.getElementById('playername-left');
 let player1Score = 0;
 let player2Score = 0;
+
+export class MatchResult
+{
+    constructor(playerScore = 0, opponentScore = 0,  opponentName = "") {
+      this.scorePlayer = playerScore;
+      this.scoreOpponent = opponentScore;
+      this.nameOpponent = opponentName;
+    }
+}
 
 function animateScoreChange(scoreElement, newScore) {
     // Step 1: Add the 'fall-down' class to animate the old score down
@@ -56,4 +67,20 @@ export function setVisibleScore(boolean)
     scoreLeft.style.display = boolean === true ? 'block' : 'none';
     playernameRight.style.display = boolean === true ? 'block' : 'none';
     playernameLeft.style.display = boolean === true ? 'block' : 'none';
+}
+
+export function loadScores()
+{
+    const scoresContainer = document.getElementById('matchHistoryContainer');
+    for (let i = 0; i < playerStats.matches.length; i++)
+    {
+        const newContainer = document.createElement('div');
+        newContainer.classList.add('score-container');
+    
+        const messageContent = document.createElement('div');
+        messageContent.classList.add('message');
+        messageContent.textContent = playerStats.nickname + " vs " + playerStats.matches[i].nameOpponent;
+        newContainer.appendChild(messageContent);
+        scoresContainer.appendChild(newContainer);
+    }
 }

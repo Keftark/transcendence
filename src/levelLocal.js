@@ -8,6 +8,8 @@ import { setLevelState, LevelMode, getLevelState } from './main.js';
 import { unloadScene } from './unloadScene.js';
 import { removeMainEvents, showCursor } from './eventsListener.js';
 import { sendSystemMessage, tryCloseChat } from './chat.js';
+import { playerStats } from './playerManager.js';
+import { getTranslation } from './translate.js';
 
 export const playerBaseHeight = 12;
 export const PLAYER_RADIUS = 1;
@@ -21,12 +23,6 @@ export const BOUNDARY =
   X_MIN: -40,
   X_MAX: 40
 }
-
-// export let matchResult =
-// {
-//     scorePlayer: 0,
-//     scoreOpponent: 0
-// }
 
 export function isVictory(match)
 {
@@ -125,6 +121,16 @@ function showKeys()
         playerKeysAdventure.style.display = 'block';
 }
 
+function setPlayerNames()
+{
+    if (getLevelState() === LevelMode.LOCAL)
+        return;
+    if (getLevelState() === LevelMode.ADVENTURE)
+        document.getElementById('playername-right').innerText = getTranslation('botName');
+    else
+        document.getElementById('playername-left').innerText = playerStats.isRegistered ? playerStats.nickname : getTranslation('playernameleft');
+}
+
 export function setUpLevel(scene)
 {
     document.getElementById('menuPanel').style.display = 'block';
@@ -211,6 +217,7 @@ export function StartLevel(levelMode)
     setUpConsts();
     setScores(0, 0);
     tryCloseChat();
+    setPlayerNames();
     
     animationId = null;
     let isCameraAnimationComplete = false;

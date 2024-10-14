@@ -47,5 +47,6 @@
     "errBadMail": "Error: wrong mail.",
     "errBadPassword": "Error: empty password.",
     "errBadPasswordConfirm": "Error: empty password confirm.",
-    "errDifferentPasswords": "Error: the password and password confirm are different."
+    "errDifferentPasswords": "Error: the password and password confirm are different.",
+    "botName": "Computer"
 }

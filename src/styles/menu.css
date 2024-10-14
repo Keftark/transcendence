@@ -79,7 +79,7 @@
     transform: translate(-100%, -50%);
 }
 
-#profilePanel h2 {
+#profilePanel h2, #settingsPanel h2 {
     margin-top: 0;
     text-align: center;
     font-size: 60px;
@@ -87,7 +87,7 @@
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
 }
 
-#profilePanel p {
+#profilePanel p, #settingsPanel p {
     margin: 5px 0;
     text-align: left;
     font-size: 30px;
@@ -173,20 +173,6 @@
     display: flex;
     justify-content: left;
     align-items: center;
-}
-
-#settingsPanel h2 {
-    margin-top: 0;
-    text-align: center;
-    font-size: 60px;
-    color: white;
-}
-
-#settingsPanel p {
-    margin: 5px 0;
-    text-align: left;
-    font-size: 30px;
-    color: white;
 }
 
 #closeSettingsButton:hover, #closeProfileButton:hover, #seeMatchesButton:hover
@@ -298,4 +284,10 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.3);
     z-index: 2;
+}
+
+.score-container
+{
+    display: flex; 
+    flex-direction: column;
 }

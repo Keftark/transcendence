@@ -47,5 +47,6 @@
     "errBadMail": "Erreur: mauvaise adresse mail.",
     "errBadPassword": "Erreur: mot de passe vide.",
     "errBadPasswordConfirm": "Erreur: confirmation du mot de passe vide.",
-    "errDifferentPasswords": "Erreur: le mot de passe et la confirmation sont differents."
+    "errDifferentPasswords": "Erreur: le mot de passe et la confirmation sont differents.",
+    "botName": "Ordinateur"
 }
