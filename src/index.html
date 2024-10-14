@@ -60,12 +60,17 @@
         <img src="./images/controlsAdventure.png" id="controlsAdventureImg" />
     </div>
     <div id="overlay"></div>
+    <div id="matchListPanel">
+        <p id="noMatchHistory"></p>
+        <p id="victories"></p>
+        <div id="matchHistoryContainer"></div>
+    </div>
     <div id="profilePanel">
         <h2 id="nameProfile"></h2>
         <p id="firstNameProfile"></p>
         <p id="lastNameProfile"></p>
         <p id="emailProfile"></p>
-        <button id="seeMatchesButton"></button>
+        <button id="seeMatchesButton" onclick="showMatchList()"></button>
         <button id="closeProfileButton"></button>
     </div>
     <div id="settingsPanel">

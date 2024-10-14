@@ -139,9 +139,9 @@ button:hover {
 }
 
 .chat-box.shrunk {
-    width: 25px;
-    height: 25px;
-    border-radius: 5px;
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
     box-shadow: 0 0 10px rgba(255, 0, 127, 0.8);
     transition: width 0.4s ease, height 0.4s ease;
 }
@@ -176,14 +176,10 @@ button:hover {
     color: rgba(255, 0, 127, 0.8);
 }
 
-#toggleSizeButton:hover {
-    background-color: #ff66b37a;
-}
-
 .chat-box.shrunk #toggleSizeButton {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 2;
+    right: 2;
     width: 25px;
     height: 25px;
     background-color: transparent;
@@ -192,10 +188,8 @@ button:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 15px rgba(255, 0, 127, 0.8);
 }
 
-.chat-box.shrunk #toggleSizeButton:hover {
-    background-color: #ff66b37a;
-    transform: scale(1.2);
+#toggleSizeButton:hover {
+    transform: scale(1.3);
 }

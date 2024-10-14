@@ -37,5 +37,7 @@
     "buttonSignIn": "S'enregistrer",
     "buttonLogIn": "Se connecter",
     "buttonLogOut": "Se deconnecter",
-    "seeMatchesButton": "Match history"
+    "seeMatchesButton": "Historique",
+    "noMatchHistory": "Pas d'historique",
+    "victories": "Victoires : "
 }

@@ -11,6 +11,7 @@ const registrationPanel = document.getElementById('registering');
 const overlayPanel = document.getElementById('overlay');
 const logInButtons = document.getElementById('loginbuttons');
 const logOutButtons = document.getElementById('logoutbuttons');
+const profileButton = document.getElementById('mainProfileButton');
 
 window.showRegistrationPanel = showRegistrationPanel;
 window.clickCancelRegister = clickCancelRegister;
@@ -57,6 +58,7 @@ export function acceptRegistration()
     createNewPlayer();
     clickCancelRegister();
     replaceLogInButtons();
+    addHoverEffect();
 }
 
 function replaceLogInButtons()
@@ -75,6 +77,19 @@ export function clickLogOut()
 {
     replaceLogOutButtons();
     resetPlayerStats();
+    removeHoverEffect();
 }
 
+function addHoverEffect() {
+    profileButton.classList.add('mainButtonHover');
+    profileButton.style.opacity = 1;
+}
+
+// Function to remove the hover effect
+function removeHoverEffect() {
+    profileButton.classList.remove('mainButtonHover');
+    profileButton.style.opacity = 0.5;
+}
+
+removeHoverEffect();
 resetRegistrationInputs();

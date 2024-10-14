@@ -22,10 +22,15 @@ export const BOUNDARY =
   X_MAX: 40
 }
 
-export let matchResult =
+// export let matchResult =
+// {
+//     scorePlayer: 0,
+//     scoreOpponent: 0
+// }
+
+export function isVictory(match)
 {
-    scorePlayer: 0,
-    scoreOpponent: 0
+    return (match.scorePlayer > match.scoreOpponent);
 }
 
 export function CreateMatchScore(newScorePlayer, newScoreOpponent)

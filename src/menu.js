@@ -54,11 +54,11 @@ document.getElementById('mainButton').addEventListener('click', () => {
 });
 
 document.getElementById('modeLocal').addEventListener('click', () => {
-    clickPlayLocal();
+    clickPlayGame(LevelMode.LOCAL);
 });
 
 document.getElementById('modeComputer').addEventListener('click', () => {
-    clickPlayAdventure();
+    clickPlayGame(LevelMode.ADVENTURE);
 });
 
 document.getElementById('backButton').addEventListener('click', () => {
@@ -73,7 +73,7 @@ export function openMenu()
     
     if (panel.classList.contains('show') === false) {
         setTimeout(() => {
-            panel.classList.add('show'); // Add the show class to fade in
+            panel.classList.add('show');
         });
     }
 }
@@ -83,7 +83,7 @@ export function closeMenu()
     const panel = document.getElementById('menuPanel');
     
     if (panel.classList.contains('show')) {
-        panel.classList.remove('show'); // Remove the show class to fade out
+        panel.classList.remove('show');
     }
 }
 
@@ -103,6 +103,37 @@ export function openProfile()
     if (getLevelState() === LevelMode.MENU)
         oldButton = document.getElementById('mainProfileButton');
     document.getElementById('closeProfileButton').focus();
+}
+
+window.showMatchList = showMatchList;
+export function showMatchList()
+{
+    const profilePanel = document.getElementById('profilePanel');
+    const matchListPanel = document.getElementById('matchListPanel');
+    if (profilePanel.classList.contains('toLeft') === false) {
+        if (playerStats.matches.length === 0)
+        {
+            document.getElementById('noMatchHistory').style.display = 'block';
+            document.getElementById('victories').style.display = 'none';
+        }
+        else
+        {
+            document.getElementById('noMatchHistory').style.display = 'none';
+            document.getElementById('victories').style.display = 'block';
+        }
+        matchListPanel.style.display = 'flex';
+        setTimeout(() => {
+            profilePanel.classList.add('toLeft');
+            matchListPanel.classList.add('toRight');
+        }, 50);
+    }
+    else {
+            profilePanel.classList.remove('toLeft');
+            matchListPanel.classList.remove('toRight');
+        setTimeout(() => {
+            matchListPanel.style.display = 'none';
+        }, 100);
+    }
 }
 
 export function closeProfile()
@@ -177,12 +208,18 @@ function showMainMenu()
     mainMenuPanel.style.display = 'flex';
     const button = document.getElementById('mainPlayButton');
     button.focus();
+    if (playerStats.isRegistered)
+        document.getElementById('logoutbuttons').style.display = 'flex';
+    else
+        document.getElementById('loginbuttons').style.display = 'flex';
 }
 
 function hideMainMenu()
 {
     const mainMenuPanel = document.getElementById('mainMenuPanel');
     mainMenuPanel.style.display = 'none';
+    document.getElementById('loginbuttons').style.display = 'none';
+    document.getElementById('logoutbuttons').style.display = 'none';
 }
 
 function hideMainPanel()
@@ -197,18 +234,11 @@ export function clickPlay()
     showModeChoice();
 }
 
-export function clickPlayLocal()
+export function clickPlayGame(mode)
 {
     hideMainMenu();
     hideModeChoice();
-    StartLevel(LevelMode.LOCAL);
-}
-
-export function clickPlayAdventure()
-{
-    hideMainMenu();
-    hideModeChoice();
-    StartLevel(LevelMode.ADVENTURE);
+    StartLevel(mode);
 }
 
 export function showModeChoice()

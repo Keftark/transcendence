@@ -1,4 +1,4 @@
-import { matchResult } from "./levelLocal";
+import { isVictory } from "./levelLocal";
 import { changeTextsColor } from "./menu";
 const inputNick = document.getElementById('inputName');
 const inputFirstName = document.getElementById('inputFirstName');
@@ -20,10 +20,14 @@ export let playerStats =
     matches: []
 }
 
-export function addMatchToHistory(scorePlayer, scoreOpponent)
+export function addMatchToHistory(playerScore, opponentScore)
 {
+    const newMatchResult = {
+        scorePlayer: playerScore,
+        scoreOpponent: opponentScore
+    };
+    playerStats.matches.push(newMatchResult);
     // prendre le joueur depuis la base de donnees et inserer le nouveau score
-    playerStats.matches.push(matchResult(scorePlayer, scoreOpponent));
 }
 
 export function createNewPlayer()
@@ -70,3 +74,18 @@ export function loadPlayerConfig(playerStats)
     changeLanguage(playerStats.language);
     changeTextsColor(playerStats.colors);
 }
+
+export function getPlayerVictories()
+{
+    const total = playerStats.matches.length;
+    let victories = 0;
+    for (let i = 0; i < total; i++)
+    {
+        if (isVictory(playerStats.matches[i]))
+            victories++;
+    }
+    const percentage = victories * 100 / total;
+    return {total, victories, percentage};
+}
+
+addMatchToHistory(5, 3);

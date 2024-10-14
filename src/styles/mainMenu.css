@@ -89,10 +89,18 @@
 
 .modeSelectionButton:hover,
 .modeSelectionButtonBack:hover,
-.mainMenuButton:hover {
+#mainPlayButton:hover,
+#mainSettingsButton:hover
+ {
     border-width: 6px;
     background-color: rgba(0, 255, 255, 0.219);
     opacity: 0.8;
     box-shadow: 0 0 16px rgba(0, 255, 255, 0.301);
 }
 
+.mainButtonHover:hover{
+    border-width: 6px;
+    background-color: rgba(0, 255, 255, 0.219);
+    opacity: 0.8;
+    box-shadow: 0 0 16px rgba(0, 255, 255, 0.301);
+}
