@@ -39,5 +39,13 @@
     "buttonLogOut": "Se deconnecter",
     "seeMatchesButton": "Historique",
     "noMatchHistory": "Pas d'historique",
-    "victories": "Victoires : "
+    "victories": "Victoires : ",
+    "errEmptyName": "Erreur: pseudonyme vide.",
+    "errEmptyFirstName": "Erreur: prenom vide.",
+    "errEmptyLastName": "Erreur: nom vide.",
+    "errEmptyMail": "Erreur: mail vide.",
+    "errBadMail": "Erreur: mauvaise adresse mail.",
+    "errBadPassword": "Erreur: mot de passe vide.",
+    "errBadPasswordConfirm": "Erreur: confirmation du mot de passe vide.",
+    "errDifferentPasswords": "Erreur: le mot de passe et la confirmation sont differents."
 }

@@ -84,6 +84,7 @@
     text-align: center;
     font-size: 60px;
     color: white;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
 }
 
 #profilePanel p {
@@ -193,6 +194,18 @@
     background-color: rgba(0, 255, 255, 0.267);
     opacity: 0.8;
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.815);
+}
+
+#seeMatchesButton.open
+{
+    border: 2px solid rgb(1, 168, 163);
+    background-color: rgb(0, 142, 137);
+}
+
+#seeMatchesButton.open:hover
+{
+    border: 2px solid rgb(1, 168, 163);
+    background-color: rgba(0, 255, 255, 0.567);
 }
 
 #color1Button, #color2Button, #color3Button, #color4Button, #color5Button {

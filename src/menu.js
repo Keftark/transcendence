@@ -110,11 +110,13 @@ export function showMatchList()
 {
     const profilePanel = document.getElementById('profilePanel');
     const matchListPanel = document.getElementById('matchListPanel');
+    const matchListButton = document.getElementById('seeMatchesButton');
     if (profilePanel.classList.contains('toLeft') === false) {
         if (playerStats.matches.length === 0)
         {
             document.getElementById('noMatchHistory').style.display = 'block';
             document.getElementById('victories').style.display = 'none';
+            matchListButton.style.backgroundColor = '#ffffff56';
         }
         else
         {
@@ -125,11 +127,13 @@ export function showMatchList()
         setTimeout(() => {
             profilePanel.classList.add('toLeft');
             matchListPanel.classList.add('toRight');
+            matchListButton.classList.add('open');
         }, 50);
     }
     else {
             profilePanel.classList.remove('toLeft');
             matchListPanel.classList.remove('toRight');
+            matchListButton.classList.remove('open');
         setTimeout(() => {
             matchListPanel.style.display = 'none';
         }, 100);
@@ -139,7 +143,21 @@ export function showMatchList()
 export function closeProfile()
 {
     const profilePanel = document.getElementById('profilePanel');
-    profilePanel.style.display = 'none';
+    const matchListPanel = document.getElementById('matchListPanel');
+    if (profilePanel.classList.contains('toLeft') === true) {
+        profilePanel.classList.remove('toLeft');
+        matchListPanel.classList.remove('toRight');
+        document.getElementById('seeMatchesButton').classList.remove('open');
+        setTimeout(() => {
+            matchListPanel.style.display = 'none';
+            profilePanel.style.display = 'none';
+        }, 100);
+    }
+    else
+    {
+        matchListPanel.style.display = 'none';
+        profilePanel.style.display = 'none';
+    }
     if (oldButton != null)
     {
         oldButton.focus();
@@ -243,8 +261,7 @@ export function clickPlayGame(mode)
 
 export function showModeChoice()
 {
-    const modeSelection = document.getElementById('modeSelection');
-    modeSelection.style.display = 'flex';
+    document.getElementById('modeSelection').style.display = 'flex';
     setLevelState(LevelMode.MODESELECTION);
     const modeLocal = document.getElementById('modeLocal');
     modeLocal.focus();
@@ -252,8 +269,7 @@ export function showModeChoice()
 
 function hideModeChoice()
 {
-    const modeSelection = document.getElementById('modeSelection');
-    modeSelection.style.display = 'none';
+    document.getElementById('modeSelection').style.display = 'none';
 }
 
 export function clickBackButtonMenu()

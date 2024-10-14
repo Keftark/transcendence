@@ -116,29 +116,35 @@
     <div id="registering">
         <div id="registeringPanel">
             <h1 class="regItem" id="registerHeader"></h1>
-            <div id="regField" class="regItem">
+            <div class="regItem">
                 <p id="registerName"></p>
                 <input type="text" id="inputName" placeholder="...">
+                <p class="registerErrorMessage" id="registerErrorName"></p>
             </div>
             <div class="regItem">
                 <p id="registerFirstName"></p>
                 <input type="text" id="inputFirstName" placeholder="...">
+                <p class="registerErrorMessage" id="registerErrorFirstName"></p>
             </div>
             <div class="regItem">
                 <p id="registerLastName"></p>
                 <input type="text" id="inputLastName" placeholder="...">
+                <p class="registerErrorMessage" id="registerErrorLastName"></p>
             </div>
             <div class="regItem">
                 <p id="registerMail"></p>
                 <input type="text" id="inputMail" placeholder="...">
+                <p class="registerErrorMessage" id="registerErrorMail"></p>
             </div>
             <div class="regItem">
                 <p id="registerPassword"></p>
                 <input type="password" id="inputPassword" placeholder="...">
+                <p class="registerErrorMessage" id="registerErrorPassword"></p>
             </div>
             <div class="regItem">
                 <p id="registerConfirmPassword"></p>
                 <input type="password" id="inputConfirmPassword" placeholder="...">
+                <p class="registerErrorMessage" id="registerErrorConfirmPassword"></p>
             </div>
             <div id="regButtons">
                 <button class="regButton" id="registerConfirm" onclick="acceptRegistration()"></button>

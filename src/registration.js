@@ -26,6 +26,12 @@ function  resetRegistrationInputs()
     inputMail.value = "";
     inputPassword.value = "";
     inputConfirmPassword.value = "";
+    document.getElementById('registerErrorName').innerText = "";
+    document.getElementById('registerErrorFirstName').innerText = "";
+    document.getElementById('registerErrorLastName').innerText = "";
+    document.getElementById('registerErrorMail').innerText = "";
+    document.getElementById('registerErrorPassword').innerText = "";
+    document.getElementById('registerErrorConfirmPassword').innerText = "";
 }
 
 export function clickCancelRegister()
@@ -53,8 +59,80 @@ export function showRegistrationPanel()
     inputNick.focus();
 }
 
+function checkFields()
+{
+    let inputValue = inputNick.value;
+    let errors = 0;
+    if (inputValue.trim() === "")
+    {
+        document.getElementById('registerErrorName').innerText = getTranslation('errEmptyName');
+        errors++;
+    }
+    else
+        document.getElementById('registerErrorName').innerText = "";
+    // check if the name is in the database and return false if it's in
+    inputValue = inputFirstName.value;
+    if (inputValue.trim() === "")
+    {
+        document.getElementById('registerErrorFirstName').innerText = getTranslation('errEmptyFirstName');
+        errors++;
+    }
+    else
+        document.getElementById('registerErrorFirstName').innerText = "";
+    inputValue = inputLastName.value;
+    if (inputValue.trim() === "")
+    {
+        document.getElementById('registerErrorLastName').innerText = getTranslation('errEmptyLastName');
+        errors++;
+    }
+    else
+        document.getElementById('registerErrorLastName').innerText = "";
+    inputValue = inputMail.value;
+    if (inputValue.trim() === "")
+    {
+        document.getElementById('registerErrorMail').innerText = getTranslation('errEmptyMail');
+        errors++;
+    }
+    else
+        document.getElementById('registerErrorMail').innerText = "";
+    if (!inputValue.includes('@'))
+    {
+        document.getElementById('registerErrorMail').innerText = getTranslation('errBadMail');
+        errors++;
+    }
+    else
+        document.getElementById('registerErrorMail').innerText = "";
+    // check if the mail is in the database and return false if it's in
+    inputValue = inputPassword.value;
+    if (inputValue.trim() === "")
+    {
+        document.getElementById('registerErrorPassword').innerText = getTranslation('errBadPassword');
+        errors++;
+    }
+    else
+        document.getElementById('registerErrorPassword').innerText = "";
+    inputValue = inputConfirmPassword.value;
+    if (inputValue.trim() === "")
+    {
+        document.getElementById('registerErrorConfirmPassword').innerText = getTranslation('errBadPasswordConfirm');
+        errors++;
+    }
+    else if (inputPassword.value != inputConfirmPassword.value)
+    {
+        document.getElementById('registerErrorConfirmPassword').innerText = getTranslation('errDifferentPasswords');
+        errors++;
+    }
+    else
+        document.getElementById('registerErrorConfirmPassword').innerText = "";
+    if (errors > 0)
+        return false;
+    return true;
+}
+
 export function acceptRegistration()
 {
+    if (checkFields() === false)
+        return;
     createNewPlayer();
     clickCancelRegister();
     replaceLogInButtons();

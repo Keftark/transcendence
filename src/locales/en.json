@@ -39,5 +39,13 @@
     "buttonLogOut": "Log out",
     "seeMatchesButton": "Match history",
     "noMatchHistory": "No history",
-    "victories": "Victories: "
+    "victories": "Victories: ",
+    "errEmptyName": "Error: empty nickname.",
+    "errEmptyFirstName": "Error: empty first name.",
+    "errEmptyLastName": "Error: empty last name.",
+    "errEmptyMail": "Error: empty mail.",
+    "errBadMail": "Error: wrong mail.",
+    "errBadPassword": "Error: empty password.",
+    "errBadPasswordConfirm": "Error: empty password confirm.",
+    "errDifferentPasswords": "Error: the password and password confirm are different."
 }

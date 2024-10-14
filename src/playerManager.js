@@ -88,4 +88,4 @@ export function getPlayerVictories()
     return {total, victories, percentage};
 }
 
-addMatchToHistory(5, 3);
+addMatchToHistory(3, 5);
