@@ -8,6 +8,7 @@ const sendButton = document.getElementById('sendButton');
 const chatBox = document.getElementById('chatBox');
 const toggleSizeButton = document.getElementById('toggleSizeButton');
 const toggleIcon = document.getElementById('toggleIcon');
+let lastSender = "";
 
 function resetInputFieldValue()
 {
@@ -96,10 +97,13 @@ function createMessageElement(name, messageText) {
     const messageContainer = document.createElement('div');
     messageContainer.classList.add('message-container');
 
-    const nameHeader = document.createElement('div');
-    nameHeader.classList.add('message-name');
-    nameHeader.textContent = name;
-    messageContainer.appendChild(nameHeader);
+    if (name != lastSender)
+    {
+        const nameHeader = document.createElement('div');
+        nameHeader.classList.add('message-name');
+        nameHeader.textContent = name;
+        messageContainer.appendChild(nameHeader);
+    }
 
     const messageContent = document.createElement('div');
     messageContent.classList.add('message');
@@ -137,11 +141,11 @@ function sendRandomMessage(newMessage)
         sendMessageLeft(newMessage);
     else
         sendMessageMiddle(newMessage);
-    messageCount++;
 }
 
 function getPlayerName()
 {
+    messageCount = Math.floor(Math.random() * 3);
     let name = "";
 
     /* Bloc a supprimer, c'est juste pour des tests */
@@ -164,6 +168,7 @@ export function sendSystemMessage(message)
     newMessage.classList.add('message-middle');
     messagesContainer.appendChild(newMessage);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    lastSender = "";
 }
 
 /* 
@@ -184,6 +189,7 @@ function trySendMessage() {
         sendRandomMessage(newMessage);
         messagesContainer.appendChild(newMessage);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        lastSender = playerName;
     }
     inputElement.value = '';
     inputElement.focus();

@@ -39,7 +39,7 @@
 .message-container {
     display: flex; 
     flex-direction: column; /* Stack name and message vertically */
-    margin-bottom: 5px; /* Space between messages */
+    margin-bottom: -6px; /* Space between messages */
 }
 
 .message-name {
@@ -81,6 +81,7 @@
 }
 
 .message-middle {
+    margin-top: 6px;
     text-align: center;
     align-self: center;
     color: #6d6d6d;
