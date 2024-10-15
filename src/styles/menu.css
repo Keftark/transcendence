@@ -289,5 +289,33 @@
 .score-container
 {
     display: flex; 
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
+    border: 2px solid #002627;
+}
+
+.score-left
+{
+    flex: 1;
+    position: relative;
+    font-family: 'MyCustomFont', Arial, sans-serif;
+    padding: 4px;
+    font-size: 30px;
+    box-sizing: border-box;
+    white-space: pre-line;
+    text-align: start;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+.score-right
+{
+    flex: 1;
+    position: relative;
+    font-family: 'MyCustomFont', Arial, sans-serif;
+    padding: 4px;
+    font-size: 30px;
+    text-align: end;
+    box-sizing: border-box;
+    white-space: pre-line;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
 }

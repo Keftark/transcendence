@@ -89,3 +89,4 @@ export function getPlayerVictories()
 }
 
 addMatchToHistory(3, 5, "random");
+addMatchToHistory(5, 3, "random2");

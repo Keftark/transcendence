@@ -2,8 +2,11 @@ import { addMainEvents } from './eventsListener.js';
 import { StartLevel, unloadLevel } from './levelLocal.js';
 import { getLevelState, LevelMode, setLevelState } from './main.js';
 import { playerStats } from './playerManager.js';
-import { loadScores } from './scoreManager.js';
+import { loadScores, removeAllScores } from './scoreManager.js';
 const overlayPanel = document.getElementById('overlay');
+const profilePanel = document.getElementById('profilePanel');
+const matchListPanel = document.getElementById('matchListPanel');
+const matchListButton = document.getElementById('seeMatchesButton');
 
 document.getElementById('mainPlayButton').addEventListener('click', () => {
     clickPlay();
@@ -104,10 +107,8 @@ export function openProfile()
 window.showMatchList = showMatchList;
 export function showMatchList()
 {
-    const profilePanel = document.getElementById('profilePanel');
-    const matchListPanel = document.getElementById('matchListPanel');
-    const matchListButton = document.getElementById('seeMatchesButton');
-    if (profilePanel.classList.contains('toLeft') === false) {
+    if (profilePanel.classList.contains('toLeft') === false)
+    {
         if (playerStats.matches.length === 0)
         {
             document.getElementById('noMatchHistory').style.display = 'block';
@@ -118,6 +119,7 @@ export function showMatchList()
         {
             document.getElementById('noMatchHistory').style.display = 'none';
             document.getElementById('victories').style.display = 'block';
+            loadScores();
         }
         matchListPanel.style.display = 'flex';
         setTimeout(() => {
@@ -125,28 +127,29 @@ export function showMatchList()
             matchListPanel.classList.add('toRight');
             matchListButton.classList.add('open');
         }, 50);
-        loadScores();
     }
-    else {
-            profilePanel.classList.remove('toLeft');
-            matchListPanel.classList.remove('toRight');
-            matchListButton.classList.remove('open');
-        setTimeout(() => {
-            matchListPanel.style.display = 'none';
-        }, 100);
+    else
+    {
+        closeMatchList();
     }
+}
+
+function closeMatchList()
+{
+    profilePanel.classList.remove('toLeft');
+    matchListPanel.classList.remove('toRight');
+    document.getElementById('seeMatchesButton').classList.remove('open');
+    removeAllScores();
+    setTimeout(() => {
+        matchListPanel.style.display = 'none';
+    }, 100);
 }
 
 export function closeProfile()
 {
-    const profilePanel = document.getElementById('profilePanel');
-    const matchListPanel = document.getElementById('matchListPanel');
     if (profilePanel.classList.contains('toLeft') === true) {
-        profilePanel.classList.remove('toLeft');
-        matchListPanel.classList.remove('toRight');
-        document.getElementById('seeMatchesButton').classList.remove('open');
+        closeMatchList();
         setTimeout(() => {
-            matchListPanel.style.display = 'none';
             profilePanel.style.display = 'none';
         }, 100);
     }
@@ -205,6 +208,7 @@ export function changeTextsColor(newColor)
     textElements.forEach(element => {
         element.style.color = newColor;
     });
+    playerStats.colors = newColor;
 }
 
 export function loadMainMenu()

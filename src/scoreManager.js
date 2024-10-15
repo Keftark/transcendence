@@ -1,4 +1,5 @@
-import { playerStats } from "./playerManager";
+import { getPlayerVictories, playerStats } from "./playerManager";
+import { getTranslation } from "./translate";
 
 const scoreRight = document.getElementById('score-right');
 const scoreLeft = document.getElementById('score-left');
@@ -16,27 +17,19 @@ export class MatchResult
     }
 }
 
-function animateScoreChange(scoreElement, newScore) {
-    // Step 1: Add the 'fall-down' class to animate the old score down
+function animateScoreChange(scoreElement, newScore)
+{
     scoreElement.classList.add('fall-down');
-
-    // Step 2: After the fall animation completes (300ms), update the score and move the new score up
     setTimeout(() => {
-        // Update the score text and prepare it below the original position
         scoreElement.innerText = newScore;
-
-        // Trigger reflow so the class change is recognized
         requestAnimationFrame(() => {
-            // Step 3: Now add 'rise-up' to smoothly move the new score into place
             scoreElement.classList.remove('fall-down');
             scoreElement.classList.add('rise-up');
         });
-
-        // Step 4: After the rise-up animation completes, reset the classes
         setTimeout(() => {
             scoreElement.classList.remove('rise-up');
-        }, 500); // Match the duration of the 'rise-up' animation
-    }, 500); // Match the duration of the 'fall-down' animation
+        }, 500);
+    }, 500);
 }
 
 export function addScore(playerNbr)
@@ -69,18 +62,40 @@ export function setVisibleScore(boolean)
     playernameLeft.style.display = boolean === true ? 'block' : 'none';
 }
 
+export function removeAllScores()
+{
+    let parentElement = document.getElementById('matchHistoryContainer');
+    while (parentElement.firstChild)
+        parentElement.removeChild(parentElement.firstChild);
+}
+
 export function loadScores()
 {
+    document.getElementById('victories').innerText = getTranslation('victories') + getPlayerVictories().victories + "/" + getPlayerVictories().total + " (" + getPlayerVictories().percentage + "%)";
     const scoresContainer = document.getElementById('matchHistoryContainer');
     for (let i = 0; i < playerStats.matches.length; i++)
     {
         const newContainer = document.createElement('div');
         newContainer.classList.add('score-container');
-    
-        const messageContent = document.createElement('div');
-        messageContent.classList.add('message');
-        messageContent.textContent = playerStats.nickname + " vs " + playerStats.matches[i].nameOpponent;
-        newContainer.appendChild(messageContent);
+        newContainer.style.color = playerStats.colors;
+        const headContent = document.createElement('div');
+        headContent.classList.add('score-left');
+        headContent.textContent = playerStats.nickname + "\n" + playerStats.matches[i].scorePlayer;
+        newContainer.appendChild(headContent);
+        const scoreContent = document.createElement('div');
+        scoreContent.classList.add('score-right');
+        scoreContent.textContent = playerStats.matches[i].nameOpponent + "\n" + playerStats.matches[i].scoreOpponent;
+        newContainer.appendChild(scoreContent);
+        if (playerStats.matches[i].scorePlayer > playerStats.matches[i].scoreOpponent)
+        {
+            newContainer.style.background = 'linear-gradient(to right, #228822 30%, #006666 70%)';
+            // headContent.style.backgroundColor = "#08fd0088";
+        }
+        else
+        {
+            newContainer.style.background = 'linear-gradient(to right, #882222 30%, #006666 70%)';
+            // scoreContent.style.backgroundColor = "#08fd0088";
+        }
         scoresContainer.appendChild(newContainer);
     }
 }
