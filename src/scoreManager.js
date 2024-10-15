@@ -88,15 +88,16 @@ export function loadScores()
         let match = playerStats.matches[i];
         const newContainer = document.createElement('div');
         newContainer.classList.add('score-container');
-        newContainer.style.color = playerStats.colors;
-        const headContent = document.createElement('div');
-        headContent.classList.add('score-left');
-        headContent.textContent = playerStats.nickname + "\n" + match.scorePlayer;
-        newContainer.appendChild(headContent);
-        const scoreContent = document.createElement('div');
-        scoreContent.classList.add('score-right');
-        scoreContent.textContent = match.nameOpponent + "\n" + match.scoreOpponent;
-        newContainer.appendChild(scoreContent);
+        const leftContent = document.createElement('div');
+        leftContent.style.color = playerStats.colors;
+        leftContent.classList.add('score-left');
+        leftContent.textContent = playerStats.nickname + "\n" + match.scorePlayer;
+        newContainer.appendChild(leftContent);
+        const rightContent = document.createElement('div');
+        rightContent.style.color = playerStats.colors;
+        rightContent.classList.add('score-right');
+        rightContent.textContent = match.nameOpponent + "\n" + match.scoreOpponent;
+        newContainer.appendChild(rightContent);
         if (match.scorePlayer > match.scoreOpponent)
             newContainer.style.background = 'linear-gradient(to right, #228822 30%, #006666 70%)';
         else

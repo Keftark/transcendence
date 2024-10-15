@@ -44,6 +44,7 @@
 
 .message-name {
     /* align-self: flex-end; */
+    padding-top: 8px;
     right: 4px;
     font-size: 11px;
     font-weight: lighter; /* Make the name bold */
@@ -55,21 +56,24 @@
 .message, .message-left, .message-middle, .message-right {
     position: relative;
     font-family: Arial, sans-serif;
-    padding: 4px;
-    border-radius: 4px;
     font-size: 14px;
     max-width: 90%;
 }
 
+.message, .message-left, .message-right {
+    padding: 3px;
+    border-radius: 8px;
+}
+
 .message-container-left
 {
-    box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.1);
     background-color: #2e333a;
 }
 
 .message-container-right
 {
-    box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.1);
     background-color: #26293b;
 }
 

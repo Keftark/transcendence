@@ -102,9 +102,9 @@ export function createWalls(scene)
     wallRight.position.set(BOUNDARY.X_MIN - 2.5, 0, 0);
 }
 
-export function removeRightWall()
+export function setVisibilityRightWall(isVisible)
 {
-    wallRight.visible = false;
+    wallRight.visible = isVisible;
 }
 
 export function createLights(scene)

@@ -3,7 +3,7 @@ import { setupPlayerMovement } from './playerMovement.js';
 import { createBall } from './ball.js';
 import { ScreenShake } from './screenShake.js';
 import { setScores, addScore, setVisibleScore } from './scoreManager.js';
-import { createLights, createPlayers, drawBackground, drawLine, createWalls, removeRightWall } from './objects.js';
+import { createLights, createPlayers, drawBackground, drawLine, createWalls, setVisibilityRightWall } from './objects.js';
 import { setLevelState, LevelMode, getLevelState } from './main.js';
 import { unloadScene } from './unloadScene.js';
 import { removeMainEvents, showCursor } from './eventsListener.js';
@@ -265,7 +265,7 @@ export function StartLevel(levelMode)
             }
             if (getLevelState() === LevelMode.ADVENTURE && camera.position.z < 60.1)
             {
-                removeRightWall(); // remove the wall of player1
+                setVisibilityRightWall(false); // remove the wall of player1
                 isCameraAnimationComplete = true;
                 setVisiblePlay();
             }
@@ -306,6 +306,7 @@ export function StartLevel(levelMode)
     {
         if (event.key === 'Escape' && (getLevelState() != LevelMode.MENU && getLevelState() != LevelMode.MODESELECTION))
         {
+            setVisibilityRightWall(true);
             resetFunction(true);
             resetScreen(0);
             animate();

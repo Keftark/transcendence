@@ -180,9 +180,6 @@ export function closeSettings()
     overlayPanel.style.display = 'none';
 }
 
-const textElements = document.querySelectorAll(' \
-    h1, h2, h3, p, button, #top-text, #menu-label span, #pressplay, #play, #score-left, #score-right, #playername-left, \
-    #playername-right');
 
 export function setButtonsColors()
 {
@@ -197,6 +194,9 @@ export function setButtonsColors()
 
 export function changeTextsColor(newColor)
 {
+    const textElements = document.querySelectorAll(' \
+        h1, h2, div, h3, p, button, #top-text, #menu-label span, #pressplay, #play, #score-left, #score-right, #playername-left, \
+        #playername-right');
     textElements.forEach(element => {
         element.style.color = newColor;
     });
