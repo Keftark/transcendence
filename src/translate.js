@@ -52,8 +52,6 @@ export function updateHTML(translations)
 	document.getElementById('buttonLogIn').innerText = translations.buttonLogIn;
 	document.getElementById('buttonLogOut').innerText = translations.buttonLogOut;
 	document.getElementById('seeMatchesButton').innerText = translations.seeMatchesButton;
-	document.getElementById('noMatchHistory').innerText = translations.noMatchHistory;
-	document.getElementById('victories').innerText = translations.victories + getPlayerVictories().victories + "/" + getPlayerVictories().total + " (" + getPlayerVictories().percentage + "%)";
 }
 
 export async function changeLanguage(lang)

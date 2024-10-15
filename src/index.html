@@ -61,15 +61,20 @@
     </div>
     <div id="overlay"></div>
     <div id="matchListPanel">
-        <p id="noMatchHistory"></p>
-        <p id="victories"></p>
         <div id="matchHistoryContainer"></div>
     </div>
     <div id="profilePanel">
         <h2 id="nameProfile"></h2>
         <p id="firstNameProfile"></p>
         <p id="lastNameProfile"></p>
-        <p id="emailProfile"></p>
+        <div id="victoriesContainer">
+            <img id="mailImg" src="./icons/mail.png">
+            <p id="mailProfile"></p>
+        </div>
+        <div id="victoriesContainer">
+            <img id="victoriesImg" src="./icons/trophy.png">
+            <p id="victories"></p>
+        </div>
         <button id="seeMatchesButton" onclick="showMatchList()"></button>
         <button id="closeProfileButton"></button>
     </div>

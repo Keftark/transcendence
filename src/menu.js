@@ -2,7 +2,6 @@ import { addMainEvents } from './eventsListener.js';
 import { StartLevel, unloadLevel } from './levelLocal.js';
 import { getLevelState, LevelMode, setLevelState } from './main.js';
 import { playerStats } from './playerManager.js';
-import { loadScores, removeAllScores } from './scoreManager.js';
 const overlayPanel = document.getElementById('overlay');
 const profilePanel = document.getElementById('profilePanel');
 const matchListPanel = document.getElementById('matchListPanel');
@@ -93,9 +92,15 @@ export function openProfile()
      
         return;
     }
+
+    if (playerStats.matches.length === 0)
+        document.getElementById('seeMatchesButton').style.display = 'none';
+    else
+        document.getElementById('seeMatchesButton').style.display = 'block';
     document.getElementById('nameProfile').innerText = playerStats.nickname;
     document.getElementById('firstNameProfile').innerText = playerStats.firstName;
     document.getElementById('lastNameProfile').innerText = playerStats.lastName;
+    document.getElementById('mailProfile').innerText = playerStats.mail;
     overlayPanel.style.display = 'block';
     const profilePanel = document.getElementById('profilePanel');
     profilePanel.style.display = 'block';
@@ -109,18 +114,6 @@ export function showMatchList()
 {
     if (profilePanel.classList.contains('toLeft') === false)
     {
-        if (playerStats.matches.length === 0)
-        {
-            document.getElementById('noMatchHistory').style.display = 'block';
-            document.getElementById('victories').style.display = 'none';
-            matchListButton.style.backgroundColor = '#ffffff56';
-        }
-        else
-        {
-            document.getElementById('noMatchHistory').style.display = 'none';
-            document.getElementById('victories').style.display = 'block';
-            loadScores();
-        }
         matchListPanel.style.display = 'flex';
         setTimeout(() => {
             profilePanel.classList.add('toLeft');
@@ -139,7 +132,6 @@ function closeMatchList()
     profilePanel.classList.remove('toLeft');
     matchListPanel.classList.remove('toRight');
     document.getElementById('seeMatchesButton').classList.remove('open');
-    removeAllScores();
     setTimeout(() => {
         matchListPanel.style.display = 'none';
     }, 100);

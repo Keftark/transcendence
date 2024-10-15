@@ -38,7 +38,7 @@
     "buttonLogIn": "Se connecter",
     "buttonLogOut": "Se deconnecter",
     "seeMatchesButton": "Historique",
-    "noMatchHistory": "Pas d'historique",
+    "noMatchHistory": "Pas d'historique de match",
     "victories": "Victoires : ",
     "errEmptyName": "Erreur: pseudonyme vide.",
     "errEmptyFirstName": "Erreur: prenom vide.",

@@ -69,33 +69,38 @@ export function removeAllScores()
         parentElement.removeChild(parentElement.firstChild);
 }
 
+function getVictoriesText()
+{
+    return (getPlayerVictories().victories + "/" + getPlayerVictories().total
+        + " (" + getPlayerVictories().percentage + "%)");
+}
+
 export function loadScores()
 {
-    document.getElementById('victories').innerText = getTranslation('victories') + getPlayerVictories().victories + "/" + getPlayerVictories().total + " (" + getPlayerVictories().percentage + "%)";
+    if (playerStats.matches.length > 0)
+        document.getElementById('victories').innerText = getVictoriesText();
+    else
+        document.getElementById('victories').innerText = getTranslation('noMatchHistory');
+
     const scoresContainer = document.getElementById('matchHistoryContainer');
     for (let i = 0; i < playerStats.matches.length; i++)
     {
+        let match = playerStats.matches[i];
         const newContainer = document.createElement('div');
         newContainer.classList.add('score-container');
         newContainer.style.color = playerStats.colors;
         const headContent = document.createElement('div');
         headContent.classList.add('score-left');
-        headContent.textContent = playerStats.nickname + "\n" + playerStats.matches[i].scorePlayer;
+        headContent.textContent = playerStats.nickname + "\n" + match.scorePlayer;
         newContainer.appendChild(headContent);
         const scoreContent = document.createElement('div');
         scoreContent.classList.add('score-right');
-        scoreContent.textContent = playerStats.matches[i].nameOpponent + "\n" + playerStats.matches[i].scoreOpponent;
+        scoreContent.textContent = match.nameOpponent + "\n" + match.scoreOpponent;
         newContainer.appendChild(scoreContent);
-        if (playerStats.matches[i].scorePlayer > playerStats.matches[i].scoreOpponent)
-        {
+        if (match.scorePlayer > match.scoreOpponent)
             newContainer.style.background = 'linear-gradient(to right, #228822 30%, #006666 70%)';
-            // headContent.style.backgroundColor = "#08fd0088";
-        }
         else
-        {
             newContainer.style.background = 'linear-gradient(to right, #882222 30%, #006666 70%)';
-            // scoreContent.style.backgroundColor = "#08fd0088";
-        }
         scoresContainer.appendChild(newContainer);
     }
 }

@@ -1,4 +1,5 @@
 import { createNewPlayer, resetPlayerStats } from "./playerManager";
+import { loadScores, removeAllScores } from "./scoreManager";
 import { getTranslation } from "./translate";
 
 const inputNick = document.getElementById('inputName');
@@ -137,6 +138,7 @@ export function acceptRegistration()
     clickCancelRegister();
     replaceLogInButtons();
     addHoverEffect();
+    loadScores();
 }
 
 function replaceLogInButtons()
@@ -156,6 +158,7 @@ export function clickLogOut()
     replaceLogOutButtons();
     resetPlayerStats();
     removeHoverEffect();
+    removeAllScores();
 }
 
 function addHoverEffect() {

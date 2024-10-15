@@ -84,7 +84,6 @@
     text-align: center;
     font-size: 60px;
     color: white;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
 }
 
 #profilePanel p, #settingsPanel p {
@@ -318,4 +317,18 @@
     box-sizing: border-box;
     white-space: pre-line;
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+#victoriesContainer, #mailContainer
+{
+    display: flex;
+    flex-direction: row;
+}
+
+#victoriesImg, #mailImg
+{
+    display: flex;
+    height: 32px;
+    width: 32px;
+    padding: 4px;
 }

@@ -84,7 +84,8 @@ export function getPlayerVictories()
         if (isVictory(playerStats.matches[i]))
             victories++;
     }
-    const percentage = victories * 100 / total;
+    let percentage = victories * 100 / total;
+    percentage = parseFloat(percentage.toFixed(2));
     return {total, victories, percentage};
 }
 
