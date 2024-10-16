@@ -2,6 +2,7 @@ import { addMainEvents } from './eventsListener.js';
 import { StartLevel, unloadLevel } from './levelLocal.js';
 import { getLevelState, LevelMode, setLevelState } from './main.js';
 import { playerStats } from './playerManager.js';
+import { loadScores, removeAllScores } from './scoreManager.js';
 const overlayPanel = document.getElementById('overlay');
 const profilePanel = document.getElementById('profilePanel');
 const matchListPanel = document.getElementById('matchListPanel');
@@ -85,22 +86,25 @@ export function closeMenu()
     }
 }
 
-export function openProfile()
+export function openProfile(player = playerStats)
 {
-    if (playerStats.isRegistered === false)
-    {
-     
+    if (player.isRegistered === false)
         return;
-    }
+    loadScores(player);
+    if (player.matches.length === 0)
+    {
 
-    if (playerStats.matches.length === 0)
         document.getElementById('seeMatchesButton').style.display = 'none';
+    }
     else
+    {
+
         document.getElementById('seeMatchesButton').style.display = 'block';
-    document.getElementById('nameProfile').innerText = playerStats.nickname;
-    document.getElementById('firstNameProfile').innerText = playerStats.firstName;
-    document.getElementById('lastNameProfile').innerText = playerStats.lastName;
-    document.getElementById('mailProfile').innerText = playerStats.mail;
+    }
+    document.getElementById('nameProfile').innerText = player.nickname;
+    document.getElementById('firstNameProfile').innerText = player.firstName;
+    document.getElementById('lastNameProfile').innerText = player.lastName;
+    document.getElementById('mailProfile').innerText = player.mail;
     overlayPanel.style.display = 'block';
     const profilePanel = document.getElementById('profilePanel');
     profilePanel.style.display = 'block';
@@ -150,6 +154,7 @@ export function closeProfile()
         matchListPanel.style.display = 'none';
         profilePanel.style.display = 'none';
     }
+    removeAllScores();
     if (oldButton != null)
     {
         oldButton.focus();
@@ -269,4 +274,9 @@ export function clickBackButtonMenu()
 {
     hideModeChoice();
     showMainMenu();
+}
+
+export function openDuelPanel(otherPlayer = "")
+{
+    // if otherPlayer != "" and if isInTheDatabase(otherPlayer), sends an invitation to this player
 }

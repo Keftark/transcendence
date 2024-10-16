@@ -1,10 +1,9 @@
 import { getPlayerVictories, playerStats } from "./playerManager";
 import { getTranslation } from "./translate";
 
+const scores = document.getElementById('scores');
 const scoreRight = document.getElementById('score-right');
 const scoreLeft = document.getElementById('score-left');
-const playernameRight = document.getElementById('playername-right');
-const playernameLeft = document.getElementById('playername-left');
 let player1Score = 0;
 let player2Score = 0;
 
@@ -56,10 +55,7 @@ export function setScores(player1score, player2score)
 
 export function setVisibleScore(boolean)
 {
-    scoreRight.style.display = boolean === true ? 'block' : 'none';
-    scoreLeft.style.display = boolean === true ? 'block' : 'none';
-    playernameRight.style.display = boolean === true ? 'block' : 'none';
-    playernameLeft.style.display = boolean === true ? 'block' : 'none';
+    scores.style.display = boolean === true ? 'block' : 'none';
 }
 
 export function removeAllScores()
@@ -69,29 +65,29 @@ export function removeAllScores()
         parentElement.removeChild(parentElement.firstChild);
 }
 
-function getVictoriesText()
+function getVictoriesText(player = playerStats)
 {
-    return (getPlayerVictories().victories + "/" + getPlayerVictories().total
-        + " (" + getPlayerVictories().percentage + "%)");
+    return (getPlayerVictories(player).victories + "/" + getPlayerVictories(player).total
+        + " (" + getPlayerVictories(player).percentage + "%)");
 }
 
-export function loadScores()
+export function loadScores(player = playerStats)
 {
-    if (playerStats.matches.length > 0)
-        document.getElementById('victories').innerText = getVictoriesText();
+    if (player.matches.length > 0)
+        document.getElementById('victories').innerText = getVictoriesText(player);
     else
         document.getElementById('victories').innerText = getTranslation('noMatchHistory');
 
     const scoresContainer = document.getElementById('matchHistoryContainer');
-    for (let i = 0; i < playerStats.matches.length; i++)
+    for (let i = 0; i < player.matches.length; i++)
     {
-        let match = playerStats.matches[i];
+        let match = player.matches[i];
         const newContainer = document.createElement('div');
         newContainer.classList.add('score-container');
         const leftContent = document.createElement('div');
         leftContent.style.color = playerStats.colors;
         leftContent.classList.add('score-left');
-        leftContent.textContent = playerStats.nickname + "\n" + match.scorePlayer;
+        leftContent.textContent = player.nickname + "\n" + match.scorePlayer;
         newContainer.appendChild(leftContent);
         const rightContent = document.createElement('div');
         rightContent.style.color = playerStats.colors;

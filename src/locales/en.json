@@ -2,7 +2,7 @@
     "pressplay": "Press space to",
     "play": "PLAY",
     "playernameleft": "Player 1", 
-    "playernameright": "Player 2", 
+    "playernameright": "Player 211111111", 
     "profileButton": "Profile", 
     "settingsButton": "Settings", 
     "mainButton": "Main menu", 
@@ -54,5 +54,6 @@
     "removeFriendButton": "Remove friend",
     "seeProfileButton": "Profile",
     "you": "You",
-    "guest": "Guest"
+    "guest": "Guest",
+    "inviteGameButton": "Duel"
 }

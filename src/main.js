@@ -2,6 +2,7 @@ import { clickBackButtonMenu, loadMainMenu } from './menu.js';
 import { initTranslation, changeLanguage } from './translate.js';
 import { setButtonsColors,  } from './menu.js';
 import { addMainEvents } from './eventsListener.js';
+import { createPlayerStats, playerStats } from './playerManager.js';
 
 export const LevelMode = {
     MENU: 0,

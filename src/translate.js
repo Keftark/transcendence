@@ -54,6 +54,7 @@ export function updateHTML(translations)
 	document.getElementById('seeMatchesButton').innerText = translations.seeMatchesButton;
 	document.getElementById('addFriendButton').innerText = translations.addFriendButton;
 	document.getElementById('seeProfileButton').innerText = translations.seeProfileButton;
+	document.getElementById('inviteGameButton').innerText = translations.inviteGameButton;
 }
 
 export async function changeLanguage(lang)

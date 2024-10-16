@@ -1,3 +1,4 @@
+import { fakeDatabase } from "./database";
 import { isVictory } from "./levelLocal";
 import { changeTextsColor } from "./menu";
 import { MatchResult } from "./scoreManager";
@@ -15,17 +16,32 @@ export let playerStats =
     lastName: "",
     mail: "",
     password: "",
-    language: "",
-    colors: "",
+    language: "en",
+    colors: "white",
     photoIndex: 0,
     isRegistered: false,
     matches: [],
     friends: []
 }
 
+export function createPlayerStats() {
+    return {
+        nickname: "",
+        firstName: "",
+        lastName: "",
+        mail: "",
+        password: "",
+        language: "",
+        colors: "",
+        photoIndex: 0,
+        isRegistered: false,
+        matches: [],
+        friends: []
+    };
+}
+
 export function addMatchToHistory(playerScore, opponentScore, opponentName)
 {
-
     setTimeout(() => {
         playerStats.matches.push(new MatchResult(playerScore, opponentScore, opponentName));
     }, 50);
@@ -34,16 +50,20 @@ export function addMatchToHistory(playerScore, opponentScore, opponentName)
 
 export function createNewPlayer()
 {
-    playerStats.nickname = inputNick.value;
-    playerStats.firstName = inputFirstName.value;
-    playerStats.lastName = inputLastName.value;
-    playerStats.mail = inputMail.value;
-    playerStats.password = inputPassword.value;
-    playerStats.language = "en";
-    playerStats.photoIndex = 0;
-    playerStats.colors = "white";
-    playerStats.isRegistered = true;
-    playerStats.friends.push("Other");
+    let player = createPlayerStats();
+    player.nickname = inputNick.value;
+    player.firstName = inputFirstName.value;
+    player.lastName = inputLastName.value;
+    player.mail = inputMail.value;
+    player.password = inputPassword.value;
+    player.language = "en";
+    player.photoIndex = 0;
+    player.colors = "white";
+    player.isRegistered = true;
+    player.friends.push("ProGamer");
+    fakeDatabase.push(player);
+    playerStats = player;
+    // playerStats.friends.push("Other");
 }
 
 export function resetPlayerStats()
@@ -79,13 +99,13 @@ export function loadPlayerConfig(playerStats)
     changeTextsColor(playerStats.colors);
 }
 
-export function getPlayerVictories()
+export function getPlayerVictories(player = playerStats)
 {
-    const total = playerStats.matches.length;
+    const total = player.matches.length;
     let victories = 0;
     for (let i = 0; i < total; i++)
     {
-        if (isVictory(playerStats.matches[i]))
+        if (isVictory(player.matches[i]))
             victories++;
     }
     let percentage = victories * 100 / total;

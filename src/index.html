@@ -22,7 +22,11 @@
     <script type="module" src="/chat.js"></script>
     <script type="module" src="/cheats.js"></script>
     <script type="module" src="/registration.js"></script>
+
+    <!------------------------------ Header Title ------------------------------>
     <div id="top-text">ft_transcendence</div>
+
+    <!------------------------------ Main Menu UI ------------------------------>
     <div class="mainMenuPanel" id="mainMenuPanel">
         <div class="mainPanel" id="mainPanel">
             <h3 id="mainMenuText"></h3>
@@ -37,12 +41,32 @@
             <button class="modeSelectionButtonBack" id="backButton"></button>
         </div>
     </div>
+
+    <!------------------------------ Main Menu Log In Buttons ------------------------------>
+    <div id="loginbuttons">
+        <button id="buttonSignIn" onclick="showRegistrationPanel()"></button>
+        <button id="buttonLogIn" onclick="clickCancelRegister()"></button>
+    </div>
+    <div id="logoutbuttons">
+        <button id="buttonLogOut" onclick="clickLogOut()"></button>
+    </div>
+
+    <!------------------------------ Duel Panel ------------------------------>
+    <div id="duelPanel">
+
+    </div>
+
+    <!------------------------------ In Game UI ------------------------------>
     <div id="pressplay"></div>
     <div class="glitch" id="play"></div>
-    <div id="score-left">0</div>
-    <div id="score-right">0</div>
-    <div id="playername-left"></div>
-    <div id="playername-right"></div>
+    <div id="scores">
+        <div id="score-left">0</div>
+        <div id="score-right">0</div>
+        <div id="playername-left"></div>
+        <div id="playername-right"></div>
+    </div>
+
+    <!------------------------------ In Game Side Menu Panel ------------------------------>
     <div id="menuPanel">
         <div id="menu-label">
             <span>M</span>
@@ -63,6 +87,7 @@
     <div id="matchListPanel">
         <div id="matchHistoryContainer"></div>
     </div>
+    <!------------------------------ Profile Panel ------------------------------>
     <div id="profilePanel">
         <h2 id="nameProfile"></h2>
         <p id="firstNameProfile"></p>
@@ -78,6 +103,8 @@
         <button id="seeMatchesButton" onclick="showMatchList()"></button>
         <button id="closeProfileButton"></button>
     </div>
+
+    <!------------------------------ Settings Panel ------------------------------>
     <div id="settingsPanel">
         <h2 id="settings">Settings</h2>
         <p id="colors"></p>
@@ -99,6 +126,8 @@
         </div>
         <button id="closeSettingsButton"></button>
     </div>
+
+    <!------------------------------ Chat Box ------------------------------>
     <div class="chat-box" id="chatBox">
         <button id="toggleSizeButton">
             <img src="icons/shrink.png" id="toggleIcon"/>
@@ -114,16 +143,12 @@
     <div id="chatContextMenu">
         <div id="spaceContextMenu">
             <button id="addFriendButton"></button>
+            <button id="inviteGameButton"></button>
             <button id="seeProfileButton"></button>
         </div>
     </div>
-    <div id="loginbuttons">
-        <button id="buttonSignIn" onclick="showRegistrationPanel()"></button>
-        <button id="buttonLogIn" onclick="clickCancelRegister()"></button>
-    </div>
-    <div id="logoutbuttons">
-        <button id="buttonLogOut" onclick="clickLogOut()"></button>
-    </div>
+
+    <!------------------------------ Registering Panel ------------------------------>
     <div id="registering">
         <div id="registeringPanel">
             <h1 class="regItem" id="registerHeader"></h1>

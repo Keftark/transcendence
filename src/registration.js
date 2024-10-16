@@ -138,7 +138,6 @@ export function acceptRegistration()
     clickCancelRegister();
     replaceLogInButtons();
     addHoverEffect();
-    loadScores();
 }
 
 function replaceLogInButtons()

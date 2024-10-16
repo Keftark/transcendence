@@ -130,7 +130,6 @@ button
     position: absolute;
     font-size: 52px;
     color: white;
-    display: none;
 }
 
 #playername-left, #playername-right {
@@ -138,17 +137,21 @@ button
     position: absolute;
     color: white;
     font-size: 35px;
-    display: none;
 }
 
 #playername-left {
-    left: 50%;
-    transform: translateX(-180px);
+    right: 50%;
+    transform: translateX(-60px);
+}
+
+#scores
+{
+    display: none;
 }
 
 #playername-right {
-    right: 50%;
-    transform: translateX(180px);
+    left: 50%;
+    transform: translateX(60px);
 }
 
 .playername {

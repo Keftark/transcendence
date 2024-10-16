@@ -199,7 +199,7 @@ button:hover {
 #chatContextMenu
 {
     position: absolute;
-    display: flex;
+    display: none;
     padding: 28px;
     size-adjust: flex;
     flex-direction: column;
@@ -228,7 +228,7 @@ button:hover {
     gap: 4px;
 }
 
-#addFriendButton, #seeProfileButton
+#addFriendButton, #inviteGameButton, #seeProfileButton
 {
     position: relative;
     align-self: center;

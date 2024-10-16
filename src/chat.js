@@ -1,5 +1,7 @@
 import { cheatCodes } from "./cheats";
+import { isInTheDatabase, searchDatabase } from "./database";
 import { getLevelState, LevelMode } from "./main";
+import { openProfile } from "./menu";
 import { playerStats } from "./playerManager";
 import { getTranslation } from "./translate";
 
@@ -97,14 +99,80 @@ function messageIsACode(message)
 
 const contextMenuChat = document.getElementById('chatContextMenu');
 const addFriendButton = document.getElementById('addFriendButton');
+const seeProfileButton = document.getElementById('seeProfileButton');
 
 contextMenuChat.addEventListener('mouseleave', () => {
     closeNameContextMenu();
 });
+
 contextMenuChat.addEventListener('click', () => {
     closeNameContextMenu();
 });
-let currentName = "";
+
+addFriendButton.addEventListener('click', () => {
+    clickAddRemoveFriend();
+});
+
+seeProfileButton.addEventListener('click', () => {
+    clickOpenProfile();
+});
+
+function clickPlayWith()
+{
+    // calls the mutiplayer (1vs1) game panel
+    // the left player is the caller, the right one is the invited player.
+    // on the screen, there is a text 'Waiting for <player>...' until he accepts the invitation.
+    // if the player accepts the invitation, he goes on the same panel and its informations are filled.
+    // if the player refuses, the panel disappears? or instead of the waiting player text, there is 
+}
+
+function clickOpenProfile()
+{
+    const player = searchDatabase(selectedName);
+    if (player === null)
+    {
+        console.error("error: the player " + selectedName + " doesn't exist");
+        return;
+    }
+    openProfile(player);
+}
+
+function removeFriend(friendName)
+{
+    const index = playerStats.friends.indexOf(friendName);
+    playerStats.friends.splice(index, 1);
+}
+
+function clickAddRemoveFriend()
+{
+    if (playerStats.friends.includes(selectedName))
+        removeFriend(selectedName);
+    else
+        playerStats.friends.push(selectedName);
+}
+
+function setFriendButtonText()
+{
+    if (playerStats.friends.includes(selectedName))
+        addFriendButton.innerText = getTranslation('removeFriendButton');
+    else
+        addFriendButton.innerText = getTranslation('addFriendButton');
+}
+
+function showFriendButtonIfRegistered()
+{
+    if (playerStats.isRegistered === false)
+    {
+        addFriendButton.style.display = 'none';
+    }
+    else
+    {
+        addFriendButton.style.display = 'flex';
+        setFriendButtonText();
+    }
+}
+
+let selectedName = "";
 function openNameContextMenu(name, nameHeader)
 {
     if (contextMenuChat.style.display === 'flex')
@@ -113,29 +181,31 @@ function openNameContextMenu(name, nameHeader)
     }
     else
     {
-        const rect = nameHeader.getBoundingClientRect();
-        if (playerStats.friends.includes(name))
-            addFriendButton.innerText = getTranslation('removeFriendButton');
-        else
-            addFriendButton.innerText = getTranslation('addFriendButton');
+        if (isInTheDatabase(name) === false)
+            return;
+        selectedName = name;
+        showFriendButtonIfRegistered();
         contextMenuChat.style.display = 'flex';
-        contextMenuChat.style.top = (rect.bottom) + 'px'; // 10px below the first element
+        const rect = nameHeader.getBoundingClientRect();
+        contextMenuChat.style.top = (rect.bottom) + 'px';
         contextMenuChat.style.left = rect.left + 'px';
-        currentName = name;
     }
 }
 
 function closeNameContextMenu()
 {
+    selectedName = "";
     contextMenuChat.style.display = 'none';
 }
 
-function nameIsInDatabase(name)
+function isNotAGuest(name)
 {
-    // checks the database for the name
-    // returns true if the name is found,
-    // returns false if not.
-    return true;
+    return (name != getTranslation('guest'));
+}
+
+function isNotThePlayer(name)
+{
+    return (name != playerStats.nickname);
 }
 
 function createMessageElement(name, messageText) {
@@ -148,7 +218,7 @@ function createMessageElement(name, messageText) {
         nameHeader.classList.add('message-name');
         nameHeader.textContent = name.length > 0 ? name + getTranslation(':') : name;
         messageContainer.appendChild(nameHeader);
-        if (name != playerStats.nickname && name != getTranslation('guest') && nameIsInDatabase(name))
+        if (isNotThePlayer(name) && isNotAGuest(name) && isInTheDatabase(name))
         {
             nameHeader.addEventListener("click", function() {
                 openNameContextMenu(name, nameHeader);
@@ -208,7 +278,7 @@ function getPlayerName()
             name = getTranslation('guest');
     }
     else if (messageCount % 3 === 1)
-        name = "Other";
+        name = "ProGamer";
 
     /*
         Logique pour avoir le nom du joueur.
