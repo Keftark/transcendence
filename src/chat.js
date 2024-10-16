@@ -1,5 +1,7 @@
 import { cheatCodes } from "./cheats";
 import { getLevelState, LevelMode } from "./main";
+import { playerStats } from "./playerManager";
+import { getTranslation } from "./translate";
 
 const messagesContainer = document.getElementById('messages');
 const inputField = document.querySelector('input[type="text"]');
@@ -93,6 +95,49 @@ function messageIsACode(message)
     }
 }
 
+const contextMenuChat = document.getElementById('chatContextMenu');
+const addFriendButton = document.getElementById('addFriendButton');
+
+contextMenuChat.addEventListener('mouseleave', () => {
+    closeNameContextMenu();
+});
+contextMenuChat.addEventListener('click', () => {
+    closeNameContextMenu();
+});
+let currentName = "";
+function openNameContextMenu(name, nameHeader)
+{
+    if (contextMenuChat.style.display === 'flex')
+    {
+        contextMenuChat.style.display = 'none';
+    }
+    else
+    {
+        const rect = nameHeader.getBoundingClientRect();
+        if (playerStats.friends.includes(name))
+            addFriendButton.innerText = getTranslation('removeFriendButton');
+        else
+            addFriendButton.innerText = getTranslation('addFriendButton');
+        contextMenuChat.style.display = 'flex';
+        contextMenuChat.style.top = (rect.bottom) + 'px'; // 10px below the first element
+        contextMenuChat.style.left = rect.left + 'px';
+        currentName = name;
+    }
+}
+
+function closeNameContextMenu()
+{
+    contextMenuChat.style.display = 'none';
+}
+
+function nameIsInDatabase(name)
+{
+    // checks the database for the name
+    // returns true if the name is found,
+    // returns false if not.
+    return true;
+}
+
 function createMessageElement(name, messageText) {
     const messageContainer = document.createElement('div');
     messageContainer.classList.add('message-container');
@@ -101,8 +146,14 @@ function createMessageElement(name, messageText) {
     {
         const nameHeader = document.createElement('div');
         nameHeader.classList.add('message-name');
-        nameHeader.textContent = name;
+        nameHeader.textContent = name.length > 0 ? name + getTranslation(':') : name;
         messageContainer.appendChild(nameHeader);
+        if (name != playerStats.nickname && name != getTranslation('guest') && nameIsInDatabase(name))
+        {
+            nameHeader.addEventListener("click", function() {
+                openNameContextMenu(name, nameHeader);
+              });
+        }
     }
 
     const messageContent = document.createElement('div');
@@ -150,13 +201,17 @@ function getPlayerName()
 
     /* Bloc a supprimer, c'est juste pour des tests */
     if (messageCount % 3 === 0)
-        name = "Vous :";
+    {
+        if (playerStats.isRegistered)
+            name = playerStats.nickname;
+        else
+            name = getTranslation('guest');
+    }
     else if (messageCount % 3 === 1)
-        name = "Other :";
+        name = "Other";
 
     /*
         Logique pour avoir le nom du joueur.
-        Si le joueur est celui qui ecrit, on met "Vous :" ou "You:", selon la traduction  et on envoie le message sur la droite
     */
 
     return name;
@@ -172,7 +227,7 @@ export function sendSystemMessage(message)
 }
 
 /* 
-    Ne pas afficher le nom si le meme joueur ecrit plusieurs fois de suite
+    Les messages systemes seront envoyes avec sendSystemMessage()
 */
 function trySendMessage() {
     const messageText = inputElement.value.trim();

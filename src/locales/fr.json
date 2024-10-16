@@ -48,5 +48,11 @@
     "errBadPassword": "Erreur: mot de passe vide.",
     "errBadPasswordConfirm": "Erreur: confirmation du mot de passe vide.",
     "errDifferentPasswords": "Erreur: le mot de passe et la confirmation sont differents.",
-    "botName": "Ordinateur"
+    "botName": "Ordinateur",
+    ":": " : ",
+    "addFriendButton": "Ajouter ami",
+    "removeFriendButton": "Retirer ami",
+    "seeProfileButton": "Voir profile",
+    "you": "Vous",
+    "guest": "Invite"
 }

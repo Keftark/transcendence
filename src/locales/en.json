@@ -48,5 +48,11 @@
     "errBadPassword": "Error: empty password.",
     "errBadPasswordConfirm": "Error: empty password confirm.",
     "errDifferentPasswords": "Error: the password and password confirm are different.",
-    "botName": "Computer"
+    "botName": "Computer",
+    ":": ": ",
+    "addFriendButton": "Add friend",
+    "removeFriendButton": "Remove friend",
+    "seeProfileButton": "Profile",
+    "you": "You",
+    "guest": "Guest"
 }

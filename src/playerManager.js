@@ -1,6 +1,7 @@
 import { isVictory } from "./levelLocal";
 import { changeTextsColor } from "./menu";
 import { MatchResult } from "./scoreManager";
+import { getTranslation } from "./translate";
 const inputNick = document.getElementById('inputName');
 const inputFirstName = document.getElementById('inputFirstName');
 const inputLastName = document.getElementById('inputLastName');
@@ -18,7 +19,8 @@ export let playerStats =
     colors: "",
     photoIndex: 0,
     isRegistered: false,
-    matches: []
+    matches: [],
+    friends: []
 }
 
 export function addMatchToHistory(playerScore, opponentScore, opponentName)
@@ -41,11 +43,12 @@ export function createNewPlayer()
     playerStats.photoIndex = 0;
     playerStats.colors = "white";
     playerStats.isRegistered = true;
+    playerStats.friends.push("Other");
 }
 
 export function resetPlayerStats()
 {
-    playerStats.nickname = "";
+    playerStats.nickname = getTranslation('guest');
     playerStats.firstName = "";
     playerStats.lastName = "";
     playerStats.mail = "";
@@ -54,6 +57,7 @@ export function resetPlayerStats()
     playerStats.photoIndex = 0;
     playerStats.colors = "white";
     playerStats.matches = [];
+    playerStats.friends = [];
     playerStats.isRegistered = false;
 }
 
