@@ -29,6 +29,8 @@ export function createBall(scene, callBack) {
     const maxLightIntensity = 10;
     let ballVelocity;
     let intensityIncrement = 0.05;
+    const boundxmin = BOUNDARY.X_MIN - 0.8;
+    const boundxmax = BOUNDARY.X_MAX + 0.8;
 
     scene.add(ball);
     pointLight.position.copy(ball.position);
@@ -58,19 +60,25 @@ export function createBall(scene, callBack) {
         if (pointLight.intensity < maxLightIntensity) {
             pointLight.intensity = Math.min(maxLightIntensity, pointLight.intensity + 0.1);
             ball.material.emissiveIntensity = Math.min(maxLightIntensity, ball.material.emissiveIntensity + intensityIncrement);
-            intensityIncrement *= 1.05;
+            intensityIncrement *= 1.03;
             pointLight.distance += 1;
         }
     }
 
-    function checkCollisionTopBottom(ball)
+    function checkCollisionTopBottom(nextPos)
     {
         const radius = ballStats.BALL_RADIUS;
-        const posY = ball.position.y;
+        const posY = nextPos.y;
         if (posY + radius > BOUNDARY.Y_MAX - 1)
+        {
+            // ball.position.set(nextPos.x, BOUNDARY.Y_MAX - 1 - radius);
             ballVelocity.y = -ballVelocity.y;
+        }
         else if (posY - radius < BOUNDARY.Y_MIN + 1)
+        {
+            // ball.position.set(nextPos.x, BOUNDARY.Y_MIN + 1 + radius);
             ballVelocity.y = -ballVelocity.y;
+        }
     }
 
     function getXContactPointPaddle(player)
@@ -140,12 +148,11 @@ export function createBall(scene, callBack) {
 
     function updateBall(ball, player1, player2)
     {
-        // let nextPos = ball.position + ballVelocity;
+        let nextPos = new THREE.Vector3(ball.position.x + ballVelocity.x, ball.position.y + ballVelocity.y);
         ball.position.add(ballVelocity);
         pointLight.position.copy(ball.position);
-        
         sparks.updateSparks();
-        checkCollisionTopBottom(ball);
+        checkCollisionTopBottom(nextPos);
         if (checkCollisionLeftPaddle(ball, player1) === true)
             bounceBallOnPaddle(true, new THREE.Vector3(getXContactPointPaddle(player1), ball.position.y, 0), player1);
         else if (checkCollisionRightPaddle(ball, player2))
@@ -154,9 +161,9 @@ export function createBall(scene, callBack) {
         {
             const radius = ballStats.BALL_RADIUS;
             const ballPosX = ball.position.x;
-            if (ballPosX - radius < BOUNDARY.X_MIN - 0.8)
+            if (ballPosX - radius < boundxmin)
                 playerGetPoint(1);
-            else if (ballPosX + radius > BOUNDARY.X_MAX + 0.8)
+            else if (ballPosX + radius > boundxmax)
                 playerGetPoint(2);
         }
     }

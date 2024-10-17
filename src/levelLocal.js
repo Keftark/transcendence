@@ -104,6 +104,10 @@ export function setUpCamera()
 export function setUpScene()
 {
     scene = new THREE.Scene();
+    const loader = new THREE.TextureLoader();
+    loader.load('backgrounds/space.png', function(texture) {
+        scene.background = texture;
+    });
     camera = setUpCamera();
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);

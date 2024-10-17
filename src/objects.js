@@ -21,13 +21,25 @@ export function drawLine(scene, BOUNDARY)
 export function drawBackground(scene)
 {
     const background = new THREE.PlaneGeometry(1000, 1000);
-    const bgMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0x171717,
-            roughness: 1 // Base color
+    const textureLoader = new THREE.TextureLoader();
+    const texture = textureLoader.load('backgrounds/space1.png');
+    const material = new THREE.MeshBasicMaterial({
+        map: texture,
+        transparent: true,
+        opacity: 1
     });
-    const bg = new THREE.Mesh(background, bgMaterial);
+    const bg = new THREE.Mesh(background, material);
     scene.add(bg);
-    bg.position.set(0, 0, -1);
+    bg.position.set(0, 0, -500);
+    const texture2 = textureLoader.load('backgrounds/space2.png');
+    const material2 = new THREE.MeshBasicMaterial({
+        map: texture2,
+        transparent: true,
+        opacity: 1
+    });
+    const bg2 = new THREE.Mesh(background, material2);
+    scene.add(bg2);
+    bg2.position.set(0, 0, -300);
 }
 
 export function createPlayers(scene)
@@ -51,8 +63,8 @@ export function createWalls(scene)
     const wallSizeHorizontal = wallHorizontalSize + 7;
     const wallSizeVertical = wallVerticalSize - 1;
     const textureLoader = new THREE.TextureLoader();
-    const sideTextureHorizontal = textureLoader.load('mat/wall.jpg');
-    const topTextureHorizontal = textureLoader.load('mat/wall.jpg');
+    const sideTextureHorizontal = textureLoader.load('mat/scifiwall.png');
+    const topTextureHorizontal = textureLoader.load('mat/scifiwall.png');
     sideTextureHorizontal.wrapS = sideTextureHorizontal.wrapT = THREE.RepeatWrapping;
     sideTextureHorizontal.repeat.set(wallHorizontalSize / 9, 1);
     topTextureHorizontal.wrapS = topTextureHorizontal.wrapT = THREE.RepeatWrapping;
@@ -75,8 +87,8 @@ export function createWalls(scene)
     scene.add(wallBot);
     wallBot.position.set(0, BOUNDARY.Y_MIN - 0.5, 0);
 
-    const sideTextureVertical = textureLoader.load('mat/wall.jpg');
-    const topTextureVertical = textureLoader.load('mat/wall.jpg');
+    const sideTextureVertical = textureLoader.load('mat/scifiwall.png');
+    const topTextureVertical = textureLoader.load('mat/scifiwall.png');
     sideTextureVertical.rotation = Math.PI / 2;
     topTextureVertical.rotation = Math.PI / 2;
     sideTextureVertical.wrapS = sideTextureVertical.wrapT = THREE.RepeatWrapping;
