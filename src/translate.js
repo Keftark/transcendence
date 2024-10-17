@@ -55,6 +55,11 @@ export function updateHTML(translations)
 	document.getElementById('addFriendButton').innerText = translations.addFriendButton;
 	document.getElementById('seeProfileButton').innerText = translations.seeProfileButton;
 	document.getElementById('inviteGameButton').innerText = translations.inviteGameButton;
+	document.getElementById('player1Name').innerText = translations.player1Name;
+	document.getElementById('player2Name').innerText = translations.player2Name;
+	document.getElementById('waitingForPlayer').innerText = translations.waitingForPlayer;
+	document.getElementById('startDuelButton').innerText = translations.startDuelButton;
+	document.getElementById('leaveDuelButton').innerText = translations.leaveDuelButton;
 }
 
 export async function changeLanguage(lang)

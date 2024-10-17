@@ -55,5 +55,11 @@
     "seeProfileButton": "Profile",
     "you": "You",
     "guest": "Guest",
-    "inviteGameButton": "Duel"
+    "inviteGameButton": "Duel",
+    "headerDuel": "Duel",
+    "player1Name": "Player 1",
+    "player2Name": "Player 2",
+    "waitingForPlayer": "Waiting for player...",
+    "startDuelButton": "Start",
+    "leaveDuelButton": "Leave"
 }

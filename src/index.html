@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="./styles/anims.css">
     <link rel="stylesheet" href="./styles/chat.css">
     <link rel="stylesheet" href="./styles/registration.css">
+    <link rel="stylesheet" href="./styles/duelPanel.css">
     <link rel="icon" type="image/png" href="/favicon.png">
 </head>
 <body>
@@ -22,6 +23,7 @@
     <script type="module" src="/chat.js"></script>
     <script type="module" src="/cheats.js"></script>
     <script type="module" src="/registration.js"></script>
+    <script type="module" src="/duelPanel.js"></script>
 
     <!------------------------------ Header Title ------------------------------>
     <div id="top-text">ft_transcendence</div>
@@ -53,7 +55,24 @@
 
     <!------------------------------ Duel Panel ------------------------------>
     <div id="duelPanel">
-
+        <img id="thunderImg" src="images/thunder.png">
+        <div id="playersDuel">
+            <div id="player1Duel">
+                <p id="player1Name"></p>
+                <img id="player1ImgDuel">
+                <p id=""></p>
+            </div>
+            <h2 id="vs">VS</h2>
+            <div id="player2Duel">
+                <p id="player2Name"></p>
+                <img id="player2ImgDuel">
+                <p id="waitingForPlayer"></p>
+            </div>
+        </div>
+        <div id="buttonsDuel">
+            <button id="startDuelButton"></button>
+            <button id="leaveDuelButton"></button>
+        </div>
     </div>
 
     <!------------------------------ In Game UI ------------------------------>
