@@ -23,8 +23,8 @@ export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
     let moveUp2 = false;
     let moveDown2 = false;
     let isLocal = getLevelState() === LevelMode.LOCAL;
-    const boundymax = boundYMax - 6.5;
-    const boundymin = boundYMin + 6.5;
+    const boundymax = boundYMax - 7.2;
+    const boundymin = boundYMin + 7.2;
 
     function checkKeys(event, isTrue)
     {

@@ -1,6 +1,6 @@
 #duelPanel
 {
-    display: flex;
+    display: none;
     position: absolute;
     flex-direction: column; 
     justify-content: center;
@@ -17,13 +17,6 @@
 #player1Name, #player2Name
 {
     font-size: 34px;
-}
-
-#vs
-{
-    align-self: center;
-    justify-self: center;
-    font-size: 64px;
 }
 
 #playersDuel
@@ -44,6 +37,19 @@
     height: 500px;
     width: 5%;
     transform: translate(-50%, -50%);
+}
+
+#vsImg
+{
+    left: 50%;
+    top: 50%;
+    position: absolute;
+    transform: translate(-50%, -90%);
+}
+
+.vsAnim
+{
+    animation: shrink 0.3s ease forwards;
 }
 
 #player1Duel

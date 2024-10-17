@@ -9,6 +9,15 @@
     }
 }
 
+@keyframes shrink {
+    0% {
+        transform: translate(-50%, -90%) scale(10); /* Start normal size */
+    }
+    100% {
+        transform: translate(-50%, -90%) scale(1.5); /* End at 5x scale */
+    }
+}
+
 @keyframes rise-up {
     0% {
         opacity: 0;

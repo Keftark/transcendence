@@ -2,6 +2,7 @@ import { ballBaseRadius, ballBaseSpeed, ballStats, BOUNDARY } from './levelLocal
 import { Sparks } from './sparks.js';
 const speedLimit = 3;
 const maxBounceAngle = 75 * Math.PI / 180;
+const baseSpeed = 0.75;
 
 function getDimensions(object) {
     const boundingBox = new THREE.Box3().setFromObject(object);
@@ -12,26 +13,27 @@ function getDimensions(object) {
     };
 }
 
+function getRandomVelocityComponent() {return Math.random() < 0.5 ? baseSpeed : -baseSpeed;}
+
 export function createBall(scene, callBack) {
     const ballMaterial = new THREE.MeshStandardMaterial({ 
         color: 0xffffff,
-        emissive: new THREE.Color(0xff2200), // Initial emissive color (red)
-        emissiveIntensity: 0 // Start with no emissive intensity
+        emissive: new THREE.Color(0xff2200),
+        emissiveIntensity: 0
     });
     const ballGeometry = new THREE.SphereGeometry(ballStats.BALL_RADIUS, 32, 32);
     const sparks = new Sparks(scene);
     const ballVelocitySpeedUp = new THREE.Vector3(0.15, 0.15, 0);
     const ball = new THREE.Mesh(ballGeometry, ballMaterial);
     const pointLight = new THREE.PointLight(0xff2200, 0, 0);
-    const maxLightIntensity = 10; // Maximum intensity value
+    const maxLightIntensity = 10;
     let ballVelocity;
-    let intensityIncrement = 0.05; // Amount to increase intensity with each bounce
+    let intensityIncrement = 0.05;
 
     scene.add(ball);
     pointLight.position.copy(ball.position);
     scene.add(pointLight);
 
-    function getRandomVelocityComponent() {return Math.random() < 0.5 ? 0.5 : -0.5;}
     function resetVelocity() { 
         let rnd1 = getRandomVelocityComponent();
         let rnd2 = getRandomVelocityComponent();
@@ -126,7 +128,7 @@ export function createBall(scene, callBack) {
         if (!isLeft)
             ballVelocity.x = -ballVelocity.x;
     
-        const shouldSpawnSparks = (isLeft && ballVelocity.x > 1.1) || (!isLeft && -ballVelocity.x > 1.1);
+        const shouldSpawnSparks = (isLeft && ballVelocity.x > 1.5) || (!isLeft && -ballVelocity.x > 1.5);
         if (shouldSpawnSparks) {
             const count = Math.trunc(Math.abs(ballVelocity.x) * 15);
             sparks.spawnSparks(position, count);
@@ -138,6 +140,7 @@ export function createBall(scene, callBack) {
 
     function updateBall(ball, player1, player2)
     {
+        // let nextPos = ball.position + ballVelocity;
         ball.position.add(ballVelocity);
         pointLight.position.copy(ball.position);
         
@@ -151,14 +154,15 @@ export function createBall(scene, callBack) {
         {
             const radius = ballStats.BALL_RADIUS;
             const ballPosX = ball.position.x;
-            if (ballPosX - radius < BOUNDARY.X_MIN)
+            if (ballPosX - radius < BOUNDARY.X_MIN - 0.8)
                 playerGetPoint(1);
-            else if (ballPosX + radius > BOUNDARY.X_MAX)
+            else if (ballPosX + radius > BOUNDARY.X_MAX + 0.8)
                 playerGetPoint(2);
         }
     }
 
-    function changeBallSize(newRadius) {
+    function changeBallSize(newRadius)
+    {
         if (isNaN(newRadius))
             newRadius = ballBaseRadius;
         let radius = parseFloat(newRadius);
