@@ -34,7 +34,6 @@ export function animateCamera(time, camera, callBack)
     
         camera.position.x = -xPos;
         camera.position.z = zPos;
-        console.log(camera.position.x + ", " + camera.position.y + ", " + camera.position.z);
         camera.lookAt(0, 0, 0);
         camera.rotation.x = 0;
         camera.rotation.z = -(Math.PI / 2);

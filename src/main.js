@@ -11,7 +11,14 @@ export const LevelMode = {
     ADVENTURE: 3,
 };
 
+export const ArenaType = 
+{
+    SPACE: 0,
+    CAVE: 1
+}
+
 let levelMode = LevelMode.MENU;
+let arenaType = ArenaType.CAVE;
 
 export function setLevelState(newLevelMode)
 {
@@ -21,6 +28,16 @@ export function setLevelState(newLevelMode)
 export function getLevelState()
 {
     return levelMode;
+}
+
+export function setArenaType(newArenaType)
+{
+    arenaType = newArenaType;
+}
+
+export function getArenaType()
+{
+    return arenaType;
 }
 
 export function checkEscapeKey()

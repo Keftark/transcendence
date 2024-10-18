@@ -142,7 +142,6 @@ export function createBall(scene, callBack) {
             sparks.spawnSparks(position, count);
         }
         ballVelocity.y += isLeft ? ballVelocitySpeedUp.y : -ballVelocitySpeedUp.y;
-        console.log(ballVelocity.x + ", " + ballVelocity.y);
     }
     
 
