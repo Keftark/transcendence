@@ -1,5 +1,7 @@
+import * as THREE from 'three';
 import { ballBaseRadius, ballBaseSpeed, ballStats, BOUNDARY } from './levelLocal.js';
 import { Sparks } from './sparks.js';
+import { ArenaType, getArenaType } from './main.js';
 const speedLimit = 3;
 const maxBounceAngle = 75 * Math.PI / 180;
 const baseSpeed = 0.75;
@@ -13,22 +15,34 @@ function getDimensions(object) {
     };
 }
 
+function getBallTexturePath()
+{
+    const levelType = getArenaType();
+    if (levelType === ArenaType.CAVE)
+        return 'mat/caveBall.png';
+    if (levelType === ArenaType.SPACE)
+        return 'mat/spaceBall.png';
+}
+
 function getRandomVelocityComponent() {return Math.random() < 0.5 ? baseSpeed : -baseSpeed;}
 
 export function createBall(scene, callBack) {
+    const textureLoader = new THREE.TextureLoader();
+    const ballTexture = textureLoader.load(getBallTexturePath());
+    ballTexture.colorSpace = THREE.SRGBColorSpace;
     const ballMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0xffffff,
+        map:ballTexture,
         emissive: new THREE.Color(0xff2200),
         emissiveIntensity: 0
     });
     const ballGeometry = new THREE.SphereGeometry(ballStats.BALL_RADIUS, 32, 32);
     const sparks = new Sparks(scene);
-    const ballVelocitySpeedUp = new THREE.Vector3(0.15, 0.15, 0);
+    const ballVelocitySpeedUp = new THREE.Vector3(0.07, 0.07, 0);
     const ball = new THREE.Mesh(ballGeometry, ballMaterial);
     const pointLight = new THREE.PointLight(0xff2200, 0, 0);
     const maxLightIntensity = 10;
     let ballVelocity;
-    let intensityIncrement = 0.05;
+    let intensityIncrement = 0.002;
     const boundxmin = BOUNDARY.X_MIN - 0.8;
     const boundxmax = BOUNDARY.X_MAX + 0.8;
 
@@ -60,7 +74,7 @@ export function createBall(scene, callBack) {
         if (pointLight.intensity < maxLightIntensity) {
             pointLight.intensity = Math.min(maxLightIntensity, pointLight.intensity + 0.1);
             ball.material.emissiveIntensity = Math.min(maxLightIntensity, ball.material.emissiveIntensity + intensityIncrement);
-            intensityIncrement *= 1.03;
+            intensityIncrement *= 1.05;
             pointLight.distance += 1;
         }
     }
@@ -136,7 +150,7 @@ export function createBall(scene, callBack) {
         if (!isLeft)
             ballVelocity.x = -ballVelocity.x;
     
-        const shouldSpawnSparks = (isLeft && ballVelocity.x > 1.5) || (!isLeft && -ballVelocity.x > 1.5);
+        const shouldSpawnSparks = (isLeft && ballVelocity.x > 1.6) || (!isLeft && -ballVelocity.x > 1.6);
         if (shouldSpawnSparks) {
             const count = Math.trunc(Math.abs(ballVelocity.x) * 15);
             sparks.spawnSparks(position, count);

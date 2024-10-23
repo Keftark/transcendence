@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 import { addPlayerMovementKeyDown, addPlayerMovementKeyUp } from "./playerMovement";
 
 function hideUiElements()

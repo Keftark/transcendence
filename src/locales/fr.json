@@ -61,5 +61,6 @@
     "player2Name": "Joueur 2",
     "waitingForPlayer": "En attente du joueur...",
     "startDuelButton": "Commencer",
-    "leaveDuelButton": "Quitter"
+    "leaveDuelButton": "Quitter",
+    "loading": "Chargement..."
 }

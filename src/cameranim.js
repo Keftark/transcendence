@@ -24,7 +24,7 @@ export function animateCamera(time, camera, callBack)
         const yPos = 50 - (50 * t * t);
     
         // Update camera position
-        camera.position.y = yPos; 
+        camera.position.y = yPos;
         camera.lookAt(0, 0, 0);
     }
     else if (getLevelState() === LevelMode.ADVENTURE)

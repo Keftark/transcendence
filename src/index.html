@@ -13,7 +13,6 @@
     <link rel="icon" type="image/png" href="/favicon.png">
 </head>
 <body>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
     <script type="module" src="/main.js"></script>
     <script type="module" src="/menu.js"></script>
     <script type="module" src="/translate.js"></script>
@@ -76,8 +75,11 @@
     </div>
 
     <!------------------------------ In Game UI ------------------------------>
-    <div id="pressplay"></div>
-    <div class="glitch" id="play"></div>
+    <p id="loading"></p>
+    <div id="pressPlayDiv">
+        <div id="pressplay"></div>
+        <div class="glitch" id="play"></div>
+    </div>
     <div id="scores">
         <div id="score-left">0</div>
         <div id="score-right">0</div>

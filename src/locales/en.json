@@ -61,5 +61,6 @@
     "player2Name": "Player 2",
     "waitingForPlayer": "Waiting for player...",
     "startDuelButton": "Start",
-    "leaveDuelButton": "Leave"
+    "leaveDuelButton": "Leave",
+    "loading": "Loading..."
 }

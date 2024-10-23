@@ -60,6 +60,7 @@ export function updateHTML(translations)
 	document.getElementById('waitingForPlayer').innerText = translations.waitingForPlayer;
 	document.getElementById('startDuelButton').innerText = translations.startDuelButton;
 	document.getElementById('leaveDuelButton').innerText = translations.leaveDuelButton;
+	document.getElementById('loading').innerText = translations.loading;
 }
 
 export async function changeLanguage(lang)
