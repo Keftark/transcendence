@@ -7,19 +7,29 @@ export class ScreenShake
         this.shakeDuration = 0;    // How long the shake will last
         this.shakeEndTime = 0;     // When the shake will end
         this.shakeOffset = { x: 0, y: 0 }; // Current shake offset
+        this.started = false;
+        this.basePositionX;
+        this.basePositionY;
+        this.basePositionZ;
     }
   
     // Function to start the screen shake effect
     start(intensity, duration)
     {
+        this.basePositionX = this.camera.position.x;
+        this.basePositionY = this.camera.position.y;
+        this.basePositionZ = this.camera.position.z;
         this.shakeIntensity = intensity;
         this.shakeDuration = duration;
         this.shakeEndTime = performance.now() + duration;
+        this.started = true;
     }
   
     // Update shake effect
     update()
     {
+        if (this.started === false)
+            return;
         const now = performance.now();
         if (now < this.shakeEndTime)
         {
@@ -38,12 +48,13 @@ export class ScreenShake
             this.shakeDuration = 0;
             this.shakeOffset.x = 0;
             this.shakeOffset.y = 0;
+            this.started = false;
             
             // decommenter ce code pour remettre le shaking a zero ? 
             // ca pose probleme avec les differents modes et la position initiale de la camera
 
-            // this.camera.position.x = 0;
-            // this.camera.position.y = 0;
+            this.camera.position.set(this.basePositionX, this.basePositionY, this.basePositionZ);
+            console.log(this.camera.position); 
         }
     }
   }

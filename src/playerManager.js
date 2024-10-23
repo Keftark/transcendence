@@ -20,6 +20,7 @@ export let playerStats =
     colors: "white",
     photoIndex: 0,
     isRegistered: false,
+    cameraOrthographic: false,
     matches: [],
     friends: []
 }
@@ -35,6 +36,7 @@ export function createPlayerStats() {
         colors: "",
         photoIndex: 0,
         isRegistered: false,
+        cameraOrthographic: false,
         matches: [],
         friends: []
     };

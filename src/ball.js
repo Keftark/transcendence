@@ -5,6 +5,7 @@ import { ArenaType, getArenaType } from './main.js';
 const speedLimit = 3;
 const maxBounceAngle = 75 * Math.PI / 180;
 const baseSpeed = 0.75;
+const baseIntensityIncrement = 0.002;
 
 function getDimensions(object) {
     const boundingBox = new THREE.Box3().setFromObject(object);
@@ -42,7 +43,7 @@ export function createBall(scene, callBack) {
     const pointLight = new THREE.PointLight(0xff2200, 0, 0);
     const maxLightIntensity = 10;
     let ballVelocity;
-    let intensityIncrement = 0.002;
+    let intensityIncrement = baseIntensityIncrement;
     const boundxmin = BOUNDARY.X_MIN - 0.8;
     const boundxmax = BOUNDARY.X_MAX + 0.8;
 
@@ -61,6 +62,7 @@ export function createBall(scene, callBack) {
         pointLight.position.copy(ball.position); // Update light position
         pointLight.intensity = 0; // Reset light intensity
         ball.material.emissiveIntensity = 0; // Reset emissive intensity
+        intensityIncrement = baseIntensityIncrement;
         resetVelocity();
     }
 
@@ -85,12 +87,12 @@ export function createBall(scene, callBack) {
         const posY = nextPos.y;
         if (posY + radius > BOUNDARY.Y_MAX - 1)
         {
-            // ball.position.set(nextPos.x, BOUNDARY.Y_MAX - 1 - radius);
+            ball.position.set(nextPos.x, BOUNDARY.Y_MAX - 1 - radius);
             ballVelocity.y = -ballVelocity.y;
         }
         else if (posY - radius < BOUNDARY.Y_MIN + 1)
         {
-            // ball.position.set(nextPos.x, BOUNDARY.Y_MIN + 1 + radius);
+            ball.position.set(nextPos.x, BOUNDARY.Y_MIN + 1 + radius);
             ballVelocity.y = -ballVelocity.y;
         }
     }
@@ -131,7 +133,8 @@ export function createBall(scene, callBack) {
             }
         return false;
     }
-    function bounceBallOnPaddle(isLeft, position, paddle) {
+    function bounceBallOnPaddle(isLeft, position, paddle)
+    {
         updateBallLight();
     
         const paddleCenter = paddle.position.y;
@@ -161,11 +164,11 @@ export function createBall(scene, callBack) {
 
     function updateBall(ball, player1, player2)
     {
-        let nextPos = new THREE.Vector3(ball.position.x + ballVelocity.x, ball.position.y + ballVelocity.y);
+        // let nextPos = new THREE.Vector3(ball.position.x + ballVelocity.x, ball.position.y + ballVelocity.y);
         ball.position.add(ballVelocity);
         pointLight.position.copy(ball.position);
         sparks.updateSparks();
-        checkCollisionTopBottom(nextPos);
+        checkCollisionTopBottom(ball.position);
         if (checkCollisionLeftPaddle(ball, player1) === true)
             bounceBallOnPaddle(true, new THREE.Vector3(getXContactPointPaddle(player1), ball.position.y, 0), player1);
         else if (checkCollisionRightPaddle(ball, player2))

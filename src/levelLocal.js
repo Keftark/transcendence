@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { animateCamera, resetCamera } from './cameranim.js';
+import { animateCamera, getCameraActiveState, resetCamera } from './cameranim.js';
 import { setupPlayerMovement } from './playerMovement.js';
 import { createBall } from './ball.js';
 import { ScreenShake } from './screenShake.js';
@@ -117,20 +117,32 @@ export function eventsListener(event)
     pressEscapeFunction(event);
 }
 
+function setOrthographicCamera()
+{
+    const aspect = window.innerWidth / window.innerHeight;
+    const cameraSize = 50; // Adjust this value to control zoom level
+
+    const camera = new THREE.OrthographicCamera(
+        -cameraSize * aspect, // left
+        cameraSize * aspect,  // right
+        cameraSize,           // top
+        -cameraSize,          // bottom
+        0.1,                  // near clipping plane
+        1000                  // far clipping plane
+    );
+    return camera;
+}
+
+function setPerspectiveCamera()
+{
+    let camera = new THREE.PerspectiveCamera(75, SCREEN_WIDTH / SCREEN_HEIGHT, 0.1, 1000);
+    return camera;
+}
+
 export function setUpCamera()
 {
-    // let camera = new THREE.PerspectiveCamera(75, SCREEN_WIDTH / SCREEN_HEIGHT, 0.1, 1000);
-    const aspect = window.innerWidth / window.innerHeight;
-const cameraSize = 50; // Adjust this value to control zoom level
+    let camera = playerStats.cameraOrthographic === true ? setOrthographicCamera() : setPerspectiveCamera();
 
-const camera = new THREE.OrthographicCamera(
-    -cameraSize * aspect, // left
-    cameraSize * aspect,  // right
-    cameraSize,           // top
-    -cameraSize,          // bottom
-    0.1,                  // near clipping plane
-    1000                  // far clipping plane
-);
     if (currentLevelMode === LevelMode.LOCAL)
     {
         camera.position.z = 50;
@@ -167,12 +179,12 @@ function showKeys()
 
 function setPlayerNames()
 {
-    if (currentLevelMode === LevelMode.LOCAL)
-        return;
     if (currentLevelMode === LevelMode.ADVENTURE)
         document.getElementById('playername-right').innerText = getTranslation('botName');
     else
+    {
         document.getElementById('playername-left').innerText = playerStats.isRegistered ? playerStats.nickname : getTranslation('playernameleft');
+    }
 }
 
 export function setUpLevel(scene)
@@ -295,6 +307,19 @@ export function StartLevel(levelMode)
         }
     }
     let lastTimestamp = 0;
+
+    function endAnimation()
+    {
+        cameraRatioWidth = 1920 / camera.position.z;
+        cameraRatioHeigth = 1080 / camera.position.z;
+        isCameraAnimationComplete = true;
+        setVisiblePlay();
+        if (currentLevelMode === LevelMode.ADVENTURE)
+        {
+            setVisibilityRightWall(false); // remove the wall of player1
+        }
+    }
+
     function animate(timestamp)
     {
         const deltaTime = timestamp - lastTimestamp; // Calculate the time since the last frame
@@ -302,19 +327,8 @@ export function StartLevel(levelMode)
         if (!isCameraAnimationComplete)
         {
             animateCamera(timestamp, camera, setVisiblePlay);
-            if (currentLevelMode === LevelMode.LOCAL && camera.position.y < 0.3)
-            {
-                isCameraAnimationComplete = true;
-                cameraRatioWidth = 1920 / camera.position.z;
-                cameraRatioHeigth = 1080 / camera.position.z;
-                setVisiblePlay();
-            }
-            if (currentLevelMode === LevelMode.ADVENTURE && camera.position.z < 60.1)
-            {
-                setVisibilityRightWall(false); // remove the wall of player1
-                isCameraAnimationComplete = true;
-                setVisiblePlay();
-            }
+            if (getCameraActiveState() === false)
+                endAnimation();
         }
         else
         {

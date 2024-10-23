@@ -10,6 +10,11 @@ export function resetCamera(time)
     cameraAnimationActive = true;
 }
 
+export function getCameraActiveState()
+{
+    return cameraAnimationActive;
+}
+
 export function animateCamera(time, camera, callBack)
 {
     if (!cameraAnimationActive) return; // Stop animation if the flag is false
@@ -24,7 +29,7 @@ export function animateCamera(time, camera, callBack)
         const yPos = 50 - (50 * t * t);
     
         // Update camera position
-        camera.position.y = yPos;
+        camera.position.y = -yPos;
         camera.lookAt(0, 0, 0);
     }
     else if (getLevelState() === LevelMode.ADVENTURE)
