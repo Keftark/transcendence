@@ -56,6 +56,7 @@ document.addEventListener('keydown', function(e) {
         } else {
             openChat();
         }
+        e.preventDefault();
     }
 });
 
@@ -315,7 +316,10 @@ function trySendMessage() {
     
     if (messageText !== "") {
         if (messageIsACode(messageText))
+        {
+            inputElement.focus();
             return;
+        }
         const truncatedMessage = messageText.split(' ').map(word => {
             return word.length > 30 ? word.substring(0, 30) + '...' : word;
         }).join(' ');

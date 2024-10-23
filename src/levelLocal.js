@@ -74,13 +74,11 @@ function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     
     // Optionally: Adjust camera's position based on window size
-    console.log("Base pos: " + camera.position.z);
     if (window.innerWidth > window.innerHeight) {
         camera.position.z = cameraRatioWidth / camera.aspect * 2.5; // For wider windows, move the camera further
     } else {
         camera.position.z = cameraRatioHeigth / camera.aspect * 3.5; // For taller windows, move the camera further back
     }
-    console.log("Changed pos: " + camera.position.z);
     
     // Update the camera's projection matrix after changing the aspect ratio
     camera.updateProjectionMatrix();
@@ -205,9 +203,9 @@ export function changeBallSizeInstance(newSize)
     changeBallSizeFunction(newSize);
 }
 
-export function changeBallSpeedInstance(newSize)
+export function changeBallSpeedInstance(newSpeed)
 {
-    changeBallSpeedFunction(newSize);
+    changeBallSpeedFunction(newSpeed);
 }
 
 function setUpConsts()
@@ -285,7 +283,8 @@ export function StartLevel(levelMode)
     
     function resetScreen(playerNbr)
     {
-        screenShake.start(0.7, 400);
+        if (playerNbr != 0)
+            screenShake.start(0.7, 400);
         addScore(playerNbr);
         resetFunction(false);
     }
@@ -333,7 +332,7 @@ export function StartLevel(levelMode)
         else
         {
             screenShake.update();
-            if (isBallMoving) updateBall(ball, player1, player2);
+            if (isBallMoving) updateBall(player1, player2);
             updatePlayers(deltaTime);
         }
         renderer.render(scene, camera);

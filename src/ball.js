@@ -5,7 +5,7 @@ import { ArenaType, getArenaType } from './main.js';
 const speedLimit = 3;
 const maxBounceAngle = 75 * Math.PI / 180;
 const baseSpeed = 0.75;
-const baseIntensityIncrement = 0.002;
+const baseIntensityIncrement = 0.005;
 
 function getDimensions(object) {
     const boundingBox = new THREE.Box3().setFromObject(object);
@@ -33,15 +33,15 @@ export function createBall(scene, callBack) {
     ballTexture.colorSpace = THREE.SRGBColorSpace;
     const ballMaterial = new THREE.MeshStandardMaterial({ 
         map:ballTexture,
-        emissive: new THREE.Color(0xff2200),
+        emissive: new THREE.Color(0xff5500),
         emissiveIntensity: 0
     });
     const ballGeometry = new THREE.SphereGeometry(ballStats.BALL_RADIUS, 32, 32);
     const sparks = new Sparks(scene);
     const ballVelocitySpeedUp = new THREE.Vector3(0.07, 0.07, 0);
     const ball = new THREE.Mesh(ballGeometry, ballMaterial);
-    const pointLight = new THREE.PointLight(0xff2200, 0, 0);
-    const maxLightIntensity = 10;
+    const pointLight = new THREE.PointLight(0xff5500, 0, 0);
+    const maxLightIntensity = 30;
     let ballVelocity;
     let intensityIncrement = baseIntensityIncrement;
     const boundxmin = BOUNDARY.X_MIN - 0.8;
@@ -61,6 +61,7 @@ export function createBall(scene, callBack) {
         ball.position.set(0, 0, 0);
         pointLight.position.copy(ball.position); // Update light position
         pointLight.intensity = 0; // Reset light intensity
+        pointLight.distance = 0;
         ball.material.emissiveIntensity = 0; // Reset emissive intensity
         intensityIncrement = baseIntensityIncrement;
         resetVelocity();
@@ -74,10 +75,23 @@ export function createBall(scene, callBack) {
     function updateBallLight()
     {
         if (pointLight.intensity < maxLightIntensity) {
-            pointLight.intensity = Math.min(maxLightIntensity, pointLight.intensity + 0.1);
+            pointLight.intensity = Math.min(maxLightIntensity, pointLight.intensity + 1);
             ball.material.emissiveIntensity = Math.min(maxLightIntensity, ball.material.emissiveIntensity + intensityIncrement);
-            intensityIncrement *= 1.05;
-            pointLight.distance += 1;
+            intensityIncrement *= 1.04;
+            pointLight.distance += intensityIncrement * 15;
+        }
+    }
+
+    function ballLookAt()
+    {
+        let direction = ballVelocity.clone().normalize();
+        // If the ball is moving, use lookAt to orient it
+        if (direction.length() > 0) {
+            // Calculate the target position (where the ball is heading)
+            const targetPosition = ball.position.clone().normalize().add(direction);
+            ball.lookAt(targetPosition); // Make the ball look towards the target position
+            console.log("position: " + ball.position.x + ", " + ball.position.y);
+            console.log("look: " + targetPosition.x + ", " + targetPosition.y);
         }
     }
 
@@ -89,11 +103,13 @@ export function createBall(scene, callBack) {
         {
             ball.position.set(nextPos.x, BOUNDARY.Y_MAX - 1 - radius);
             ballVelocity.y = -ballVelocity.y;
+            ballLookAt();
         }
         else if (posY - radius < BOUNDARY.Y_MIN + 1)
         {
             ball.position.set(nextPos.x, BOUNDARY.Y_MIN + 1 + radius);
             ballVelocity.y = -ballVelocity.y;
+            ballLookAt();
         }
     }
 
@@ -102,7 +118,7 @@ export function createBall(scene, callBack) {
         return player.position.x < 0 ? player.position.x + player.geometry.parameters.radiusTop : player.position.x - player.geometry.parameters.radiusTop;
     }
 
-    function checkCollisionLeftPaddle(ball, player1)
+    function checkCollisionLeftPaddle(player1)
     {
         const radius = ballStats.BALL_RADIUS;
         const ballPosY = ball.position.y;
@@ -118,7 +134,7 @@ export function createBall(scene, callBack) {
         return false;
     }
 
-    function checkCollisionRightPaddle(ball, player2)
+    function checkCollisionRightPaddle(player2)
     {
         const radius = ballStats.BALL_RADIUS;
         const ballPosY = ball.position.y;
@@ -159,19 +175,21 @@ export function createBall(scene, callBack) {
             sparks.spawnSparks(position, count);
         }
         ballVelocity.y += isLeft ? ballVelocitySpeedUp.y : -ballVelocitySpeedUp.y;
+        ballLookAt();
     }
     
 
-    function updateBall(ball, player1, player2)
+    function updateBall(player1, player2)
     {
         // let nextPos = new THREE.Vector3(ball.position.x + ballVelocity.x, ball.position.y + ballVelocity.y);
         ball.position.add(ballVelocity);
+
         pointLight.position.copy(ball.position);
         sparks.updateSparks();
         checkCollisionTopBottom(ball.position);
-        if (checkCollisionLeftPaddle(ball, player1) === true)
+        if (checkCollisionLeftPaddle(player1) === true)
             bounceBallOnPaddle(true, new THREE.Vector3(getXContactPointPaddle(player1), ball.position.y, 0), player1);
-        else if (checkCollisionRightPaddle(ball, player2))
+        else if (checkCollisionRightPaddle(player2))
             bounceBallOnPaddle(false, new THREE.Vector3(getXContactPointPaddle(player2), ball.position.y, 0), player2);
         else
         {
@@ -182,6 +200,7 @@ export function createBall(scene, callBack) {
             else if (ballPosX + radius > boundxmax)
                 playerGetPoint(2);
         }
+        ball.rotation.z += 0.03;
     }
 
     function changeBallSize(newRadius)

@@ -228,12 +228,12 @@ button
 
 #controlsP1LocalImg, #controlsAdventureImg
 {
-    left: 2%;
+    left: 16px;
 }
 
 #controlsP2LocalImg
 {
-    right: 2%;
+    right: 16px;
 }
 
 #loading

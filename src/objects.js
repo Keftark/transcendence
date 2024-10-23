@@ -55,7 +55,7 @@ function drawBackgroundCave(scene, textureLoader)
     const background = new THREE.PlaneGeometry(BOUNDARY.X_MAX * 2 + 7, BOUNDARY.Y_MAX * 2 + 2);
     const texture = textureLoader.load('backgrounds/cave.png');
     texture.colorSpace = THREE.SRGBColorSpace;
-    const material =  new THREE.MeshBasicMaterial({ map: texture });
+    const material =  new THREE.MeshStandardMaterial({ map: texture });
     const bg = new THREE.Mesh(background, material);
     scene.add(bg);
     bg.position.set(0, 0, -1);

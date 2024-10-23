@@ -32,7 +32,7 @@ export class Sparks {
 
         // Material for the particles
         const material = new THREE.PointsMaterial({
-            color: 0xffaa00,
+            color: 0xff5500,
             size: 0.25,
             transparent: true,
             opacity: 1.0

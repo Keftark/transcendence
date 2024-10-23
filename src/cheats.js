@@ -12,17 +12,20 @@ export const cheatCodes =
 export function changeBallSize(newSize)
 {
     changeBallSizeInstance(newSize);
-    sendSystemMessage(getTranslation('ballSizeChanged') + newSize);
+    let siseStr = isNaN(newSize) ? 'its default value' : String(newSize);
+    sendSystemMessage(getTranslation('ballSizeChanged') + siseStr);
 }
 
 export function changeBallSpeed(newSpeed)
 {
     changeBallSpeedInstance(newSpeed);
-    sendSystemMessage(getTranslation('ballSpeedChanged') + newSpeed);
+    let speedStr = isNaN(newSpeed) ? 'its default value' : String(newSpeed);
+    sendSystemMessage(getTranslation('ballSpeedChanged') + speedStr);
 }
 
 export function changePaddlesSize(newSize)
 {
     changePlayersSize(newSize)
-    sendSystemMessage(getTranslation('paddleSizeChanged') + newSize);
+    let siseStr = isNaN(newSize) ? 'its default value' : String(newSize);
+    sendSystemMessage(getTranslation('paddleSizeChanged') + siseStr);
 }

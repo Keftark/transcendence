@@ -1,3 +1,17 @@
+
+function resetCameraShake(screenShake)
+{
+    screenShake.camera.position.set(screenShake.basePositionX, screenShake.basePositionY, screenShake.basePositionZ);
+    screenShake.shakeIntensity = 0;
+    screenShake.shakeDuration = 0;
+    screenShake.shakeOffset.x = 0;
+    screenShake.shakeOffset.y = 0;
+    screenShake.basePositionX = 0;
+    screenShake.basePositionY = 0;
+    screenShake.basePositionZ = 0;
+    screenShake.started = false;
+}
+
 export class ScreenShake
 {
     constructor(camera)
@@ -24,19 +38,6 @@ export class ScreenShake
         this.shakeEndTime = performance.now() + duration;
         this.started = true;
     }
-
-    resetCameraShake()
-    {
-        this.camera.position.set(this.basePositionX, this.basePositionY, this.basePositionZ);
-        this.shakeIntensity = 0;
-        this.shakeDuration = 0;
-        this.shakeOffset.x = 0;
-        this.shakeOffset.y = 0;
-        this.basePositionX = 0;
-        this.basePositionY = 0;
-        this.basePositionZ = 0;
-        this.started = false;
-    }
   
     // Update shake effect
     update()
@@ -56,7 +57,7 @@ export class ScreenShake
         }
         else
         {
-            resetCameraShake();
+            resetCameraShake(this);
         }
     }
   }
