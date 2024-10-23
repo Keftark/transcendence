@@ -29,6 +29,7 @@ function openChat()
     chatBox.classList.remove('hide-elements');
     chatBox.classList.add('expanded');
     toggleIcon.src = 'icons/shrink.png';
+    inputField.focus();
 }
 
 function closeChat()
@@ -48,6 +49,16 @@ export function tryCloseChat()
         closeChat();
 }
 
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && e.shiftKey) {
+        if (chatBox.classList.contains('expanded')) {
+            closeChat();
+        } else {
+            openChat();
+        }
+    }
+});
+
 document.addEventListener("DOMContentLoaded", function() {
 
     sendButton.addEventListener('click', function() {
@@ -55,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     inputElement.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && !e.shiftKey) {    
             if (document.activeElement === inputElement)
                 sendButton.click();
             else
