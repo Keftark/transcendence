@@ -58,6 +58,11 @@ document.addEventListener('keydown', function(e) {
         }
         e.preventDefault();
     }
+    if (e.key === '/' && document.activeElement != inputElement)
+    {
+        openChat();
+        inputField.value = '';
+    }
 });
 
 document.addEventListener("DOMContentLoaded", function() {

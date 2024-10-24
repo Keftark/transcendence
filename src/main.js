@@ -23,7 +23,7 @@ export const ArenaType =
 }
 
 let levelMode = LevelMode.MENU;
-let arenaType = ArenaType.CAVE;
+let arenaType = ArenaType.SPACE;
 
 export function setLevelState(newLevelMode)
 {

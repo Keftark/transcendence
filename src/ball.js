@@ -88,10 +88,9 @@ export function createBall(scene, callBack) {
         // If the ball is moving, use lookAt to orient it
         if (direction.length() > 0) {
             // Calculate the target position (where the ball is heading)
-            const targetPosition = ball.position.clone().normalize().add(direction);
+            const targetPosition = ball.position.clone().add(direction);
+            targetPosition.z = ball.position.z;
             ball.lookAt(targetPosition); // Make the ball look towards the target position
-            console.log("position: " + ball.position.x + ", " + ball.position.y);
-            console.log("look: " + targetPosition.x + ", " + targetPosition.y);
         }
     }
 
@@ -178,6 +177,16 @@ export function createBall(scene, callBack) {
         ballLookAt();
     }
     
+    let previousPosition = new THREE.Vector3(ball.position.x, ball.position.y, ball.position.z);
+    function rotateBall()
+    {
+        const direction = new THREE.Vector3();
+        direction.subVectors(ball.position, previousPosition).normalize();
+        const displacement = previousPosition.distanceTo(ball.position);
+        const rotationAxis = new THREE.Vector3(-direction.y, direction.x, 0).normalize();
+        ball.rotateOnAxis(rotationAxis, displacement / 5);
+        previousPosition.copy(ball.position);
+    }
 
     function updateBall(player1, player2)
     {
@@ -200,7 +209,7 @@ export function createBall(scene, callBack) {
             else if (ballPosX + radius > boundxmax)
                 playerGetPoint(2);
         }
-        ball.rotation.z += 0.03;
+        rotateBall();
     }
 
     function changeBallSize(newRadius)
@@ -223,5 +232,6 @@ export function createBall(scene, callBack) {
     }
 
     resetVelocity();
+
     return { ball, updateBall, resetBall, changeBallSize, changeBallSpeed };
 }

@@ -4,13 +4,15 @@ import { setupPlayerMovement } from './playerMovement.js';
 import { createBall } from './ball.js';
 import { ScreenShake } from './screenShake.js';
 import { setScores, addScore, setVisibleScore } from './scoreManager.js';
-import { createLights, createPlayers, drawBackground, createWalls, setVisibilityRightWall, addModels } from './objects.js';
-import { setLevelState, LevelMode, getLevelState } from './main.js';
+import { createLights, createPlayers, setVisibilityRightWall } from './objects.js';
+import { setLevelState, LevelMode, getLevelState, getArenaType, ArenaType } from './main.js';
 import { unloadScene } from './unloadScene.js';
 import { removeMainEvents, showCursor } from './eventsListener.js';
 import { sendSystemMessage, tryCloseChat } from './chat.js';
 import { playerStats } from './playerManager.js';
 import { getTranslation } from './translate.js';
+import { createSpaceLevel } from './levelSpace.js';
+import { createCaveLevel } from './levelCave.js';
 
 export const playerBaseHeight = 12;
 export const PLAYER_RADIUS = 1;
@@ -193,9 +195,10 @@ export function setUpLevel(scene)
     [player1, player2] = createPlayers(scene, textureLoader);
     createLights(scene);
     resetPlayersPositions();
-    createWalls(scene, textureLoader);
-    drawBackground(scene, textureLoader);
-    addModels(scene, textureLoader);
+    if (getArenaType() === ArenaType.SPACE)
+        createSpaceLevel(scene, textureLoader);
+    if (getArenaType() === ArenaType.CAVE)
+        createCaveLevel(scene, textureLoader);
 }
 
 export function changeBallSizeInstance(newSize)
