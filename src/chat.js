@@ -6,8 +6,7 @@ import { playerStats } from "./playerManager";
 import { getTranslation } from "./translate";
 
 const messagesContainer = document.getElementById('messages');
-const inputField = document.querySelector('input[type="text"]');
-const inputElement = document.getElementById('myInput');
+const inputElement = document.getElementById('inputChat');
 const sendButton = document.getElementById('sendButton');
 const chatBox = document.getElementById('chatBox');
 const toggleSizeButton = document.getElementById('toggleSizeButton');
@@ -16,7 +15,7 @@ let lastSender = "";
 
 function resetInputFieldValue()
 {
-    inputField.value = '';
+    inputElement.value = '';
 }
 
 window.onload = function() {
@@ -29,7 +28,7 @@ function openChat()
     chatBox.classList.remove('hide-elements');
     chatBox.classList.add('expanded');
     toggleIcon.src = 'icons/shrink.png';
-    inputField.focus();
+    inputElement.focus();
 }
 
 function closeChat()
@@ -60,8 +59,9 @@ document.addEventListener('keydown', function(e) {
     }
     if (e.key === '/' && document.activeElement != inputElement)
     {
+        e.preventDefault();
         openChat();
-        inputField.value = '';
+        inputElement.value = '/';
     }
 });
 
@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (document.activeElement === inputElement)
                 sendButton.click();
             else
-                inputField.focus();
+                inputElement.focus();
         }
     });
 

@@ -86,7 +86,9 @@
 
 #leaveDuelButton, #startDuelButton
 {
-    width: 128px;
+
+    width: auto;
+    min-width: 128px;
     height: 64px;
     background-color: #005c57;
     color: white;

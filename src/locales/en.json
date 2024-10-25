@@ -62,5 +62,9 @@
     "waitingForPlayer": "Waiting for player...",
     "startDuelButton": "Start",
     "leaveDuelButton": "Leave",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "rulesPointsText": "Points to win:",
+    "rulesArenaText": "Arena:",
+    "rulesTimerText": "Max. time (in seconds):",
+    "buttonAcceptRules": "Start"
 }

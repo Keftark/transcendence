@@ -15,7 +15,7 @@ export function addPlayerMovementKeyUp(event)
     onKeyUpFunction(event);
 }
 
-const myInput = document.getElementById('myInput');
+const myInput = document.getElementById('inputChat');
 export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
 {
     let moveUp1 = false;

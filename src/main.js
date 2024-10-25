@@ -78,3 +78,4 @@ setButtonsColors();
 window.changeLanguage = changeLanguage;
 const button = document.getElementById('mainPlayButton');
 button.focus();
+document.getElementById('rules').style.display = 'flex';

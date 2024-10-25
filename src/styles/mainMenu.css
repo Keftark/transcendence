@@ -22,7 +22,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 300px;
+    width: auto;
+    min-width: 300px;
     height: 100px;
     margin: 5px 0;
     background-color: #000000;
@@ -51,7 +52,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 300px;
+    width: auto;
+    min-width: 300px;
     height: 100px;
     margin: 5px 0;
     background-color: #000000;
@@ -67,7 +69,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 200px;
+    width: auto;
+    min-width: 200px;
     height: 70px;
     margin: 5px 0;
     background-color: #000000;

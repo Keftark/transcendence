@@ -359,7 +359,7 @@ export function StartLevel(levelMode)
         }
     }
 
-    const myInput = document.getElementById('myInput');
+    const myInput = document.getElementById('inputChat');
     pressSpaceFunction = function pressSpaceStart(event)
     {
         if (!isBallMoving && event.key === ' ' && isCameraAnimationComplete && document.activeElement != myInput)

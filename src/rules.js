@@ -1,6 +1,5 @@
 import { ArenaType } from "./main";
 
-
 let rules =
 {
     pointsToWin: 3,

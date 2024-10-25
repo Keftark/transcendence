@@ -62,5 +62,9 @@
     "waitingForPlayer": "En attente du joueur...",
     "startDuelButton": "Commencer",
     "leaveDuelButton": "Quitter",
-    "loading": "Chargement..."
+    "loading": "Chargement...",
+    "rulesPointsText": "Points de victoire :",
+    "rulesArenaText": "Arene:",
+    "rulesTimerText": "Temps max. (en secondes) :",
+    "buttonAcceptRules": "Commencer"
 }

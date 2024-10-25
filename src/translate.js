@@ -61,6 +61,10 @@ export function updateHTML(translations)
 	document.getElementById('startDuelButton').innerText = translations.startDuelButton;
 	document.getElementById('leaveDuelButton').innerText = translations.leaveDuelButton;
 	document.getElementById('loading').innerText = translations.loading;
+	document.getElementById('rulesPointsText').innerText = translations.rulesPointsText;
+	document.getElementById('rulesArenaText').innerText = translations.rulesArenaText;
+	document.getElementById('rulesTimerText').innerText = translations.rulesTimerText;
+	document.getElementById('buttonAcceptRules').innerText = translations.buttonAcceptRules;
 }
 
 export async function changeLanguage(lang)
