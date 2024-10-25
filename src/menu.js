@@ -194,7 +194,7 @@ export function setButtonsColors()
 export function changeTextsColor(newColor)
 {
     const textElements = document.querySelectorAll(' \
-        h1, h2, div, h3, p, button, #top-text, #menu-label span, #pressplay, #play, #score-left, #score-right, #playername-left, \
+        h1, h2, div, h3, p, button, #header-title, #menu-label span, #pressplay, #play, #score-left, #score-right, #playername-left, \
         #playername-right');
     textElements.forEach(element => {
         element.style.color = newColor;
@@ -205,6 +205,7 @@ export function changeTextsColor(newColor)
 export function loadMainMenu()
 {
     unloadLevel();
+    setHeaderVisibility(true);
     showMainMenu();
     addMainEvents();
 }
@@ -292,4 +293,12 @@ export function onModesClose()
 export function openDuelPanel(otherPlayer = "")
 {
     // if otherPlayer != "" and if isInTheDatabase(otherPlayer), sends an invitation to this player
+}
+
+export function setHeaderVisibility(isVisible)
+{
+    if (isVisible === true)
+        document.getElementById('header-title').style.display = 'block';
+    else
+        document.getElementById('header-title').style.display = 'none';
 }

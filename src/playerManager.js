@@ -1,5 +1,6 @@
 import { fakeDatabase } from "./database";
 import { isVictory } from "./levelLocal";
+import { getMatchTime } from "./timer";
 import { changeTextsColor } from "./menu";
 import { MatchResult } from "./scoreManager";
 import { getTranslation } from "./translate";
@@ -42,10 +43,10 @@ export function createPlayerStats() {
     };
 }
 
-export function addMatchToHistory(playerScore, opponentScore, opponentName)
+export function addMatchToHistory(playerScore, opponentScore, opponentName, matchTime = '0')
 {
     setTimeout(() => {
-        playerStats.matches.push(new MatchResult(playerScore, opponentScore, opponentName));
+        playerStats.matches.push(new MatchResult(playerScore, opponentScore, opponentName, matchTime));
     }, 50);
     // prendre le joueur depuis la base de donnees et inserer le nouveau score
 }

@@ -36,7 +36,7 @@ button
     cursor: none;
 }
 
-#top-text {
+#header-title {
     pointer-events: none;
     position: absolute;
     top: 0;
@@ -133,14 +133,14 @@ button
  }
 
 #score-left, #score-right{
-    top: 80px;
+    top: 70px;
     position: absolute;
     font-size: 52px;
     color: white;
 }
 
 #playername-left, #playername-right {
-    top: 90px;
+    top: 80px;
     position: absolute;
     color: white;
     font-size: 35px;
@@ -181,7 +181,16 @@ button
     transition: transform 0.3s ease-in-out;
 }
 
-/* Moves the text down by 20px */
+#timer
+{
+    display: inline-block;
+    position: absolute;
+    top: 0%;
+    left: 50%;
+    font-size: 60px;
+    transform: translate(-50%, -80%);
+}
+
 .fall-down {
     animation: fall-down 0.5s forwards;
 }
@@ -200,23 +209,6 @@ button
 .fade-active {
     animation: fade 2s forwards;
 }
-
-/* #loadingScreen {
-    height: 100vh;
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    background-color: #000;
-    overflow: hidden;
-    z-index: 1;
-}
-
-#loadingScreen p {
-    font-size: 30px;
-    color: white;
-    font-family: 'MyCustomFont', Arial, sans-serif;
-} */
 
 #controlsP1LocalImg, #controlsP2LocalImg, #controlsAdventureImg {
     display: none;

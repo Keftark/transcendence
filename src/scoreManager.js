@@ -9,10 +9,11 @@ let player2Score = 0;
 
 export class MatchResult
 {
-    constructor(playerScore = 0, opponentScore = 0,  opponentName = "") {
+    constructor(playerScore = 0, opponentScore = 0,  opponentName = "", matchTime = 0) {
       this.scorePlayer = playerScore;
       this.scoreOpponent = opponentScore;
       this.nameOpponent = opponentName;
+      this.time = matchTime;
     }
 }
 

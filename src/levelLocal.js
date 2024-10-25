@@ -9,10 +9,12 @@ import { setLevelState, LevelMode, getLevelState, getArenaType, ArenaType } from
 import { unloadScene } from './unloadScene.js';
 import { removeMainEvents, showCursor } from './eventsListener.js';
 import { sendSystemMessage, tryCloseChat } from './chat.js';
-import { playerStats } from './playerManager.js';
+import { addMatchToHistory, playerStats } from './playerManager.js';
 import { getTranslation } from './translate.js';
 import { createSpaceLevel } from './levelSpace.js';
 import { createCaveLevel } from './levelCave.js';
+import { getMatchTime, isGamePaused, pauseStopWatch, resetStopwatch, resumeStopWatch, startStopwatch } from './timer.js';
+import { setHeaderVisibility } from './menu.js';
 
 export const playerBaseHeight = 12;
 export const PLAYER_RADIUS = 1;
@@ -57,8 +59,8 @@ let pressSpaceFunction = null;
 let player1, player2;
 let camera = null;
 let screenShake = null;
-let pressPlayDiv = document.getElementById('pressPlayDiv');
-let playDiv = document.getElementById('play');
+const pressPlayDiv = document.getElementById('pressPlayDiv');
+const playDiv = document.getElementById('play');
 let changeBallSizeFunction = null;
 let changeBallSpeedFunction = null;
 let player1KeysLocal = document.getElementById('controlsP1LocalImg');
@@ -260,7 +262,8 @@ function hidePlayMessage()
 
 export function StartLevel(levelMode)
 {
-    console.log("level loaded");
+    setHeaderVisibility(false);
+    resetStopwatch();
     document.getElementById('loading').style.display = 'block';
     showCursor();
     setLevelState(levelMode);
@@ -286,7 +289,10 @@ export function StartLevel(levelMode)
     function resetScreen(playerNbr)
     {
         if (playerNbr != 0)
+        {
             screenShake.start(0.7, 400);
+            pauseStopWatch();
+        }
         addScore(playerNbr);
         resetFunction(false);
     }
@@ -359,6 +365,13 @@ export function StartLevel(levelMode)
         if (!isBallMoving && event.key === ' ' && isCameraAnimationComplete && document.activeElement != myInput)
         {
             isBallMoving = true;
+            if (isGamePaused())
+                resumeStopWatch();
+            else
+            {
+                resetStopwatch();
+                startStopwatch();
+            }
             hidePlayMessage();
         }
     }
@@ -369,17 +382,18 @@ export function StartLevel(levelMode)
         {
             setVisibilityRightWall(true);
             resetFunction(true);
+            resetStopwatch();
             resetScreen(0);
             animate();
         }
     }
     
-    document.addEventListener('visibilitychange', () => {
-        if (document.hidden)
-            resetAnim();
-        else
-            if (!animationId) animate();
-    });
+    // document.addEventListener('visibilitychange', () => {
+    //     if (document.hidden)
+    //         resetAnim();
+    //     else
+    //         if (!animationId) animate();
+    // });
 
     setTimeout(() => { // put a loading screen?
         document.getElementById('loading').style.display = 'none';
@@ -389,5 +403,6 @@ export function StartLevel(levelMode)
 
 export function endMatch()
 {
-
+    const player2Name = document.getElementById('playername-right').innerText;
+    addMatchToHistory(scorePlayer, scoreOpponent, player2Name, getMatchTime());
 }
