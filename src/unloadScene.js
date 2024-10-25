@@ -3,12 +3,6 @@ import { addPlayerMovementKeyDown, addPlayerMovementKeyUp } from "./playerMoveme
 
 function hideUiElements()
 {
-    document.getElementById('pressplay').style.display = 'none';
-    document.getElementById('play').style.display = 'none';
-    document.getElementById('playername-left').style.display = 'none';
-    document.getElementById('playername-right').style.display = 'none';
-    document.getElementById('score-left').style.display = 'none';
-    document.getElementById('score-right').style.display = 'none';
     document.getElementById('menuPanel').style.display = 'none';
     document.getElementById('controlsP1LocalImg').style.display = 'none';
     document.getElementById('controlsP2LocalImg').style.display = 'none';

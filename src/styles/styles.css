@@ -245,3 +245,11 @@ button
     transform: translate(-50%, -50%);
     font-size: 40px;
 }
+
+.page, .subpage {
+    display: none; /* Hide all sections initially */
+}
+
+#home {
+    display: block; /* Display the home page by default */
+}

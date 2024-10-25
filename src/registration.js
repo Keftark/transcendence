@@ -1,6 +1,7 @@
 import { createNewPlayer, resetPlayerStats } from "./playerManager";
 import { loadScores, removeAllScores } from "./scoreManager";
 import { getTranslation } from "./translate";
+import { navigateTo } from "./pages";
 
 const inputNick = document.getElementById('inputName');
 const inputFirstName = document.getElementById('inputFirstName');
@@ -8,7 +9,7 @@ const inputLastName = document.getElementById('inputLastName');
 const inputMail = document.getElementById('inputMail');
 const inputPassword = document.getElementById('inputPassword');
 const inputConfirmPassword = document.getElementById('inputConfirmPassword');
-const registrationPanel = document.getElementById('registering');
+const registrationPanel = document.getElementById('registeringpanel');
 const overlayPanel = document.getElementById('overlay');
 const logInButtons = document.getElementById('loginbuttons');
 const logOutButtons = document.getElementById('logoutbuttons');
@@ -37,6 +38,11 @@ function  resetRegistrationInputs()
 
 export function clickCancelRegister()
 {
+    navigateTo('home');
+}
+
+export function onRegistrationClose()
+{
     resetRegistrationInputs();
 
     overlayPanel.style.display = 'none';
@@ -49,6 +55,11 @@ export function clickCancelRegister()
 }
 
 export function showRegistrationPanel()
+{
+    navigateTo('registering');
+}
+
+export function onRegistrationOpen()
 {
     overlayPanel.style.display = 'block';
     registrationPanel.style.display = 'block';

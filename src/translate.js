@@ -22,7 +22,7 @@ export function updateHTML(translations)
 	document.getElementById('mainProfileButton').innerText = translations.profileButton;
 	document.getElementById('mainSettingsButton').innerText = translations.settingsButton;
 	document.getElementById('mainButton').innerText = translations.mainButton;
-	document.getElementById('settings').innerText = translations.settings;
+	document.getElementById('settingsHeader').innerText = translations.settings;
 	document.getElementById('colors').innerText = translations.colors;
 	document.getElementById('closeProfileButton').innerText = translations.close;
 	document.getElementById('closeSettingsButton').innerText = translations.close;
@@ -32,7 +32,7 @@ export function updateHTML(translations)
 	document.getElementById('modeLocal').innerText = translations.modeLocal;
 	document.getElementById('modeComputer').innerText = translations.modeComputer;
 	document.getElementById('mainMenuText').innerText = translations.mainMenuText;
-	document.getElementById('backButton').innerText = translations.backText;
+	document.getElementById('modeBackButton').innerText = translations.backText;
 	document.getElementById('registerHeader').innerText = translations.registerHeader;
 	document.getElementById('registerName').innerText = translations.registerName;
 	document.getElementById('inputName').placeholder = translations.inputName;

@@ -57,8 +57,8 @@ let pressSpaceFunction = null;
 let player1, player2;
 let camera = null;
 let screenShake = null;
-let pressPlayDiv = null;
-let playDiv = null;
+let pressPlayDiv = document.getElementById('pressPlayDiv');
+let playDiv = document.getElementById('play');
 let changeBallSizeFunction = null;
 let changeBallSpeedFunction = null;
 let player1KeysLocal = document.getElementById('controlsP1LocalImg');
@@ -216,8 +216,6 @@ function setUpConsts()
     if (screenShake != null)
         return;
     screenShake = new ScreenShake(camera);
-    pressPlayDiv = document.getElementById('pressPlayDiv');
-    playDiv = document.getElementById('play');
 }
   
 function resetPlayersPositions()
@@ -262,6 +260,7 @@ function hidePlayMessage()
 
 export function StartLevel(levelMode)
 {
+    console.log("level loaded");
     document.getElementById('loading').style.display = 'block';
     showCursor();
     setLevelState(levelMode);

@@ -13,6 +13,7 @@
     <link rel="icon" type="image/png" href="/favicon.png">
 </head>
 <body>
+    <script type="module" src="/pages.js"></script>
     <script type="module" src="/main.js"></script>
     <script type="module" src="/menu.js"></script>
     <script type="module" src="/translate.js"></script>
@@ -26,54 +27,63 @@
     <script type="module" src="/levelSpace.js"></script>
     <script type="module" src="/levelCave.js"></script>
 
+    <div id="game-local" class="page"></div>
+    <div id="game-ai" class="page"></div>
     <!------------------------------ Header Title ------------------------------>
     <div id="top-text">ft_transcendence</div>
 
     <!------------------------------ Main Menu UI ------------------------------>
-    <div class="mainMenuPanel" id="mainMenuPanel">
-        <div class="mainPanel" id="mainPanel">
-            <h3 id="mainMenuText"></h3>
-            <button class="mainMenuButton" id="mainPlayButton"></button>
-            <button class="mainMenuButton" id="mainProfileButton"></button>
-            <button class="mainMenuButton" id="mainSettingsButton"></button>
+    <div id="home" class="page">
+        <div class="mainMenuPanel" id="mainMenuPanel">
+            <div class="mainPanel" id="mainPanel">
+                <h3 id="mainMenuText"></h3>
+                <button class="mainMenuButton" id="mainPlayButton"></button>
+                <button class="mainMenuButton" id="mainProfileButton"></button>
+                <button class="mainMenuButton" id="mainSettingsButton"></button>
+            </div>
         </div>
+
+        <!------------------------------ Main Menu Log In Buttons ------------------------------>
+        <div id="loginbuttons">
+            <button id="buttonSignIn" onclick="showRegistrationPanel()"></button>
+            <button id="buttonLogIn" onclick="clickCancelRegister()"></button>
+        </div>
+        <div id="logoutbuttons">
+            <button id="buttonLogOut" onclick="clickLogOut()"></button>
+        </div>
+    </div>
+    <!------------------------------ Mode Selection ------------------------------>
+    <div id="modes" class="page">
         <div class="modeSelectionPanel" id="modeSelection">
             <h3 id="modeSelectionText"></h3>
             <button class="modeSelectionButton" id="modeLocal"></button>
             <button class="modeSelectionButton" id="modeComputer"></button>
-            <button class="modeSelectionButtonBack" id="backButton"></button>
+            <button class="modeSelectionButtonBack" id="modeBackButton"></button>
         </div>
-    </div>
-
-    <!------------------------------ Main Menu Log In Buttons ------------------------------>
-    <div id="loginbuttons">
-        <button id="buttonSignIn" onclick="showRegistrationPanel()"></button>
-        <button id="buttonLogIn" onclick="clickCancelRegister()"></button>
-    </div>
-    <div id="logoutbuttons">
-        <button id="buttonLogOut" onclick="clickLogOut()"></button>
     </div>
 
     <!------------------------------ Duel Panel ------------------------------>
-    <div id="duelPanel">
-        <div id="playersDuel">
-            <div id="player1Duel">
-                <p id="player1Name"></p>
-                <img id="player1ImgDuel">
-                <p id=""></p>
+    <div id="duel" class="subpage">
+        <div id="duelPanel">
+            <div id="playersDuel">
+                <div id="player1Duel">
+                    <p id="player1Name"></p>
+                    <img id="player1ImgDuel">
+                    <p id=""></p>
+                </div>
+                <div id="player2Duel">
+                    <p id="player2Name"></p>
+                    <img id="player2ImgDuel">
+                    <p id="waitingForPlayer"></p>
+                </div>
             </div>
-            <div id="player2Duel">
-                <p id="player2Name"></p>
-                <img id="player2ImgDuel">
-                <p id="waitingForPlayer"></p>
+            <div id="buttonsDuel">
+                <button id="startDuelButton"></button>
+                <button id="leaveDuelButton"></button>
             </div>
+            <img id="thunderImg" src="images/thunder.png">
+            <img id="vsImg" src="images/vs.png">
         </div>
-        <div id="buttonsDuel">
-            <button id="startDuelButton"></button>
-            <button id="leaveDuelButton"></button>
-        </div>
-        <img id="thunderImg" src="images/thunder.png">
-        <img id="vsImg" src="images/vs.png">
     </div>
 
     <!------------------------------ In Game UI ------------------------------>
@@ -129,7 +139,7 @@
 
     <!------------------------------ Settings Panel ------------------------------>
     <div id="settingsPanel">
-        <h2 id="settings">Settings</h2>
+        <h2 id="settingsHeader"></h2>
         <p id="colors"></p>
         <div id="options">
             <button class="colorize-btn" id="color1Button" data-color="white"></button>
@@ -172,42 +182,44 @@
     </div>
 
     <!------------------------------ Registering Panel ------------------------------>
-    <div id="registering">
-        <div id="registeringPanel">
-            <h1 class="regItem" id="registerHeader"></h1>
-            <div class="regItem">
-                <p id="registerName"></p>
-                <input type="text" id="inputName" placeholder="...">
-                <p class="registerErrorMessage" id="registerErrorName"></p>
-            </div>
-            <div class="regItem">
-                <p id="registerFirstName"></p>
-                <input type="text" id="inputFirstName" placeholder="...">
-                <p class="registerErrorMessage" id="registerErrorFirstName"></p>
-            </div>
-            <div class="regItem">
-                <p id="registerLastName"></p>
-                <input type="text" id="inputLastName" placeholder="...">
-                <p class="registerErrorMessage" id="registerErrorLastName"></p>
-            </div>
-            <div class="regItem">
-                <p id="registerMail"></p>
-                <input type="text" id="inputMail" placeholder="...">
-                <p class="registerErrorMessage" id="registerErrorMail"></p>
-            </div>
-            <div class="regItem">
-                <p id="registerPassword"></p>
-                <input type="password" id="inputPassword" placeholder="...">
-                <p class="registerErrorMessage" id="registerErrorPassword"></p>
-            </div>
-            <div class="regItem">
-                <p id="registerConfirmPassword"></p>
-                <input type="password" id="inputConfirmPassword" placeholder="...">
-                <p class="registerErrorMessage" id="registerErrorConfirmPassword"></p>
-            </div>
-            <div id="regButtons">
-                <button class="regButton" id="registerConfirm" onclick="acceptRegistration()"></button>
-                <button class="regButton" id="registerCancel" onclick="clickCancelRegister()"></button>
+    <div id="registering" class="subpage">
+        <div id="registeringpanel">
+            <div id="registeringPanel">
+                <h1 class="regItem" id="registerHeader"></h1>
+                <div class="regItem">
+                    <p id="registerName"></p>
+                    <input type="text" id="inputName" placeholder="...">
+                    <p class="registerErrorMessage" id="registerErrorName"></p>
+                </div>
+                <div class="regItem">
+                    <p id="registerFirstName"></p>
+                    <input type="text" id="inputFirstName" placeholder="...">
+                    <p class="registerErrorMessage" id="registerErrorFirstName"></p>
+                </div>
+                <div class="regItem">
+                    <p id="registerLastName"></p>
+                    <input type="text" id="inputLastName" placeholder="...">
+                    <p class="registerErrorMessage" id="registerErrorLastName"></p>
+                </div>
+                <div class="regItem">
+                    <p id="registerMail"></p>
+                    <input type="text" id="inputMail" placeholder="...">
+                    <p class="registerErrorMessage" id="registerErrorMail"></p>
+                </div>
+                <div class="regItem">
+                    <p id="registerPassword"></p>
+                    <input type="password" id="inputPassword" placeholder="...">
+                    <p class="registerErrorMessage" id="registerErrorPassword"></p>
+                </div>
+                <div class="regItem">
+                    <p id="registerConfirmPassword"></p>
+                    <input type="password" id="inputConfirmPassword" placeholder="...">
+                    <p class="registerErrorMessage" id="registerErrorConfirmPassword"></p>
+                </div>
+                <div id="regButtons">
+                    <button class="regButton" id="registerConfirm" onclick="acceptRegistration()"></button>
+                    <button class="regButton" id="registerCancel" onclick="clickCancelRegister()"></button>
+                </div>
             </div>
         </div>
     </div>

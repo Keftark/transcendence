@@ -1,6 +1,7 @@
 import { addMainEvents } from './eventsListener.js';
 import { StartLevel, unloadLevel } from './levelLocal.js';
 import { getLevelState, LevelMode, setLevelState } from './main.js';
+import { navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
 import { loadScores, removeAllScores } from './scoreManager.js';
 const overlayPanel = document.getElementById('overlay');
@@ -49,7 +50,7 @@ document.getElementById('closeSettingsButton').addEventListener('click', () => {
 });
 
 document.getElementById('mainButton').addEventListener('click', () => {
-    loadMainMenu();
+    clickBackButtonMenu();
 });
 
 document.getElementById('modeLocal').addEventListener('click', () => {
@@ -60,7 +61,7 @@ document.getElementById('modeComputer').addEventListener('click', () => {
     clickPlayGame(LevelMode.ADVENTURE);
 });
 
-document.getElementById('backButton').addEventListener('click', () => {
+document.getElementById('modeBackButton').addEventListener('click', () => {
     clickBackButtonMenu();
 });
 
@@ -92,15 +93,9 @@ export function openProfile(player = playerStats)
         return;
     loadScores(player);
     if (player.matches.length === 0)
-    {
-
         document.getElementById('seeMatchesButton').style.display = 'none';
-    }
     else
-    {
-
         document.getElementById('seeMatchesButton').style.display = 'block';
-    }
     document.getElementById('nameProfile').innerText = player.nickname;
     document.getElementById('firstNameProfile').innerText = player.firstName;
     document.getElementById('lastNameProfile').innerText = player.lastName;
@@ -185,7 +180,6 @@ export function closeSettings()
     overlayPanel.style.display = 'none';
 }
 
-
 export function setButtonsColors()
 {
     const buttons = document.querySelectorAll('.colorize-btn');
@@ -252,12 +246,26 @@ export function clickPlay()
 
 export function clickPlayGame(mode)
 {
+    
+    if (mode === LevelMode.LOCAL)
+        navigateTo('game-local', mode);
+    else if (mode === LevelMode.ADVENTURE)
+        navigateTo('game-ai', mode);
+}
+
+export function onPlayGame(mode)
+{
     hideMainMenu();
     hideModeChoice();
     StartLevel(mode);
 }
 
 export function showModeChoice()
+{
+    navigateTo('modes');
+}
+
+export function onModesOpen()
 {
     document.getElementById('modeSelection').style.display = 'flex';
     setLevelState(LevelMode.MODESELECTION);
@@ -271,6 +279,11 @@ function hideModeChoice()
 }
 
 export function clickBackButtonMenu()
+{
+    navigateTo('home', getLevelState());
+}
+
+export function onModesClose()
 {
     hideModeChoice();
     showMainMenu();

@@ -67,6 +67,10 @@ function changeCursors()
     });
 }
 
+export function isLevelMode(value) {
+    return Object.values(LevelMode).includes(value);
+}
+
 changeCursors();
 addMainEvents();
 initTranslation();
