@@ -2,28 +2,10 @@ import { clickBackButtonMenu, loadMainMenu } from './menu.js';
 import { initTranslation, changeLanguage } from './translate.js';
 import { setButtonsColors,  } from './menu.js';
 import { addMainEvents } from './eventsListener.js';
-import { createPlayerStats, playerStats } from './playerManager.js';
+import { ArenaType, LevelMode } from './variables.js';
 
-export const LevelMode = {
-	MENU: 0,
-	MODESELECTION: 1,
-	ADVENTURE: 2,
-	DUEL: 3,
-	DUELCUSTOM: 4,
-	LOCAL: 5,
-	LOCALCUSTOM: 6,
-	TOURNAMENTLOBBY: 7,
-	TOURNAMENT: 8,
-};
-
-export const ArenaType = 
-{
-    SPACE: 0,
-    CAVE: 1
-}
 
 let levelMode = LevelMode.MENU;
-let arenaType = ArenaType.SPACE;
 
 export function setLevelState(newLevelMode)
 {
@@ -35,16 +17,6 @@ export function getLevelState()
     return levelMode;
 }
 
-export function setArenaType(newArenaType)
-{
-    arenaType = newArenaType;
-}
-
-export function getArenaType()
-{
-    return arenaType;
-}
-
 export function checkEscapeKey()
 {
     if (levelMode === LevelMode.MODESELECTION)
@@ -54,16 +26,16 @@ export function checkEscapeKey()
 function changeCursors()
 {
     document.body.style.cursor = "url('./icons/cursor.png'), auto";
-    const buttons = document.querySelectorAll('button');
+    const buttons = document.querySelectorAll('button, input[type="checkbox"]');
     
     // Loop through each button and change the cursor
     buttons.forEach(button => {
         button.style.cursor = "url('./icons/cursor-button.png'), move";
     });
 
-    const inputs = document.querySelectorAll('input');
+    const inputs = document.querySelectorAll('input[type="text"], input[type="number"], input[type="password"]');
     inputs.forEach(input => {
-        input.style.cursor = "url('./icons/cursor-text.png'), move";
+        input.style.cursor = "url('./icons/cursor-text.png') 4 10, move";
     });
 }
 
@@ -78,4 +50,3 @@ setButtonsColors();
 window.changeLanguage = changeLanguage;
 const button = document.getElementById('mainPlayButton');
 button.focus();
-document.getElementById('rules').style.display = 'flex';

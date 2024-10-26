@@ -5,7 +5,7 @@ import { createBall } from './ball.js';
 import { ScreenShake } from './screenShake.js';
 import { setScores, addScore, setVisibleScore } from './scoreManager.js';
 import { createLights, createPlayers, setVisibilityRightWall } from './objects.js';
-import { setLevelState, LevelMode, getLevelState, getArenaType, ArenaType } from './main.js';
+import { setLevelState } from './main.js';
 import { unloadScene } from './unloadScene.js';
 import { removeMainEvents, showCursor } from './eventsListener.js';
 import { sendSystemMessage, tryCloseChat } from './chat.js';
@@ -13,8 +13,10 @@ import { addMatchToHistory, playerStats } from './playerManager.js';
 import { getTranslation } from './translate.js';
 import { createSpaceLevel } from './levelSpace.js';
 import { createCaveLevel } from './levelCave.js';
-import { getMatchTime, isGamePaused, pauseStopWatch, resetStopwatch, resumeStopWatch, startStopwatch } from './timer.js';
+import { getMatchTime, isGamePaused, pauseStopWatch, resetStopwatch, resumeStopWatch, setStopWatch, startStopwatch, stopStopwatch } from './timer.js';
 import { setHeaderVisibility } from './menu.js';
+import { getRules } from './rules.js';
+import { ArenaType, LevelMode } from './variables.js';
 
 export const playerBaseHeight = 12;
 export const PLAYER_RADIUS = 1;
@@ -70,6 +72,7 @@ let currentLevelMode;
 let isCameraAnimationComplete = false;
 let cameraRatioWidth = 0;
 let cameraRatioHeigth = 0;
+export let isInGame = false;
 
 function onWindowResize() {
     if (!isCameraAnimationComplete)
@@ -141,19 +144,28 @@ function setPerspectiveCamera()
     return camera;
 }
 
+export function setCameraType()
+{
+    const rotation = camera.rotation;
+    const position = camera.position;
+    camera = playerStats.cameraOrthographic === true ? setOrthographicCamera() : setPerspectiveCamera();
+    camera.position.set(position.x, position.y, position.z);
+    camera.rotation = rotation;
+}
+
 export function setUpCamera()
 {
-    let camera = playerStats.cameraOrthographic === true ? setOrthographicCamera() : setPerspectiveCamera();
+    let newCamera = playerStats.cameraOrthographic === true ? setOrthographicCamera() : setPerspectiveCamera();
 
     if (currentLevelMode === LevelMode.LOCAL)
     {
-        camera.position.z = 50;
+        newCamera.position.z = 50;
     }
     else if (currentLevelMode === LevelMode.ADVENTURE)
     {
-        camera.position.set(50, 0, 30);
+        newCamera.position.set(50, 0, 30);
     }
-    return camera;
+    return newCamera;
 }
 
 export function setUpScene(levelMode)
@@ -197,9 +209,9 @@ export function setUpLevel(scene)
     [player1, player2] = createPlayers(scene, textureLoader);
     createLights(scene);
     resetPlayersPositions();
-    if (getArenaType() === ArenaType.SPACE)
+    if (getRules().arena === ArenaType.SPACE)
         createSpaceLevel(scene, textureLoader);
-    if (getArenaType() === ArenaType.CAVE)
+    else if (getRules().arena === ArenaType.CAVE)
         createCaveLevel(scene, textureLoader);
 }
 
@@ -259,11 +271,22 @@ function hidePlayMessage()
     pressPlayDiv.style.display = 'none';
     pressPlayDiv.style.opacity = '0';
 }
+    
+function resetAnim()
+{
+    if (animationId)
+    {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+    }
+}
 
 export function StartLevel(levelMode)
 {
+    isInGame = true;
     setHeaderVisibility(false);
-    resetStopwatch();
+    // resetStopwatch();
+    setStopWatch(getRules().maxTime);
     document.getElementById('loading').style.display = 'block';
     showCursor();
     setLevelState(levelMode);
@@ -349,15 +372,6 @@ export function StartLevel(levelMode)
         else
             resetFunction(true);
     }
-    
-    function resetAnim()
-    {
-        if (animationId)
-        {
-            cancelAnimationFrame(animationId);
-            animationId = null;
-        }
-    }
 
     const myInput = document.getElementById('inputChat');
     pressSpaceFunction = function pressSpaceStart(event)
@@ -370,7 +384,7 @@ export function StartLevel(levelMode)
             else
             {
                 resetStopwatch();
-                startStopwatch();
+                startStopwatch(getRules().maxTime);
             }
             hidePlayMessage();
         }
@@ -394,15 +408,24 @@ export function StartLevel(levelMode)
     //     else
     //         if (!animationId) animate();
     // });
-
     setTimeout(() => { // put a loading screen?
         document.getElementById('loading').style.display = 'none';
         animate();
     }, 500);
 }
 
-export function endMatch()
+export function endMatch(scoreP1, scoreP2)
 {
+    stopStopwatch();
+    resetAnim();
+    const player1Name = document.getElementById('playername-left').innerText;
     const player2Name = document.getElementById('playername-right').innerText;
-    addMatchToHistory(scorePlayer, scoreOpponent, player2Name, getMatchTime());
+    addMatchToHistory(scoreP1, scoreP2, player2Name, getMatchTime());
+    console.log("player wins");
+    // faire apparaitre la fenetre de win
+    let winner = '';
+    if (scoreP1 > scoreP2)
+        winner = player1Name;
+    else if (scoreP1 < scoreP2)
+        winner = player2Name;  
 }

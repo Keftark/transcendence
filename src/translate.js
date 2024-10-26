@@ -1,4 +1,4 @@
-import { getPlayerVictories } from "./playerManager";
+import { getPlayerVictories, playerStats } from "./playerManager";
 
 let translations;
 
@@ -65,6 +65,9 @@ export function updateHTML(translations)
 	document.getElementById('rulesArenaText').innerText = translations.rulesArenaText;
 	document.getElementById('rulesTimerText').innerText = translations.rulesTimerText;
 	document.getElementById('buttonAcceptRules').innerText = translations.buttonAcceptRules;
+	document.getElementById('cameraTypeHeader').innerText = translations.cameraTypeHeader;
+	document.getElementById('cameraTypeText').innerText = playerStats.cameraOrthographic ? translations.orthographic : translations.perspective;
+	
 }
 
 export async function changeLanguage(lang)

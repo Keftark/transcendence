@@ -1,6 +1,5 @@
 import * as THREE from 'three';
-import { PLAYER_HEIGHT, PLAYER_RADIUS, BOUNDARY } from "./levelLocal";
-import { ArenaType, getArenaType, getLevelState, LevelMode } from "./main";
+import { BOUNDARY } from "./levelLocal";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { setWallRight } from './objects';
 
@@ -43,17 +42,12 @@ function drawBackground(scene, textureLoader)
 
 function createWalls(scene, textureLoader)
 {
-    const arenaType = getArenaType();
     const wallHeight = 1;
     const wallVerticalSize = BOUNDARY.Y_MAX * 2;
     const wallHorizontalSize = BOUNDARY.X_MAX * 2;
     const wallSizeHorizontal = wallHorizontalSize + 7;
     const wallSizeVertical = wallVerticalSize - 1;
-    let texturePath = '';
-    if (arenaType === ArenaType.SPACE)
-        texturePath = 'mat/scifiwall.png';
-    if (arenaType === ArenaType.CAVE)
-        texturePath = 'mat/cavewall.png';
+    let texturePath = 'mat/scifiwall.png';
     const sideTextureHorizontal = textureLoader.load(texturePath);
     sideTextureHorizontal.colorSpace = THREE.SRGBColorSpace;
     const topTextureHorizontal = textureLoader.load(texturePath);

@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { PLAYER_HEIGHT, PLAYER_RADIUS, BOUNDARY } from "./levelLocal";
-import { ArenaType, getArenaType, getLevelState, LevelMode } from "./main";
+import { getLevelState } from "./main";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { LevelMode } from './variables';
 
 let wallLeft;
 let wallRight;

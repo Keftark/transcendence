@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { ballBaseRadius, ballBaseSpeed, ballStats, BOUNDARY } from './levelLocal.js';
 import { Sparks } from './sparks.js';
-import { ArenaType, getArenaType } from './main.js';
+import { ArenaType } from './variables.js';
+import { getRules } from './rules.js';
 const speedLimit = 3;
 const maxBounceAngle = 75 * Math.PI / 180;
 const baseSpeed = 0.75;
@@ -18,7 +19,7 @@ function getDimensions(object) {
 
 function getBallTexturePath()
 {
-    const levelType = getArenaType();
+    const levelType = getRules().arena;
     if (levelType === ArenaType.CAVE)
         return 'mat/caveBall.png';
     if (levelType === ArenaType.SPACE)

@@ -1,5 +1,6 @@
 import { balle } from "./levelLocal";
-import { getLevelState, LevelMode } from "./main";
+import { getLevelState } from "./main";
+import { LevelMode } from "./variables";
 
 const moveSpeed = 300;
 let onKeyUpFunction = null;

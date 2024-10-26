@@ -1,7 +1,11 @@
+import { checkTimer } from "./rules";
+
 const display = document.getElementById('timer');
 let timerId;
 let elapsedTime = 0; // Time in seconds
 let isPaused = false;
+let isReverse = false;
+let baseTimer = 0;
 
 // Function to format time as HH:MM:SS
 function formatTime(seconds) {
@@ -22,14 +26,15 @@ function updateDisplay() {
 export function isGamePaused(){return isPaused;}
 
 // Function to start the stopwatch
-export function startStopwatch()
+export function startStopwatch(timer)
 {
     if (!timerId) { // Check if the timer is already running
         timerId = setInterval(() => {
             if (!isPaused)
             {
-                elapsedTime++;
+                elapsedTime = timer > 0 ? elapsedTime - 1 : elapsedTime + 1;
                 updateDisplay();
+                checkTimer(elapsedTime);
             }
         }, 1000); // Update every second
     }
@@ -47,7 +52,7 @@ export function resetStopwatch()
 {
     resumeStopWatch();
     stopStopwatch(); // Stop the timer if it's running
-    elapsedTime = 0; // Reset elapsed time
+    elapsedTime = baseTimer; // Reset elapsed time
     updateDisplay(); // Update display to show 00:00:00
 }
 
@@ -64,4 +69,20 @@ export function resumeStopWatch()
 export function getMatchTime()
 {
     return formatTime(elapsedTime);
+}
+
+export function setStopWatch(timer)
+{
+    if (timer > 0)
+    {
+        baseTimer = timer;
+        elapsedTime = timer;
+        isReverse = true;
+    }
+    else
+    {
+        isReverse = false;
+        elapsedTime = baseTimer = 0;
+    }
+    updateDisplay();
 }

@@ -66,5 +66,8 @@
     "rulesPointsText": "Points de victoire :",
     "rulesArenaText": "Arene:",
     "rulesTimerText": "Temps max. (en secondes) :",
-    "buttonAcceptRules": "Commencer"
+    "buttonAcceptRules": "Commencer",
+    "cameraTypeHeader": "Camera : ",
+    "cameraType": "perspective",
+    "perspective": "perspective"
 }

@@ -28,6 +28,7 @@
     <script type="module" src="/levelSpace.js"></script>
     <script type="module" src="/levelCave.js"></script>
     <script type="module" src="/timer.js"></script>
+    <script type="module" src="/variables.js"></script>
     <script type="module" src="/rules.js"></script>
 
     <div id="game-local" class="page"></div>
@@ -75,8 +76,8 @@
             <div id="rulesArenaType">
                 <h1 id="rulesArenaText"></h1>
                 <div id="arenas">
-                    <img id="rulesArenaTypeCave" src="/images/arenaCave.png">
-                    <img id="rulesArenaTypeSpace" src="/images/arenaSpace.png">
+                    <img class="arena" id="rulesArenaTypeCave" src="/images/arenaCave.png" onclick="selectArena(0)">
+                    <img class="arena" id="rulesArenaTypeSpace" src="/images/arenaSpace.png" onclick="selectArena(1)">
                 </div>
             </div>
             <div id="rulesTimer">
@@ -182,6 +183,11 @@
             <button class="language" id="lang2Button" onclick="changeLanguage('fr')">
                 <img src="./icons/lang-fr.png" id="lang-icon" />
             </button>
+        </div>
+        <p id="cameraTypeHeader"></p>
+        <div id="cameraType">
+            <input type="checkbox" id="cameraTypeCheckbox" class="toggle-checkbox">
+            <p id="cameraTypeText"></p>
         </div>
         <button id="closeSettingsButton"></button>
     </div>

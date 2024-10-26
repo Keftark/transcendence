@@ -1,4 +1,5 @@
-import { getLevelState, LevelMode } from "./main";
+import { getLevelState } from "./main";
+import { LevelMode } from "./variables";
 
 let cameraAnimationActive = true; // Flag to control camera animation
 let startTime; // Track the start time of the animation

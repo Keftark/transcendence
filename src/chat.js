@@ -1,9 +1,11 @@
 import { cheatCodes } from "./cheats";
 import { isInTheDatabase, searchDatabase } from "./database";
-import { getLevelState, LevelMode } from "./main";
-import { openProfile } from "./menu";
+import { getLevelState } from "./main";
+import { openProfile, uncheckCameraToggle } from "./menu";
 import { playerStats } from "./playerManager";
+import { resetInputfieldsRules } from "./rules";
 import { getTranslation } from "./translate";
+import { LevelMode } from "./variables";
 
 const messagesContainer = document.getElementById('messages');
 const inputElement = document.getElementById('inputChat');
@@ -16,6 +18,8 @@ let lastSender = "";
 function resetInputFieldValue()
 {
     inputElement.value = '';
+    resetInputfieldsRules();
+    uncheckCameraToggle();
 }
 
 window.onload = function() {

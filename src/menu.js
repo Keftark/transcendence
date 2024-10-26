@@ -1,13 +1,17 @@
 import { addMainEvents } from './eventsListener.js';
-import { StartLevel, unloadLevel } from './levelLocal.js';
-import { getLevelState, LevelMode, setLevelState } from './main.js';
+import { isInGame, setCameraType, StartLevel, unloadLevel } from './levelLocal.js';
+import { getLevelState, setLevelState } from './main.js';
 import { navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
+import { getRules, openRules, setCustomRules } from './rules.js';
 import { loadScores, removeAllScores } from './scoreManager.js';
+import { getTranslation } from './translate.js';
+import { LevelMode } from './variables.js';
 const overlayPanel = document.getElementById('overlay');
 const profilePanel = document.getElementById('profilePanel');
 const matchListPanel = document.getElementById('matchListPanel');
 const matchListButton = document.getElementById('seeMatchesButton');
+let selectedMode;
 
 document.getElementById('mainPlayButton').addEventListener('click', () => {
     clickPlay();
@@ -54,11 +58,15 @@ document.getElementById('mainButton').addEventListener('click', () => {
 });
 
 document.getElementById('modeLocal').addEventListener('click', () => {
-    clickPlayGame(LevelMode.LOCAL);
+    selectedMode = LevelMode.LOCAL;
+    openRules();
+    // clickPlayGame(LevelMode.LOCAL);
 });
 
 document.getElementById('modeComputer').addEventListener('click', () => {
-    clickPlayGame(LevelMode.ADVENTURE);
+    selectedMode = LevelMode.ADVENTURE;
+    openRules();
+    // clickPlayGame(LevelMode.ADVENTURE);
 });
 
 document.getElementById('modeBackButton').addEventListener('click', () => {
@@ -245,19 +253,18 @@ export function clickPlay()
     showModeChoice();
 }
 
-export function clickPlayGame(mode)
+export function clickPlayGame()
 {
-    
-    if (mode === LevelMode.LOCAL)
-        navigateTo('game-local', mode);
-    else if (mode === LevelMode.ADVENTURE)
-        navigateTo('game-ai', mode);
+    setCustomRules();
+    if (selectedMode === LevelMode.LOCAL)
+        navigateTo('game-local', selectedMode);
+    else if (selectedMode === LevelMode.ADVENTURE)
+        navigateTo('game-ai', selectedMode);
 }
 
 export function onPlayGame(mode)
 {
     hideMainMenu();
-    hideModeChoice();
     StartLevel(mode);
 }
 
@@ -268,15 +275,9 @@ export function showModeChoice()
 
 export function onModesOpen()
 {
-    document.getElementById('modeSelection').style.display = 'flex';
     setLevelState(LevelMode.MODESELECTION);
     const modeLocal = document.getElementById('modeLocal');
     modeLocal.focus();
-}
-
-function hideModeChoice()
-{
-    document.getElementById('modeSelection').style.display = 'none';
 }
 
 export function clickBackButtonMenu()
@@ -286,7 +287,6 @@ export function clickBackButtonMenu()
 
 export function onModesClose()
 {
-    hideModeChoice();
     showMainMenu();
 }
 
@@ -301,4 +301,27 @@ export function setHeaderVisibility(isVisible)
         document.getElementById('header-title').style.display = 'block';
     else
         document.getElementById('header-title').style.display = 'none';
+}
+
+const toggleCamera = document.getElementById('cameraTypeCheckbox');
+const toggleCameraText = document.getElementById('cameraTypeText');
+
+toggleCamera.addEventListener('change', () => {
+    toggleCameraType();
+});
+
+export function toggleCameraType()
+{
+    playerStats.cameraOrthographic = toggleCamera.checked;
+    if (playerStats.cameraOrthographic)
+        toggleCameraText.innerText = getTranslation('orthographic');
+    else
+        toggleCameraText.innerText = getTranslation('perspective');
+    if (isInGame === true)
+        setCameraType();
+}
+
+export function uncheckCameraToggle()
+{
+    toggleCamera.checked = false;
 }

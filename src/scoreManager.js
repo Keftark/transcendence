@@ -1,4 +1,6 @@
+import { endMatch } from "./levelLocal";
 import { getPlayerVictories, playerStats } from "./playerManager";
+import { checkPoints } from "./rules";
 import { getTranslation } from "./translate";
 
 const scores = document.getElementById('scores');
@@ -44,6 +46,7 @@ export function addScore(playerNbr)
         player1Score += 1;
         animateScoreChange(scoreLeft, player1Score);
     }
+    checkPoints(player1Score, player2Score);
 }
 
 export function setScores(player1score, player2score)
@@ -101,4 +104,9 @@ export function loadScores(player = playerStats)
             newContainer.style.background = 'linear-gradient(to right, #882222 30%, #006666 70%)';
         scoresContainer.appendChild(newContainer);
     }
+}
+
+export function endOfMatch()
+{
+    endMatch(player1Score, player2Score);
 }
