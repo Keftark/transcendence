@@ -26,7 +26,7 @@ export function checkEscapeKey()
 function changeCursors()
 {
     document.body.style.cursor = "url('./icons/cursor.png'), auto";
-    const buttons = document.querySelectorAll('button, input[type="checkbox"]');
+    const buttons = document.querySelectorAll('button, input[type="checkbox"], .arena');
     
     // Loop through each button and change the cursor
     buttons.forEach(button => {

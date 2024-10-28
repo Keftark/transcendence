@@ -33,7 +33,7 @@
     "registerConfirmPassword": "Confirm your password:",
     "inputConfirmPassword": "Your password...",
     "registerConfirm": "Confirm",
-    "registerCancel": "Cancel",
+    "cancel": "Cancel",
     "buttonSignIn": "Sign in",
     "buttonLogIn": "Log in",
     "buttonLogOut": "Log out",
@@ -69,5 +69,7 @@
     "buttonAcceptRules": "Start",
     "cameraTypeHeader": "Camera: ",
     "orthographic": "orthographic",
-    "perspective": "perspective"
+    "perspective": "perspective",
+    "won": " won!",
+    "exaequo": " Exaequo!"
 }

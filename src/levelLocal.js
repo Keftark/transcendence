@@ -17,6 +17,7 @@ import { getMatchTime, isGamePaused, pauseStopWatch, resetStopwatch, resumeStopW
 import { setHeaderVisibility } from './menu.js';
 import { getRules } from './rules.js';
 import { ArenaType, LevelMode } from './variables.js';
+import { callVictoryScreen } from './victory.js';
 
 export const playerBaseHeight = 12;
 export const PLAYER_RADIUS = 1;
@@ -150,7 +151,7 @@ export function setCameraType()
     const position = camera.position;
     camera = playerStats.cameraOrthographic === true ? setOrthographicCamera() : setPerspectiveCamera();
     camera.position.set(position.x, position.y, position.z);
-    camera.rotation = rotation;
+    camera.rotation.set(rotation);
 }
 
 export function setUpCamera()
@@ -427,5 +428,9 @@ export function endMatch(scoreP1, scoreP2)
     if (scoreP1 > scoreP2)
         winner = player1Name;
     else if (scoreP1 < scoreP2)
-        winner = player2Name;  
+        winner = player2Name;
+    if (winner != '')
+        callVictoryScreen(winner + getTranslation('won'));
+    else
+        callVictoryScreen(getTranslation('exaequo'));
 }

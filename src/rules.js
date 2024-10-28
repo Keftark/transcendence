@@ -5,11 +5,13 @@ import { endOfMatch } from "./scoreManager";
 import { ArenaType } from "./variables";
 
 window.selectArena = selectArena;
+document.getElementById('buttonCancelRules').addEventListener('click', clickCancelRules);
 
 const nbrPointsInput = document.getElementById('rulesPointsInput');
 let selectedArena = 0;
 const timerInput = document.getElementById('rulesTimerInput');
 const buttonStart = document.getElementById('buttonAcceptRules');
+const arenas = document.getElementById('arenas').querySelectorAll('.arena');
 
 buttonStart.addEventListener('click', () => {
     clickPlayGame();
@@ -33,9 +35,9 @@ export function selectArena(arenaIndex)
 {
     if (selectedArena != arenaIndex)
     {
-        document.getElementById('arenas').querySelectorAll('.arena')[selectedArena].classList.remove('applyBorder');
+        arenas[selectedArena].classList.remove('applyBorder');
         selectedArena = arenaIndex;
-        const child = document.getElementById('arenas').querySelectorAll('.arena')[arenaIndex];
+        const child = arenas[arenaIndex];
         child.classList.add('applyBorder');
     }
     
@@ -50,6 +52,8 @@ export function setCustomRules()
 
 export function resetInputfieldsRules()
 {
+    arenas[selectedArena].classList.remove('applyBorder');
+    arenas[0].classList.add('applyBorder');
     nbrPointsInput.value = '3';
     selectedArena = 0;
     timerInput.value = '0';
@@ -77,6 +81,12 @@ export function checkTimer(timer)
 export function openRules()
 {
     navigateTo('rules');
+}
+
+export function clickCancelRules()
+{
+    navigateTo('modes');
+    resetInputfieldsRules();
 }
 
 document.getElementById('rulesArenaTypeCave').classList.add('applyBorder');

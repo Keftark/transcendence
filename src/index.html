@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="./styles/registration.css">
     <link rel="stylesheet" href="./styles/duelPanel.css">
     <link rel="stylesheet" href="./styles/rulesPanel.css">
+    <link rel="stylesheet" href="./styles/victory.css">
     <link rel="icon" type="image/png" href="/favicon.png">
 </head>
 <body>
@@ -82,9 +83,12 @@
             </div>
             <div id="rulesTimer">
                 <h1 id="rulesTimerText"></h1>
-                <input type="text " id="rulesTimerInput" value="0" min="0" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                <input type="text" id="rulesTimerInput" value="0" min="0" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
             </div>
-            <button id="buttonAcceptRules"></button>
+            <div id="buttonsRules">
+                <button id="buttonAcceptRules"></button>
+                <button id="buttonCancelRules"></button>
+            </div>
         </div>
     </div>
 
@@ -190,6 +194,14 @@
             <p id="cameraTypeText"></p>
         </div>
         <button id="closeSettingsButton"></button>
+    </div>
+
+    <!------------------------------ Victory Panel ------------------------------>
+    <div id="victory">
+        <div id="victoryPanel">
+            <h1 id="victoryText"></h1>
+            <button id="closeVictoryButton" onclick="closeVictoryScreen()"></button>
+        </div>
     </div>
 
     <!------------------------------ Chat Box ------------------------------>

@@ -70,9 +70,17 @@
     color: #70727f;
 }
 
+#buttonsRules
+{
+    margin-top: 1.6rem;
+    margin-bottom: 1.6rem;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
 #buttonAcceptRules
 {
-    margin-top: 24px;
     width: auto;
     min-width: 200px;
     height: 70px;
@@ -84,12 +92,33 @@
     box-shadow: 0 0 8px rgba(0, 255, 255, 0.301);
 }
 
+#buttonCancelRules
+{
+    width: auto;
+    min-width: 200px;
+    height: 70px;
+    font-size: 46px;
+    border: none;
+    border: 1px solid #999999;
+    background-color:rgb(0, 0, 0);
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(255, 0, 0, 0.301);
+}
+
 #buttonAcceptRules:hover
 {
     border-color: #035500;
     background-color: rgba(0, 255, 21, 0.219);
     opacity: 0.8;
     box-shadow: 0 0 16px rgba(0, 255, 255, 0.301);
+}
+
+#buttonCancelRules:hover
+{
+    border-color: #550000;
+    background-color: rgba(255, 0, 0, 0.219);
+    opacity: 0.8;
+    box-shadow: 0 0 16px rgba(255, 0, 0, 0.301);
 }
 
 .arena

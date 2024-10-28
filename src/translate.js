@@ -47,7 +47,7 @@ export function updateHTML(translations)
 	document.getElementById('registerConfirmPassword').innerText = translations.registerConfirmPassword;
 	document.getElementById('inputConfirmPassword').placeholder = translations.inputConfirmPassword;
 	document.getElementById('registerConfirm').innerText = translations.registerConfirm;
-	document.getElementById('registerCancel').innerText = translations.registerCancel;
+	document.getElementById('registerCancel').innerText = translations.cancel;
 	document.getElementById('buttonSignIn').innerText = translations.buttonSignIn;
 	document.getElementById('buttonLogIn').innerText = translations.buttonLogIn;
 	document.getElementById('buttonLogOut').innerText = translations.buttonLogOut;
@@ -67,6 +67,8 @@ export function updateHTML(translations)
 	document.getElementById('buttonAcceptRules').innerText = translations.buttonAcceptRules;
 	document.getElementById('cameraTypeHeader').innerText = translations.cameraTypeHeader;
 	document.getElementById('cameraTypeText').innerText = playerStats.cameraOrthographic ? translations.orthographic : translations.perspective;
+	document.getElementById('closeVictoryButton').innerText = translations.mainButton;
+	document.getElementById('buttonCancelRules').innerText = translations.cancel;
 	
 }
 
