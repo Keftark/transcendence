@@ -260,6 +260,7 @@ function resetPlayAnim()
  
 function setVisiblePlay()
 {
+    console.log('ici');
     resetPlayAnim();
     playDiv.classList.add('fade-active');
     setVisibleScore(true);
@@ -357,9 +358,7 @@ export function StartLevel(levelMode)
         lastTimestamp = timestamp;
         if (!isCameraAnimationComplete)
         {
-            animateCamera(timestamp, camera, setVisiblePlay);
-            if (getCameraActiveState() === false)
-                endAnimation();
+            animateCamera(timestamp, camera, endAnimation);
         }
         else
         {
@@ -417,13 +416,12 @@ export function StartLevel(levelMode)
 
 export function endMatch(scoreP1, scoreP2)
 {
-    stopStopwatch();
-    resetAnim();
     const player1Name = document.getElementById('playername-left').innerText;
     const player2Name = document.getElementById('playername-right').innerText;
     addMatchToHistory(scoreP1, scoreP2, player2Name, getMatchTime());
-    console.log("player wins");
-    // faire apparaitre la fenetre de win
+    pressPlayDiv.style.display = 'none';
+    stopStopwatch();
+    resetAnim();
     let winner = '';
     if (scoreP1 > scoreP2)
         winner = player1Name;

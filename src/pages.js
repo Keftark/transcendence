@@ -18,6 +18,9 @@ function onOpenPage(path, otherVar = null)
         case 'game-local':
             onPlayGame(otherVar);
         break;
+        case 'game-ai':
+            onPlayGame(otherVar);
+        break;
     }
 }
 
@@ -32,6 +35,9 @@ function onClosePage(path)
             onModesClose();
         break;
         case 'game-local':
+            loadMainMenu();
+        break;
+        case 'game-ai':
             loadMainMenu();
         break;
     }

@@ -22,6 +22,7 @@
     border-radius: 15px;
     z-index: 0;
     font-size: 48px;
+    transition: all 1s ease;
 }
 
 #closeVictoryButton
@@ -44,4 +45,9 @@
     background-color: rgba(0, 255, 21, 0.219);
     opacity: 0.8;
     box-shadow: 0 0 16px rgba(0, 255, 255, 0.301);
+}
+
+.grow-on-appear
+{
+    animation: grow 0.2s ease-out forwards;
 }

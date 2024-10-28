@@ -102,6 +102,9 @@ export function loadScores(player = playerStats)
             newContainer.style.background = 'linear-gradient(to right, #228822 30%, #006666 70%)';
         else
             newContainer.style.background = 'linear-gradient(to right, #882222 30%, #006666 70%)';
+        const timerContent = document.createElement('p');
+        timerContent.textContent = match.matchTime;
+        newContainer.appendChild(timerContent);
         scoresContainer.appendChild(newContainer);
     }
 }
