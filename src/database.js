@@ -30,7 +30,7 @@ function createFakeDatabase()
     player2.isRegistered = true;
     player2.matches = [];
     player2.friends = ["Gamer123"];
-    player2.matches.push(new MatchResult(3, 1, "Keftark"));
+    player2.matches.push(new MatchResult(3, 1, "Keftark", '10'));
     fakeDatabase.push(player2);
 }
 

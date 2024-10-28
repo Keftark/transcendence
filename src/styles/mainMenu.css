@@ -10,8 +10,10 @@
     flex-direction: column; 
     justify-content: center;
     align-items: center;
-    width: 900px;
-    height: 500px;
+    width: 80vw;
+    max-width: 56rem;
+    height: 54vh;
+    max-height: 30rem;
     background-color: #000000;
     border: 1px solid #002522;
     border-radius: 15px;
@@ -22,17 +24,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: auto;
-    min-width: 300px;
-    height: 100px;
-    margin: 5px 0;
+    width: 17vw;
+    height: 8vh;
+    margin: 0.5vh 0;
     background-color: #000000;
     color: rgb(255, 255, 255);
     border: 3px solid #005c57;
     border-radius: 15px;
     text-align: center;
-    line-height: 14px;
-    font-size: 46px;
+    font-size: clamp(0.5rem + 2vw, 0.5rem + 2vw, 6vw);
 }
 
 #modeSelection
@@ -41,52 +41,39 @@
     flex-direction: column; 
     justify-content: center;
     align-items: center;
-    width: 900px;
-    height: 500px;
+    width: 80vw;
+    max-width: 56rem;
+    height: 54vh;
+    max-height: 30rem;
     background-color: #000000;
     border: 1px solid #002522;
     border-radius: 15px;
 }
 
-.modeSelectionButton {
+.modeSelectionButton, .modeSelectionButtonBack {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: auto;
-    min-width: 300px;
-    height: 100px;
-    margin: 5px 0;
+    width: 17vw;
+    height: 8vh;
+    margin: 0.5vh 0;
     background-color: #000000;
     color: rgb(255, 255, 255);
     border: 3px solid #00776d;
     border-radius: 15px;
     text-align: center;
-    line-height: 35px;
-    font-size: 46px;
+    font-size: clamp(0.5rem + 1vw, 0.5rem + 2vw, 6vw);
 }
 
 .modeSelectionButtonBack {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: auto;
-    min-width: 200px;
-    height: 70px;
-    margin: 5px 0;
-    background-color: #000000;
-    color: rgb(255, 255, 255);
     border: 3px solid #770000;
-    border-radius: 15px;
-    text-align: center;
-    line-height: 14px;
-    font-size: 46px;
 }
 
 #modeSelection h3, #mainPanel h3
 {
     position: absolute;
-    top: 10%;
-    font-size: 46px;
+    top: 1vh;
+    font-size: clamp(2vh, 1rem + 6vh, 6rem);
     color: white;
 }
 

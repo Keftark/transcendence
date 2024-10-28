@@ -68,15 +68,17 @@ export function resumeStopWatch()
 
 export function getMatchTime()
 {
-    return formatTime(elapsedTime);
+    if (baseTimer > 0)
+        return formatTime(baseTimer);
+    else
+        return formatTime(elapsedTime);
 }
 
 export function setStopWatch(timer)
 {
     if (timer > 0)
     {
-        baseTimer = timer;
-        elapsedTime = timer;
+        elapsedTime = baseTimer = timer;
         isReverse = true;
     }
     else

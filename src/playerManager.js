@@ -1,6 +1,5 @@
 import { fakeDatabase } from "./database";
 import { isVictory } from "./levelLocal";
-import { getMatchTime } from "./timer";
 import { changeTextsColor } from "./menu";
 import { MatchResult } from "./scoreManager";
 import { getTranslation } from "./translate";
@@ -115,6 +114,3 @@ export function getPlayerVictories(player = playerStats)
     percentage = parseFloat(percentage.toFixed(2));
     return {total, victories, percentage};
 }
-
-addMatchToHistory(3, 5, "random");
-addMatchToHistory(5, 3, "random2");

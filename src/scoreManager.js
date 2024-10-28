@@ -15,7 +15,7 @@ export class MatchResult
       this.scorePlayer = playerScore;
       this.scoreOpponent = opponentScore;
       this.nameOpponent = opponentName;
-      this.time = matchTime;
+      this.matchTime = matchTime;
     }
 }
 
@@ -103,6 +103,7 @@ export function loadScores(player = playerStats)
         else
             newContainer.style.background = 'linear-gradient(to right, #882222 30%, #006666 70%)';
         const timerContent = document.createElement('p');
+        console.log(match.matchTime);
         timerContent.textContent = match.matchTime;
         newContainer.appendChild(timerContent);
         scoresContainer.appendChild(newContainer);

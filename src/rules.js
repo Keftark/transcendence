@@ -45,9 +45,9 @@ export function selectArena(arenaIndex)
 
 export function setCustomRules()
 {
-    rules.pointsToWin = nbrPointsInput.value;
+    rules.pointsToWin = nbrPointsInput.value === '' ? nbrPointsInput.placeholder : nbrPointsInput.value;
     rules.arena = selectedArena;
-    rules.maxTime = timerInput.value;
+    rules.maxTime = timerInput.value === '' ? timerInput.placeholder : timerInput.value;
 }
 
 export function resetInputfieldsRules()

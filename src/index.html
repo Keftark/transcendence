@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="./styles/rulesPanel.css">
     <link rel="stylesheet" href="./styles/victory.css">
     <link rel="stylesheet" href="./styles/scores.css">
+    <link rel="stylesheet" href="./styles/gameUI.css">
     <link rel="icon" type="image/png" href="/favicon.png">
 </head>
 <body>
@@ -73,7 +74,7 @@
         <div id="rulesPanel">
             <div id="rulesPoints">
                 <h1 id="rulesPointsText"></h1>
-                <input type="text" id="rulesPointsInput" value="3" min="0" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                <input type="text" id="rulesPointsInput" placeholder="3" value="3" min="0" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
             </div>
             <div id="rulesArenaType">
                 <h1 id="rulesArenaText"></h1>
@@ -84,7 +85,7 @@
             </div>
             <div id="rulesTimer">
                 <h1 id="rulesTimerText"></h1>
-                <input type="text" id="rulesTimerInput" value="0" min="0" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                <input type="text" id="rulesTimerInput" placeholder="0" value="0" min="0" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
             </div>
             <div id="buttonsRules">
                 <button id="buttonAcceptRules"></button>

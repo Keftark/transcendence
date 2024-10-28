@@ -260,7 +260,6 @@ function resetPlayAnim()
  
 function setVisiblePlay()
 {
-    console.log('ici');
     resetPlayAnim();
     playDiv.classList.add('fade-active');
     setVisibleScore(true);
@@ -289,7 +288,7 @@ export function StartLevel(levelMode)
     setHeaderVisibility(false);
     // resetStopwatch();
     setStopWatch(getRules().maxTime);
-    document.getElementById('loading').style.display = 'block';
+    document.getElementById('loading').style.display = 'flex';
     showCursor();
     setLevelState(levelMode);
     removeMainEvents();
@@ -325,18 +324,20 @@ export function StartLevel(levelMode)
     resetFunction = function resetGame(resetCam, time)
     {
         resetAnim();
-        hidePlayMessage();
         resetPlayersPositions();
-        setVisibleScore(false);
         toggleReset = false;
-        isCameraAnimationComplete = false;
         isBallMoving = false;
         resetBall();
         if (resetCam)
         {
+            isCameraAnimationComplete = false;
+            hidePlayMessage();
+            setVisibleScore(false);
             setScores(0, 0);
             resetCamera(time);
         }
+        else if (isCameraAnimationComplete === true)
+            setVisiblePlay();
     }
     let lastTimestamp = 0;
 
