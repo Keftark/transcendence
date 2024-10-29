@@ -1,6 +1,7 @@
 import { isLevelMode } from "./main";
 import { onModesClose, onModesOpen, loadMainMenu, onPlayGame } from "./menu";
 import { onRegistrationClose, onRegistrationOpen } from "./registration";
+import { onCloseRules, onOpenRules } from "./rules";
 
 let currentPath;
 let lastMode = null;
@@ -14,6 +15,9 @@ function onOpenPage(path, otherVar = null)
         break;
         case 'modes':
             onModesOpen();
+        break;
+        case 'rules':
+            onOpenRules();
         break;
         case 'game-local':
             onPlayGame(otherVar);
@@ -33,6 +37,9 @@ function onClosePage(path)
         break;
         case 'modes':
             onModesClose();
+        break;
+        case 'rules':
+            onCloseRules();
         break;
         case 'game-local':
             loadMainMenu();

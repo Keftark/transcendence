@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="./styles/victory.css">
     <link rel="stylesheet" href="./styles/scores.css">
     <link rel="stylesheet" href="./styles/gameUI.css">
+    <link rel="stylesheet" href="./styles/modeSelection.css">
     <link rel="icon" type="image/png" href="/favicon.png">
 </head>
 <body>
@@ -79,8 +80,12 @@
             <div id="rulesArenaType">
                 <h1 id="rulesArenaText"></h1>
                 <div id="arenas">
-                    <img class="arena" id="rulesArenaTypeCave" src="/images/arenaCave.png" onclick="selectArena(0)">
-                    <img class="arena" id="rulesArenaTypeSpace" src="/images/arenaSpace.png" onclick="selectArena(1)">
+                    <button class="arena" id="rulesArenaTypeCave" onclick="selectArena(0)">
+                        <img src="/images/arenaCave.png">
+                    </button>
+                    <button class="arena" id="rulesArenaTypeSpace" onclick="selectArena(1)">
+                        <img src="/images/arenaSpace.png">
+                    </button>
                 </div>
             </div>
             <div id="rulesTimer">
@@ -125,11 +130,13 @@
         <div class="glitch" id="play"></div>
     </div>
     <div id="scores">
-        <div id="score-left">0</div>
-        <div id="score-right">0</div>
-        <div id="playername-left"></div>
-        <div id="playername-right"></div>
         <p id="timer"></p>
+        <div id="scorediv">
+            <div id="playername-left"></div>
+            <div id="score-left">0</div>
+            <div id="score-right">0</div>
+            <div id="playername-right"></div>
+        </div>
     </div>
 
     <!------------------------------ In Game Side Menu Panel ------------------------------>

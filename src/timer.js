@@ -69,7 +69,7 @@ export function resumeStopWatch()
 export function getMatchTime()
 {
     if (baseTimer > 0)
-        return formatTime(baseTimer);
+        return formatTime(baseTimer - elapsedTime);
     else
         return formatTime(elapsedTime);
 }

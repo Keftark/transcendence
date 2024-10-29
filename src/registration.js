@@ -2,6 +2,7 @@ import { createNewPlayer, resetPlayerStats } from "./playerManager";
 import { loadScores, removeAllScores } from "./scoreManager";
 import { getTranslation } from "./translate";
 import { navigateTo } from "./pages";
+import { addDisableButtonEffect, removeDisableButtonEffect } from "./main";
 
 const inputNick = document.getElementById('inputName');
 const inputFirstName = document.getElementById('inputFirstName');
@@ -148,7 +149,7 @@ export function acceptRegistration()
     createNewPlayer();
     clickCancelRegister();
     replaceLogInButtons();
-    addHoverEffect();
+    removeDisableButtonEffect(profileButton);
 }
 
 function replaceLogInButtons()
@@ -167,20 +168,9 @@ export function clickLogOut()
 {
     replaceLogOutButtons();
     resetPlayerStats();
-    removeHoverEffect();
+    addDisableButtonEffect(profileButton);
     removeAllScores();
 }
 
-function addHoverEffect() {
-    profileButton.classList.add('mainButtonHover');
-    profileButton.style.opacity = 1;
-}
-
-// Function to remove the hover effect
-function removeHoverEffect() {
-    profileButton.classList.remove('mainButtonHover');
-    profileButton.style.opacity = 0.5;
-}
-
-removeHoverEffect();
+addDisableButtonEffect(profileButton);
 resetRegistrationInputs();

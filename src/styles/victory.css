@@ -21,9 +21,10 @@
     max-width: 56rem;
     height: 54vh;
     max-height: 30rem;
-    background-color: #00252266;
+    background-color: #000f0e;
+    border: 1px solid #999999;
     border-radius: 15px;
-    font-size: 3rem;
+    font-size: clamp(0.5rem + 1vw, 0.5rem + 2vw, 6vw);
     transition: all 1s ease;
 }
 
@@ -31,10 +32,10 @@
 {
     position: absolute;
     bottom: 1rem;
-    width: auto;
-    min-width: 12rem;
-    height: 4.5rem;
-    font-size: 3rem;
+    width: 20vw;
+    max-width: 12rem;
+    height: 10vh;
+    font-size: clamp(0.5rem + 1vw, 0.5rem + 2vw, 6vw);
     border: none;
     border: 1px solid #999999;
     background-color:rgb(0, 0, 0);

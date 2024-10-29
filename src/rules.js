@@ -1,4 +1,5 @@
 import { endMatch } from "./levelLocal";
+import { addDisableButtonEffect, removeDisableButtonEffect } from "./main";
 import { clickPlayGame } from "./menu";
 import { navigateTo } from "./pages";
 import { endOfMatch } from "./scoreManager";
@@ -40,7 +41,6 @@ export function selectArena(arenaIndex)
         const child = arenas[arenaIndex];
         child.classList.add('applyBorder');
     }
-    
 }
 
 export function setCustomRules()
@@ -57,6 +57,7 @@ export function resetInputfieldsRules()
     nbrPointsInput.value = '3';
     selectedArena = 0;
     timerInput.value = '0';
+    removeDisableButtonEffect(buttonStart);
 }
 
 export function getRules()
@@ -83,10 +84,34 @@ export function openRules()
     navigateTo('rules');
 }
 
+export function onOpenRules()
+{
+    nbrPointsInput.select();
+}
+
 export function clickCancelRules()
 {
     navigateTo('modes');
+}
+
+export function onCloseRules()
+{
     resetInputfieldsRules();
 }
 
+export function endEditInputFieldRules()
+{
+    if (timerInput.value === '0' && nbrPointsInput.value === '0')
+        addDisableButtonEffect(buttonStart);
+    else
+        removeDisableButtonEffect(buttonStart);
+}
+
 document.getElementById('rulesArenaTypeCave').classList.add('applyBorder');
+
+timerInput.addEventListener("input", () => {
+    endEditInputFieldRules();
+});
+nbrPointsInput.addEventListener("input", () => {
+    endEditInputFieldRules();
+});

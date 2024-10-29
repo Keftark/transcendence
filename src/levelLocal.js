@@ -111,6 +111,7 @@ export function setBallStats(newRadius, newSpeed)
 
 export function unloadLevel()
 {
+    currentLevelMode = LevelMode.MENU;
     unloadScene(scene, renderer, animationId);
     resetFunction(true);
 }
@@ -288,7 +289,7 @@ export function StartLevel(levelMode)
     setHeaderVisibility(false);
     // resetStopwatch();
     setStopWatch(getRules().maxTime);
-    document.getElementById('loading').style.display = 'flex';
+    document.getElementById('loading').style.display = 'block';
     showCursor();
     setLevelState(levelMode);
     removeMainEvents();
