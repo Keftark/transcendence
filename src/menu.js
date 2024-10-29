@@ -5,7 +5,7 @@ import { navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
 import { getRules, openRules, setCustomRules } from './rules.js';
 import { loadScores, removeAllScores } from './scoreManager.js';
-import { getTranslation } from './translate.js';
+import { changeLanguage, getTranslation } from './translate.js';
 import { LevelMode } from './variables.js';
 const overlayPanel = document.getElementById('overlay');
 const profilePanel = document.getElementById('profilePanel');
@@ -188,12 +188,26 @@ export function closeSettings()
     overlayPanel.style.display = 'none';
 }
 
+let currentColorIndex = 0;
+let currentLangIndex = 0;
+
+
+const buttonsColors = document.querySelectorAll('.colorize-btn');
+function changeOutlineColors(newIndex)
+{
+    if (currentColorIndex === newIndex)
+        return;
+    if (currentColorIndex != -1)
+        buttonsColors[currentColorIndex].classList.remove('applyBorderOptions');
+    currentColorIndex = newIndex;
+    buttonsColors[currentColorIndex].classList.add('applyBorderOptions');
+}
+
 export function setButtonsColors()
 {
-    const buttons = document.querySelectorAll('.colorize-btn');
-
-    buttons.forEach(button => {
+    buttonsColors.forEach(button => {
         button.addEventListener('click', function() {
+            changeOutlineColors(parseInt(this.getAttribute('data-index'), 10));
             changeTextsColor(this.getAttribute('data-color'));
         });
     });
@@ -208,6 +222,27 @@ export function changeTextsColor(newColor)
         element.style.color = newColor;
     });
     playerStats.colors = newColor;
+}
+
+const buttonsLanguage = document.querySelectorAll('.language');
+function changeOutlineLanguage(newIndex)
+{
+    if (currentLangIndex === newIndex)
+        return;
+    if (currentLangIndex != -1)
+        buttonsLanguage[currentLangIndex].classList.remove('applyBorderOptions');
+    currentLangIndex = newIndex;
+    buttonsLanguage[currentLangIndex].classList.add('applyBorderOptions');
+}
+
+export function setLanguageButtons()
+{
+    buttonsLanguage.forEach(button => {
+        button.addEventListener('click', function() {
+            changeOutlineLanguage(parseInt(this.getAttribute('data-lang'), 10));
+            changeLanguage(this.getAttribute('data-language'));
+        });
+    });
 }
 
 export function loadMainMenu()
@@ -303,25 +338,19 @@ export function setHeaderVisibility(isVisible)
         document.getElementById('header-title').style.display = 'none';
 }
 
-const toggleCamera = document.getElementById('cameraTypeCheckbox');
-const toggleCameraText = document.getElementById('cameraTypeText');
+const toggleCameraText = document.getElementById('cameraTypeHeader');
 
-toggleCamera.addEventListener('change', () => {
-    toggleCameraType();
-});
 
 export function toggleCameraType()
 {
-    playerStats.cameraOrthographic = toggleCamera.checked;
+    // playerStats.cameraOrthographic = toggleCamera.checked;
     if (playerStats.cameraOrthographic)
-        toggleCameraText.innerText = getTranslation('orthographic');
+        toggleCameraText.innerText = getTranslation('cameraTypeHeader') + getTranslation('orthographic');
     else
-        toggleCameraText.innerText = getTranslation('perspective');
+        toggleCameraText.innerText = getTranslation('cameraTypeHeader') + getTranslation('perspective');
     if (isInGame === true)
         setCameraType();
 }
 
-export function uncheckCameraToggle()
-{
-    toggleCamera.checked = false;
-}
+document.getElementById('lang1Button').classList.add('applyBorderOptions');
+document.getElementById('color1Button').classList.add('applyBorderOptions');

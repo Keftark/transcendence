@@ -1,7 +1,7 @@
 import { cheatCodes } from "./cheats";
 import { isInTheDatabase, searchDatabase } from "./database";
 import { getLevelState } from "./main";
-import { openProfile, uncheckCameraToggle } from "./menu";
+import { openProfile } from "./menu";
 import { playerStats } from "./playerManager";
 import { resetInputfieldsRules } from "./rules";
 import { getTranslation } from "./translate";
@@ -20,14 +20,13 @@ function resetInputFieldValue()
 {
     inputElement.value = '';
     resetInputfieldsRules();
-    uncheckCameraToggle();
 }
 
 window.onload = function() {
     resetInputFieldValue();
 };
 
-export function isChatOpen() {return chatIsOpen};
+export function isChatOpen() {return chatIsOpen && document.activeElement === inputElement};
 
 function openChat()
 {

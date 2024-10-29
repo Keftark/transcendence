@@ -1,0 +1,165 @@
+/*------------------------------ Settings Panel ------------------------------*/
+#settingsPanel {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 400px;
+    background-color:rgb(1, 56, 56);
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    z-index: 3;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+#optionsLanguages, #optionsColors
+{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+#closeSettingsButton:hover, #closeProfileButton:hover, #seeMatchesButton:hover
+{
+    background-color: rgba(0, 255, 255, 0.267);
+    opacity: 0.8;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.815);
+}
+
+#seeMatchesButton.open
+{
+    border: 2px solid rgb(1, 168, 163);
+    background-color: rgb(0, 142, 137);
+}
+
+#seeMatchesButton.open:hover
+{
+    border: 2px solid rgb(1, 168, 163);
+    background-color: rgba(0, 255, 255, 0.567);
+}
+
+#color1Button, #color2Button, #color3Button, #color4Button, #color5Button {
+    margin: 3px;
+    margin-bottom: 10px;
+    width: 64px;
+    height: 64px;
+    background-color: white;
+    border: none;
+    position: relative;
+    transition: box-shadow 0.3s;
+}
+
+#color1Button:hover::after, 
+#color2Button:hover::after, 
+#color3Button:hover::after, 
+#color4Button:hover::after, 
+#color5Button:hover::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: #00ff15bd;
+    border-radius: 5px;
+    z-index: -1;
+}
+
+
+#color2Button
+{
+    background-color: #9e009e;
+}
+
+#color3Button
+{
+    background-color: #ffbb00;
+}
+
+#color4Button
+{
+    background-color: #ac0000;
+}
+
+#color5Button
+{
+    background-color: #08ec00;
+}
+
+#cameraType
+{
+    gap: 10px;
+}
+
+#perspectiveButton, #orthographicButton
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 64px;
+    height: 64px;
+    border: none;
+}
+
+#perspectiveButton img,
+#orthographicButton img
+{
+    width: 64px;
+    height: 64px;
+}
+
+#lang1Button,
+#lang2Button {
+    width: 80px;
+    height: 45px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+    padding: 3px;
+    margin: 0px;
+    position: relative;
+    transition: box-shadow 0.3s;
+}
+
+#lang1Button img,
+#lang2Button img
+{
+    width: 80px;
+    height: 41px;
+}
+
+#lang1Button:hover::after,
+#lang2Button:hover::after
+{
+    content: '';
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background: #00ff15bd;
+    border-radius: 3px;
+    z-index: -1;
+}
+
+#cameraType
+{
+    display: flex;
+    margin-left: 4px;
+}
+
+#cameraTypeCheckbox
+{
+    transform: scale(2);
+    margin-right: 16px;
+}
+
+.applyBorderOptions
+{
+    box-shadow: 0 0 16px rgb(0, 255, 242);
+}

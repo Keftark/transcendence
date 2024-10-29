@@ -1,5 +1,5 @@
-import { clickBackButtonMenu, loadMainMenu } from './menu.js';
-import { initTranslation, changeLanguage } from './translate.js';
+import { clickBackButtonMenu, loadMainMenu, setLanguageButtons } from './menu.js';
+import { initTranslation } from './translate.js';
 import { setButtonsColors,  } from './menu.js';
 import { addMainEvents } from './eventsListener.js';
 import { ArenaType, LevelMode } from './variables.js';
@@ -68,6 +68,6 @@ changeCursors();
 addMainEvents();
 initTranslation();
 setButtonsColors();
-window.changeLanguage = changeLanguage;
+setLanguageButtons();
 const button = document.getElementById('mainPlayButton');
 button.focus();

@@ -33,7 +33,7 @@
     border: 3px solid #770000;
 }
 
-#modeSelection h3, #mainPanel h3
+#modeSelection h3, #mainPanel h3, #rulesPanel h3
 {
     position: absolute;
     top: 1vh;

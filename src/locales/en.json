@@ -71,5 +71,6 @@
     "orthographic": "orthographic",
     "perspective": "perspective",
     "won": " won!",
-    "exaequo": " Exaequo!"
+    "exaequo": "Exaequo!",
+    "rulesHeaderText": "Rules"
 }

@@ -65,10 +65,10 @@ export function updateHTML(translations)
 	document.getElementById('rulesArenaText').innerText = translations.rulesArenaText;
 	document.getElementById('rulesTimerText').innerText = translations.rulesTimerText;
 	document.getElementById('buttonAcceptRules').innerText = translations.buttonAcceptRules;
-	document.getElementById('cameraTypeHeader').innerText = translations.cameraTypeHeader;
-	document.getElementById('cameraTypeText').innerText = playerStats.cameraOrthographic ? translations.orthographic : translations.perspective;
+	document.getElementById('cameraTypeHeader').innerText = playerStats.cameraOrthographic ? translations.cameraTypeHeader + translations.orthographic : translations.cameraTypeHeader + translations.perspective;
 	document.getElementById('closeVictoryButton').innerText = translations.mainButton;
 	document.getElementById('buttonCancelRules').innerText = translations.cancel;
+	document.getElementById('rulesHeaderText').innerText = translations.rulesHeaderText;
 	
 }
 
