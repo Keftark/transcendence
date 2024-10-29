@@ -3,6 +3,8 @@ import { initTranslation, changeLanguage } from './translate.js';
 import { setButtonsColors,  } from './menu.js';
 import { addMainEvents } from './eventsListener.js';
 import { ArenaType, LevelMode } from './variables.js';
+import { isChatOpen, tryCloseChat } from './chat.js';
+import { clickCancelRules, isRulesOpen } from './rules.js';
 
 
 let levelMode = LevelMode.MENU;
@@ -19,7 +21,11 @@ export function getLevelState()
 
 export function checkEscapeKey()
 {
-    if (levelMode === LevelMode.MODESELECTION)
+    if (isChatOpen())
+        tryCloseChat();
+    else if (isRulesOpen())
+        clickCancelRules();
+    else if (levelMode === LevelMode.MODESELECTION)
         clickBackButtonMenu();
 }
 
@@ -52,10 +58,8 @@ export function addDisableButtonEffect(button) {
 
 // Function to remove the hover effect
 export function removeDisableButtonEffect(button) {
-    console.log('removing');
     if (!button.classList.contains('disabledButtonHover'))
         return;
-    console.log('removed');
     button.classList.remove('disabledButtonHover');
     button.style.opacity = 1;
 }

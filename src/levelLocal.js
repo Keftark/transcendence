@@ -285,6 +285,7 @@ function resetAnim()
 
 export function StartLevel(levelMode)
 {
+    gameEnded = false;
     isInGame = true;
     setHeaderVisibility(false);
     // resetStopwatch();
@@ -325,10 +326,13 @@ export function StartLevel(levelMode)
     resetFunction = function resetGame(resetCam, time)
     {
         resetAnim();
-        resetPlayersPositions();
         toggleReset = false;
         isBallMoving = false;
-        resetBall();
+        if (!gameEnded)
+        {
+            resetPlayersPositions();
+            resetBall();
+        }
         if (resetCam)
         {
             isCameraAnimationComplete = false;
@@ -337,7 +341,7 @@ export function StartLevel(levelMode)
             setScores(0, 0);
             resetCamera(time);
         }
-        else if (isCameraAnimationComplete === true)
+        else if (isCameraAnimationComplete === true && !gameEnded)
             setVisiblePlay();
     }
     let lastTimestamp = 0;
@@ -416,21 +420,25 @@ export function StartLevel(levelMode)
     }, 500);
 }
 
+let gameEnded = false;
 export function endMatch(scoreP1, scoreP2)
 {
+    gameEnded = true;
     const player1Name = document.getElementById('playername-left').innerText;
     const player2Name = document.getElementById('playername-right').innerText;
     addMatchToHistory(scoreP1, scoreP2, player2Name, getMatchTime());
     pressPlayDiv.style.display = 'none';
     stopStopwatch();
     resetAnim();
-    let winner = '';
-    if (scoreP1 > scoreP2)
-        winner = player1Name;
-    else if (scoreP1 < scoreP2)
-        winner = player2Name;
-    if (winner != '')
-        callVictoryScreen(winner + getTranslation('won'));
-    else
-        callVictoryScreen(getTranslation('exaequo'));
+    setTimeout(() => {
+        let winner = '';
+        if (scoreP1 > scoreP2)
+            winner = player1Name;
+        else if (scoreP1 < scoreP2)
+            winner = player2Name;
+        if (winner != '')
+            callVictoryScreen(winner + getTranslation('won'));
+        else
+            callVictoryScreen(getTranslation('exaequo'));
+    }, 1500);
 }

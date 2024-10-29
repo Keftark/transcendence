@@ -14,6 +14,7 @@ const chatBox = document.getElementById('chatBox');
 const toggleSizeButton = document.getElementById('toggleSizeButton');
 const toggleIcon = document.getElementById('toggleIcon');
 let lastSender = "";
+let chatIsOpen = true;
 
 function resetInputFieldValue()
 {
@@ -26,6 +27,8 @@ window.onload = function() {
     resetInputFieldValue();
 };
 
+export function isChatOpen() {return chatIsOpen};
+
 function openChat()
 {
     chatBox.classList.remove('shrunk');
@@ -33,6 +36,7 @@ function openChat()
     chatBox.classList.add('expanded');
     toggleIcon.src = 'icons/shrink.png';
     inputElement.focus();
+    chatIsOpen = true;
 }
 
 function closeChat()
@@ -44,6 +48,7 @@ function closeChat()
     setTimeout(function() {
         chatBox.classList.add('hide-elements');
     }, 400);
+    chatIsOpen = false;
 }
 
 export function tryCloseChat()

@@ -68,11 +68,6 @@ export function createBall(scene, callBack) {
         resetVelocity();
     }
 
-    function playerGetPoint(playerNbr) {
-        resetBall();
-        callBack(playerNbr);
-    }
-
     function updateBallLight()
     {
         if (pointLight.intensity < maxLightIntensity) {
@@ -206,9 +201,9 @@ export function createBall(scene, callBack) {
             const radius = ballStats.BALL_RADIUS;
             const ballPosX = ball.position.x;
             if (ballPosX - radius < boundxmin)
-                playerGetPoint(1);
+                callBack(1);
             else if (ballPosX + radius > boundxmax)
-                playerGetPoint(2);
+                callBack(2);
         }
         rotateBall();
     }

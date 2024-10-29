@@ -13,6 +13,7 @@ let selectedArena = 0;
 const timerInput = document.getElementById('rulesTimerInput');
 const buttonStart = document.getElementById('buttonAcceptRules');
 const arenas = document.getElementById('arenas').querySelectorAll('.arena');
+let rulesOpen = false;
 
 buttonStart.addEventListener('click', () => {
     clickPlayGame();
@@ -24,6 +25,8 @@ let rules =
     arena: ArenaType.CAVE, 
     maxTime: 0,
 }
+
+export function isRulesOpen() {return rulesOpen;}
 
 export function setDefaultRules()
 {
@@ -86,6 +89,7 @@ export function openRules()
 
 export function onOpenRules()
 {
+    rulesOpen = true;
     nbrPointsInput.select();
 }
 
@@ -96,6 +100,7 @@ export function clickCancelRules()
 
 export function onCloseRules()
 {
+    rulesOpen = false;
     resetInputfieldsRules();
 }
 
