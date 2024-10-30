@@ -57,7 +57,7 @@ var scene;
 let animationId;
 let renderer;
 let resetFunction;
-let pressEscapeFunction = null;
+export let pressEscapeInGame = null;
 let pressSpaceFunction = null;
 let player1, player2;
 let camera = null;
@@ -118,10 +118,9 @@ export function unloadLevel()
 
 export function eventsListener(event)
 {
-    if (pressEscapeFunction === null)
+    if (pressSpaceFunction === null)
         return;
     pressSpaceFunction(event);
-    pressEscapeFunction(event);
 }
 
 function setOrthographicCamera()
@@ -152,7 +151,7 @@ export function setCameraType()
     const position = camera.position;
     camera = playerStats.cameraOrthographic === true ? setOrthographicCamera() : setPerspectiveCamera();
     camera.position.set(position.x, position.y, position.z);
-    camera.rotation.set(rotation);
+    camera.rotation.set(rotation.x, rotation.y, rotation.z);
 }
 
 export function setUpCamera()
@@ -396,16 +395,13 @@ export function StartLevel(levelMode)
         }
     }
 
-    pressEscapeFunction = function pressEscapeReinitLevel(event)
+    pressEscapeInGame = function pressEscapeReinitLevel()
     {
-        if (event.key === 'Escape' && (currentLevelMode != LevelMode.MENU && currentLevelMode != LevelMode.MODESELECTION))
-        {
-            setVisibilityRightWall(true);
-            resetFunction(true);
-            resetStopwatch();
-            resetScreen(0);
-            animate();
-        }
+        setVisibilityRightWall(true);
+        resetFunction(true);
+        resetStopwatch();
+        resetScreen(0);
+        animate();
     }
     
     // document.addEventListener('visibilitychange', () => {

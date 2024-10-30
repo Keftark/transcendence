@@ -17,7 +17,12 @@ function mainMenuEvents(event)
         event.preventDefault();
         const prevIndex = (currentIndex - 1 + focusable.length) % focusable.length;
         focusable[prevIndex].focus();
-    } else if (event.key === 'Escape') {
+    }
+}
+
+function escapeEvent(event)
+{
+    if (event.key === 'Escape') {
         document.body.classList.add('hide-cursor');
         checkEscapeKey();
     }
@@ -42,3 +47,4 @@ export function addMainEvents()
 
 
 document.addEventListener('keydown',  eventsListener);
+document.addEventListener('keydown',  escapeEvent);

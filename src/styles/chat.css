@@ -21,8 +21,9 @@
 }
 
 .messages {
-    overflow-y: auto;
-    max-height: 75%;
+    background-color: #ffffff05;
+    overflow-y: scroll;
+    height: 78%;
     border-bottom: 2px solid #4c4f67;
 }
 
@@ -84,7 +85,6 @@
 }
 
 .message-middle {
-    margin-top: -0.4rem;
     text-align: center;
     align-self: center;
     color: #6d6d6d;

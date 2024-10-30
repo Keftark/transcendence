@@ -5,6 +5,7 @@ import { addMainEvents } from './eventsListener.js';
 import { ArenaType, LevelMode } from './variables.js';
 import { isChatOpen, tryCloseChat } from './chat.js';
 import { clickCancelRules, isRulesOpen } from './rules.js';
+import { isInGame, pressEscapeInGame } from './levelLocal.js';
 
 
 let levelMode = LevelMode.MENU;
@@ -27,6 +28,8 @@ export function checkEscapeKey()
         clickCancelRules();
     else if (levelMode === LevelMode.MODESELECTION)
         clickBackButtonMenu();
+    else if (isInGame)
+        pressEscapeInGame();
 }
 
 function changeCursors()

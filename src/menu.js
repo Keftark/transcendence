@@ -73,6 +73,16 @@ document.getElementById('modeBackButton').addEventListener('click', () => {
     clickBackButtonMenu();
 });
 
+document.getElementById('perspectiveButton').addEventListener('click', () => {
+    playerStats.cameraOrthographic = false;
+    toggleCameraType(0);
+});
+
+document.getElementById('orthographicButton').addEventListener('click', () => {
+    playerStats.cameraOrthographic = true;
+    toggleCameraType(1);
+});
+
 let oldButton = null;
 
 export function openMenu()
@@ -339,18 +349,51 @@ export function setHeaderVisibility(isVisible)
 }
 
 const toggleCameraText = document.getElementById('cameraTypeHeader');
-
-
-export function toggleCameraType()
+let currentCameraType = 0;
+export function toggleCameraType(cameraType)
 {
-    // playerStats.cameraOrthographic = toggleCamera.checked;
+    if (cameraType === currentCameraType)
+        return;
     if (playerStats.cameraOrthographic)
+    {
+        currentCameraType = 1;
+        document.getElementById('perspectiveButton').classList.remove('applyBorderOptions');
+        document.getElementById('orthographicButton').classList.add('applyBorderOptions');
         toggleCameraText.innerText = getTranslation('cameraTypeHeader') + getTranslation('orthographic');
+    }
     else
+    {
+        currentCameraType = 0;
+        document.getElementById('perspectiveButton').classList.add('applyBorderOptions');
+        document.getElementById('orthographicButton').classList.remove('applyBorderOptions');
         toggleCameraText.innerText = getTranslation('cameraTypeHeader') + getTranslation('perspective');
+    }
     if (isInGame === true)
         setCameraType();
 }
 
+const hoverImage = document.getElementById('homeImg');
+
+const imageSources = {
+  mainPlayButton: 'images/playImage.png',
+  mainProfileButton: 'images/profileImage.png',
+  mainSettingsButton: 'images/settingsImage.png',
+};
+
+function showImage(buttonId) {
+  hoverImage.src = imageSources[buttonId];
+  hoverImage.style.opacity = 0.2;
+}
+
+function hideImage() {
+    hoverImage.style.opacity = 0;
+}
+
+document.querySelectorAll('.mainMenuButton').forEach(button => {
+  button.addEventListener('mouseover', () => showImage(button.id));
+  button.addEventListener('mouseout', hideImage);
+});
+
+document.getElementById('perspectiveButton').classList.add('applyBorderOptions');
 document.getElementById('lang1Button').classList.add('applyBorderOptions');
 document.getElementById('color1Button').classList.add('applyBorderOptions');
