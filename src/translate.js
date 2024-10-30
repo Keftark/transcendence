@@ -69,7 +69,11 @@ export function updateHTML(translations)
 	document.getElementById('closeVictoryButton').innerText = translations.mainButton;
 	document.getElementById('buttonCancelRules').innerText = translations.cancel;
 	document.getElementById('rulesHeaderText').innerText = translations.rulesHeaderText;
-	
+	document.getElementById('modesLocalHeader').innerText = translations.modesLocalHeader;
+	document.getElementById('modesOnlineHeader').innerText = translations.modesOnlineHeader;
+	document.getElementById('modeDuelText').innerText = translations.headerDuel;
+	document.getElementById('tournamentText').innerText = translations.tournamentText;
+
 }
 
 export async function changeLanguage(lang)

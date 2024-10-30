@@ -57,13 +57,13 @@ document.getElementById('mainButton').addEventListener('click', () => {
     clickBackButtonMenu();
 });
 
-document.getElementById('modeLocal').addEventListener('click', () => {
+document.getElementById('modeLocalButton').addEventListener('click', () => {
     selectedMode = LevelMode.LOCAL;
     openRules();
     // clickPlayGame(LevelMode.LOCAL);
 });
 
-document.getElementById('modeComputer').addEventListener('click', () => {
+document.getElementById('modeComputerButton').addEventListener('click', () => {
     selectedMode = LevelMode.ADVENTURE;
     openRules();
     // clickPlayGame(LevelMode.ADVENTURE);
@@ -321,7 +321,7 @@ export function showModeChoice()
 export function onModesOpen()
 {
     setLevelState(LevelMode.MODESELECTION);
-    const modeLocal = document.getElementById('modeLocal');
+    const modeLocal = document.getElementById('modeLocalButton');
     modeLocal.focus();
 }
 

@@ -72,5 +72,8 @@
     "perspective": "perspective",
     "won": " won!",
     "exaequo": "Exaequo!",
-    "rulesHeaderText": "Rules"
+    "rulesHeaderText": "Rules",
+    "modesLocalHeader": "Local",
+    "modesOnlineHeader": "Online",
+    "tournamentText": "Tournament"
 }

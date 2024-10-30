@@ -65,10 +65,30 @@
     </div>
     <!------------------------------ Mode Selection ------------------------------>
     <div id="modes" class="page">
+        <h3 id="modeSelectionText"></h3>
         <div class="modeSelectionPanel" id="modeSelection">
-            <h3 id="modeSelectionText"></h3>
-            <button class="modeSelectionButton" id="modeLocal"></button>
-            <button class="modeSelectionButton" id="modeComputer"></button>
+            <div id="modesLocal">
+                <h1 id="modesLocalHeader"></h1>
+                <button class="modeSelectionButton" id="modeLocalButton">
+                    <img id="versusImg" src="/images/versusImage.png">
+                </button>
+                <p id="modeLocal"></p>
+                <button class="modeSelectionButton" id="modeComputerButton">
+                    <img id="vsIAImg" src="/images/vsComputerImage.png">
+                </button>
+                <p id="modeComputer"></p>
+            </div>
+            <div id="modesOnline">
+                <h1 id="modesOnlineHeader"></h1>
+                <button class="modeSelectionButton" id="modeLocalButton">
+                    <img id="duelImg" src="/images/duelImage.png">
+                </button>
+                <p id="modeDuelText"></p>
+                <button class="modeSelectionButton" id="modeComputerButton">
+                    <img id="tournamentImg" src="/images/tournamentImage.png">
+                </button>
+                <p id="tournamentText"></p>
+            </div>
             <button class="modeSelectionButtonBack" id="modeBackButton"></button>
         </div>
     </div>
