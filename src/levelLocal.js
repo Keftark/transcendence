@@ -74,6 +74,7 @@ let isCameraAnimationComplete = false;
 let cameraRatioWidth = 0;
 let cameraRatioHeigth = 0;
 export let isInGame = false;
+let animateLevelFunction = null;
 
 function onWindowResize() {
     if (!isCameraAnimationComplete)
@@ -211,7 +212,7 @@ export function setUpLevel(scene)
     createLights(scene);
     resetPlayersPositions();
     if (getRules().arena === ArenaType.SPACE)
-        createSpaceLevel(scene, textureLoader);
+        animateLevelFunction = createSpaceLevel(scene, textureLoader);
     else if (getRules().arena === ArenaType.CAVE)
         createCaveLevel(scene, textureLoader);
 }
@@ -371,6 +372,8 @@ export function StartLevel(levelMode)
             if (isBallMoving) updateBall(player1, player2);
             updatePlayers(deltaTime);
         }
+        if (animateLevelFunction != null)
+            animateLevelFunction();
         renderer.render(scene, camera);
         if (!toggleReset)
             animationId = requestAnimationFrame(animate);
@@ -410,7 +413,7 @@ export function StartLevel(levelMode)
     //     else
     //         if (!animationId) animate();
     // });
-    setTimeout(() => { // put a loading screen?
+    setTimeout(() => {
         document.getElementById('loading').style.display = 'none';
         animate();
     }, 500);
