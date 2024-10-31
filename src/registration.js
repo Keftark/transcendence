@@ -15,6 +15,7 @@ const overlayPanel = document.getElementById('overlay');
 const logInButtons = document.getElementById('loginbuttons');
 const logOutButtons = document.getElementById('logoutbuttons');
 const profileButton = document.getElementById('mainProfileButton');
+let isRegistOpen = false;
 
 window.showRegistrationPanel = showRegistrationPanel;
 window.clickCancelRegister = clickCancelRegister;
@@ -44,6 +45,7 @@ export function clickCancelRegister()
 
 export function onRegistrationClose()
 {
+    isRegistOpen = false;
     resetRegistrationInputs();
 
     overlayPanel.style.display = 'none';
@@ -62,6 +64,7 @@ export function showRegistrationPanel()
 
 export function onRegistrationOpen()
 {
+    isRegistOpen = true;
     overlayPanel.style.display = 'block';
     registrationPanel.style.display = 'block';
     if (registrationPanel.classList.contains('showReg') === false) {
@@ -170,6 +173,11 @@ export function clickLogOut()
     resetPlayerStats();
     addDisableButtonEffect(profileButton);
     removeAllScores();
+}
+
+export function isRegistrationOpen()
+{
+    return isRegistOpen;
 }
 
 addDisableButtonEffect(profileButton);

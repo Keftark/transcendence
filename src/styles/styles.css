@@ -24,6 +24,11 @@ h1, h2, h3 {
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
 }
 
+h2
+{
+    font-size: clamp(0.5rem + 1vw + 1vh, 1rem + 1vw + 1vh, 5rem);
+}
+
 button
 {
     font-family: 'MyCustomFont', Arial, sans-serif;
@@ -45,7 +50,7 @@ button
     transform: translateX(-50%);
     background: none;
     color: white;
-    font-size: clamp(2vh, 2rem + 6vh, 6rem);
+    font-size: clamp(1rem + 1vw + 1vh, 3rem + 1vw + 1vh, 6rem);
     text-align: center;
     z-index: 0;
     width: 100%;

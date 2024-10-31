@@ -20,7 +20,7 @@ function drawBackground(scene, textureLoader)
     });
     const background = new THREE.PlaneGeometry(1000, 1000);
     const texture = textureLoader.load('backgrounds/space1.png');
-    texture.encoding = THREE.sRGBEncoding;
+    // texture.encoding = THREE.sRGBEncoding;
     const material = new THREE.MeshBasicMaterial({
         map: texture,
         transparent: true,

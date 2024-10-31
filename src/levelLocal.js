@@ -126,7 +126,7 @@ export function eventsListener(event)
 function setOrthographicCamera()
 {
     const aspect = window.innerWidth / window.innerHeight;
-    const cameraSize = 50; // Adjust this value to control zoom level
+    const cameraSize = 50;
 
     const camera = new THREE.OrthographicCamera(
         -cameraSize * aspect, // left
@@ -264,7 +264,7 @@ function setVisiblePlay()
     playDiv.classList.add('fade-active');
     setVisibleScore(true);
     pressPlayDiv.style.visibility = 'visible';
-    pressPlayDiv.style.display = 'block';
+    pressPlayDiv.style.display = 'flex';
 }
 
 function hidePlayMessage()

@@ -47,7 +47,7 @@
         <div class="mainMenuPanel" id="mainMenuPanel">
             <div class="mainPanel" id="mainPanel">
                 <img id="homeImg" src="">
-                <h3 id="mainMenuText"></h3>
+                <h2 id="mainMenuText"></h2>
                 <button class="mainMenuButton" id="mainPlayButton"></button>
                 <button class="mainMenuButton" id="mainProfileButton"></button>
                 <button class="mainMenuButton" id="mainSettingsButton"></button>
@@ -65,7 +65,7 @@
     </div>
     <!------------------------------ Mode Selection ------------------------------>
     <div id="modes" class="page">
-        <h3 id="modeSelectionText"></h3>
+        <h2 id="modeSelectionText"></h2>
         <div class="modeSelectionPanel" id="modeSelection">
             <div id="modesLocal">
                 <h1 id="modesLocalHeader"></h1>
@@ -95,11 +95,11 @@
 
     <!------------------------------ Rules Selection ------------------------------>
     <div id="rules" class="subpage">
+        <h2 id="rulesHeaderText"></h2>
         <div id="rulesPanel">
-            <h3 id="rulesHeaderText"></h3>
             <div id="rulesPoints">
                 <h1 id="rulesPointsText"></h1>
-                <input type="text" id="rulesPointsInput" placeholder="3" value="3" min="0" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                <input type="text" id="rulesPointsInput" placeholder="3" value="3" min="0" maxlength="2" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
             </div>
             <div id="rulesArenaType">
                 <h1 id="rulesArenaText"></h1>
@@ -114,7 +114,7 @@
             </div>
             <div id="rulesTimer">
                 <h1 id="rulesTimerText"></h1>
-                <input type="text" id="rulesTimerInput" placeholder="0" value="0" min="0" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                <input type="text" id="rulesTimerInput" placeholder="0" value="0" min="0" maxlength="3" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
             </div>
             <div id="buttonsRules">
                 <button id="buttonAcceptRules"></button>

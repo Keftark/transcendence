@@ -2,32 +2,47 @@
 #modeSelection
 {
     display: flex;
-    flex-direction: row; 
-    align-items:center;
-    justify-content:space-evenly;
+    flex-direction: row;
+    justify-content:space-around;
     width: 80vw;
-    max-width: 56rem;
+    max-width: 900px;
     height: 54vh;
-    max-height: 30rem;
+    max-height: 480px;
     background-color: #000000;
     border: 1px solid #002522;
     border-radius: 15px;
+}
+
+#modes h2
+{
+    position: absolute;
+    left: 50%;
+    top: 0%;
+    margin: 0;
+    transform: translate(-50%, 150%);
+    /* box-shadow: 0 0 16px rgba(0, 255, 255, 0.301); */
 }
 
 #modesLocal, #modesOnline
 {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    align-content: space-around;
+    justify-content:space-around;
     align-items: center;
+    height: 100%;
+    width: 50%;
+}
+
+#modesLocal p, #modesOnline p, #modesLocal h1, #modesOnline h1
+{
+    margin: 0;
 }
 
 .modeSelectionButton {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 10vw;
-    height: 10vw;
+    width: auto;
+    height: 30%;
     background-color: #000000;
     color: rgb(255, 255, 255);
     border: 3px solid #00776d;

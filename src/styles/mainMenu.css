@@ -60,3 +60,12 @@
     opacity: 0;
     transition: all 0.5s ease-in-out;
 }
+
+#mainPanel h2
+{
+    position: absolute;
+    left: 50%;
+    top: 0%;
+    margin: 0;
+    transform: translate(-50%, 150%);
+}

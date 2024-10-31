@@ -6,6 +6,7 @@ import { ArenaType, LevelMode } from './variables.js';
 import { isChatOpen, tryCloseChat } from './chat.js';
 import { clickCancelRules, isRulesOpen } from './rules.js';
 import { isInGame, pressEscapeInGame } from './levelLocal.js';
+import { clickCancelRegister, isRegistrationOpen } from './registration.js';
 
 
 let levelMode = LevelMode.MENU;
@@ -22,7 +23,9 @@ export function getLevelState()
 
 export function checkEscapeKey()
 {
-    if (isChatOpen())
+    if (isRegistrationOpen())
+        clickCancelRegister();
+    else if (isChatOpen())
         tryCloseChat();
     else if (isRulesOpen())
         clickCancelRules();
