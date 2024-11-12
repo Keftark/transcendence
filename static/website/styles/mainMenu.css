@@ -1,0 +1,71 @@
+.mainMenuPanel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.mainPanel {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+    width: 80vw;
+    max-width: 56rem;
+    height: 54vh;
+    max-height: 30rem;
+    background-color: #000000;
+    border: 1px solid #002522;
+    border-radius: 15px;
+    z-index: 0;
+}
+
+.mainMenuButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 17vw;
+    height: 8vh;
+    margin: 0.5vh 0;
+    background-color: #000000;
+    color: rgb(255, 255, 255);
+    border: 3px solid #005c57;
+    border-radius: 15px;
+    text-align: center;
+    font-size: clamp(0.5rem + 2vw, 0.5rem + 2vw, 6vw);
+}
+
+.mainMenuButton:hover{
+    border-width: 6px;
+    background-color: rgba(0, 255, 255, 0.219);
+    opacity: 0.8;
+    box-shadow: 0 0 16px rgba(0, 255, 255, 0.301);
+}
+
+.disabledButtonHover:hover{
+    border-width: 3px;
+    background-color: rgba(41, 54, 54, 1);
+    box-shadow: none;
+}
+
+#homeImg
+{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 50vh;
+    height: 50vh;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+}
+
+#mainPanel h2
+{
+    position: absolute;
+    left: 50%;
+    top: 0%;
+    margin: 0;
+    transform: translate(-50%, 150%);
+}

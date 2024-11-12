@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Untitled Game</title>
+    <link rel="stylesheet" href="./styles/styles.css">
+    <link rel="stylesheet" href="./styles/mainMenu.css">
+    <link rel="stylesheet" href="./styles/menu.css">
+    <link rel="stylesheet" href="./styles/anims.css">
+    <link rel="stylesheet" href="./styles/chat.css">
+    <link rel="stylesheet" href="./styles/registration.css">
+    <link rel="stylesheet" href="./styles/duelPanel.css">
+    <link rel="stylesheet" href="./styles/rulesPanel.css">
+    <link rel="stylesheet" href="./styles/victory.css">
+    <link rel="stylesheet" href="./styles/scores.css">
+    <link rel="stylesheet" href="./styles/gameUI.css">
+    <link rel="stylesheet" href="./styles/modeSelection.css">
+    <link rel="stylesheet" href="./styles/profile.css">
+    <link rel="stylesheet" href="./styles/settings.css">
+    <link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body>
+    <script type="module" src="/pages.js"></script>
+    <script type="module" src="/main.js"></script>
+    <script type="module" src="/menu.js"></script>
+    <script type="module" src="/translate.js"></script>
+    <script type="module" src="/levelLocal.js"></script>
+    <script type="module" src="/vars.js"></script>
+    <script type="module" src="/eventsListener.js"></script>
+    <script type="module" src="/chat.js"></script>
+    <script type="module" src="/cheats.js"></script>
+    <script type="module" src="/registration.js"></script>
+    <script type="module" src="/duelPanel.js"></script>
+    <script type="module" src="/levelSpace.js"></script>
+    <script type="module" src="/levelCave.js"></script>
+    <script type="module" src="/timer.js"></script>
+    <script type="module" src="/variables.js"></script>
+    <script type="module" src="/rules.js"></script>
+
+    <div id="game-local" class="page"></div>
+    <div id="game-ai" class="page"></div>
+    <!------------------------------ Header Title ------------------------------>
+    <div id="header-title">ft_transcendence</div>
+
+    <!------------------------------ Main Menu UI ------------------------------>
+    <div id="home" class="page">
+        <div class="mainMenuPanel" id="mainMenuPanel">
+            <div class="mainPanel" id="mainPanel">
+                <img id="homeImg" src="">
+                <h2 id="mainMenuText"></h2>
+                <button class="mainMenuButton" id="mainPlayButton"></button>
+                <button class="mainMenuButton" id="mainProfileButton"></button>
+                <button class="mainMenuButton" id="mainSettingsButton"></button>
+            </div>
+        </div>
+
+        <!------------------------------ Main Menu Log In Buttons ------------------------------>
+        <div id="loginbuttons">
+            <button id="buttonSignIn" onclick="showRegistrationPanel()"></button>
+            <button id="buttonLogIn" onclick="clickCancelRegister()"></button>
+        </div>
+        <div id="logoutbuttons">
+            <button id="buttonLogOut" onclick="clickLogOut()"></button>
+        </div>
+    </div>
+    <!------------------------------ Mode Selection ------------------------------>
+    <div id="modes" class="page">
+        <h2 id="modeSelectionText"></h2>
+        <div class="modeSelectionPanel" id="modeSelection">
+            <div id="modesLocal">
+                <h1 id="modesLocalHeader"></h1>
+                <button class="modeSelectionButton" id="modeLocalButton">
+                    <img id="versusImg" src="/images/versusImage.png">
+                </button>
+                <p id="modeLocal"></p>
+                <button class="modeSelectionButton" id="modeComputerButton">
+                    <img id="vsIAImg" src="/images/vsComputerImage.png">
+                </button>
+                <p id="modeComputer"></p>
+            </div>
+            <div id="modesOnline">
+                <h1 id="modesOnlineHeader"></h1>
+                <button class="modeSelectionButton" id="modeLocalButton">
+                    <img id="duelImg" src="/images/duelImage.png">
+                </button>
+                <p id="modeDuelText"></p>
+                <button class="modeSelectionButton" id="modeComputerButton">
+                    <img id="tournamentImg" src="/images/tournamentImage.png">
+                </button>
+                <p id="tournamentText"></p>
+            </div>
+            <button class="modeSelectionButtonBack" id="modeBackButton"></button>
+        </div>
+    </div>
+
+    <!------------------------------ Rules Selection ------------------------------>
+    <div id="rules" class="subpage">
+        <h2 id="rulesHeaderText"></h2>
+        <div id="rulesPanel">
+            <div id="rulesPoints">
+                <h1 id="rulesPointsText"></h1>
+                <input type="text" id="rulesPointsInput" placeholder="3" value="3" min="0" maxlength="2" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+            </div>
+            <div id="rulesArenaType">
+                <h1 id="rulesArenaText"></h1>
+                <div id="arenas">
+                    <button class="arena" id="rulesArenaTypeCave" onclick="selectArena(0)">
+                        <img src="/images/arenaCave.png">
+                    </button>
+                    <button class="arena" id="rulesArenaTypeSpace" onclick="selectArena(1)">
+                        <img src="/images/arenaSpace.png">
+                    </button>
+                </div>
+            </div>
+            <div id="rulesTimer">
+                <h1 id="rulesTimerText"></h1>
+                <input type="text" id="rulesTimerInput" placeholder="0" value="0" min="0" maxlength="3" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+            </div>
+            <div id="buttonsRules">
+                <button id="buttonAcceptRules"></button>
+                <button id="buttonCancelRules"></button>
+            </div>
+        </div>
+    </div>
+
+    <!------------------------------ Duel Panel ------------------------------>
+    <div id="duel" class="subpage">
+        <div id="duelPanel">
+            <div id="playersDuel">
+                <div id="player1Duel">
+                    <p id="player1Name"></p>
+                    <img id="player1ImgDuel">
+                    <p id=""></p>
+                </div>
+                <div id="player2Duel">
+                    <p id="player2Name"></p>
+                    <img id="player2ImgDuel">
+                    <p id="waitingForPlayer"></p>
+                </div>
+            </div>
+            <div id="buttonsDuel">
+                <button id="startDuelButton"></button>
+                <button id="leaveDuelButton"></button>
+            </div>
+            <img id="thunderImg" src="images/thunder.png">
+            <img id="vsImg" src="images/vs.png">
+        </div>
+    </div>
+
+    <!------------------------------ In Game UI ------------------------------>
+    <p id="loading"></p>
+    <div id="pressPlayDiv">
+        <div id="pressplay"></div>
+        <div class="glitch" id="play"></div>
+    </div>
+    <div id="scores">
+        <p id="timer"></p>
+        <div id="scorediv">
+            <div id="playername-left"></div>
+            <div id="score-left">0</div>
+            <div id="score-right">0</div>
+            <div id="playername-right"></div>
+        </div>
+    </div>
+
+    <!------------------------------ In Game Side Menu Panel ------------------------------>
+    <div id="menuPanel">
+        <div id="menu-label">
+            <span>M</span>
+            <span>E</span>
+            <span>N</span>
+            <span>U</span>
+        </div>
+        <button class="menuButton" id="profileButton"></button>
+        <button class="menuButton" id="settingsButton"></button>
+        <button class="menuButton" id="mainButton"></button>
+    </div>
+    <div id="controls">
+        <img src="./images/controlsP1Local.png" id="controlsP1LocalImg" />
+        <img src="./images/controlsP2Local.png" id="controlsP2LocalImg" />
+        <img src="./images/controlsAdventure.png" id="controlsAdventureImg" />
+    </div>
+    <div id="overlay"></div>
+    <div id="matchListPanel">
+        <div id="matchHistoryContainer"></div>
+    </div>
+    <!------------------------------ Profile Panel ------------------------------>
+    <div id="profilePanel">
+        <h2 id="nameProfile"></h2>
+        <p id="firstNameProfile"></p>
+        <p id="lastNameProfile"></p>
+        <div id="profileContainer">
+            <img id="mailImg" src="./icons/mail.png">
+            <p id="mailProfile"></p>
+        </div>
+        <div id="profileContainer">
+            <img id="victoriesImg" src="./icons/trophy.png">
+            <p id="victories"></p>
+        </div>
+        <button id="seeMatchesButton" onclick="showMatchList()"></button>
+        <button id="closeProfileButton"></button>
+    </div>
+
+    <!------------------------------ Settings Panel ------------------------------>
+    <div id="settingsPanel">
+        <h2 id="settingsHeader"></h2>
+        <p id="colors"></p>
+        <div id="optionsColors">
+            <button class="colorize-btn" id="color1Button" data-color="white" data-index="0"></button>
+            <button class="colorize-btn" id="color2Button" data-color="#9e009e" data-index="1"></button>
+            <button class="colorize-btn" id="color3Button" data-color="#ffbb00" data-index="2"></button>
+            <button class="colorize-btn" id="color4Button" data-color="#ac0000" data-index="3"></button>
+            <button class="colorize-btn" id="color5Button" data-color="#08ec00" data-index="4"></button>
+        </div>
+        <p id="language"></p>
+        <div id="optionsLanguages">
+            <button class="language" id="lang1Button" data-language="en" data-lang="0">
+                <img src="./icons/lang-en.png" id="lang-icon" />
+            </button>
+            <button class="language" id="lang2Button" data-language="fr" data-lang="1">
+                <img src="./icons/lang-fr.png" id="lang-icon" />
+            </button>
+        </div>
+        <p id="cameraTypeHeader"></p>
+        <div id="cameraType">
+            <button id="perspectiveButton">
+                <img src="./icons/cameraPerspective.png" alt="">
+            </button>
+            <button id="orthographicButton">
+                <img src="./icons/cameraOrthographic.png" alt="">
+            </button>
+        </div>
+        <button id="closeSettingsButton"></button>
+    </div>
+
+    <!------------------------------ Victory Panel ------------------------------>
+    <div id="victory">
+        <div id="victoryPanel">
+            <h1 id="victoryText"></h1>
+            <button id="closeVictoryButton" onclick="closeVictoryScreen()"></button>
+        </div>
+    </div>
+
+    <!------------------------------ Chat Box ------------------------------>
+    <div class="chat-box" id="chatBox">
+        <button id="toggleSizeButton">
+            <img src="icons/shrink.png" id="toggleIcon"/>
+        </button>
+        <div class="messages" id="messages"></div>
+        <div class="input-container" id="inputContainer">
+            <input type="text" id="inputChat" placeholder="...">
+            <button id="sendButton">
+                <img src="icons/send.png" class="button-send-img" />
+            </button>
+        </div>
+    </div>
+    <div id="chatContextMenu">
+        <div id="spaceContextMenu">
+            <button id="addFriendButton"></button>
+            <button id="inviteGameButton"></button>
+            <button id="seeProfileButton"></button>
+        </div>
+    </div>
+
+    <!------------------------------ Registering Panel ------------------------------>
+    <div id="registering" class="subpage">
+        <div id="registeringpanel">
+            <div id="registeringPanel">
+                <h1 class="regItem" id="registerHeader"></h1>
+                <div class="regItem">
+                    <p id="registerName"></p>
+                    <input type="text" id="inputName" placeholder="...">
+                    <p class="registerErrorMessage" id="registerErrorName"></p>
+                </div>
+                <div class="regItem">
+                    <p id="registerFirstName"></p>
+                    <input type="text" id="inputFirstName" placeholder="...">
+                    <p class="registerErrorMessage" id="registerErrorFirstName"></p>
+                </div>
+                <div class="regItem">
+                    <p id="registerLastName"></p>
+                    <input type="text" id="inputLastName" placeholder="...">
+                    <p class="registerErrorMessage" id="registerErrorLastName"></p>
+                </div>
+                <div class="regItem">
+                    <p id="registerMail"></p>
+                    <input type="text" id="inputMail" placeholder="...">
+                    <p class="registerErrorMessage" id="registerErrorMail"></p>
+                </div>
+                <div class="regItem">
+                    <p id="registerPassword"></p>
+                    <input type="password" id="inputPassword" placeholder="...">
+                    <p class="registerErrorMessage" id="registerErrorPassword"></p>
+                </div>
+                <div class="regItem">
+                    <p id="registerConfirmPassword"></p>
+                    <input type="password" id="inputConfirmPassword" placeholder="...">
+                    <p class="registerErrorMessage" id="registerErrorConfirmPassword"></p>
+                </div>
+                <div id="regButtons">
+                    <button class="regButton" id="registerConfirm" onclick="acceptRegistration()"></button>
+                    <button class="regButton" id="registerCancel" onclick="clickCancelRegister()"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

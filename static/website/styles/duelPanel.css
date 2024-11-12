@@ -1,0 +1,109 @@
+#duelPanel
+{
+    display: none;
+    position: absolute;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+    width: 900px;
+    height: 500px;
+    background-color: #000000;
+    border: 1px solid #002522;
+    border-radius: 15px;
+    z-index: 0;
+    color: white;
+}
+
+#player1Name, #player2Name
+{
+    font-size: 34px;
+}
+
+#playersDuel
+{
+    flex-grow: 1;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+#thunderImg
+{
+    left: 50%;
+    top: 50%;
+    position: absolute;
+    height: 500px;
+    width: 5%;
+    transform: translate(-50%, -50%);
+}
+
+#vsImg
+{
+    left: 50%;
+    top: 50%;
+    position: absolute;
+    transform: translate(-50%, -90%);
+}
+
+.vsAnim
+{
+    animation: shrink 0.3s ease forwards;
+}
+
+#player1Duel
+{
+    align-items: center;
+}
+
+#waitingForPlayer
+{
+    font-size: 24px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    transform: translateY(20px);
+}
+
+#player2Duel
+{
+    align-items: center;
+}
+
+#player1Duel, #player2Duel
+{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-top: -64px;
+}
+
+#player1Duel img, #player2Duel img
+{
+    width: 96px;
+    height: 96px;
+}
+
+#leaveDuelButton, #startDuelButton
+{
+
+    width: auto;
+    min-width: 128px;
+    height: 64px;
+    background-color: #005c57;
+    color: white;
+    border: 1px solid #003a37;
+    font-size: 30px;
+}
+
+#startDuelButton:hover, #leaveDuelButton:hover {
+    opacity: 0.8;
+}
+
+#buttonsDuel
+{
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 32px;
+    gap: 128px;
+}
