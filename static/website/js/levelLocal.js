@@ -435,8 +435,11 @@ export function StartLevel(levelMode)
         else
         {
             screenShake.update();
-            if (isBallMoving) updateBall(player1, player2);
-            updatePlayers(deltaTime);
+            if (!gameEnded)
+            {
+                if (isBallMoving) updateBall(player1, player2);
+                updatePlayers(deltaTime);
+            }
         }
         if (animateLevelFunction != null)
             animateLevelFunction();
