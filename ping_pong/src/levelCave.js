@@ -1,4 +1,4 @@
-import * as THREE from 'https://unpkg.com/three@0.146.0/build/three.module.js';
+import * as THREE from '../node_modules/.vite/deps/three.js';
 import { BOUNDARY } from "./levelLocal";
 // import { GLTFLoader } from 'https://unpkg.com/three@0.146.0/examples/jsm/loaders/GLTFLoader.js';
 import { getRandomNumberBetween, getRandomStringFromArray, setObjectRandomPosition, setWallRight } from './objects';

@@ -1,4 +1,4 @@
-import * as THREE from 'https://unpkg.com/three@0.146.0/build/three.module.js';
+import * as THREE from '../node_modules/.vite/deps/three.js';
 import { PLAYER_HEIGHT, PLAYER_RADIUS, BOUNDARY } from "./levelLocal.js";
 import { getLevelState } from "./main.js";
 import { LevelMode } from './variables.js';

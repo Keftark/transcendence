@@ -1,4 +1,4 @@
-import * as THREE from 'https://unpkg.com/three@0.146.0/build/three.module.js';
+import * as THREE from '../node_modules/.vite/deps/three.js';
 import { animateCamera, getCameraActiveState, resetCamera } from './cameranim.js';
 import { resetBoostedStatus, setupPlayerMovement } from './playerMovement.js';
 import { createBall } from './ball.js';

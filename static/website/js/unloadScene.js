@@ -1,4 +1,4 @@
-import * as THREE from 'https://unpkg.com/three@0.146.0/build/three.module.js';
+import * as THREE from '../node_modules/.vite/deps/three.js';
 import { addPlayerMovementKeyDown, addPlayerMovementKeyUp } from "./playerMovement.js";
 
 function hideUiElements()

@@ -1,4 +1,4 @@
-import * as THREE from 'https://unpkg.com/three@0.146.0/build/three.module.js';
+import * as THREE from '../node_modules/.vite/deps/three.js';
 import { ballBaseRadius, ballBaseSpeed, ballStats, BOUNDARY } from './levelLocal.js';
 import { Sparks } from './sparks.js';
 import { ArenaType } from './variables.js';
