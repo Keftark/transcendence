@@ -1,28 +1,37 @@
 #duelPanel
 {
-    display: none;
-    position: absolute;
-    flex-direction: column; 
-    justify-content: center;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    width: 900px;
-    height: 500px;
+    width: 80vw;
+    max-width: 56rem;
+    height: 54vh;
+    max-height: 30rem;
     background-color: #000000;
     border: 1px solid #002522;
     border-radius: 15px;
     z-index: 0;
-    color: white;
 }
 
-#player1Name, #player2Name
+#duel h2
 {
-    font-size: 34px;
+    position: absolute;
+    left: 50%;
+    top: 0%;
+    margin: 0;
+    transform: translate(-50%, 150%);
+}
+
+#player1NameDuel, #player2NameDuel
+{
+    font-size: clamp(1rem + 0.2vw + 0.2vh, 1rem + 1.5vw + 1.5vh, 6rem);
 }
 
 #playersDuel
 {
     flex-grow: 1;
     width: 100%;
+    height: 100%;
     position: relative;
     display: flex;
     align-items: center;
@@ -34,17 +43,20 @@
     left: 50%;
     top: 50%;
     position: absolute;
-    height: 500px;
+    height: 54vh;
     width: 5%;
     transform: translate(-50%, -50%);
 }
 
 #vsImg
 {
+    display: none;
     left: 50%;
     top: 50%;
     position: absolute;
-    transform: translate(-50%, -90%);
+    height: 128px;
+    width: 128px;
+    transform: translate(-50%, -50%);
 }
 
 .vsAnim
@@ -52,58 +64,87 @@
     animation: shrink 0.3s ease forwards;
 }
 
-#player1Duel
+#waitingForPlayer, #fakewaiting
 {
-    align-items: center;
-}
-
-#waitingForPlayer
-{
-    font-size: 24px;
-    margin-bottom: 0px;
-    margin-top: 0px;
     transform: translateY(20px);
-}
-
-#player2Duel
-{
-    align-items: center;
 }
 
 #player1Duel, #player2Duel
 {
+    align-items: center;
     flex: 1;
     display: flex;
     flex-direction: column;
-    margin-top: -64px;
+    height: 100%;
+    justify-content: space-around;
 }
 
 #player1Duel img, #player2Duel img
 {
-    width: 96px;
-    height: 96px;
+    width: 7vw;
+    min-width: 64px;
+    height: 7vw;
+    min-height: 64px;
+}
+
+#ready1DuelButton, #ready2DuelButton
+{
+    width: fit-content;
+    padding: 8px;
+    height: 6vh;
+    background-color: #005c57;
+    color: white;
+    font-size: clamp(0.5rem + 1vw, 0.5rem + 1vw + 1vh, 6vw);
+    border-radius: 8px;
+}
+
+#ready1DuelButton.active, #ready2DuelButton.active
+{
+    background-color: #278800;
+    border-color: rgba(21, 255, 0, 0.616)
 }
 
 #leaveDuelButton, #startDuelButton
 {
-
-    width: auto;
-    min-width: 128px;
-    height: 64px;
-    background-color: #005c57;
+    position: absolute;
+    bottom: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 17vw;
+    height: 8vh;
+    margin: 0.5vh 0;
     color: white;
-    border: 1px solid #003a37;
-    font-size: 30px;
+    font-size: clamp(0.5rem + 1vw, 0.5rem + 1vw + 1vh, 6vw);
+    border-radius: 8px;
 }
 
-#startDuelButton:hover, #leaveDuelButton:hover {
+#startDuelButton
+{
+    transform: translate(-60%, 0%);
+    background-color:rgba(0, 255, 255, 0.1);
+    box-shadow: 0 0 8px rgba(0, 255, 255, 0.301);
+}
+
+#leaveDuelButton
+{
+    border: 3px solid #770000a4;
+    transform: translate(60%, 0%);
+    background-color: rgba(255, 0, 0, 0.1);
+    box-shadow: 0 0 8px rgba(255, 0, 0, 0.301);
+}
+
+#startDuelButton, #ready1DuelButton, #ready2DuelButton
+{
+    border: 3px solid #003a37;
+}
+
+#startDuelButton:hover, #leaveDuelButton:hover, #ready1DuelButton:hover, #ready2DuelButton:hover {
     opacity: 0.8;
 }
 
 #buttonsDuel
 {
     display: flex;
-    flex-direction: row;
-    padding-bottom: 32px;
-    gap: 128px;
+    justify-content: center;
 }

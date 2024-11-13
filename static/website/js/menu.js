@@ -1,5 +1,6 @@
+import { sendInvitationDuel } from './chat.js';
 import { addMainEvents } from './eventsListener.js';
-import { isInGame, setCameraType, StartLevel, unloadLevel } from './levelLocal.js';
+import { isInGame, reinitLevelFunction, setCameraType, StartLevel, unloadLevel } from './levelLocal.js';
 import { getLevelState, setLevelState } from './main.js';
 import { navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
@@ -7,26 +8,52 @@ import { getRules, openRules, setCustomRules } from './rules.js';
 import { loadScores, removeAllScores } from './scoreManager.js';
 import { changeLanguage, getTranslation } from './translate.js';
 import { LevelMode } from './variables.js';
+
 const overlayPanel = document.getElementById('overlay');
 const profilePanel = document.getElementById('profilePanel');
 const matchListPanel = document.getElementById('matchListPanel');
-const matchListButton = document.getElementById('seeMatchesButton');
-let selectedMode;
+const mainPlayButton = document.getElementById('mainPlayButton');
+const menuPanel = document.getElementById('gameMenuPanel');
+const hoverImage = document.getElementById('homeImg');
+const buttonsColors = document.querySelectorAll('.colorize-btn');
+const logInButtons = document.getElementById('loginbuttons');
+const logOutButtons = document.getElementById('logoutbuttons');
+const mainPanel = document.getElementById('mainPanel');
+const mainMenuPanel = document.getElementById('mainMenuPanel');
+const toggleCameraText = document.getElementById('cameraTypeHeader');
+const gameSettingsButton = document.getElementById('settingsButton');
 
-document.getElementById('mainPlayButton').addEventListener('click', () => {
+const buttonsLanguage = document.querySelectorAll('.language');
+const imageSources = {
+  mainPlayButton: 'static/images/playImage.png',
+  mainProfileButton: 'static/images/profileImage.png',
+  mainSettingsButton: 'static/images/settingsImage.png',
+};
+let selectedMode;
+let currentColorIndex = 0;
+let currentLangIndex = 0;
+let currentCameraType = 0;
+let settingsIsOpen = false;
+let profileIsOpen = false;
+
+document.getElementById('header-title').addEventListener('click', () => {
+    navigateTo('home');
+});
+
+mainPlayButton.addEventListener('click', () => {
     clickPlay();
 });
 
-document.getElementById('settingsButton').addEventListener('click', () => {
+gameSettingsButton.addEventListener('click', () => {
     openSettings();
 });
 
-document.getElementById('menuPanel').addEventListener('mouseenter', () => {
-    openMenu();
+menuPanel.addEventListener('mouseenter', () => {
+    openGameMenu();
 });
 
-document.getElementById('menuPanel').addEventListener('mouseleave', () => {
-    closeMenu();
+menuPanel.addEventListener('mouseleave', () => {
+    closeGameMenu();
 });
 
 document.getElementById('profileButton').addEventListener('click', () => {
@@ -41,8 +68,12 @@ document.getElementById('closeProfileButton').addEventListener('click', () => {
     closeProfile();
 });
 
-document.getElementById('settingsButton').addEventListener('click', () => {
+gameSettingsButton.addEventListener('click', () => {
     openSettings();
+});
+
+document.getElementById('reinitLevelButton').addEventListener('click', () => {
+    reinitLevelFunction();
 });
 
 document.getElementById('mainSettingsButton').addEventListener('click', () => {
@@ -83,44 +114,67 @@ document.getElementById('orthographicButton').addEventListener('click', () => {
     toggleCameraType(1);
 });
 
-let oldButton = null;
+document.getElementById('modeDuelButton').addEventListener('click', () => {
+    openDuelPanel();
+});
 
-export function openMenu()
+document.querySelectorAll('.mainMenuButton').forEach(button => {
+  button.addEventListener('mouseover', () => showImage(button.id));
+  button.addEventListener('mouseout', hideImage);
+  button.addEventListener('focus', () => showImage(button.id));
+  button.addEventListener('blur', hideImage);
+});
+
+document.getElementById('perspectiveButton').classList.add('applyBorderOptions');
+document.getElementById('lang1Button').classList.add('applyBorderOptions');
+document.getElementById('color1Button').classList.add('applyBorderOptions');
+
+let oldButton = mainPlayButton;
+
+export function openGameMenu()
 {
-    const panel = document.getElementById('menuPanel');
-    
-    if (panel.classList.contains('show') === false) {
+    if (menuPanel.classList.contains('show') === false) {
         setTimeout(() => {
-            panel.classList.add('show');
+            menuPanel.classList.add('show');
         });
     }
 }
 
-export function closeMenu()
+export function closeGameMenu()
 {
-    const panel = document.getElementById('menuPanel');
-    
-    if (panel.classList.contains('show')) {
-        panel.classList.remove('show');
+    menuPanel.classList.remove('show');
+}
+
+export function openOrCloseGameMenu()
+{
+    menuPanel.classList.toggle('show');
+    if (menuPanel.classList.contains('show'))
+    {
+        if (playerStats.isRegistered)
+            document.getElementById('profileButton').focus();
+        else
+            gameSettingsButton.focus();
     }
+    else
+        document.activeElement.blur();
 }
 
 export function openProfile(player = playerStats)
 {
     if (player.isRegistered === false)
         return;
+    profileIsOpen = true;
     loadScores(player);
     if (player.matches.length === 0)
         document.getElementById('seeMatchesButton').style.display = 'none';
     else
-        document.getElementById('seeMatchesButton').style.display = 'block';
+        document.getElementById('seeMatchesButton').style.display = 'flex';
     document.getElementById('nameProfile').innerText = player.nickname;
     document.getElementById('firstNameProfile').innerText = player.firstName;
     document.getElementById('lastNameProfile').innerText = player.lastName;
     document.getElementById('mailProfile').innerText = player.mail;
     overlayPanel.style.display = 'block';
-    const profilePanel = document.getElementById('profilePanel');
-    profilePanel.style.display = 'block';
+    profilePanel.style.display = 'flex';
     if (getLevelState() === LevelMode.MENU)
         oldButton = document.getElementById('mainProfileButton');
     document.getElementById('closeProfileButton').focus();
@@ -135,8 +189,7 @@ export function showMatchList()
         setTimeout(() => {
             profilePanel.classList.add('toLeft');
             matchListPanel.classList.add('toRight');
-            matchListButton.classList.add('open');
-        }, 50);
+        }, 100);
     }
     else
     {
@@ -148,7 +201,6 @@ function closeMatchList()
 {
     profilePanel.classList.remove('toLeft');
     matchListPanel.classList.remove('toRight');
-    document.getElementById('seeMatchesButton').classList.remove('open');
     setTimeout(() => {
         matchListPanel.style.display = 'none';
     }, 100);
@@ -156,6 +208,7 @@ function closeMatchList()
 
 export function closeProfile()
 {
+    profileIsOpen = false;
     if (profilePanel.classList.contains('toLeft') === true) {
         closeMatchList();
         setTimeout(() => {
@@ -168,41 +221,30 @@ export function closeProfile()
         profilePanel.style.display = 'none';
     }
     removeAllScores();
-    if (oldButton != null)
-    {
-        oldButton.focus();
-        oldButton = null;
-    }
+    focusOldButton();
     overlayPanel.style.display = 'none';
 }
 
 export function openSettings()
 {
+    settingsIsOpen = true;
     overlayPanel.style.display = 'block';
-    const settingsPanel = document.getElementById('settingsPanel');
-    settingsPanel.style.display = 'block'; // Show the profile panel
+    document.getElementById('settingsPanel').style.display = 'flex';
     if (getLevelState() === LevelMode.MENU)
         oldButton = document.getElementById('mainSettingsButton');
+    else
+        oldButton = gameSettingsButton;
     document.getElementById('closeSettingsButton').focus();
 }
 
 export function closeSettings()
 {
-    const settingsPanel = document.getElementById('settingsPanel');
-    settingsPanel.style.display = 'none';
-    if (oldButton != null)
-    {
-        oldButton.focus();
-        oldButton = null;
-    }
+    settingsIsOpen = false;
+    document.getElementById('settingsPanel').style.display = 'none';
+    focusOldButton();
     overlayPanel.style.display = 'none';
 }
 
-let currentColorIndex = 0;
-let currentLangIndex = 0;
-
-
-const buttonsColors = document.querySelectorAll('.colorize-btn');
 function changeOutlineColors(newIndex)
 {
     if (currentColorIndex === newIndex)
@@ -227,14 +269,13 @@ export function changeTextsColor(newColor)
 {
     const textElements = document.querySelectorAll(' \
         h1, h2, div, h3, p, button, #header-title, #menu-label span, #pressplay, #play, #score-left, #score-right, #playername-left, \
-        #playername-right');
+        #playername-right, #inputChat, input');
     textElements.forEach(element => {
         element.style.color = newColor;
     });
     playerStats.colors = newColor;
 }
 
-const buttonsLanguage = document.querySelectorAll('.language');
 function changeOutlineLanguage(newIndex)
 {
     if (currentLangIndex === newIndex)
@@ -255,40 +296,27 @@ export function setLanguageButtons()
     });
 }
 
-export function loadMainMenu()
-{
-    unloadLevel();
-    setHeaderVisibility(true);
-    showMainMenu();
-    addMainEvents();
-}
-
 function showMainMenu()
 {
     setLevelState(LevelMode.MENU);
-    const mainPanel = document.getElementById('mainPanel');
     mainPanel.style.display = 'flex';
-    const mainMenuPanel = document.getElementById('mainMenuPanel');
     mainMenuPanel.style.display = 'flex';
-    const button = document.getElementById('mainPlayButton');
-    button.focus();
+    focusOldButton();
     if (playerStats.isRegistered)
-        document.getElementById('logoutbuttons').style.display = 'flex';
+        logOutButtons.style.display = 'flex';
     else
-        document.getElementById('loginbuttons').style.display = 'flex';
+        logInButtons.style.display = 'flex';
 }
 
 function hideMainMenu()
 {
-    const mainMenuPanel = document.getElementById('mainMenuPanel');
     mainMenuPanel.style.display = 'none';
-    document.getElementById('loginbuttons').style.display = 'none';
-    document.getElementById('logoutbuttons').style.display = 'none';
+    logInButtons.style.display = 'none';
+    logOutButtons.style.display = 'none';
 }
 
 function hideMainPanel()
 {
-    const mainPanel = document.getElementById('mainPanel');
     mainPanel.style.display = 'none';
 }
 
@@ -305,6 +333,11 @@ export function clickPlayGame()
         navigateTo('game-local', selectedMode);
     else if (selectedMode === LevelMode.ADVENTURE)
         navigateTo('game-ai', selectedMode);
+    else if (selectedMode === LevelMode.DUEL)
+    {
+        sendInvitationDuel(playerStats.nickname);
+        navigateTo('duel');
+    }
 }
 
 export function onPlayGame(mode)
@@ -316,13 +349,15 @@ export function onPlayGame(mode)
 export function showModeChoice()
 {
     navigateTo('modes');
+    selectedMode = LevelMode.MODESELECTION;
 }
 
 export function onModesOpen()
 {
+    if (getLevelState() === LevelMode.MENU)
+        oldButton = mainPlayButton;
     setLevelState(LevelMode.MODESELECTION);
-    const modeLocal = document.getElementById('modeLocalButton');
-    modeLocal.focus();
+    document.getElementById('modeLocalButton').focus();
 }
 
 export function clickBackButtonMenu()
@@ -332,11 +367,15 @@ export function clickBackButtonMenu()
 
 export function onModesClose()
 {
-    showMainMenu();
+    // showMainMenu();
 }
 
-export function openDuelPanel(otherPlayer = "")
+export function openDuelPanel()
 {
+    if (playerStats.isRegistered)
+        navigateTo('duel');
+    // else
+        
     // if otherPlayer != "" and if isInTheDatabase(otherPlayer), sends an invitation to this player
 }
 
@@ -348,8 +387,6 @@ export function setHeaderVisibility(isVisible)
         document.getElementById('header-title').style.display = 'none';
 }
 
-const toggleCameraText = document.getElementById('cameraTypeHeader');
-let currentCameraType = 0;
 export function toggleCameraType(cameraType)
 {
     if (cameraType === currentCameraType)
@@ -372,14 +409,6 @@ export function toggleCameraType(cameraType)
         setCameraType();
 }
 
-const hoverImage = document.getElementById('homeImg');
-
-const imageSources = {
-  mainPlayButton: 'images/playImage.png',
-  mainProfileButton: 'images/profileImage.png',
-  mainSettingsButton: 'images/settingsImage.png',
-};
-
 function showImage(buttonId) {
   hoverImage.src = imageSources[buttonId];
   hoverImage.style.opacity = 0.2;
@@ -389,11 +418,39 @@ function hideImage() {
     hoverImage.style.opacity = 0;
 }
 
-document.querySelectorAll('.mainMenuButton').forEach(button => {
-  button.addEventListener('mouseover', () => showImage(button.id));
-  button.addEventListener('mouseout', hideImage);
-});
+export function focusOldButton()
+{
+        setTimeout(() => {
+            if (oldButton != null)
+            {
+                oldButton.focus();
+                oldButton = null;
+            }
+        }, 0);
+}
 
-document.getElementById('perspectiveButton').classList.add('applyBorderOptions');
-document.getElementById('lang1Button').classList.add('applyBorderOptions');
-document.getElementById('color1Button').classList.add('applyBorderOptions');
+export function onMainMenuOpen()
+{
+    setHeaderVisibility(true);
+    showMainMenu();
+    addMainEvents();
+    mainPlayButton.focus();
+}
+
+export function askForDuel()
+{
+    if (selectedMode === LevelMode.DUEL || isInGame)
+        return;
+    selectedMode = LevelMode.DUEL;
+    navigateTo('rules');
+}
+
+export function isSettingsOpen()
+{
+    return settingsIsOpen;
+}
+
+export function isProfileOpen()
+{
+    return profileIsOpen;
+}

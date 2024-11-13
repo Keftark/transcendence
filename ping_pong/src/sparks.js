@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from 'https://unpkg.com/three@0.146.0/build/three.module.js';
 import { BOUNDARY } from "./levelLocal";
 
 export class Sparks {

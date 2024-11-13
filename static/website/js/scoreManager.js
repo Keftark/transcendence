@@ -1,7 +1,7 @@
-import { endMatch } from "./levelLocal";
-import { getPlayerVictories, playerStats } from "./playerManager";
-import { checkPoints } from "./rules";
-import { getTranslation } from "./translate";
+import { endMatch } from "./levelLocal.js";
+import { getPlayerVictories, playerStats } from "./playerManager.js";
+import { checkPoints } from "./rules.js";
+import { getTranslation } from "./translate.js";
 
 const scores = document.getElementById('scores');
 const scoreRight = document.getElementById('score-right');

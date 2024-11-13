@@ -1,12 +1,18 @@
-import * as THREE from 'three';
+import * as THREE from 'https://unpkg.com/three@0.146.0/build/three.module.js';
 import { ballBaseRadius, ballBaseSpeed, ballStats, BOUNDARY } from './levelLocal.js';
 import { Sparks } from './sparks.js';
-import { ArenaType } from './variables.js';
+import { ArenaType, LevelMode } from './variables.js';
 import { getRules } from './rules.js';
+import { fillPowerBarLeft, fillPowerBarRight } from './powerUp.js';
+import { getBoostedStatus, stopBoostPlayer } from './playerMovement.js';
+import { getLevelState } from './main.js';
+
 const speedLimit = 3;
 const maxBounceAngle = 75 * Math.PI / 180;
 const baseSpeed = 0.75;
 const baseIntensityIncrement = 0.005;
+let ballSpeedMult = 1.0;
+let isBallBoosted = false;
 
 function getDimensions(object) {
     const boundingBox = new THREE.Box3().setFromObject(object);
@@ -21,14 +27,34 @@ function getBallTexturePath()
 {
     const levelType = getRules().arena;
     if (levelType === ArenaType.CAVE)
-        return 'mat/caveBall.png';
+        return 'static/mat/caveBall.png';
     if (levelType === ArenaType.SPACE)
-        return 'mat/spaceBall.png';
+        return 'static/mat/spaceBall.png';
+}
+
+function createBallBoostModel(textureLoader)
+{
+    const boostTexture = textureLoader.load('static/mat/ballBoost.png');
+    boostTexture.colorSpace = THREE.SRGBColorSpace;
+    const boostMaterial = new THREE.MeshStandardMaterial({ 
+        map:boostTexture,
+        transparent: true,
+        emissive: new THREE.Color(0xffff00),
+        emissiveIntensity: 10,
+        opacity: 1
+    });
+    const boostGeometry = new THREE.SphereGeometry(ballStats.BALL_RADIUS + 0.1, 32, 32);
+    const model = new THREE.Mesh(boostGeometry, boostMaterial);
+
+    model.visible = false;
+    return model;
 }
 
 function getRandomVelocityComponent() {return Math.random() < 0.5 ? baseSpeed : -baseSpeed;}
 
 export function createBall(scene, callBack) {
+    isBallBoosted = false;
+    ballSpeedMult = 1;
     const textureLoader = new THREE.TextureLoader();
     const ballTexture = textureLoader.load(getBallTexturePath());
     ballTexture.colorSpace = THREE.SRGBColorSpace;
@@ -41,6 +67,8 @@ export function createBall(scene, callBack) {
     const sparks = new Sparks(scene);
     const ballVelocitySpeedUp = new THREE.Vector3(0.07, 0.07, 0);
     const ball = new THREE.Mesh(ballGeometry, ballMaterial);
+    const boostedBall = createBallBoostModel(textureLoader);
+    ball.add(boostedBall);
     const pointLight = new THREE.PointLight(0xff5500, 0, 0);
     const maxLightIntensity = 30;
     let ballVelocity;
@@ -58,7 +86,39 @@ export function createBall(scene, callBack) {
         ballVelocity = new THREE.Vector3(rnd1, rnd2, 0); 
     }
 
+    function boostBall()
+    {
+        ballSpeedMult += 0.5;
+        isBallBoosted = true;
+        boostedBall.visible = true;
+        // mettre un contour a la balle
+    }
+    
+    function unboostBall()
+    {
+        if (isBallBoosted === false)
+            return;
+        ballSpeedMult -= 0.5;
+        isBallBoosted = false;
+        boostedBall.visible = false;
+    }
+
+    function checkBoostStatus(isLeft)
+    {
+        if (isLeft && getBoostedStatus(0) === true) // pour le joueur de gauche uniquement !
+        {
+            stopBoostPlayer(0);
+            boostBall();
+        }
+        else if (!isLeft && getBoostedStatus(1) === true) // pour le joueur de droite uniquement !
+        {
+            stopBoostPlayer(1);
+            boostBall();
+        }
+    }
+
     function resetBall() {
+        unboostBall();
         ball.position.set(0, 0, 0);
         pointLight.position.copy(ball.position); // Update light position
         pointLight.intensity = 0; // Reset light intensity
@@ -113,15 +173,20 @@ export function createBall(scene, callBack) {
         return player.position.x < 0 ? player.position.x + player.geometry.parameters.radiusTop : player.position.x - player.geometry.parameters.radiusTop;
     }
 
+    function isBallHittingPlayer(ballPosY, playerPosY, dividedPlayerSize)
+    {
+        return (ballPosY >= playerPosY - dividedPlayerSize &&
+        ballPosY <= playerPosY + dividedPlayerSize);
+    }
+
     function checkCollisionLeftPaddle(player1)
     {
-        const radius = ballStats.BALL_RADIUS;
+        // const radius = ballStats.BALL_RADIUS;
         const ballPosY = ball.position.y;
         const playerPosY = player1.position.y;
         const dividedPlayerSize = player1.geometry.parameters.height / 2;
-        if (ball.position.x - radius <= getXContactPointPaddle(player1) &&
-            ballPosY >= playerPosY - dividedPlayerSize &&
-            ballPosY <= playerPosY + dividedPlayerSize)
+        if (ball.position.x - ballStats.BALL_RADIUS <= getXContactPointPaddle(player1) &&
+            isBallHittingPlayer(ballPosY, playerPosY, dividedPlayerSize))
             {
                 // ball.position.set(getXContactPointPaddle(player1) + radius, ballPosY, 0);
                 return true;
@@ -131,21 +196,22 @@ export function createBall(scene, callBack) {
 
     function checkCollisionRightPaddle(player2)
     {
-        const radius = ballStats.BALL_RADIUS;
+        // const radius = ballStats.BALL_RADIUS;
         const ballPosY = ball.position.y;
         const playerPosY = player2.position.y;
         const dividedPlayerSize = player2.geometry.parameters.height / 2;
-        if (ball.position.x + radius >= getXContactPointPaddle(player2) &&
-            ballPosY >= playerPosY - dividedPlayerSize &&
-            ballPosY <= playerPosY + dividedPlayerSize)
+        if (ball.position.x + ballStats.BALL_RADIUS >= getXContactPointPaddle(player2) &&
+            isBallHittingPlayer(ballPosY, playerPosY, dividedPlayerSize))
             {
                 // ball.position.set(getXContactPointPaddle(player2) - radius, ballPosY, 0);
                 return true;
             }
         return false;
     }
+
     function bounceBallOnPaddle(isLeft, position, paddle)
     {
+        unboostBall();
         updateBallLight();
     
         const paddleCenter = paddle.position.y;
@@ -161,18 +227,24 @@ export function createBall(scene, callBack) {
         ballVelocity.y = ballSpeed * Math.sin(bounceAngle);
     
         ballVelocity.x = Math.min(ballVelocity.x + ballVelocitySpeedUp.x, speedLimit);
+        const absVeloX = Math.abs(ballVelocity.x);
         if (!isLeft)
+        {
             ballVelocity.x = -ballVelocity.x;
-    
-        const shouldSpawnSparks = (isLeft && ballVelocity.x > 1.6) || (!isLeft && -ballVelocity.x > 1.6);
-        if (shouldSpawnSparks) {
-            const count = Math.trunc(Math.abs(ballVelocity.x) * 15);
+            if (getLevelState() === LevelMode.LOCAL)
+                fillPowerBarRight(absVeloX * 25);
+        }
+        else
+            fillPowerBarLeft(absVeloX * 25);
+        if (absVeloX > 1.6) {
+            const count = Math.trunc(absVeloX * 15);
             sparks.spawnSparks(position, count);
         }
         ballVelocity.y += isLeft ? ballVelocitySpeedUp.y : -ballVelocitySpeedUp.y;
         ballLookAt();
+        checkBoostStatus(isLeft);
     }
-    
+
     let previousPosition = new THREE.Vector3(ball.position.x, ball.position.y, ball.position.z);
     function rotateBall()
     {
@@ -187,7 +259,10 @@ export function createBall(scene, callBack) {
     function updateBall(player1, player2)
     {
         // let nextPos = new THREE.Vector3(ball.position.x + ballVelocity.x, ball.position.y + ballVelocity.y);
-        ball.position.add(ballVelocity);
+        let modVelocity = new THREE.Vector3(ballVelocity.x, ballVelocity.y, ballVelocity.z);
+        modVelocity.x *= ballSpeedMult;
+        modVelocity.y *= ballSpeedMult;
+        ball.position.add(modVelocity);
 
         pointLight.position.copy(ball.position);
         sparks.updateSparks();
@@ -215,16 +290,19 @@ export function createBall(scene, callBack) {
         let radius = parseFloat(newRadius);
         ballStats.BALL_RADIUS = radius;
         const newBallGeometry = new THREE.SphereGeometry(radius, 32, 32);
+        const newBoostGeometry = new THREE.SphereGeometry(radius + 0.1, 32, 32);
         ball.geometry.dispose();
+        boostedBall.geometry.dispose();
         ball.geometry = newBallGeometry;
+        boostedBall.geometry = newBoostGeometry;
     }
 
     function changeBallSpeed(newSpeed)
     { 
         if (isNaN(newSpeed))
-            newSpeed = ballBaseSpeed;
-        ballVelocity.x = ballVelocity.x * parseFloat(newSpeed);
-        ballVelocity.y = ballVelocity.y * parseFloat(newSpeed);
+            ballSpeedMult = 1;
+        else
+            ballSpeedMult = newSpeed
     }
 
     resetVelocity();

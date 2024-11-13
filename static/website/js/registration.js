@@ -1,8 +1,9 @@
-import { createNewPlayer, resetPlayerStats } from "./playerManager";
-import { loadScores, removeAllScores } from "./scoreManager";
-import { getTranslation } from "./translate";
-import { navigateTo } from "./pages";
-import { addDisableButtonEffect, removeDisableButtonEffect } from "./main";
+import { createNewPlayer, playerStats, resetPlayerStats } from "./playerManager.js";
+import { loadScores, removeAllScores } from "./scoreManager.js";
+import { getTranslation } from "./translate.js";
+import { navigateTo } from "./pages.js";
+import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
+import { checkAccessToChat } from "./chat.js";
 
 const inputNick = document.getElementById('inputName');
 const inputFirstName = document.getElementById('inputFirstName');
@@ -15,46 +16,76 @@ const overlayPanel = document.getElementById('overlay');
 const logInButtons = document.getElementById('loginbuttons');
 const logOutButtons = document.getElementById('logoutbuttons');
 const profileButton = document.getElementById('mainProfileButton');
-let isRegistOpen = false;
+const passwordImg = document.getElementById('showPasswordButton');
+const passwordConfirmImg = document.getElementById('showConfirmPasswordButton');
 
-window.showRegistrationPanel = showRegistrationPanel;
-window.clickCancelRegister = clickCancelRegister;
-window.acceptRegistration = acceptRegistration;
-window.clickLogOut = clickLogOut;
+const registerErrorName = document.getElementById('registerErrorName');
+const registerErrorFirstName = document.getElementById('registerErrorFirstName');
+const registerErrorLastName = document.getElementById('registerErrorLastName');
+const registerErrorMail = document.getElementById('registerErrorMail');
+const registerErrorPassword = document.getElementById('registerErrorPassword');
+const registerErrorConfirmPassword = document.getElementById('registerErrorConfirmPassword');
+
+let isRegistOpen = false;
+let showPass = false;
+let showPassConfirm = false;
+
+
+document.getElementById('buttonLogOut').addEventListener('click', () => {
+    clickLogOut();
+});
+
+document.getElementById('registerConfirm').addEventListener('click', () => {
+    acceptRegistration();
+});
+
+document.getElementById('registerCancel').addEventListener('click', () => {
+    clickCancelRegister();
+});
+
+document.getElementById('buttonSignUp').addEventListener('click', () => {
+    showRegistrationPanel();
+});
+
+passwordImg.addEventListener('click', () => {
+    toggleShowPassword();
+});
+
+passwordConfirmImg.addEventListener('click', () => {
+    toggleShowPasswordConfirm();
+});
+
 
 function  resetRegistrationInputs()
 {
-    inputNick.value = "";
-    inputFirstName.value = "";
-    inputLastName.value = "";
-    inputMail.value = "";
-    inputPassword.value = "";
-    inputConfirmPassword.value = "";
-    document.getElementById('registerErrorName').innerText = "";
-    document.getElementById('registerErrorFirstName').innerText = "";
-    document.getElementById('registerErrorLastName').innerText = "";
-    document.getElementById('registerErrorMail').innerText = "";
-    document.getElementById('registerErrorPassword').innerText = "";
-    document.getElementById('registerErrorConfirmPassword').innerText = "";
+    inputConfirmPassword.value = inputPassword.value = inputMail.value = inputLastName.value = inputFirstName.value = inputNick.value = "";
+    registerErrorName.innerText = "";
+    registerErrorFirstName.innerText = "";
+    registerErrorLastName.innerText = "";
+    registerErrorMail.innerText = "";
+    registerErrorPassword.innerText = "";
+    registerErrorConfirmPassword.innerText = "";
+    showPassConfirm = showPass = false;
+    passwordConfirmImg.src = 'static/icons/eyeOpen.png';
+    passwordImg.src = 'static/icons/eyeOpen.png';
+    inputConfirmPassword.type = "password";
+    inputPassword.type = "password";
+    
 }
 
 export function clickCancelRegister()
 {
-    navigateTo('home');
+    registrationPanel.classList.remove('showReg');
+    setTimeout(() => {
+        navigateTo('home');
+    }, 300);
 }
 
 export function onRegistrationClose()
 {
     isRegistOpen = false;
     resetRegistrationInputs();
-
     overlayPanel.style.display = 'none';
-    if (registrationPanel.classList.contains('showReg')) {
-        registrationPanel.classList.remove('showReg');
-    }
-    setTimeout(() => {
-        registrationPanel.style.display = 'none';
-    }, 300);
 }
 
 export function showRegistrationPanel()
@@ -66,7 +97,6 @@ export function onRegistrationOpen()
 {
     isRegistOpen = true;
     overlayPanel.style.display = 'block';
-    registrationPanel.style.display = 'block';
     if (registrationPanel.classList.contains('showReg') === false) {
         setTimeout(() => {
             registrationPanel.classList.add('showReg');
@@ -81,65 +111,65 @@ function checkFields()
     let errors = 0;
     if (inputValue.trim() === "")
     {
-        document.getElementById('registerErrorName').innerText = getTranslation('errEmptyName');
+        registerErrorName.innerText = getTranslation('errEmptyName');
         errors++;
     }
     else
-        document.getElementById('registerErrorName').innerText = "";
+        registerErrorName.innerText = "";
     // check if the name is in the database and return false if it's in
     inputValue = inputFirstName.value;
     if (inputValue.trim() === "")
     {
-        document.getElementById('registerErrorFirstName').innerText = getTranslation('errEmptyFirstName');
+        registerErrorFirstName.innerText = getTranslation('errEmptyFirstName');
         errors++;
     }
     else
-        document.getElementById('registerErrorFirstName').innerText = "";
+        registerErrorFirstName.innerText = "";
     inputValue = inputLastName.value;
     if (inputValue.trim() === "")
     {
-        document.getElementById('registerErrorLastName').innerText = getTranslation('errEmptyLastName');
+        registerErrorLastName.innerText = getTranslation('errEmptyLastName');
         errors++;
     }
     else
-        document.getElementById('registerErrorLastName').innerText = "";
+        registerErrorLastName.innerText = "";
     inputValue = inputMail.value;
     if (inputValue.trim() === "")
     {
-        document.getElementById('registerErrorMail').innerText = getTranslation('errEmptyMail');
+        registerErrorMail.innerText = getTranslation('errEmptyMail');
         errors++;
     }
     else
-        document.getElementById('registerErrorMail').innerText = "";
+        registerErrorMail.innerText = "";
     if (!inputValue.includes('@'))
     {
-        document.getElementById('registerErrorMail').innerText = getTranslation('errBadMail');
+        registerErrorMail.innerText = getTranslation('errBadMail');
         errors++;
     }
     else
-        document.getElementById('registerErrorMail').innerText = "";
+        registerErrorMail.innerText = "";
     // check if the mail is in the database and return false if it's in
     inputValue = inputPassword.value;
     if (inputValue.trim() === "")
     {
-        document.getElementById('registerErrorPassword').innerText = getTranslation('errBadPassword');
+        registerErrorPassword.innerText = getTranslation('errEmptyPassword');
         errors++;
     }
     else
-        document.getElementById('registerErrorPassword').innerText = "";
+        registerErrorPassword.innerText = "";
     inputValue = inputConfirmPassword.value;
     if (inputValue.trim() === "")
     {
-        document.getElementById('registerErrorConfirmPassword').innerText = getTranslation('errBadPasswordConfirm');
+        registerErrorConfirmPassword.innerText = getTranslation('errEmptyPasswordConfirm');
         errors++;
     }
     else if (inputPassword.value != inputConfirmPassword.value)
     {
-        document.getElementById('registerErrorConfirmPassword').innerText = getTranslation('errDifferentPasswords');
+        registerErrorConfirmPassword.innerText = getTranslation('errDifferentPasswords');
         errors++;
     }
     else
-        document.getElementById('registerErrorConfirmPassword').innerText = "";
+        registerErrorConfirmPassword.innerText = "";
     if (errors > 0)
         return false;
     return true;
@@ -153,6 +183,7 @@ export function acceptRegistration()
     clickCancelRegister();
     replaceLogInButtons();
     removeDisableButtonEffect(profileButton);
+    checkAccessIfRegistered();
 }
 
 function replaceLogInButtons()
@@ -173,6 +204,7 @@ export function clickLogOut()
     resetPlayerStats();
     addDisableButtonEffect(profileButton);
     removeAllScores();
+    checkAccessIfRegistered();
 }
 
 export function isRegistrationOpen()
@@ -180,5 +212,65 @@ export function isRegistrationOpen()
     return isRegistOpen;
 }
 
+function toggleShowPassword()
+{
+    showPass = !showPass;
+    if (showPass)
+    {
+        passwordImg.src = 'static/icons/eyeClose.png';
+        inputPassword.type = "text";
+    }
+    else
+    {
+        passwordImg.src = 'static/icons/eyeOpen.png';
+        inputPassword.type = "password";
+    }
+}
+
+function toggleShowPasswordConfirm()
+{
+    showPassConfirm = !showPassConfirm;
+    if (showPassConfirm)
+    {
+        passwordConfirmImg.src = 'static/icons/eyeClose.png';
+        inputConfirmPassword.type = "text";
+    }
+    else
+    {
+        passwordConfirmImg.src = 'static/icons/eyeOpen.png';
+        inputConfirmPassword.type = "password";
+    }
+}
+
+function checkAccessModes()
+{
+    if (playerStats.isRegistered)
+    {
+        removeDisableButtonEffect(document.getElementById('modeDuelButton'));
+        removeDisableButtonEffect(document.getElementById('modeTournamentButton'));
+        document.getElementById('modesOnlineHeader').classList.remove('disabledText');
+        document.getElementById('modeDuelText').classList.remove('disabledText');
+        document.getElementById('tournamentText').classList.remove('disabledText');
+    }
+    else
+    {
+        addDisableButtonEffect(document.getElementById('modeDuelButton'));
+        addDisableButtonEffect(document.getElementById('modeTournamentButton'));
+        document.getElementById('modesOnlineHeader').classList.add('disabledText');
+        document.getElementById('modeDuelText').classList.add('disabledText');
+        document.getElementById('tournamentText').classList.add('disabledText');
+    }
+}
+
+export function checkAccessIfRegistered()
+{
+    checkAccessToChat();
+    checkAccessModes();
+}
+
 addDisableButtonEffect(profileButton);
 resetRegistrationInputs();
+
+setTimeout(() => {
+    checkAccessIfRegistered();
+}, 0);

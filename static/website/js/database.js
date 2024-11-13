@@ -1,5 +1,5 @@
-import { createPlayerStats } from "./playerManager";
-import { MatchResult } from "./scoreManager";
+import { createPlayerStats } from "./playerManager.js";
+import { MatchResult } from "./scoreManager.js";
 
 export let fakeDatabase = [];
 function createFakeDatabase()

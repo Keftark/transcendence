@@ -1,18 +1,18 @@
-import { checkEscapeKey } from "./main";
-import { eventsListener } from "./levelLocal";
+import { checkEscapeKey } from "./main.js";
+import { gameEventsListener } from "./levelLocal.js";
+import { chatIsFocused } from "./chat.js";
 
 function mainMenuEvents(event)
 {
     const focusableElements = document.querySelectorAll('button, input, a, textarea, select');
     const focusable = Array.prototype.slice.call(focusableElements);
     const currentIndex = focusable.indexOf(document.activeElement);
-    
-    if (event.key === 'ArrowDown') {
+    if (event.key === 'ArrowDown' && !chatIsFocused) {
         document.body.classList.add('hide-cursor');
         event.preventDefault();
         const nextIndex = (currentIndex + 1) % focusable.length;
         focusable[nextIndex].focus();
-    } else if (event.key === 'ArrowUp') {
+    } else if (event.key === 'ArrowUp' && !chatIsFocused) {
         document.body.classList.add('hide-cursor');
         event.preventDefault();
         const prevIndex = (currentIndex - 1 + focusable.length) % focusable.length;
@@ -46,5 +46,5 @@ export function addMainEvents()
 }
 
 
-document.addEventListener('keydown',  eventsListener);
+document.addEventListener('keydown',  gameEventsListener);
 document.addEventListener('keydown',  escapeEvent);

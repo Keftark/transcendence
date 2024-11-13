@@ -1,5 +1,5 @@
 /*------------------------------ Side Menu ------------------------------*/
-#menuPanel {
+#gameMenuPanel {
     display: none;
     position: absolute;
     top: 20px;
@@ -13,7 +13,7 @@
     transition: transform 0.3s ease;
 }
 
-#menuPanel.show {
+#gameMenuPanel.show {
     transform: translateX(0);
 }
 
@@ -38,7 +38,7 @@
     margin-bottom: 0px;
 }
 
-.menuButton {
+.gameMenuButton {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -55,7 +55,7 @@
     font-size: 20px;
 }
 
-.menuButton:hover {
+.gameMenuButton:hover {
     opacity: 0.8;
 }
 

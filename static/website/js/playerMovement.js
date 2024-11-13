@@ -1,10 +1,14 @@
-import { balle } from "./levelLocal";
-import { getLevelState } from "./main";
-import { LevelMode } from "./variables";
+import { balle, getPlayer } from "./levelLocal.js";
+import { getLevelState } from "./main.js";
+import { LevelMode } from "./variables.js";
 
 const moveSpeed = 300;
 let onKeyUpFunction = null;
 let onKeyDownFunction = null;
+let isBoostedLeft = false;
+let isBoostedRight = false;
+let botTargetPosition = 0;
+const botDelay = 1000;
 
 export function addPlayerMovementKeyDown(event)
 {
@@ -14,6 +18,39 @@ export function addPlayerMovementKeyDown(event)
 export function addPlayerMovementKeyUp(event)
 {
     onKeyUpFunction(event);
+}
+
+export function boostPlayer(playerNbr)
+{
+    if (playerNbr === 0)
+        isBoostedLeft = true;
+    else
+        isBoostedRight = true;
+    getPlayer(playerNbr).children[0].visible = true;
+    // show a model around the player
+}
+
+export function stopBoostPlayer(playerNbr)
+{
+    if (playerNbr === 0)
+        isBoostedLeft = false;
+    else
+        isBoostedRight = false;
+    getPlayer(playerNbr).children[0].visible = false;
+    // hide the model
+}
+
+export function getBoostedStatus(playerNbr)
+{
+    if (playerNbr === 0)
+        return isBoostedLeft;
+    else
+    return isBoostedRight;
+}
+
+export function resetBoostedStatus()
+{
+    isBoostedLeft = isBoostedRight = false;
 }
 
 const myInput = document.getElementById('inputChat');
@@ -31,9 +68,9 @@ export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
     {
         if (document.activeElement === myInput)
             return;
-        if (event.key === 'w')
+        if (event.key === 'w' && isLocal)
             moveUp1 = isTrue;
-        else if (event.key === 's')
+        else if (event.key === 's' && isLocal)
             moveDown1 = isTrue;
         else if (event.key === 'ArrowUp' && isLocal)
             moveUp2 = isTrue;
@@ -76,11 +113,19 @@ export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
             player2.position.y = lerp(playerposy, playerposy - adjustedSpeed, 0.1);
     }
 
+    function moveBot()
+    {
+        if (balle != null)
+            botTargetPosition = balle.position.y;
+    }
+
     function checkBotMovements(adjustedSpeed)
     {
         let playerposy = player2.position.y;
         if (playerposy < boundYMax && playerposy > boundYMin)
-            player2.position.y = lerp(playerposy, balle.position.y, 0.02 * adjustedSpeed); // 0.02 = les reflexes du bot. voir pour changer ca en fonction de la difficulte
+        {
+            player2.position.y = lerp(playerposy, botTargetPosition, 0.013 * adjustedSpeed); // 0.02 = les reflexes du bot. voir pour changer ca en fonction de la difficulte
+        }
         if (player2.position.y > boundymax)
             player2.position.y = boundymax;
         else if (player2.position.y < boundymin)
@@ -100,5 +145,7 @@ export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
     document.addEventListener('keydown', addPlayerMovementKeyDown);
     document.addEventListener('keyup', addPlayerMovementKeyUp);
 
+    if (getLevelState() === LevelMode.ADVENTURE)
+        setInterval(moveBot, botDelay);
     return { updatePlayers };
 }

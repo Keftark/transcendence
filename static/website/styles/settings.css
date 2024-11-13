@@ -2,24 +2,39 @@
 #settingsPanel {
     display: none;
     position: fixed;
+    flex-direction: column;
+    justify-content:space-around;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 90%;
+    width: calc(15vw + 5vh);
     max-width: 400px;
-    background-color:rgb(1, 56, 56);
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 20px;
+    min-width: 140px;
+    height: 45vh;
+    min-height: 200px;
+    padding: 2vh;
     z-index: 3;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-#optionsLanguages, #optionsColors
+#panelSettingsImg
+{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    scale: 1.2;
+    top: 0;
+    left: 0;
+    margin: 0;
+    z-index: -1;
+    backdrop-filter: blur(5px);
+}
+
+#optionsLanguages, #optionsColors, #cameraType
 {
     display: flex;
     justify-content: left;
     align-items: center;
+    gap: 0.3vw;
 }
 
 #closeSettingsButton:hover, #closeProfileButton:hover, #seeMatchesButton:hover
@@ -29,23 +44,11 @@
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.815);
 }
 
-#seeMatchesButton.open
-{
-    border: 2px solid rgb(1, 168, 163);
-    background-color: rgb(0, 142, 137);
-}
-
-#seeMatchesButton.open:hover
-{
-    border: 2px solid rgb(1, 168, 163);
-    background-color: rgba(0, 255, 255, 0.567);
-}
-
-#color1Button, #color2Button, #color3Button, #color4Button, #color5Button {
-    margin: 3px;
-    margin-bottom: 10px;
-    width: 64px;
-    height: 64px;
+#color1Button, #color2Button, #color3Button, #color4Button, #color5Button, #color6Button {
+    width: 4.5vh;
+    height: 4.5vh;
+    min-height: 18px;
+    min-width: 18px;
     background-color: white;
     border: none;
     position: relative;
@@ -56,7 +59,8 @@
 #color2Button:hover::after, 
 #color3Button:hover::after, 
 #color4Button:hover::after, 
-#color5Button:hover::after {
+#color5Button:hover::after, 
+#color6Button:hover::after {
     content: '';
     position: absolute;
     top: -2px;
@@ -68,16 +72,9 @@
     z-index: -1;
 }
 
-#perspectiveButton:hover,
-#orthographicButton:hover
-{
-    border: 2px solid #00ff15bd;
-}
-
-
 #color2Button
 {
-    background-color: #9e009e;
+    background-color: #ff00ff;
 }
 
 #color3Button
@@ -87,7 +84,7 @@
 
 #color4Button
 {
-    background-color: #ac0000;
+    background-color: #ff0000;
 }
 
 #color5Button
@@ -95,40 +92,23 @@
     background-color: #08ec00;
 }
 
-#cameraType
+#color6Button
 {
-    gap: 10px;
-}
-
-#perspectiveButton, #orthographicButton
-{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 68px;
-    height: 68px;
-    border: none;
-    background:none;
-}
-
-#perspectiveButton img,
-#orthographicButton img
-{
-    width: 64px;
-    height: 64px;
+    background-color: #00ffff;
 }
 
 #lang1Button,
 #lang2Button {
-    width: 80px;
-    height: 45px;
+    width: 5.5vh;
+    height: 3.5vh;
+    min-height: 18px;
+    min-width: 28px;
     display: flex;
-    justify-content: left;
+    justify-content: center;
     align-items: center;
     background-color: rgba(255, 255, 255, 0);
     border: none;
     padding: 3px;
-    margin: 0px;
     position: relative;
     transition: box-shadow 0.3s;
 }
@@ -136,8 +116,10 @@
 #lang1Button img,
 #lang2Button img
 {
-    width: 80px;
-    height: 41px;
+    width: 5.5vh;
+    min-height: 16px;
+    min-width: 24px;
+    height: 3.2vh;
 }
 
 #lang1Button:hover::after,
@@ -154,16 +136,30 @@
     z-index: -1;
 }
 
-#cameraType
+#perspectiveButton, #orthographicButton
 {
     display: flex;
-    margin-left: 4px;
+    justify-content: center;
+    align-items: center;
+    width: 4.5vh;
+    height: 4.5vh;
+    min-height: 18px;
+    min-width: 18px;
+    border: none;
+    background:none;
 }
 
-#cameraTypeCheckbox
+#perspectiveButton img,
+#orthographicButton img
 {
-    transform: scale(2);
-    margin-right: 16px;
+    width: 4.3vh;
+    height: 4.3vh;
+}
+
+#perspectiveButton:hover,
+#orthographicButton:hover
+{
+    border: 2px solid #00ff15bd;
 }
 
 .applyBorderOptions

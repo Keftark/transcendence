@@ -1,12 +1,9 @@
-import * as THREE from 'three';
-import { addPlayerMovementKeyDown, addPlayerMovementKeyUp } from "./playerMovement";
+import * as THREE from 'https://unpkg.com/three@0.146.0/build/three.module.js';
+import { addPlayerMovementKeyDown, addPlayerMovementKeyUp } from "./playerMovement.js";
 
 function hideUiElements()
 {
-    document.getElementById('menuPanel').style.display = 'none';
-    document.getElementById('controlsP1LocalImg').style.display = 'none';
-    document.getElementById('controlsP2LocalImg').style.display = 'none';
-    document.getElementById('controlsAdventureImg').style.display = 'none';
+    document.getElementById('gameMenuPanel').style.display = 'none';
 }
 
 export function unloadScene(scene, renderer, animationId)

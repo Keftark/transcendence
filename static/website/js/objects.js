@@ -1,8 +1,7 @@
-import * as THREE from 'three';
-import { PLAYER_HEIGHT, PLAYER_RADIUS, BOUNDARY } from "./levelLocal";
-import { getLevelState } from "./main";
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { LevelMode } from './variables';
+import * as THREE from 'https://unpkg.com/three@0.146.0/build/three.module.js';
+import { PLAYER_HEIGHT, PLAYER_RADIUS, BOUNDARY } from "./levelLocal.js";
+import { getLevelState } from "./main.js";
+import { LevelMode } from './variables.js';
 
 let wallLeft;
 let wallRight;
@@ -66,15 +65,36 @@ export function setObjectRandomPosition(object)
     object.position.set(posX, posY, 0);
 }
 
+
+function createPlayerBoostModel(textureLoader)
+{
+    const boostTexture = textureLoader.load('static/mat/ballBoost.png');
+    boostTexture.colorSpace = THREE.SRGBColorSpace;
+    const boostMaterial = new THREE.MeshStandardMaterial({ 
+        map:boostTexture,
+        transparent: true,
+        emissive: new THREE.Color(0xffff00),
+        emissiveIntensity: 10,
+        opacity: 1
+    });
+    const boostGeometry = new THREE.CylinderGeometry(PLAYER_RADIUS + 0.1, PLAYER_RADIUS + 0.1, PLAYER_HEIGHT + 0.1, 8, 1, false);
+    const model = new THREE.Mesh(boostGeometry, boostMaterial);
+
+    model.visible = false;
+    return model;
+}
+
 export function createPlayers(scene, textureLoader)
-{   
-    const cylinderTexture = textureLoader.load('mat/player1.jpg'); // changer la texture en fonction du skin que le joueur choisit
+{
+    const cylinderTexture = textureLoader.load('static/mat/player1.jpg'); // changer la texture en fonction du skin que le joueur choisit
     cylinderTexture.colorSpace = THREE.SRGBColorSpace;
     const material = new THREE.MeshStandardMaterial({ map: cylinderTexture });
     const geometry = new THREE.CylinderGeometry(PLAYER_RADIUS, PLAYER_RADIUS, PLAYER_HEIGHT, 8, 1, false);
 
     const player1 = new THREE.Mesh(geometry, material);
     const player2 = new THREE.Mesh(geometry, material);
+    player1.add(createPlayerBoostModel(textureLoader));
+    player2.add(createPlayerBoostModel(textureLoader));
     scene.add(player1);
     scene.add(player2);
     return [player1, player2];

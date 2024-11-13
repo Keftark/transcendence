@@ -1,43 +1,45 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <head>
+<head>
+    <meta charset="utf-8">
     <title>Untitled Game</title>
-    <link rel="stylesheet" href="{% static 'website/styles/styles.css' %}">
-    <link rel="stylesheet" href="{% static 'website/styles/mainMenu.css' %}">
-    <link rel="stylesheet" href="{% static 'website/styles/menu.css' %}">
-    <link rel="stylesheet" href="{% static 'website/styles/anims.css' %}">
-    <link rel="stylesheet" href="{% static 'website/styles/chat.css' %}">
-    <link rel="stylesheet" href="{% static 'website/styles/registration.css' %}">
-    <link rel="stylesheet" href="{% static 'website/styles/duelPanel.css' %}">
-    <link rel="stylesheet" href="{% static 'website/styles/rulesPanel.css' %}">
-    <link rel="stylesheet" href="{% static 'website/styles/victory.css' %}">
-    <link rel="stylesheet" href="{% static 'website/styles/scores.css' %}">
-    <link rel="stylesheet" href="{% static 'website/styles/gameUI.css' %}">
-    <link rel="stylesheet" href="{% static 'website/styles/modeSelection.css' %}">
-    <link rel="stylesheet" href="{% static 'website/styles/profile.css' %}">
-    <link rel="stylesheet" href="{% static 'website/styles/settings.css' %}">
-    <link rel="icon" type="image/png" href="{% static 'website/favicon.png' %}">
+    <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
+    <link rel="stylesheet" href="{% static './styles/mainMenu.css' %}">
+    <link rel="stylesheet" href="{% static './styles/menu.css' %}">
+    <link rel="stylesheet" href="{% static './styles/anims.css' %}">
+    <link rel="stylesheet" href="{% static './styles/chat.css' %}">
+    <link rel="stylesheet" href="{% static './styles/registration.css' %}">
+    <link rel="stylesheet" href="{% static './styles/duelPanel.css' %}">
+    <link rel="stylesheet" href="{% static './styles/rulesPanel.css' %}">
+    <link rel="stylesheet" href="{% static './styles/victory.css' %}">
+    <link rel="stylesheet" href="{% static './styles/scores.css' %}">
+    <link rel="stylesheet" href="{% static './styles/gameUI.css' %}">
+    <link rel="stylesheet" href="{% static './styles/modeSelection.css' %}">
+    <link rel="stylesheet" href="{% static './styles/profile.css' %}">
+    <link rel="stylesheet" href="{% static './styles/settings.css' %}">
+    <link rel="stylesheet" href="{% static './styles/signIn.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
 </head>
 <body>
-    <meta http-equiv="Content-Type" Content-type="text/js" content="application/javascript; charset=utf-8" />
-    <script type="module" src="{% static 'pages.js' %}"></script>
-    <script type="module" src="{% static 'main.js' %}"></script>
-    <script type="module" src="{% static 'menu.js' %}"></script>
-    <script type="module" src="{% static 'translate.js' %}"></script>
-    <script type="module" src="{% static 'levelLocal.js' %}"></script>
-    <script type="module" src="{% static 'vars.js' %}"></script>
-    <script type="module" src="{% static 'eventsListener.js' %}"></script>
-    <script type="module" src="{% static 'chat.js' %}"></script>
-    <script type="module" src="{% static 'cheats.js' %}"></script>
-    <script type="module" src="{% static 'registration.js' %}"></script>
-    <script type="module" src="{% static 'duelPanel.js' %}"></script>
-    <script type="module" src="{% static 'levelSpace.js' %}"></script>
-    <script type="module" src="{% static 'levelCave.js' %}"></script>
-    <script type="module" src="{% static 'timer.js' %}"></script>
-    <script type="module" src="{% static 'variables.js' %}"></script>
-    <script type="module" src="{% static 'rules.js' %}"></script>
+    <script type="module" src="{% static 'js/pages.js' %}"></script>
+    <script type="module" src="{% static 'js/menu.js' %}"></script>
+    <script type="module" src="{% static 'js/translate.js' %}"></script>
+    <script type="module" src="{% static 'js/levelLocal.js' %}"></script>
+    <script type="module" src="{% static 'js/vars.js' %}"></script>
+    <script type="module" src="{% static 'js/eventsListener.js' %}"></script>
+    <script type="module" src="{% static 'js/chat.js' %}"></script>
+    <script type="module" src="{% static 'js/cheats.js' %}"></script>
+    <script type="module" src="{% static 'js/registration.js' %}"></script>
+    <script type="module" src="{% static 'js/duelPanel.js' %}"></script>
+    <script type="module" src="{% static 'js/levelSpace.js' %}"></script>
+    <script type="module" src="{% static 'js/levelCave.js' %}"></script>
+    <script type="module" src="{% static 'js/timer.js' %}"></script>
+    <script type="module" src="{% static 'js/variables.js' %}"></script>
+    <script type="module" src="{% static 'js/rules.js' %}"></script>
+    <script type="module" src="{% static 'js/powerUp.js' %}"></script>
+    <script type="module" src="{% static 'js/main.js' %}"></script>
+    <script type="module" src="{% static 'js/deathSphere.js' %}"></script>
 
     <div id="game-local" class="page"></div>
     <div id="game-ai" class="page"></div>
@@ -45,7 +47,7 @@
     <div id="header-title">ft_transcendence</div>
 
     <!------------------------------ Main Menu UI ------------------------------>
-
+    <div id="home" class="page">
         <div class="mainMenuPanel" id="mainMenuPanel">
             <div class="mainPanel" id="mainPanel">
                 <img id="homeImg" src="">
@@ -58,12 +60,13 @@
 
         <!------------------------------ Main Menu Log In Buttons ------------------------------>
         <div id="loginbuttons">
-            <button id="buttonSignIn" onclick="showRegistrationPanel()"></button>
-            <button id="buttonLogIn" onclick="clickCancelRegister()"></button>
+            <button id="buttonSignUp"></button>
+            <button id="buttonLogIn"></button>
         </div>
         <div id="logoutbuttons">
-            <button id="buttonLogOut" onclick="clickLogOut()"></button>
+            <button id="buttonLogOut"></button>
         </div>
+    </div>
     <!------------------------------ Mode Selection ------------------------------>
     <div id="modes" class="page">
         <h2 id="modeSelectionText"></h2>
@@ -71,22 +74,22 @@
             <div id="modesLocal">
                 <h1 id="modesLocalHeader"></h1>
                 <button class="modeSelectionButton" id="modeLocalButton">
-                    <img id="versusImg" src="{% static 'website/images/versusImage.png' %}">
+                    <img id="versusImg" src="{% static 'images/versusImage.png' %}">
                 </button>
-                <p id="modeLocal"></p>
+                <p id="1vs1"></p>
                 <button class="modeSelectionButton" id="modeComputerButton">
-                    <img id="vsIAImg" src="{% static 'website/images/vsComputerImage.png' %}">
+                    <img id="vsIAImg" src="{% static 'images/vsComputerImage.png' %}">
                 </button>
                 <p id="modeComputer"></p>
             </div>
             <div id="modesOnline">
                 <h1 id="modesOnlineHeader"></h1>
-                <button class="modeSelectionButton" id="modeLocalButton">
-                    <img id="duelImg" src="{% static 'website/images/duelImage.png' %}">
+                <button class="modeSelectionButton" id="modeDuelButton">
+                    <img id="duelImg" src="{% static 'images/duelImage.png' %}">
                 </button>
                 <p id="modeDuelText"></p>
-                <button class="modeSelectionButton" id="modeComputerButton">
-                    <img id="tournamentImg" src="{% static 'website/images/tournamentImage.png' %}">
+                <button class="modeSelectionButton" id="modeTournamentButton">
+                    <img id="tournamentImg" src="{% static 'images/tournamentImage.png' %}">
                 </button>
                 <p id="tournamentText"></p>
             </div>
@@ -106,10 +109,10 @@
                 <h1 id="rulesArenaText"></h1>
                 <div id="arenas">
                     <button class="arena" id="rulesArenaTypeCave" onclick="selectArena(0)">
-                        <img src="{% static 'website/images/arenaCave.png' %}">
+                        <img src="{% static 'images/arenaCave.png' %}">
                     </button>
                     <button class="arena" id="rulesArenaTypeSpace" onclick="selectArena(1)">
-                        <img src="{% static 'website/images/arenaSpace.png' %}">
+                        <img src="{% static 'images/arenaSpace.png' %}">
                     </button>
                 </div>
             </div>
@@ -126,25 +129,28 @@
 
     <!------------------------------ Duel Panel ------------------------------>
     <div id="duel" class="subpage">
+        <h2 id="duelHeaderText"></h2>
+        <img id="thunderImg" src="{% static 'images/thunder.png' %}">
+        <img id="vsImg" src="{% static 'images/vs.png' %}">
         <div id="duelPanel">
             <div id="playersDuel">
                 <div id="player1Duel">
-                    <p id="player1Name"></p>
-                    <img id="player1ImgDuel">
-                    <p id=""></p>
+                    <p id="player1NameDuel"></p>
+                    <img id="player1ImgDuel" src="{% static 'icons/playerNoImg.png' %}">
+                    <p id="fakewaiting"> </p>
+                    <button id="ready1DuelButton"></button>
                 </div>
                 <div id="player2Duel">
-                    <p id="player2Name"></p>
-                    <img id="player2ImgDuel">
+                    <p id="player2NameDuel"></p>
+                    <img id="player2ImgDuel" src="{% static 'icons/playerNoImg.png' %}">
                     <p id="waitingForPlayer"></p>
+                    <button id="ready2DuelButton"></button>
                 </div>
             </div>
             <div id="buttonsDuel">
                 <button id="startDuelButton"></button>
                 <button id="leaveDuelButton"></button>
             </div>
-            <img id="thunderImg" src="{% static 'website/images/thunder.png' %}">
-            <img id="vsImg" src="{% static 'website/images/vs.png' %}">
         </div>
     </div>
 
@@ -163,39 +169,57 @@
             <div id="playername-right"></div>
         </div>
     </div>
+    <div id="controlsLeft">
+        <div id="boostBarUILeft">
+            <div id="boostBarLeft">
+                <img id="boostBarBgLeft" src="{% static 'images/boostBarBg.png' %}" alt="">
+                <img id="boostBarFillLeft" src="{% static 'images/boostBarFill.png' %}" alt="">
+            </div>
+            <p id="pressBoostTextLeft"></p>
+        </div>
+        <img src="{% static 'images/controlsP1Local.png' %}" id="controlsP1LocalImg" />
+        <img src="{% static 'images/controlsAdventure.png' %}" id="controlsAdventureImg" />
+    </div>
+    <div id="controlsRight">
+        <div id="boostBarUIRight">
+            <div id="boostBarRight">
+                <img id="boostBarBgRight" src="{% static 'images/boostBarBg.png' %}" alt="">
+                <img id="boostBarFillRight" src="{% static 'images/boostBarFill.png' %}" alt="">
+            </div>
+            <p id="pressBoostTextRight"></p>
+        </div>
+        <img src="{% static 'images/controlsP2Local.png' %}" id="controlsP2LocalImg" />
+    </div>
 
     <!------------------------------ In Game Side Menu Panel ------------------------------>
-    <div id="menuPanel">
+    <div id="gameMenuPanel">
         <div id="menu-label">
             <span>M</span>
             <span>E</span>
             <span>N</span>
             <span>U</span>
         </div>
-        <button class="menuButton" id="profileButton"></button>
-        <button class="menuButton" id="settingsButton"></button>
-        <button class="menuButton" id="mainButton"></button>
-    </div>
-    <div id="controls">
-        <img src="{% static 'website/images/controlsP1Local.png' %}" id="controlsP1LocalImg" />
-        <img src="{% static 'website/images/controlsP2Local.png' %}" id="controlsP2LocalImg" />
-        <img src="{% static 'website/images/controlsAdventure.png' %}" id="controlsAdventureImg" />
+        <button class="gameMenuButton" id="profileButton"></button>
+        <button class="gameMenuButton" id="settingsButton"></button>
+        <button class="gameMenuButton" id="reinitLevelButton"></button>
+        <button class="gameMenuButton" id="mainButton"></button>
     </div>
     <div id="overlay"></div>
+    <!------------------------------ Profile Panel ------------------------------>
     <div id="matchListPanel">
         <div id="matchHistoryContainer"></div>
     </div>
-    <!------------------------------ Profile Panel ------------------------------>
     <div id="profilePanel">
+        <img id="panelProfileImg" src="{% static 'images/panel.png' %}" alt="">
         <h2 id="nameProfile"></h2>
         <p id="firstNameProfile"></p>
         <p id="lastNameProfile"></p>
         <div id="profileContainer">
-            <img id="mailImg" src="{% static 'website/icons/mail.png' %}">
+            <img id="mailImg" src="{% static 'icons/mail.png' %}">
             <p id="mailProfile"></p>
         </div>
         <div id="profileContainer">
-            <img id="victoriesImg" src="{% static 'website/icons/trophy.png' %}">
+            <img id="victoriesImg" src="{% static 'icons/trophy.png' %}">
             <p id="victories"></p>
         </div>
         <button id="seeMatchesButton" onclick="showMatchList()"></button>
@@ -204,31 +228,33 @@
 
     <!------------------------------ Settings Panel ------------------------------>
     <div id="settingsPanel">
+        <img id="panelSettingsImg" src="{% static 'images/panel.png' %}" alt="">
         <h2 id="settingsHeader"></h2>
         <p id="colors"></p>
         <div id="optionsColors">
             <button class="colorize-btn" id="color1Button" data-color="white" data-index="0"></button>
-            <button class="colorize-btn" id="color2Button" data-color="#9e009e" data-index="1"></button>
+            <button class="colorize-btn" id="color2Button" data-color="#ff00ff" data-index="1"></button>
             <button class="colorize-btn" id="color3Button" data-color="#ffbb00" data-index="2"></button>
-            <button class="colorize-btn" id="color4Button" data-color="#ac0000" data-index="3"></button>
+            <button class="colorize-btn" id="color4Button" data-color="#ff0000" data-index="3"></button>
             <button class="colorize-btn" id="color5Button" data-color="#08ec00" data-index="4"></button>
+            <button class="colorize-btn" id="color6Button" data-color="#00ffff" data-index="5"></button>
         </div>
         <p id="language"></p>
         <div id="optionsLanguages">
             <button class="language" id="lang1Button" data-language="en" data-lang="0">
-                <img src="{% static 'website/icons/lang-en.png' %}" id="lang-icon" />
+                <img src="{% static 'icons/lang-en.png' %}" id="lang-icon" />
             </button>
             <button class="language" id="lang2Button" data-language="fr" data-lang="1">
-                <img src="{% static 'website/icons/lang-fr.png' %}" id="lang-icon" />
+                <img src="{% static 'icons/lang-fr.png' %}" id="lang-icon" />
             </button>
         </div>
         <p id="cameraTypeHeader"></p>
         <div id="cameraType">
             <button id="perspectiveButton">
-                <img src="{% static 'website/icons/cameraPerspective.png' %}" alt="">
+                <img src="{% static 'icons/cameraPerspective.png' %}" alt="">
             </button>
             <button id="orthographicButton">
-                <img src="{% static 'website/icons/cameraOrthographic.png' %}" alt="">
+                <img src="{% static 'icons/cameraOrthographic.png' %}" alt="">
             </button>
         </div>
         <button id="closeSettingsButton"></button>
@@ -237,22 +263,27 @@
     <!------------------------------ Victory Panel ------------------------------>
     <div id="victory">
         <div id="victoryPanel">
+            <img id="victoryImg" alt="">
             <h1 id="victoryText"></h1>
-            <button id="closeVictoryButton" onclick="closeVictoryScreen()"></button>
+            <button id="closeVictoryButton"></button>
         </div>
     </div>
 
     <!------------------------------ Chat Box ------------------------------>
     <div class="chat-box" id="chatBox">
         <button id="toggleSizeButton">
-            <img src="{% static 'website/icons/shrink.png' %}" id="toggleIcon"/>
+            <img src="{% static 'icons/shrink.png' %}" id="toggleIcon"/>
         </button>
-        <div class="messages" id="messages"></div>
+        <div class="messages" id="messages">
+        </div>
         <div class="input-container" id="inputContainer">
             <input type="text" id="inputChat" placeholder="...">
             <button id="sendButton">
-                <img src="{% static 'website/icons/send.png' %}" class="button-send-img" />
+                <img src="{% static 'icons/send.png' %}" class="button-send-img" />
             </button>
+        </div>
+        <div id="overlayChat">
+            <p id="connectToChat"></p>
         </div>
     </div>
     <div id="chatContextMenu">
@@ -270,40 +301,73 @@
                 <h1 class="regItem" id="registerHeader"></h1>
                 <div class="regItem">
                     <p id="registerName"></p>
-                    <input type="text" id="inputName" placeholder="...">
+                    <input type="text" id="inputName" maxlength="20" placeholder="...">
                     <p class="registerErrorMessage" id="registerErrorName"></p>
                 </div>
                 <div class="regItem">
                     <p id="registerFirstName"></p>
-                    <input type="text" id="inputFirstName" placeholder="...">
+                    <input type="text" id="inputFirstName" maxlength="20" placeholder="...">
                     <p class="registerErrorMessage" id="registerErrorFirstName"></p>
                 </div>
                 <div class="regItem">
                     <p id="registerLastName"></p>
-                    <input type="text" id="inputLastName" placeholder="...">
+                    <input type="text" id="inputLastName" maxlength="20" placeholder="...">
                     <p class="registerErrorMessage" id="registerErrorLastName"></p>
                 </div>
                 <div class="regItem">
                     <p id="registerMail"></p>
-                    <input type="text" id="inputMail" placeholder="...">
+                    <input type="text" id="inputMail" maxlength="20" placeholder="...">
                     <p class="registerErrorMessage" id="registerErrorMail"></p>
                 </div>
                 <div class="regItem">
                     <p id="registerPassword"></p>
-                    <input type="password" id="inputPassword" placeholder="...">
+                    <div id="passwordDiv">
+                        <input type="password" id="inputPassword" maxlength="20" placeholder="...">
+                        <img id="showPasswordButton" src="{% static 'icons/eyeOpen.png' %}" alt="">
+                    </div>
                     <p class="registerErrorMessage" id="registerErrorPassword"></p>
                 </div>
                 <div class="regItem">
                     <p id="registerConfirmPassword"></p>
-                    <input type="password" id="inputConfirmPassword" placeholder="...">
-                    <p class="registerErrorMessage" id="registerErrorConfirmPassword"></p>
+                    <div id="confirmPasswordDiv">
+                        <input type="password" id="inputConfirmPassword" maxlength="20" placeholder="...">
+                        <img id="showConfirmPasswordButton" src="{% static 'icons/eyeOpen.png' %}" alt="">   
+                    </div>
+                    <p class="registerErrorMessage" id="registerErrorConfirmPassword"></p> 
                 </div>
                 <div id="regButtons">
-                    <button class="regButton" id="registerConfirm" onclick="acceptRegistration()"></button>
-                    <button class="regButton" id="registerCancel" onclick="clickCancelRegister()"></button>
+                    <button class="regButton" id="registerConfirm"></button>
+                    <button class="regButton" id="registerCancel"></button>
                 </div>
             </div>
         </div>
     </div>
+
+    <!------------------------------ Sign In Panel ------------------------------>
+    <div id="signIn" class="subpage">
+        <div id="signinpanel">
+            <div id="signInPanel">
+                <h1 class="regItem" id="signInHeader"></h1>
+                <div class="regItem">
+                    <p id="signInName"></p>
+                    <input type="text" id="inputSignInName" maxlength="20" placeholder="...">
+                    <p class="registerErrorMessage" id="signInErrorName"></p>
+                </div>
+                <div class="regItem">
+                    <p id="signInPassword"></p>
+                    <div id="passwordSignInDiv">
+                        <input type="password" id="inputSignInPassword" maxlength="20" placeholder="...">
+                        <img id="showSignInPasswordButton" src="{% static 'icons/eyeOpen.png' %}" alt="">
+                    </div>
+                    <p class="registerErrorMessage" id="signInErrorPassword"></p>
+                </div>
+                <div id="signInButtons">
+                    <button class="signInButton" id="signInConfirm"></button>
+                    <button class="signInButton" id="signInCancel"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

@@ -2,18 +2,32 @@
 #profilePanel {
     display: none;
     position: fixed;
+    flex-direction: column;
+    justify-content:space-evenly;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 90%;
+    width: calc(15vw + 5vh);
     max-width: 400px;
-    background-color: rgb(1, 56, 56);
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 20px;
+    min-width: 200px;
+    height: 45vh;
+    min-height: 200px;
+    padding: 2vh;
     z-index: 3;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    transition: transform 0.1s ease;
+    transition: transform 0.1s ease-in-out;
+}
+
+#panelProfileImg
+{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    scale: 1.2;
+    top: 0;
+    left: 0;
+    margin: 0;
+    z-index: -1;
+    backdrop-filter: blur(5px);
 }
 
 #profilePanel.toLeft
@@ -22,32 +36,33 @@
 }
 
 #profilePanel h2, #settingsPanel h2 {
-    margin-top: 0;
+    font-size: clamp(1rem + 0.2vw + 0.2vh, 1rem + 1.5vw + 1.5vh, 6rem);
+    margin: 0;
     text-align: center;
-    font-size: 60px;
     color: white;
 }
 
 #profilePanel p, #settingsPanel p {
-    margin: 5px 0;
+    margin: 1.5vh 0 0 0;
     text-align: left;
-    font-size: 30px;
     color: white;
 }
 
 #matchListPanel {
+    position: absolute;
     display: none;
     flex-direction: column;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 90%;
     max-width: 400px;
+    width: 30%;
+    min-width: 128px;
     background-color: rgb(1, 56, 56);
-    border: 1px solid #ccc;
+    border: 1px solid #00f7ff57;
     border-radius: 10px;
-    padding: 20px;
+    padding: 0.5vw;
     z-index: 3;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
     transition: transform 0.1s ease-in-out;
@@ -55,20 +70,19 @@
 
 #matchListPanel.toRight
 {
-    transform: translate(0%, -50%);
+    transform: translate(10%, -50%);
 }
 
 #matchListPanel p {
-    margin: 5px 0;
-    text-align: left;
-    font-size: 30px;
+    margin: -10px 0;
+    bottom: 0;
+    text-align: center;
+    font-size: clamp(0.5rem + 1vw + 1vh, 0.5rem + 1vw + 1vh, 10vw);
     color: white;
 }
 
 #seeMatchesButton
 {
-    margin-top: 20px;
-    padding: 10px;
     width: 50%;
     display: flex;
     transform: translate(50%, 0%);
@@ -76,19 +90,20 @@
     color: white;
     border: 1px solid #003a37;
     text-align: center;
-    font-size: 30px;
+    font-size: clamp(0.5rem + 1vw + 1vh, 0.5rem + 1vw + 1vh, 10vw);
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.349);
 }
 
 #closeProfileButton, #closeSettingsButton {
-    margin-top: 20px;
-    padding: 10px;
-    width: 100%;
+    width: fit-content;
+    align-self: center;
+    margin-top: 2vh;
+    padding: 0.2rem;
     color: white;
-    border: 3px solid #770000;
-    border-radius: 15px;
+    border: 3px solid #770000a4;
+    border-radius: 8px;
     text-align: center;
-    font-size: 30px;
+    font-size: clamp(0.5rem + 1vw + 1vh, 0.5rem + 1vw + 1vh, 10vw);
     background-color: rgba(0, 255, 255, 0.219);
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.349);
 }
@@ -97,4 +112,16 @@
 {
     display: flex;
     flex-direction: row;
+}
+
+#seeMatchesButton.open
+{
+    border: 2px solid rgb(1, 168, 163);
+    background-color: rgb(0, 142, 137);
+}
+
+#seeMatchesButton.open:hover
+{
+    border: 2px solid rgb(1, 168, 163);
+    background-color: rgba(0, 255, 255, 0.567);
 }

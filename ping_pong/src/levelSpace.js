@@ -1,6 +1,6 @@
-import * as THREE from 'three';
-import { BOUNDARY } from "./levelLocal";
-import { setWallRight } from './objects';
+import * as THREE from 'https://unpkg.com/three@0.146.0/build/three.module.js';
+import { BOUNDARY } from "./levelLocal.js";
+import { setWallRight } from './objects.js';
 
 let wallLeft;
 let wallRight;

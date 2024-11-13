@@ -1,4 +1,4 @@
-import { checkTimer } from "./rules";
+import { checkTimer } from "./rules.js";
 
 const display = document.getElementById('timer');
 let timerId;
@@ -43,6 +43,7 @@ export function startStopwatch(timer)
 // Function to stop the stopwatch
 export function stopStopwatch()
 {
+    isPaused = false;
     clearInterval(timerId);
     timerId = null; // Reset timerId
 }

@@ -1,9 +1,10 @@
-import { endMatch } from "./levelLocal";
-import { addDisableButtonEffect, removeDisableButtonEffect } from "./main";
-import { clickPlayGame } from "./menu";
-import { navigateTo } from "./pages";
-import { endOfMatch } from "./scoreManager";
-import { ArenaType } from "./variables";
+import { endMatch } from "./levelLocal.js";
+import { addDisableButtonEffect, getLevelState, removeDisableButtonEffect } from "./main.js";
+import { clickPlayGame, showModeChoice } from "./menu.js";
+import { navigateTo } from "./pages.js";
+import { playerStats } from "./playerManager.js";
+import { endOfMatch } from "./scoreManager.js";
+import { ArenaType, LevelMode } from "./variables.js";
 
 window.selectArena = selectArena;
 document.getElementById('buttonCancelRules').addEventListener('click', clickCancelRules);
@@ -14,6 +15,7 @@ const timerInput = document.getElementById('rulesTimerInput');
 const buttonStart = document.getElementById('buttonAcceptRules');
 const arenas = document.getElementById('arenas').querySelectorAll('.arena');
 let rulesOpen = false;
+let playerDuelId = "";
 
 buttonStart.addEventListener('click', () => {
     clickPlayGame();
@@ -89,23 +91,26 @@ export function openRules()
 
 export function onOpenRules()
 {
+    playerDuelId = playerStats.id;
     rulesOpen = true;
     nbrPointsInput.select();
 }
 
 export function clickCancelRules()
 {
-    navigateTo('modes');
+    showModeChoice();
 }
 
 export function onCloseRules()
 {
+    playerDuelId = "";
     rulesOpen = false;
     resetInputfieldsRules();
 }
 
 export function endEditInputFieldRules()
 {
+    // mettre un message de warning disant qu'on ne peut pas tout mettre a zero ?
     if (timerInput.value === '0' && nbrPointsInput.value === '0')
         addDisableButtonEffect(buttonStart);
     else

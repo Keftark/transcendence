@@ -1,16 +1,20 @@
-import { fakeDatabase } from "./database";
-import { isVictory } from "./levelLocal";
-import { changeTextsColor } from "./menu";
-import { MatchResult } from "./scoreManager";
-import { getTranslation } from "./translate";
+import { fakeDatabase } from "./database.js";
+import { isVictory } from "./levelLocal.js";
+import { changeTextsColor } from "./menu.js";
+import { getRandomNumberBetween } from "./objects.js";
+import { MatchResult } from "./scoreManager.js";
+import { getTranslation } from "./translate.js";
+
 const inputNick = document.getElementById('inputName');
 const inputFirstName = document.getElementById('inputFirstName');
 const inputLastName = document.getElementById('inputLastName');
 const inputMail = document.getElementById('inputMail');
 const inputPassword = document.getElementById('inputPassword');
+const maxId = 99999;
 
 export let playerStats = 
 {
+    id: "",
     nickname: "",
     firstName: "",
     lastName: "",
@@ -114,3 +118,20 @@ export function getPlayerVictories(player = playerStats)
     percentage = parseFloat(percentage.toFixed(2));
     return {total, victories, percentage};
 }
+
+export function getPlayerName()
+{
+    if (playerStats.isRegistered)
+        return playerStats.nickname;
+    return getTranslation('guest') + playerStats.id;
+}
+
+function assignIdNewPlayer()
+{
+    // verifier si c'est une nouvelle connexion
+    let newId = Math.floor(getRandomNumberBetween(0, maxId));
+    // check si l'id existe dans la base de donnees. Si oui, on refait un random dans une boucle
+    playerStats.id = newId;
+}
+
+assignIdNewPlayer();

@@ -1,31 +1,37 @@
-import { sendSystemMessage } from "./chat";
-import { changeBallSizeInstance, changeBallSpeedInstance, changePlayersSize } from "./levelLocal";
-import { getTranslation } from "./translate";
+import { sendSystemMessage } from "./chat.js";
+import { setDuelTargetPlayer } from "./duelPanel.js";
+import { changeBallSizeInstance, changeBallSpeedInstance, changePlayersSize } from "./levelLocal.js";
+import { askForDuel } from "./menu.js";
 
 export const cheatCodes =
 {
     "/BALLSIZE" : changeBallSize,
     "/BALLSPEED" : changeBallSpeed,
-    "/PADDLESIZE" : changePaddlesSize
+    "/PADDLESIZE" : changePaddlesSize,
+    "/DUEL" : sendInvitDuel
 }
 
-export function changeBallSize(newSize)
+function changeBallSize(newSize)
 {
     changeBallSizeInstance(newSize);
-    let siseStr = isNaN(newSize) ? 'its default value' : String(newSize);
-    sendSystemMessage(getTranslation('ballSizeChanged') + siseStr);
+    sendSystemMessage("ballSizeChanged", newSize);
 }
 
-export function changeBallSpeed(newSpeed)
+function changeBallSpeed(newSpeed)
 {
     changeBallSpeedInstance(newSpeed);
-    let speedStr = isNaN(newSpeed) ? 'its default value' : String(newSpeed);
-    sendSystemMessage(getTranslation('ballSpeedChanged') + speedStr);
+    sendSystemMessage("ballSpeedChanged", newSpeed);
 }
 
-export function changePaddlesSize(newSize)
+function changePaddlesSize(newSize)
 {
     changePlayersSize(newSize)
-    let siseStr = isNaN(newSize) ? 'its default value' : String(newSize);
-    sendSystemMessage(getTranslation('paddleSizeChanged') + siseStr);
+    sendSystemMessage("paddleSizeChanged", newSize);
+}
+
+function sendInvitDuel(playerInvit = "")
+{
+    askForDuel();
+    if (playerInvit != "")
+        setDuelTargetPlayer(playerInvit)
 }

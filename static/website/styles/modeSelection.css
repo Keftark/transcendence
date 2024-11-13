@@ -39,10 +39,17 @@
     margin: 0;
 }
 
+#modesLocal p, #modesOnline p
+{
+    margin-top: -3vh;
+}
+
 .modeSelectionButton {
     display: flex;
-    width: auto;
-    height: 30%;
+    height: 14vh;
+    width: 14vh;
+    min-width: 4rem;
+    min-height: 4rem;
     background-color: #000000;
     color: rgb(255, 255, 255);
     border: 3px solid #00776d;

@@ -1,5 +1,5 @@
-import * as THREE from 'three';
-import { BOUNDARY } from "./levelLocal";
+import * as THREE from 'https://unpkg.com/three@0.146.0/build/three.module.js';
+import { BOUNDARY } from "./levelLocal.js";
 
 export class Sparks {
     constructor(scene) {
@@ -7,7 +7,8 @@ export class Sparks {
         this.scene = scene;  // The scene to which particles will be added
     }
 
-    createSparks(position, count = 100) {
+    createSparks(position, count = 100)
+    {
         const particles = new THREE.BufferGeometry();
         const positions = [];
         const velocities = [];

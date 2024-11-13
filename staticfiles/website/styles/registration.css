@@ -1,0 +1,125 @@
+#registeringpanel
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding: 0px 32px 16px 16px;
+    transform: translateX(-50%) translateY(-250%);
+    display: flex;
+    justify-content: left;
+    align-items: left;
+    background-color:rgb(0, 0, 0);
+    border: 1px solid #999999;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    transition: transform 0.3s ease-in-out;
+    z-index: 3;
+}
+
+#registeringpanel.showReg {
+    transform: translateX(-50%) translateY(-50%);
+}
+
+#regButtons
+{
+    padding-top: 32px;
+    display: flex;
+    padding-left: 16px;
+    gap: 32px;
+    align-content: center;
+    justify-content: center;
+    align-self: center;
+    align-items: center;
+}
+
+.regButton
+{
+    width: auto;
+    min-width: 72px;
+    height: 32px;
+    font-size: 16px;
+    border: none;
+    border: 1px solid #999999;
+    background-color:rgb(0, 0, 0);
+    font-family: Arial, sans-serif;
+    border-radius: 8px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.349);
+}
+
+.regButton:hover, .regButton:hover
+{
+    background-color: rgba(0, 255, 255, 0.267);
+    opacity: 0.8;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.815);
+}
+
+.regItem, .regButton
+{
+    display: flex;
+    flex-direction: column;
+    color: #a5ebf5;
+    position: relative; 
+}
+
+#inputName, #inputFirstName, #inputLastName, #inputMail, #inputPassword, #inputConfirmPassword
+{
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #002e33;
+    color: #79c8d3;
+    border: 2px solid #6b8692;
+    border-radius: 5px;
+    outline: none;
+    height: 16px;
+    margin: -14px 0px 0px 0px;
+}
+
+#registerHeader
+{
+    margin: 4px 0px 0px 0px;
+    text-align: center;
+}
+
+#loginbuttons
+{
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    display: flex;
+    flex-direction:row;
+}
+
+#logoutbuttons
+{
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    display: none;
+    flex-direction:row;
+}
+
+#buttonSignIn, #buttonLogIn, #buttonLogOut
+{
+    display: flex;
+    margin: 5px;
+    font-size: calc(1rem + 1vw);
+    border: none;
+    background-color: transparent;
+    font-family: Arial, sans-serif;
+    border-radius: 8px;
+    color: #ffffff;
+    font-family: 'MyCustomFont', Arial, sans-serif;
+}
+
+.registerErrorMessage
+{
+    margin: 80px 0px 0px 0px;
+    font-size: 14px;
+    position: absolute;
+    color: red;
+    white-space: nowrap;
+    align-self: center;
+    font-style: italic;
+    text-shadow: 0 0 2px rgb(0, 0, 0);
+}

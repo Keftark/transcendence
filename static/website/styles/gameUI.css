@@ -98,7 +98,6 @@
 }
 
 #score-left, #score-right{
-    font-size: 4.5vw;
     color: white;
     font-size: clamp(1rem, 1vw + 1.5rem, 6vw);
     
@@ -128,25 +127,6 @@
     animation: fade 2s forwards;
 }
 
-#controlsP1LocalImg, #controlsP2LocalImg, #controlsAdventureImg {
-    display: none;
-    position: absolute;
-    bottom: 5%;
-    z-index: 1;
-    width: 20vw;
-    max-width: 12rem;
-}
-
-#controlsP1LocalImg, #controlsAdventureImg
-{
-    left: 1rem;
-}
-
-#controlsP2LocalImg
-{
-    right: 1rem;
-}
-
 #loading
 {
     display: none;
@@ -155,4 +135,110 @@
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 5rem;
+}
+
+#controlsLeft, #controlsRight
+{
+    display: none;
+    position: absolute;
+    bottom: 16px;
+    width: 20vw;
+    max-width: 12rem;
+    flex-direction: row;
+    gap: 64px;
+}
+
+#controlsLeft
+{
+    left: 1rem;
+}
+
+#controlsRight
+{
+    right: 1rem;
+}
+
+#controlsP1LocalImg, #controlsP2LocalImg, #controlsAdventureImg {
+    bottom: 16px;
+    z-index: 1;
+    width: 20vw;
+    max-width: 12rem;
+}
+
+#controlsP1LocalImg, #controlsAdventureImg {
+    display: none;
+}
+
+#controlsP2LocalImg
+{
+    display: block;
+}
+
+#boostBarUILeft, #boostBarUIRight
+{
+    display: flex;
+    position: absolute;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    min-height: 24px;
+    transition: box-shadow 0.5s;
+    transform: translateY(-200%);
+}
+
+#boostBarUILeft.ready, #boostBarUIRight.ready
+{
+    box-shadow: 0 0 25px rgb(255, 238, 0);
+}
+
+#boostBarLeft, #boostBarRight
+{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 3vh;
+}
+
+#boostBarBgLeft, #boostBarBgRight
+{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+#boostBarBgLeft
+{
+    left: 0;
+}
+
+#boostBarBgRight
+{
+    right: 0;
+}
+
+#boostBarFillLeft, #boostBarFillRight
+{
+    position: absolute;
+    width: 0%;
+    height: 100%;
+    transition: width 0.2s ease;
+}
+
+#boostBarFillLeft
+{
+    left: 2px;
+}
+
+#boostBarFillRight
+{
+    right: 2px;
+}
+
+#pressBoostTextLeft, #pressBoostTextRight
+{
+    position: absolute;
+    width: max-content;
+    display: none;
+    transform: translateY(100%);
 }

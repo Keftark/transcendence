@@ -1,9 +1,9 @@
 @keyframes shrink {
     0% {
-        transform: translate(-50%, -90%) scale(10); /* Start normal size */
+        transform: translate(-50%, -50%) scale(10); /* Start normal size */
     }
     100% {
-        transform: translate(-50%, -90%) scale(1.5); /* End at 5x scale */
+        transform: translate(-50%, -50%) scale(1.5); /* End at 5x scale */
     }
 }
 

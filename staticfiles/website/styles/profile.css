@@ -1,0 +1,100 @@
+/*------------------------------ Profile Panel ------------------------------*/
+#profilePanel {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 400px;
+    background-color: rgb(1, 56, 56);
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    z-index: 3;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.1s ease;
+}
+
+#profilePanel.toLeft
+{
+    transform: translate(-100%, -50%);
+}
+
+#profilePanel h2, #settingsPanel h2 {
+    margin-top: 0;
+    text-align: center;
+    font-size: 60px;
+    color: white;
+}
+
+#profilePanel p, #settingsPanel p {
+    margin: 5px 0;
+    text-align: left;
+    font-size: 30px;
+    color: white;
+}
+
+#matchListPanel {
+    display: none;
+    flex-direction: column;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 400px;
+    background-color: rgb(1, 56, 56);
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    z-index: 3;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.1s ease-in-out;
+}
+
+#matchListPanel.toRight
+{
+    transform: translate(0%, -50%);
+}
+
+#matchListPanel p {
+    margin: 5px 0;
+    text-align: left;
+    font-size: 30px;
+    color: white;
+}
+
+#seeMatchesButton
+{
+    margin-top: 20px;
+    padding: 10px;
+    width: 50%;
+    display: flex;
+    transform: translate(50%, 0%);
+    background-color: #005c57;
+    color: white;
+    border: 1px solid #003a37;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.349);
+}
+
+#closeProfileButton, #closeSettingsButton {
+    margin-top: 20px;
+    padding: 10px;
+    width: 100%;
+    color: white;
+    border: 3px solid #770000;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 30px;
+    background-color: rgba(0, 255, 255, 0.219);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.349);
+}
+
+#profileContainer
+{
+    display: flex;
+    flex-direction: row;
+}

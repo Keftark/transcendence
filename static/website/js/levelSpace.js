@@ -1,6 +1,6 @@
-import * as THREE from 'three';
-import { BOUNDARY } from "./levelLocal";
-import { setWallRight } from './objects';
+import * as THREE from 'https://unpkg.com/three@0.146.0/build/three.module.js';
+import { BOUNDARY } from "./levelLocal.js";
+import { setWallRight } from './objects.js';
 
 let wallLeft;
 let wallRight;
@@ -22,12 +22,12 @@ function addModels(scene)
 
 function drawBackground(scene, textureLoader)
 {
-    textureLoader.load('backgrounds/space.png', function(texture) {
+    textureLoader.load('static/backgrounds/space.png', function(texture) {
         texture.colorSpace = THREE.SRGBColorSpace;
         scene.background = texture;
     });
     const background = new THREE.PlaneGeometry(1000, 1000);
-    const texture = textureLoader.load('backgrounds/space1.png');
+    const texture = textureLoader.load('static/backgrounds/space1.png');
     // texture.encoding = THREE.sRGBEncoding;
     const material = new THREE.MeshBasicMaterial({
         map: texture,
@@ -37,7 +37,7 @@ function drawBackground(scene, textureLoader)
     const bg = new THREE.Mesh(background, material);
     scene.add(bg);
     bg.position.set(0, 0, -500);
-    const texture2 = textureLoader.load('backgrounds/space2.png');
+    const texture2 = textureLoader.load('static/backgrounds/space2.png');
     const material2 = new THREE.MeshBasicMaterial({
         map: texture2,
         transparent: true,
@@ -46,6 +46,18 @@ function drawBackground(scene, textureLoader)
     const bg2 = new THREE.Mesh(background, material2);
     scene.add(bg2);
     bg2.position.set(0, 0, -300);
+
+    const backgroundTop = new THREE.PlaneGeometry(BOUNDARY.X_MAX * 2 + 7, BOUNDARY.Y_MAX * 2 + 2);
+    const textureTop = textureLoader.load('static/backgrounds/bgSpaceTop.png');
+    texture.colorSpace = THREE.SRGBColorSpace;
+    const materialTop =  new THREE.MeshStandardMaterial({ 
+        map: textureTop ,
+        transparent: true,
+        opacity: 1
+    });
+    const bgTop = new THREE.Mesh(backgroundTop, materialTop);
+    scene.add(bgTop);
+    bgTop.position.set(0, 0, -1);
 }
 
 function createWalls(scene, textureLoader)
@@ -55,7 +67,7 @@ function createWalls(scene, textureLoader)
     const wallHorizontalSize = BOUNDARY.X_MAX * 2;
     const wallSizeHorizontal = wallHorizontalSize + 7;
     const wallSizeVertical = wallVerticalSize - 1;
-    let texturePath = 'mat/scifiwall.png';
+    let texturePath = 'static/mat/scifiwall.png';
 
     const cylinderTextureVertical = textureLoader.load(texturePath);
 

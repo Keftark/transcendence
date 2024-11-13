@@ -1,8 +1,8 @@
-import * as THREE from 'three';
-import { BOUNDARY } from "./levelLocal";
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { getRandomNumberBetween, getRandomStringFromArray, setObjectRandomPosition, setWallRight } from './objects';
-import { LevelMode } from './variables';
+import * as THREE from 'https://unpkg.com/three@0.146.0/build/three.module.js';
+import { BOUNDARY } from "./levelLocal.js";
+// import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { getRandomNumberBetween, getRandomStringFromArray, setObjectRandomPosition, setWallRight } from './objects.js';
+import { LevelMode } from './variables.js';
 
 let wallLeft;
 export let wallRight;
@@ -12,36 +12,37 @@ function getRandomRock()
 {
     const paths =   
     [
-        '3DModels/rock1.glb',
-        '3DModels/rock2.glb',
-        '3DModels/rock3.glb'
+        'static/3DModels/rock1.glb',
+        'static/3DModels/rock2.glb',
+        'static/3DModels/rock3.glb'
     ]
     return getRandomStringFromArray(paths);
 }
 
 function addRocks(scene)
 {
-    const loader = new GLTFLoader();
-    let nbrRocks = currentLevelMode === LevelMode.ADVENTURE ? 50 : 20;
-    for (let i = 0; i < nbrRocks; i++)
-    {
-        loader.load(
-            getRandomRock(),
-            function (gltf) {
-                const model = gltf.scene;
-                scene.add(model);
-                setObjectRandomPosition(model);
-                let nbr = getRandomNumberBetween(0.5, 2);
-                model.scale.set(nbr, nbr, nbr);
-                model.rotation.x = 90;
-                model.rotation.y = getRandomNumberBetween(0, 360);
-            },
-            undefined,
-            function (error) {
-                console.error('An error occurred', error);
-            }
-        );
-    }
+    return;
+    // const loader = new GLTFLoader();
+    // let nbrRocks = currentLevelMode === LevelMode.ADVENTURE ? 50 : 20;
+    // for (let i = 0; i < nbrRocks; i++)
+    // {
+    //     loader.load(
+    //         getRandomRock(),
+    //         function (gltf) {
+    //             const model = gltf.scene;
+    //             scene.add(model);
+    //             setObjectRandomPosition(model);
+    //             let nbr = getRandomNumberBetween(0.5, 2);
+    //             model.scale.set(nbr, nbr, nbr);
+    //             model.rotation.x = 90;
+    //             model.rotation.y = getRandomNumberBetween(0, 360);
+    //         },
+    //         undefined,
+    //         function (error) {
+    //             console.error('An error occurred', error);
+    //         }
+    //     );
+    // }
 }
 
 function addModels(scene)
@@ -53,7 +54,7 @@ function addModels(scene)
 function drawBackground(scene, textureLoader)
 {
     const background = new THREE.PlaneGeometry(BOUNDARY.X_MAX * 2 + 7, BOUNDARY.Y_MAX * 2 + 2);
-    const texture = textureLoader.load('backgrounds/cave.png');
+    const texture = textureLoader.load('static/backgrounds/cave.png');
     texture.colorSpace = THREE.SRGBColorSpace;
     const material =  new THREE.MeshStandardMaterial({ map: texture });
     const bg = new THREE.Mesh(background, material);
@@ -68,7 +69,7 @@ function createWalls(scene, textureLoader)
     const wallHorizontalSize = BOUNDARY.X_MAX * 2;
     const wallSizeHorizontal = wallHorizontalSize + 7;
     const wallSizeVertical = wallVerticalSize - 1;
-    let texturePath = 'mat/cavewall.png';
+    let texturePath = 'static/mat/cavewall.png';
     const sideTextureHorizontal = textureLoader.load(texturePath);
     sideTextureHorizontal.colorSpace = THREE.SRGBColorSpace;
     const topTextureHorizontal = textureLoader.load(texturePath);

@@ -1,4 +1,4 @@
-#registeringpanel
+#registeringpanel, #signinpanel
 {
     position: absolute;
     top: 50%;
@@ -12,17 +12,22 @@
     border: 1px solid #999999;
     border-radius: 8px;
     font-family: Arial, sans-serif;
-    transition: transform 0.3s ease-in-out;
     z-index: 3;
+    transition: transform 0.3s ease;
 }
 
-#registeringpanel.showReg {
+#registeringPanel p, #signInPanel p
+{
+    font-size: clamp(0.5rem, 0.5rem + 0.3vw + 0.3vh, 10vw);
+}
+
+#registeringpanel.showReg, #signinpanel.showReg {
     transform: translateX(-50%) translateY(-50%);
 }
 
-#regButtons
+#regButtons, #signInButtons
 {
-    padding-top: 32px;
+    padding-top: 4vh;
     display: flex;
     padding-left: 16px;
     gap: 32px;
@@ -32,12 +37,13 @@
     align-items: center;
 }
 
-.regButton
+.regButton, .signInButton
 {
     width: auto;
     min-width: 72px;
-    height: 32px;
-    font-size: 16px;
+    height: 3vw;
+    max-height: 32px;
+    font-size: clamp(0.5rem, 0.5rem + 0.3vw + 0.3vh, 10vw);
     border: none;
     border: 1px solid #999999;
     background-color:rgb(0, 0, 0);
@@ -46,7 +52,7 @@
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.349);
 }
 
-.regButton:hover, .regButton:hover
+.regButton:hover
 {
     background-color: rgba(0, 255, 255, 0.267);
     opacity: 0.8;
@@ -57,28 +63,30 @@
 {
     display: flex;
     flex-direction: column;
-    color: #a5ebf5;
-    position: relative; 
+    color: white;
+    position: relative;
 }
 
-#inputName, #inputFirstName, #inputLastName, #inputMail, #inputPassword, #inputConfirmPassword
+#inputName, #inputFirstName, #inputLastName, #inputMail, #inputPassword, #inputConfirmPassword, #inputSignInPassword, #inputSignInName
 {
+    display: flex;
     flex-grow: 1;
-    padding: 10px;
-    font-size: 16px;
+    padding: 4px;
+    font-size: clamp(0.5rem, 0.5rem + 0.3vw + 0.3vh, 10vw);
     background-color: #002e33;
-    color: #79c8d3;
+    color: white;
     border: 2px solid #6b8692;
     border-radius: 5px;
     outline: none;
-    height: 16px;
+    height: 2vh;
     margin: -14px 0px 0px 0px;
 }
 
-#registerHeader
+#registerHeader, #signInHeader
 {
     margin: 4px 0px 0px 0px;
     text-align: center;
+    font-size: clamp(1rem, 1rem + 0.5vw + 0.5vh, 10vw);
 }
 
 #loginbuttons
@@ -99,7 +107,7 @@
     flex-direction:row;
 }
 
-#buttonSignIn, #buttonLogIn, #buttonLogOut
+#buttonSignUp, #buttonLogIn, #buttonLogOut
 {
     display: flex;
     margin: 5px;
@@ -114,12 +122,32 @@
 
 .registerErrorMessage
 {
-    margin: 80px 0px 0px 0px;
-    font-size: 14px;
+    font-size: clamp(0.5rem, 0.5rem + 0.3vw + 0.3vh, 10vw);
+    bottom: 0;
+    transform: translateY(200%);
     position: absolute;
     color: red;
     white-space: nowrap;
     align-self: center;
     font-style: italic;
     text-shadow: 0 0 2px rgb(0, 0, 0);
+}
+
+#passwordDiv, #confirmPasswordDiv, #passwordSignInDiv
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+#showPasswordButton, #showConfirmPasswordButton, #showSignInPasswordButton
+{
+    position: absolute;
+    right: 4px;
+    width: 3vh;
+    height: 3vh;
+    min-width: 16px;
+    min-height: 16px;
+    margin: -14px 0px 0px 0px;
 }

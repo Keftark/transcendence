@@ -1,7 +1,10 @@
-import { isLevelMode } from "./main";
-import { onModesClose, onModesOpen, loadMainMenu, onPlayGame } from "./menu";
-import { onRegistrationClose, onRegistrationOpen } from "./registration";
-import { onCloseRules, onOpenRules } from "./rules";
+import { onCloseDuel, onOpenDuel } from "./duelPanel.js";
+import { unloadLevel } from "./levelLocal.js";
+import { isLevelMode } from "./main.js";
+import { onModesClose, onModesOpen, onPlayGame, onMainMenuOpen } from "./menu.js";
+import { onRegistrationClose, onRegistrationOpen } from "./registration.js";
+import { onCloseRules, onOpenRules } from "./rules.js";
+import { onSignInClose, onSignInOpen } from "./signIn.js";
 
 let currentPath;
 let lastMode = null;
@@ -10,14 +13,23 @@ function onOpenPage(path, otherVar = null)
 {
     switch (path)
     {
+        case 'home':
+            onMainMenuOpen();
+        break;
         case 'registering':
             onRegistrationOpen();
+        break;
+        case 'signIn':
+            onSignInOpen();
         break;
         case 'modes':
             onModesOpen();
         break;
         case 'rules':
             onOpenRules();
+        break;
+        case 'duel':
+            onOpenDuel();
         break;
         case 'game-local':
             onPlayGame(otherVar);
@@ -35,23 +47,28 @@ function onClosePage(path)
         case 'registering':
             onRegistrationClose();
         break;
+        case 'signIn':
+            onSignInClose();
+        break;
         case 'modes':
             onModesClose();
         break;
         case 'rules':
             onCloseRules();
         break;
+        case 'duel':
+            onCloseDuel();
+        break;
         case 'game-local':
-            loadMainMenu();
+            unloadLevel();
         break;
         case 'game-ai':
-            loadMainMenu();
+            unloadLevel();
         break;
     }
 }
 
 export function navigateTo(path, otherVar = null) {
-    // Hide all page and subpage elements
     document.getElementById(currentPath).style.display = 'none';
     onClosePage(currentPath);
     if (isLevelMode(otherVar))
@@ -59,10 +76,9 @@ export function navigateTo(path, otherVar = null) {
     else
         lastMode = null;
     currentPath = path;
-    // Show the specific section that matches the `path`
-    const section = document.getElementById(path);
-    if (section) {
-        section.style.display = 'block';
+    const nextPage = document.getElementById(path);
+    if (nextPage) {
+        nextPage.style.display = 'block';
         onOpenPage(path, otherVar);
     }
 

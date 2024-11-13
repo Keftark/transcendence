@@ -1,13 +1,11 @@
-import { clickBackButtonMenu, loadMainMenu, setLanguageButtons } from './menu.js';
+import { setButtonsColors, clickBackButtonMenu, closeProfile, closeSettings, focusOldButton, isProfileOpen, isSettingsOpen, openOrCloseGameMenu, setLanguageButtons } from './menu.js';
 import { initTranslation } from './translate.js';
-import { setButtonsColors,  } from './menu.js';
 import { addMainEvents } from './eventsListener.js';
 import { ArenaType, LevelMode } from './variables.js';
 import { isChatOpen, tryCloseChat } from './chat.js';
 import { clickCancelRules, isRulesOpen } from './rules.js';
-import { isInGame, pressEscapeInGame } from './levelLocal.js';
+import { gameEnded, isInGame } from './levelLocal.js';
 import { clickCancelRegister, isRegistrationOpen } from './registration.js';
-
 
 let levelMode = LevelMode.MENU;
 
@@ -27,27 +25,31 @@ export function checkEscapeKey()
         clickCancelRegister();
     else if (isChatOpen())
         tryCloseChat();
+    else if (isSettingsOpen())
+        closeSettings();
+    else if (isProfileOpen())
+        closeProfile();
     else if (isRulesOpen())
         clickCancelRules();
     else if (levelMode === LevelMode.MODESELECTION)
         clickBackButtonMenu();
-    else if (isInGame)
-        pressEscapeInGame();
+    else if (isInGame && !gameEnded)
+        openOrCloseGameMenu();
 }
 
 function changeCursors()
 {
-    document.body.style.cursor = "url('./icons/cursor.png'), auto";
-    const buttons = document.querySelectorAll('button, input[type="checkbox"], .arena');
+    document.body.style.cursor = "url('./static/icons/cursor.png'), auto";
+    const buttons = document.querySelectorAll('button, input[type="checkbox"], .arena, #showPasswordButton, #showConfirmPasswordButton, #header-title');
     
     // Loop through each button and change the cursor
     buttons.forEach(button => {
-        button.style.cursor = "url('./icons/cursor-button.png'), move";
+        button.style.cursor = "url('./static/icons/cursor-button.png'), move";
     });
 
     const inputs = document.querySelectorAll('input[type="text"], input[type="number"], input[type="password"]');
     inputs.forEach(input => {
-        input.style.cursor = "url('./icons/cursor-text.png') 4 10, move";
+        input.style.cursor = "url('./static/icons/cursor-text.png') 4 10, move";
     });
 }
 
@@ -75,5 +77,5 @@ addMainEvents();
 initTranslation();
 setButtonsColors();
 setLanguageButtons();
-const button = document.getElementById('mainPlayButton');
-button.focus();
+
+focusOldButton();
