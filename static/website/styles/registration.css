@@ -151,3 +151,27 @@
     min-height: 16px;
     margin: -14px 0px 0px 0px;
 }
+
+
+#askSignInDiv, #askRegisterDiv
+{
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 100%);
+    white-space: nowrap;
+    gap: 6px;
+}
+
+#askSignIn, #askRegister
+{
+    text-decoration: underline;
+    color: aqua;
+}
+
+#askSignIn:hover, #askRegister:hover
+{
+    color: rgb(216, 255, 255);
+}

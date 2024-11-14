@@ -56,6 +56,13 @@ passwordConfirmImg.addEventListener('click', () => {
 });
 
 
+document.getElementById('askSignIn').addEventListener('click', () => {
+    registrationPanel.classList.remove('showReg');
+    setTimeout(() => {
+        navigateTo('signIn');
+    }, 300);
+});
+
 function  resetRegistrationInputs()
 {
     inputConfirmPassword.value = inputPassword.value = inputMail.value = inputLastName.value = inputFirstName.value = inputNick.value = "";
@@ -83,6 +90,7 @@ export function clickCancelRegister()
 
 export function onRegistrationClose()
 {
+    console.log("registration close");
     isRegistOpen = false;
     resetRegistrationInputs();
     overlayPanel.style.display = 'none';
@@ -97,11 +105,9 @@ export function onRegistrationOpen()
 {
     isRegistOpen = true;
     overlayPanel.style.display = 'block';
-    if (registrationPanel.classList.contains('showReg') === false) {
-        setTimeout(() => {
-            registrationPanel.classList.add('showReg');
-        }, 10);
-    }
+    setTimeout(() => {
+        registrationPanel.classList.add('showReg');
+    }, 10);
     inputNick.focus();
 }
 
@@ -267,6 +273,8 @@ export function checkAccessIfRegistered()
     checkAccessToChat();
     checkAccessModes();
 }
+
+
 
 addDisableButtonEffect(profileButton);
 resetRegistrationInputs();

@@ -27,6 +27,13 @@ passwordImg.addEventListener('click', () => {
     toggleShowPassword();
 });
 
+document.getElementById('askRegister').addEventListener('click', () => {
+    signInPanel.classList.remove('showReg');
+    setTimeout(() => {
+        navigateTo('registering');
+    }, 300);
+});
+
 function showLogInPanel()
 {
     navigateTo('signIn');

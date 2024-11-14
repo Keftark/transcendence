@@ -86,6 +86,10 @@ export function updateHTML(translations)
 	document.getElementById('signInPassword').innerText = translations.registerPassword;
 	document.getElementById('signInName').innerText = translations.registerName;
 	document.getElementById('signInHeader').innerText = translations.signInHeader;
+	document.getElementById('askSignIn').innerText = translations.askSignIn;
+	document.getElementById('askRegister').innerText = translations.askRegister;
+	document.getElementById('askSignInText').innerText = translations.askSignInText;
+	document.getElementById('askRegisterText').innerText = translations.askRegisterText;
 	
 	
 }

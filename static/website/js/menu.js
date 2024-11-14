@@ -133,11 +133,9 @@ let oldButton = mainPlayButton;
 
 export function openGameMenu()
 {
-    if (menuPanel.classList.contains('show') === false) {
-        setTimeout(() => {
-            menuPanel.classList.add('show');
-        });
-    }
+    setTimeout(() => {
+        menuPanel.classList.add('show');
+    });
 }
 
 export function closeGameMenu()
