@@ -6,6 +6,7 @@ import { isChatOpen, tryCloseChat } from './chat.js';
 import { clickCancelRules, isRulesOpen } from './rules.js';
 import { gameEnded, isInGame } from './levelLocal.js';
 import { clickCancelRegister, isRegistrationOpen } from './registration.js';
+import { closeTournamentMenu } from './tournament.js';
 
 let levelMode = LevelMode.MENU;
 
@@ -33,6 +34,8 @@ export function checkEscapeKey()
         clickCancelRules();
     else if (levelMode === LevelMode.MODESELECTION)
         clickBackButtonMenu();
+    else if (levelMode === LevelMode.TOURNAMENTLOBBY)
+        closeTournamentMenu();
     else if (isInGame && !gameEnded)
         openOrCloseGameMenu();
 }

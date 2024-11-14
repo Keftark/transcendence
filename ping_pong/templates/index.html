@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="{% static './styles/profile.css' %}">
     <link rel="stylesheet" href="{% static './styles/settings.css' %}">
     <link rel="stylesheet" href="{% static './styles/signIn.css' %}">
+    <link rel="stylesheet" href="{% static './styles/tournament.css' %}">
     <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
 </head>
 <body>
@@ -39,6 +40,7 @@
     <script type="module" src="{% static 'js/rules.js' %}"></script>
     <script type="module" src="{% static 'js/powerUp.js' %}"></script>
     <script type="module" src="{% static 'js/main.js' %}"></script>
+    <script type="module" src="{% static 'js/tournament.js' %}"></script>
     <script type="module" src="{% static 'js/deathSphere.js' %}"></script>
 
     <div id="game-local" class="page"></div>
@@ -51,7 +53,7 @@
         <div class="mainMenuPanel" id="mainMenuPanel">
             <div class="mainPanel" id="mainPanel">
                 <img id="homeImg" src="">
-                <h2 id="mainMenuText"></h2>
+                <h2 class="headerText" id="mainMenuText"></h2>
                 <button class="mainMenuButton" id="mainPlayButton"></button>
                 <button class="mainMenuButton" id="mainProfileButton"></button>
                 <button class="mainMenuButton" id="mainSettingsButton"></button>
@@ -69,7 +71,7 @@
     </div>
     <!------------------------------ Mode Selection ------------------------------>
     <div id="modes" class="page">
-        <h2 id="modeSelectionText"></h2>
+        <h2 class="headerText" id="modeSelectionText"></h2>
         <div class="modeSelectionPanel" id="modeSelection">
             <div id="modesLocal">
                 <h1 id="modesLocalHeader"></h1>
@@ -93,13 +95,13 @@
                 </button>
                 <p id="tournamentText"></p>
             </div>
-            <button class="modeSelectionButtonBack" id="modeBackButton"></button>
+            <button class="buttonCancel" id="modeBackButton"></button>
         </div>
     </div>
 
     <!------------------------------ Rules Selection ------------------------------>
-    <div id="rules" class="subpage">
-        <h2 id="rulesHeaderText"></h2>
+    <div id="rules" class="page">
+        <h2 class="headerText" id="rulesHeaderText"></h2>
         <div id="rulesPanel">
             <div id="rulesPoints">
                 <h1 id="rulesPointsText"></h1>
@@ -121,15 +123,15 @@
                 <input type="text" id="rulesTimerInput" placeholder="0" value="0" min="0" maxlength="3" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
             </div>
             <div id="buttonsRules">
-                <button id="buttonAcceptRules"></button>
-                <button id="buttonCancelRules"></button>
+                <button class="buttonAccept" id="buttonAcceptRules"></button>
+                <button class="buttonCancel" id="buttonCancelRules"></button>
             </div>
         </div>
     </div>
 
     <!------------------------------ Duel Panel ------------------------------>
-    <div id="duel" class="subpage">
-        <h2 id="duelHeaderText"></h2>
+    <div id="duel" class="page">
+        <h2 class="headerText" id="duelHeaderText"></h2>
         <img id="thunderImg" src="{% static 'images/thunder.png' %}">
         <img id="vsImg" src="{% static 'images/vs.png' %}">
         <div id="duelPanel">
@@ -148,9 +150,29 @@
                 </div>
             </div>
             <div id="buttonsDuel">
-                <button id="startDuelButton"></button>
-                <button id="leaveDuelButton"></button>
+                <button class="buttonAccept" id="startDuelButton"></button>
+                <button class="buttonCancel" id="leaveDuelButton"></button>
             </div>
+        </div>
+    </div>
+
+    <!------------------------------ Tournament Panel ------------------------------>
+    <div id="tournamentMenu" class="page">
+        <h2 class="headerText" id="tournamentHeaderText"></h2>
+        <div id="tournamentMenuPanel">
+            <div id="createTournament">
+                <p id="createTournamentText"></p>
+                <button class="modeSelectionButton" id="createTournamentButton">
+                    <img src="{% static 'images/tournamentCreate.png' %}">
+                </button>
+            </div>
+            <div id="joinTournament">
+                <p id="joinTournamentText"></p>
+                <button class="modeSelectionButton" id="joinTournamentButton">
+                    <img src="{% static 'images/tournamentJoin.png' %}">
+                </button>
+            </div>
+            <button class="buttonCancel" id="cancelTournamentButton"></button>
         </div>
     </div>
 
@@ -295,7 +317,7 @@
     </div>
 
     <!------------------------------ Registering Panel ------------------------------>
-    <div id="registering" class="subpage">
+    <div id="registering" class="page">
         <div id="registeringpanel">
             <div id="registeringPanel">
                 <div id="askSignInDiv">
@@ -348,7 +370,7 @@
     </div>
 
     <!------------------------------ Sign In Panel ------------------------------>
-    <div id="signIn" class="subpage">
+    <div id="signIn" class="page">
         <div id="signinpanel">
             <div id="signInPanel">
                 <div id="askRegisterDiv">

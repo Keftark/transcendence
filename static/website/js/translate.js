@@ -90,6 +90,10 @@ export function updateHTML(translations)
 	document.getElementById('askRegister').innerText = translations.askRegister;
 	document.getElementById('askSignInText').innerText = translations.askSignInText;
 	document.getElementById('askRegisterText').innerText = translations.askRegisterText;
+	document.getElementById('createTournamentText').innerText = translations.createTournamentText;
+	document.getElementById('joinTournamentText').innerText = translations.joinTournamentText;
+	document.getElementById('tournamentHeaderText').innerText = translations.tournamentText;
+	document.getElementById('cancelTournamentButton').innerText = translations.cancel;
 	
 	
 }

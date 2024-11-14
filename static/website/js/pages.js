@@ -5,6 +5,7 @@ import { onModesClose, onModesOpen, onPlayGame, onMainMenuOpen } from "./menu.js
 import { onRegistrationClose, onRegistrationOpen } from "./registration.js";
 import { onCloseRules, onOpenRules } from "./rules.js";
 import { onSignInClose, onSignInOpen } from "./signIn.js";
+import { onTournamentMenuOpen } from "./tournament.js";
 
 let currentPath;
 let lastMode = null;
@@ -36,6 +37,9 @@ function onOpenPage(path, otherVar = null)
         break;
         case 'game-ai':
             onPlayGame(otherVar);
+        break;
+        case 'tournamentMenu':
+            onTournamentMenuOpen();
         break;
     }
 }

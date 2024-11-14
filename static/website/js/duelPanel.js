@@ -76,12 +76,6 @@ export function closeDuelPanel()
     showModeChoice();
 }
 
-export function resetDuel()
-{
-    closeDuelPanel();
-    openDuelPanel();
-}
-
 export function onOpenDuel()
 {
     fillInfosPlayer(1);

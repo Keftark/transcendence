@@ -91,6 +91,8 @@
     "connectToChat": "Log in to chat!",
     "victory": "Victory!",
     "defeat": "Defeat!",
-    "signInHeader": "Sign in"
+    "signInHeader": "Sign in",
+    "createTournamentText": "Create a tournament",
+    "joinTournamentText": "Join a tournament"
     
 }

@@ -90,7 +90,6 @@ export function clickCancelRegister()
 
 export function onRegistrationClose()
 {
-    console.log("registration close");
     isRegistOpen = false;
     resetRegistrationInputs();
     overlayPanel.style.display = 'none';
