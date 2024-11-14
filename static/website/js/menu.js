@@ -100,6 +100,11 @@ document.getElementById('modeComputerButton').addEventListener('click', () => {
     // clickPlayGame(LevelMode.ADVENTURE);
 });
 
+document.getElementById('createTournamentButton').addEventListener('click', () => {
+    selectedMode = LevelMode.TOURNAMENTLOBBY;
+    openRules(" ");
+});
+
 document.getElementById('modeBackButton').addEventListener('click', () => {
     clickBackButtonMenu();
 });
@@ -340,8 +345,8 @@ export function clickPlayGame()
         sendInvitationDuel(playerStats.nickname);
         navigateTo('duel');
     }
-    else if (selectedMode === LevelMode.TOURNAMENT)
-        navigateTo('game-ai', selectedMode);
+    else if (selectedMode === LevelMode.TOURNAMENTLOBBY)
+        navigateTo('tournament-lobby', selectedMode);
 }
 
 export function onPlayGame(mode)
@@ -386,7 +391,7 @@ function openDuelPanel()
 export function openTournamentMenu()
 {
     if (playerStats.isRegistered)
-        navigateTo('tournamentMenu');
+        navigateTo('tournament-menu');
 }
 
 export function setHeaderVisibility(isVisible)

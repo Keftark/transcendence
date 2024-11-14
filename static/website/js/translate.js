@@ -66,6 +66,7 @@ export function updateHTML(translations)
 	document.getElementById('rulesPointsText').innerText = translations.rulesPointsText;
 	document.getElementById('rulesArenaText').innerText = translations.rulesArenaText;
 	document.getElementById('rulesTimerText').innerText = translations.rulesTimerText;
+	document.getElementById('rulesMaxPlayersText').innerText = translations.rulesMaxPlayersText;
 	document.getElementById('buttonAcceptRules').innerText = translations.buttonAcceptRules;
 	document.getElementById('cameraTypeHeader').innerText = playerStats.cameraOrthographic ? translations.cameraTypeHeader + translations.orthographic : translations.cameraTypeHeader + translations.perspective;
 	document.getElementById('closeVictoryButton').innerText = translations.mainButton;

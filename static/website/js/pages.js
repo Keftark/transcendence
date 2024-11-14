@@ -1,13 +1,13 @@
 import { onCloseDuel, onOpenDuel } from "./duelPanel.js";
 import { unloadLevel } from "./levelLocal.js";
-import { isLevelMode } from "./main.js";
+import { isALevelMode } from "./main.js";
 import { onModesClose, onModesOpen, onPlayGame, onMainMenuOpen } from "./menu.js";
 import { onRegistrationClose, onRegistrationOpen } from "./registration.js";
 import { onCloseRules, onOpenRules } from "./rules.js";
 import { onSignInClose, onSignInOpen } from "./signIn.js";
 import { onTournamentMenuOpen } from "./tournament.js";
 
-let currentPath;
+let currentPath = 'home';
 let lastMode = null;
 
 function onOpenPage(path, otherVar = null)
@@ -27,7 +27,7 @@ function onOpenPage(path, otherVar = null)
             onModesOpen();
         break;
         case 'rules':
-            onOpenRules();
+            onOpenRules(otherVar);
         break;
         case 'duel':
             onOpenDuel();
@@ -38,7 +38,7 @@ function onOpenPage(path, otherVar = null)
         case 'game-ai':
             onPlayGame(otherVar);
         break;
-        case 'tournamentMenu':
+        case 'tournament-menu':
             onTournamentMenuOpen();
         break;
     }
@@ -75,7 +75,7 @@ function onClosePage(path)
 export function navigateTo(path, otherVar = null) {
     document.getElementById(currentPath).style.display = 'none';
     onClosePage(currentPath);
-    if (isLevelMode(otherVar))
+    if (isALevelMode(otherVar))
         lastMode = otherVar;
     else
         lastMode = null;
@@ -98,5 +98,7 @@ window.onpopstate = function(event) {
 };
 
 // Initial navigation on page load
-currentPath = 'home';
-navigateTo('home');
+
+setTimeout(() => {
+    navigateTo('home');
+}, 0);

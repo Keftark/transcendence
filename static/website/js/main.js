@@ -56,7 +56,7 @@ function changeCursors()
     });
 }
 
-export function isLevelMode(value) {
+export function isALevelMode(value) {
     return Object.values(LevelMode).includes(value);
 }
 

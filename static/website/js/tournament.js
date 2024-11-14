@@ -6,6 +6,7 @@ document.getElementById('cancelTournamentButton').addEventListener('click', () =
     closeTournamentMenu();
 });
 
+
 export function onTournamentMenuOpen()
 {
     setLevelState(LevelMode.TOURNAMENTLOBBY);

@@ -1,6 +1,6 @@
 import * as THREE from '../node_modules/.vite/deps/three.js';
 import { BOUNDARY } from "./levelLocal.js";
-// import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { GLTFLoader } from '../node_modules/.vite/deps/three_examples_jsm_loaders_GLTFLoader.js';
 import { getRandomNumberBetween, getRandomStringFromArray, setObjectRandomPosition, setWallRight } from './objects.js';
 import { LevelMode } from './variables.js';
 
@@ -21,28 +21,27 @@ function getRandomRock()
 
 function addRocks(scene)
 {
-    return;
-    // const loader = new GLTFLoader();
-    // let nbrRocks = currentLevelMode === LevelMode.ADVENTURE ? 50 : 20;
-    // for (let i = 0; i < nbrRocks; i++)
-    // {
-    //     loader.load(
-    //         getRandomRock(),
-    //         function (gltf) {
-    //             const model = gltf.scene;
-    //             scene.add(model);
-    //             setObjectRandomPosition(model);
-    //             let nbr = getRandomNumberBetween(0.5, 2);
-    //             model.scale.set(nbr, nbr, nbr);
-    //             model.rotation.x = 90;
-    //             model.rotation.y = getRandomNumberBetween(0, 360);
-    //         },
-    //         undefined,
-    //         function (error) {
-    //             console.error('An error occurred', error);
-    //         }
-    //     );
-    // }
+    const loader = new GLTFLoader();
+    let nbrRocks = currentLevelMode === LevelMode.ADVENTURE ? 50 : 20;
+    for (let i = 0; i < nbrRocks; i++)
+    {
+        loader.load(
+            getRandomRock(),
+            function (gltf) {
+                const model = gltf.scene;
+                scene.add(model);
+                setObjectRandomPosition(model);
+                let nbr = getRandomNumberBetween(0.5, 2);
+                model.scale.set(nbr, nbr, nbr);
+                model.rotation.x = 90;
+                model.rotation.y = getRandomNumberBetween(0, 360);
+            },
+            undefined,
+            function (error) {
+                console.error('An error occurred', error);
+            }
+        );
+    }
 }
 
 function addModels(scene)

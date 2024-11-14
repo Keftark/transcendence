@@ -73,6 +73,7 @@
     "rulesPointsText": "Points de victoire :",
     "rulesArenaText": "Arène :",
     "rulesTimerText": "Temps max. (en secondes) :",
+    "rulesMaxPlayersText": "Nombre de joueurs",
     "buttonAcceptRules": "Commencer",
     "cameraTypeHeader": "Caméra : ",
     "orthographic": "orthographique",

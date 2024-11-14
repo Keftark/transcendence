@@ -28,7 +28,7 @@
     margin-top: -1rem;
 }
 
-#rulesPoints, #rulesTimer
+#rulesPoints, #rulesTimer, #rulesMaxPlayers
 {
     display: flex;
     flex-direction: column;
@@ -54,7 +54,7 @@
     gap: 2rem;
 }
 
-#rulesPointsInput, #rulesTimerInput {
+#rulesPointsInput, #rulesTimerInput, #rulesMaxPlayersInput {
     font-family: 'MyCustomFont', Arial, sans-serif;
     flex-grow: 1;
     padding: 0.2vh 0.2vh 0px 0.2vh;
@@ -70,7 +70,7 @@
     transition: all 0.3s ease-in-out;
 }
 
-#rulesPointsInput::placeholder, #rulesTimerInput::placeholder {
+#rulesPointsInput::placeholder, #rulesTimerInput::placeholder, #rulesMaxPlayersInput::placeholder {
     font-family: 'MyCustomFont', Arial, sans-serif;
     color: #70727f;
 }

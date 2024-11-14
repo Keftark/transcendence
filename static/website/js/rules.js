@@ -1,21 +1,30 @@
 import { endMatch } from "./levelLocal.js";
-import { addDisableButtonEffect, getLevelState, removeDisableButtonEffect } from "./main.js";
+import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
 import { clickPlayGame, showModeChoice } from "./menu.js";
 import { navigateTo } from "./pages.js";
 import { playerStats } from "./playerManager.js";
 import { endOfMatch } from "./scoreManager.js";
-import { ArenaType, LevelMode } from "./variables.js";
+import { ArenaType } from "./variables.js";
 
-window.selectArena = selectArena;
 document.getElementById('buttonCancelRules').addEventListener('click', clickCancelRules);
+
+document.getElementById('rulesArenaTypeCave').addEventListener('click', () => {
+    selectArena(0);
+});
+document.getElementById('rulesArenaTypeSpace').addEventListener('click', () => {
+    selectArena(1);
+});
 
 const nbrPointsInput = document.getElementById('rulesPointsInput');
 let selectedArena = 0;
 const timerInput = document.getElementById('rulesTimerInput');
 const buttonStart = document.getElementById('buttonAcceptRules');
+const nbrOfPlayersField = document.getElementById('rulesMaxPlayers');
+const nbrOfPlayersInput = document.getElementById('rulesMaxPlayersInput');
 const arenas = document.getElementById('arenas').querySelectorAll('.arena');
 let rulesOpen = false;
 let playerDuelId = "";
+let showNbrPlayers = false;
 
 buttonStart.addEventListener('click', () => {
     clickPlayGame();
@@ -24,8 +33,9 @@ buttonStart.addEventListener('click', () => {
 let rules =
 {
     pointsToWin: 3,
-    arena: ArenaType.CAVE, 
+    arena: ArenaType.CAVE,
     maxTime: 0,
+    nbrPlayers: 0,
 }
 
 export function isRulesOpen() {return rulesOpen;}
@@ -35,6 +45,7 @@ export function setDefaultRules()
     rules.pointsToWin = 3;
     rules.arena = ArenaType.CAVE; // faire un random ?
     rules.maxTime = 0;
+    rules.nbrPlayers = 0;
 }
 
 export function selectArena(arenaIndex)
@@ -53,6 +64,7 @@ export function setCustomRules()
     rules.pointsToWin = nbrPointsInput.value === '' ? nbrPointsInput.placeholder : nbrPointsInput.value;
     rules.arena = selectedArena;
     rules.maxTime = timerInput.value === '' ? timerInput.placeholder : timerInput.value;
+    rules.nbrPlayers = nbrOfPlayersInput.value === '' ? nbrOfPlayersInput.placeholder : nbrOfPlayersInput.value;
 }
 
 export function resetInputfieldsRules()
@@ -62,6 +74,7 @@ export function resetInputfieldsRules()
     nbrPointsInput.value = '3';
     selectedArena = 0;
     timerInput.value = '0';
+    nbrOfPlayersInput.value = '0';
     removeDisableButtonEffect(buttonStart);
 }
 
@@ -84,13 +97,15 @@ export function checkTimer(timer)
         endOfMatch();
 }
 
-export function openRules()
+export function openRules(fromTournament = null)
 {
-    navigateTo('rules');
+    navigateTo('rules', fromTournament);
 }
 
-export function onOpenRules()
+export function onOpenRules(fromTournament)
 {
+    showNbrPlayers = fromTournament === null ? false : true;
+    nbrOfPlayersField.style.display = fromTournament === null ? 'none' : 'flex';
     playerDuelId = playerStats.id;
     rulesOpen = true;
     nbrPointsInput.select();
@@ -111,7 +126,8 @@ export function onCloseRules()
 export function endEditInputFieldRules()
 {
     // mettre un message de warning disant qu'on ne peut pas tout mettre a zero ?
-    if (timerInput.value === '0' && nbrPointsInput.value === '0')
+    if (timerInput.value === '0' && nbrPointsInput.value === '0'
+        && (showNbrPlayers === true && nbrOfPlayersInput.value === '0'))
         addDisableButtonEffect(buttonStart);
     else
         removeDisableButtonEffect(buttonStart);
@@ -122,6 +138,11 @@ document.getElementById('rulesArenaTypeCave').classList.add('applyBorder');
 timerInput.addEventListener("input", () => {
     endEditInputFieldRules();
 });
+
 nbrPointsInput.addEventListener("input", () => {
+    endEditInputFieldRules();
+});
+
+nbrOfPlayersInput.addEventListener("input", () => {
     endEditInputFieldRules();
 });

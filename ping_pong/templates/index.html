@@ -23,6 +23,7 @@
     <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
 </head>
 <body>
+    <script type="module" src="{% static 'js/rules.js' %}"></script>
     <script type="module" src="{% static 'js/pages.js' %}"></script>
     <script type="module" src="{% static 'js/menu.js' %}"></script>
     <script type="module" src="{% static 'js/translate.js' %}"></script>
@@ -37,7 +38,6 @@
     <script type="module" src="{% static 'js/levelCave.js' %}"></script>
     <script type="module" src="{% static 'js/timer.js' %}"></script>
     <script type="module" src="{% static 'js/variables.js' %}"></script>
-    <script type="module" src="{% static 'js/rules.js' %}"></script>
     <script type="module" src="{% static 'js/powerUp.js' %}"></script>
     <script type="module" src="{% static 'js/main.js' %}"></script>
     <script type="module" src="{% static 'js/tournament.js' %}"></script>
@@ -110,10 +110,10 @@
             <div id="rulesArenaType">
                 <h1 id="rulesArenaText"></h1>
                 <div id="arenas">
-                    <button class="arena" id="rulesArenaTypeCave" onclick="selectArena(0)">
+                    <button class="arena" id="rulesArenaTypeCave">
                         <img src="{% static 'images/arenaCave.png' %}">
                     </button>
-                    <button class="arena" id="rulesArenaTypeSpace" onclick="selectArena(1)">
+                    <button class="arena" id="rulesArenaTypeSpace">
                         <img src="{% static 'images/arenaSpace.png' %}">
                     </button>
                 </div>
@@ -121,6 +121,10 @@
             <div id="rulesTimer">
                 <h1 id="rulesTimerText"></h1>
                 <input type="text" id="rulesTimerInput" placeholder="0" value="0" min="0" maxlength="3" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+            </div>
+            <div id="rulesMaxPlayers">
+                <h1 id="rulesMaxPlayersText"></h1>
+                <input type="text" id="rulesMaxPlayersInput" placeholder="0" value="0" min="0" maxlength="2" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
             </div>
             <div id="buttonsRules">
                 <button class="buttonAccept" id="buttonAcceptRules"></button>
@@ -156,8 +160,8 @@
         </div>
     </div>
 
-    <!------------------------------ Tournament Panel ------------------------------>
-    <div id="tournamentMenu" class="page">
+    <!------------------------------ Tournament Menu Panel ------------------------------>
+    <div id="tournament-menu" class="page">
         <h2 class="headerText" id="tournamentHeaderText"></h2>
         <div id="tournamentMenuPanel">
             <div id="createTournament">
@@ -173,6 +177,16 @@
                 </button>
             </div>
             <button class="buttonCancel" id="cancelTournamentButton"></button>
+        </div>
+    </div>
+
+    <!------------------------------ Tournament Lobby Panel ------------------------------>
+    <div id="tournament-lobby" class="page">
+        <h2 class="headerText" id="tournamentLobbyHeaderText"></h2>
+        <div id="tournamentLobbyPanel">
+            
+            <button class="buttonAccept" id="startTournamentButton"></button>
+            <button class="buttonCancel" id="cancelTournamentLobbyButton"></button>
         </div>
     </div>
 
