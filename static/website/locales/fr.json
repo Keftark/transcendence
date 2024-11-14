@@ -67,14 +67,14 @@
     "player1Name": "Joueur 1",
     "player2Name": "Joueur 2",
     "waitingForPlayer": "En attente du joueur...",
-    "startDuelButton": "Commencer",
+    "start": "Commencer",
     "leaveDuelButton": "Quitter",
     "loading": "Chargement...",
     "rulesPointsText": "Points de victoire :",
     "rulesArenaText": "Arène :",
     "rulesTimerText": "Temps max. (en secondes) :",
     "rulesMaxPlayersText": "Nombre de joueurs",
-    "buttonAcceptRules": "Commencer",
+    "players": "Joueurs",
     "cameraTypeHeader": "Caméra : ",
     "orthographic": "orthographique",
     "perspective": "perspective",
@@ -94,5 +94,6 @@
     "defeat": "Défaite !",
     "signInHeader": "Connexion",
     "createTournamentText": "Créer un tournoi",
-    "joinTournamentText": "Rejoindre un tournoi"
+    "joinTournamentText": "Rejoindre un tournoi",
+    "sendTournamentInvitToChat": "Envoyer dans le chat"
 }

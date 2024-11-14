@@ -60,14 +60,14 @@ export function updateHTML(translations)
 	document.getElementById('player1NameDuel').innerText = translations.player1Name;
 	document.getElementById('player2NameDuel').innerText = translations.player2Name;
 	document.getElementById('waitingForPlayer').innerText = translations.waitingForPlayer;
-	document.getElementById('startDuelButton').innerText = translations.startDuelButton;
+	document.getElementById('startDuelButton').innerText = translations.start;
 	document.getElementById('leaveDuelButton').innerText = translations.leaveDuelButton;
 	document.getElementById('loading').innerText = translations.loading;
 	document.getElementById('rulesPointsText').innerText = translations.rulesPointsText;
 	document.getElementById('rulesArenaText').innerText = translations.rulesArenaText;
 	document.getElementById('rulesTimerText').innerText = translations.rulesTimerText;
 	document.getElementById('rulesMaxPlayersText').innerText = translations.rulesMaxPlayersText;
-	document.getElementById('buttonAcceptRules').innerText = translations.buttonAcceptRules;
+	document.getElementById('buttonAcceptRules').innerText = translations.start;
 	document.getElementById('cameraTypeHeader').innerText = playerStats.cameraOrthographic ? translations.cameraTypeHeader + translations.orthographic : translations.cameraTypeHeader + translations.perspective;
 	document.getElementById('closeVictoryButton').innerText = translations.mainButton;
 	document.getElementById('buttonCancelRules').innerText = translations.cancel;
@@ -95,7 +95,10 @@ export function updateHTML(translations)
 	document.getElementById('joinTournamentText').innerText = translations.joinTournamentText;
 	document.getElementById('tournamentHeaderText').innerText = translations.tournamentText;
 	document.getElementById('cancelTournamentButton').innerText = translations.cancel;
-	
+	document.getElementById('startTournamentButton').innerText = translations.start;
+	document.getElementById('cancelTournamentLobbyButton').innerText = translations.cancel;
+	document.getElementById('sendTournamentInvitToChat').innerText = translations.sendTournamentInvitToChat;
+
 	
 }
 

@@ -67,14 +67,14 @@
     "player1Name": "Player 1",
     "player2Name": "Player 2",
     "waitingForPlayer": "Waiting for player...",
-    "startDuelButton": "Start",
+    "start": "Start",
     "leaveDuelButton": "Leave",
     "loading": "Loading...",
     "rulesPointsText": "Points to win:",
     "rulesArenaText": "Arena:",
     "rulesTimerText": "Max. time (in seconds):",
     "rulesMaxPlayersText": "Number of players",
-    "buttonAcceptRules": "Start",
+    "players": "Players",
     "cameraTypeHeader": "Camera: ",
     "orthographic": "orthographic",
     "perspective": "perspective",
@@ -94,6 +94,7 @@
     "defeat": "Defeat!",
     "signInHeader": "Sign in",
     "createTournamentText": "Create a tournament",
-    "joinTournamentText": "Join a tournament"
+    "joinTournamentText": "Join a tournament",
+    "sendTournamentInvitToChat": "Send to chat"
     
 }

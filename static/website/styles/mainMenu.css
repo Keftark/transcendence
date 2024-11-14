@@ -96,7 +96,7 @@
 
 .buttonCancel:hover
 {
-    border-color: #550000;
+    border-color: #b60000;
     background-color: rgba(255, 0, 0, 0.3);
     opacity: 0.8;
     box-shadow: 0 0 16px rgba(255, 0, 0, 0.301);
@@ -123,7 +123,7 @@
 
 .buttonAccept:hover
 {
-    border-color: #035500;
+    border-color: #06ad00;
     background-color: rgba(0, 255, 21, 0.3);
     opacity: 0.8;
     box-shadow: 0 0 16px rgba(0, 255, 255, 0.301);
