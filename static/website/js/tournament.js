@@ -9,14 +9,25 @@ const nbrPlayersTournament = document.getElementById('nbrPlayersTournament');
 const listplayersDiv = document.getElementById('listPlayersTournament');
 const buttonStartTournament = document.getElementById('startTournamentButton');
 const rulesTextTournament = document.getElementById('rulesTextTournament');
+const listTournamentsDiv = document.getElementById('listTournaments');
 
 let countPlayers = 0;
 let maxPlayers = 0;
 let tournamentLeader = "";
+let curSelectedTournament = "";
 
 document.getElementById('cancelTournamentButton').addEventListener('click', () => {
     closeTournamentMenu();
 });
+
+document.getElementById('cancelJoinTournamentLobbyButton').addEventListener('click', () => {
+    closeTournamentMenu();
+});
+
+document.getElementById('joinTournamentButton').addEventListener('click', () => {
+    joinSpecificTournament();
+});
+
 
 document.getElementById('startTournamentButton').addEventListener('click', () => {
     startTournament();
@@ -25,6 +36,12 @@ document.getElementById('startTournamentButton').addEventListener('click', () =>
 document.getElementById('cancelTournamentLobbyButton').addEventListener('click', () => {
     closeTournamentLobbyMenu();
 });
+
+function joinSpecificTournament()
+{
+    // select a tournament with getAttribute('name') on the selected item
+    navigateTo('tournament-lobby');
+}
 
 export function onTournamentMenuOpen()
 {
@@ -54,6 +71,25 @@ export function onTournamentLobbyOpen(otherVar)
     addPlayerToTournament(playerStats.nickname);
 }
 
+function getNameFromDatabase()
+{
+
+}
+
+export function onTournamentJoinOpen()
+{
+    // charger tous les tournois a partir de la database
+    // creer un div qui sera cliquable
+    const playerName = getNameFromDatabase();
+    const tournamentDiv = document.createElement('div');
+    // tournamentDiv.classList.add('tournament');
+    tournamentDiv.setAttribute('name', playerName);
+    tournamentDiv.addEventListener('click', function(event) {
+        const clickedDiv = event.target;
+        curSelectedTournament = clickedDiv.getAttribute('name');
+    });
+}
+
 export function startTournament()
 {
     if (buttonStartTournament.classList.contains('disabledButtonHover'))
@@ -68,15 +104,26 @@ export function closeTournamentMenu()
 
 function deleteEveryone()
 {
-    // suppression de tout le monde dans la base de donnees
-    // suppression de tous les joueurs dans la liste
+    // suppression de tout le monde dans la base de donnees si c'est le leader qui quitte
     while (listplayersDiv.firstChild)
         listplayersDiv.removeChild(listplayersDiv.firstChild);
+}
+
+function deleteEveryTournament()
+{
+    while (listTournamentsDiv.firstChild)
+        listTournamentsDiv.removeChild(listTournamentsDiv.firstChild);
 }
 
 export function closeTournamentLobbyMenu()
 {
     deleteEveryone();
+    navigateTo('tournament-menu');
+}
+
+export function closeTournamentJoinMenu()
+{
+    deleteEveryTournament();
     navigateTo('tournament-menu');
 }
 

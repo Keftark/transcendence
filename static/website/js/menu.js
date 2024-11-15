@@ -105,6 +105,10 @@ document.getElementById('createTournamentButton').addEventListener('click', () =
     openRules(" ");
 });
 
+document.getElementById('joinTournamentButton').addEventListener('click', () => {
+    joinTournament();
+});
+
 document.getElementById('modeBackButton').addEventListener('click', () => {
     clickBackButtonMenu();
 });
@@ -468,4 +472,9 @@ export function isSettingsOpen()
 export function isProfileOpen()
 {
     return profileIsOpen;
+}
+
+function joinTournament()
+{
+    navigateTo('tournament-join');
 }

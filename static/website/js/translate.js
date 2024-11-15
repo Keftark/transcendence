@@ -104,6 +104,9 @@ export function updateHTML(translations)
 	document.getElementById('rulesPointsTextTournament').innerText = translations.rulesPointsText;
 	document.getElementById('rulesTimeTextTournament').innerText = translations.rulesTimerText;
 	document.getElementById('rulesPlayersTextTournament').innerText = translations.rulesMaxPlayersText;
+	document.getElementById('availableTournamentHeader').innerText = translations.availableTournamentHeader;
+	document.getElementById('joinTournamentLobbyButton').innerText = translations.join;
+	document.getElementById('cancelJoinTournamentLobbyButton').innerText = translations.cancel;
 
 	
 }

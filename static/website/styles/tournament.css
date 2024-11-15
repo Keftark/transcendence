@@ -1,4 +1,4 @@
-#tournamentMenuPanel, #tournamentLobbyPanel
+#tournamentMenuPanel, #tournamentLobbyPanel, #tournamentJoinPanel
 {
     display: flex;
     flex-direction: row;
@@ -61,7 +61,8 @@
     box-shadow: 0 0 16px rgba(255, 251, 0, 0.301);
 }
 
-#listPlayers {
+#listPlayers, #listTournamentDiv
+{
     right: 0;
     height: 78%;
     width: 22vw;
@@ -72,7 +73,7 @@
     align-items: center;
 }
 
-.listPlayersTournament {
+.listPlayersTournament, #listTournaments {
     background-color: #ffffff05;
     overflow-y: scroll;
     right: 0;

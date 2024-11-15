@@ -96,5 +96,6 @@
     "createTournamentText": "Créer un tournoi",
     "joinTournamentText": "Rejoindre un tournoi",
     "sendTournamentInvitToChat": "Envoyer dans le chat",
-    "tournamentLobbyHeaderText": "Tournoi - Accueil"
+    "tournamentLobbyHeaderText": "Tournoi - Accueil",
+    "availableTournamentHeader": "Tournois disponibles"
 }

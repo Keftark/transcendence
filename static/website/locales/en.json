@@ -96,6 +96,7 @@
     "createTournamentText": "Create a tournament",
     "joinTournamentText": "Join a tournament",
     "sendTournamentInvitToChat": "Send to chat",
-    "tournamentLobbyHeaderText": "Tournament - Lobby"
+    "tournamentLobbyHeaderText": "Tournament - Lobby",
+    "availableTournamentHeader": "Available tournaments"
     
 }
