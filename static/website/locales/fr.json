@@ -70,10 +70,10 @@
     "start": "Commencer",
     "leaveDuelButton": "Quitter",
     "loading": "Chargement...",
-    "rulesPointsText": "Points de victoire :",
-    "rulesArenaText": "Arène :",
-    "rulesTimerText": "Temps max. (en secondes) :",
-    "rulesMaxPlayersText": "Nombre de joueurs",
+    "rulesPointsText": "Points de victoire : ",
+    "rulesArenaText": "Arène : ",
+    "rulesTimerText": "Temps max. (en secondes) : ",
+    "rulesMaxPlayersText": "Nombre de joueurs : ",
     "players": "Joueurs",
     "cameraTypeHeader": "Caméra : ",
     "orthographic": "orthographique",
@@ -95,5 +95,6 @@
     "signInHeader": "Connexion",
     "createTournamentText": "Créer un tournoi",
     "joinTournamentText": "Rejoindre un tournoi",
-    "sendTournamentInvitToChat": "Envoyer dans le chat"
+    "sendTournamentInvitToChat": "Envoyer dans le chat",
+    "tournamentLobbyHeaderText": "Tournoi - Accueil"
 }

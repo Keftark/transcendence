@@ -70,10 +70,10 @@
     "start": "Start",
     "leaveDuelButton": "Leave",
     "loading": "Loading...",
-    "rulesPointsText": "Points to win:",
-    "rulesArenaText": "Arena:",
-    "rulesTimerText": "Max. time (in seconds):",
-    "rulesMaxPlayersText": "Number of players",
+    "rulesPointsText": "Points to win: ",
+    "rulesArenaText": "Arena: ",
+    "rulesTimerText": "Max. time (in seconds): ",
+    "rulesMaxPlayersText": "Number of players: ",
     "players": "Players",
     "cameraTypeHeader": "Camera: ",
     "orthographic": "orthographic",
@@ -95,6 +95,7 @@
     "signInHeader": "Sign in",
     "createTournamentText": "Create a tournament",
     "joinTournamentText": "Join a tournament",
-    "sendTournamentInvitToChat": "Send to chat"
+    "sendTournamentInvitToChat": "Send to chat",
+    "tournamentLobbyHeaderText": "Tournament - Lobby"
     
 }

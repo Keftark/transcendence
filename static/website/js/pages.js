@@ -103,6 +103,6 @@ window.onpopstate = function(event) {
 // Initial navigation on page load
 
 setTimeout(() => {
-    // navigateTo('home');
-    navigateTo('tournament-lobby');
+    navigateTo('home');
+    // navigateTo('tournament-lobby');
 }, 100);

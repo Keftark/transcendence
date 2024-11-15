@@ -43,9 +43,10 @@
 }
 
 .disabledButtonHover:hover{
-    border-width: 3px;
-    background-color: rgba(41, 54, 54, 1);
-    box-shadow: none;
+    border-color:transparent !important;
+    border-width: 3px !important;
+    background-color: rgba(34, 34, 34, 0.377) !important;
+    box-shadow: none !important;
 }
 
 .disabledText

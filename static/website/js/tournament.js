@@ -1,12 +1,14 @@
 import { addDisableButtonEffect, removeDisableButtonEffect, setLevelState } from "./main.js";
 import { navigateTo } from "./pages.js";
 import { playerStats } from "./playerManager.js";
+import { getRules } from "./rules.js";
 import { getTranslation } from "./translate.js";
-import { LevelMode } from "./variables.js";
+import { ArenaType, LevelMode } from "./variables.js";
 
 const nbrPlayersTournament = document.getElementById('nbrPlayersTournament');
 const listplayersDiv = document.getElementById('listPlayersTournament');
 const buttonStartTournament = document.getElementById('startTournamentButton');
+const rulesTextTournament = document.getElementById('rulesTextTournament');
 
 let countPlayers = 0;
 let maxPlayers = 0;
@@ -30,10 +32,23 @@ export function onTournamentMenuOpen()
     document.getElementById('createTournamentButton').focus();
 }
 
+function showTournamentRules()
+{
+    const rules = getRules();
+    maxPlayers = rules.nbrPlayers;
+    document.getElementById('rulesArenaValueTournament').textContent = ArenaType[rules.arena];
+    document.getElementById('rulesPointsValueTournament').textContent = rules.pointsToWin;
+    document.getElementById('rulesTimeValueTournament').textContent = rules.maxTime;
+    document.getElementById('rulesPlayersValueTournament').textContent = rules.nbrPlayers;
+}
+
 export function onTournamentLobbyOpen(otherVar)
 {
-    if (otherVar != null)
+    if (otherVar != null) // c'est le createur du tournoi
+    {
         tournamentLeader = playerStats.nickname;
+        showTournamentRules();
+    }
     // ajouter le joueur dans la base de donnees du tournoi
     // recuperer dans la base de donnees la liste des joueurs presents et les ajouter
     addPlayerToTournament(playerStats.nickname);

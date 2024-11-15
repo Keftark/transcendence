@@ -24,9 +24,11 @@ const nbrOfPlayersInput = document.getElementById('rulesMaxPlayersInput');
 const arenas = document.getElementById('arenas').querySelectorAll('.arena');
 let rulesOpen = false;
 let playerDuelId = "";
-let showNbrPlayers = false;
+let isTournament = false;
 
 buttonStart.addEventListener('click', () => {
+    if (isTournament && !isNbrPlayersEven())
+        return;
     clickPlayGame();
 });
 
@@ -36,6 +38,12 @@ let rules =
     arena: ArenaType.CAVE,
     maxTime: 0,
     nbrPlayers: 0,
+}
+
+function isNbrPlayersEven()
+{
+    const nbr = Number(nbrOfPlayersInput.value);
+    return !isNaN(nbr) && Number.isInteger(nbr) && nbr != 0 && nbr % 2 === 0;
 }
 
 export function isRulesOpen() {return rulesOpen;}
@@ -75,7 +83,7 @@ export function resetInputfieldsRules()
     selectedArena = 0;
     timerInput.value = '0';
     nbrOfPlayersInput.value = '0';
-    removeDisableButtonEffect(buttonStart);
+    addDisableButtonEffect(buttonStart);
 }
 
 export function getRules()
@@ -104,7 +112,7 @@ export function openRules(fromTournament = null)
 
 export function onOpenRules(fromTournament)
 {
-    showNbrPlayers = fromTournament === null ? false : true;
+    isTournament = fromTournament === null ? false : true;
     nbrOfPlayersField.style.display = fromTournament === null ? 'none' : 'flex';
     playerDuelId = playerStats.id;
     rulesOpen = true;
@@ -126,8 +134,8 @@ export function onCloseRules()
 export function endEditInputFieldRules()
 {
     // mettre un message de warning disant qu'on ne peut pas tout mettre a zero ?
-    if (timerInput.value === '0' && nbrPointsInput.value === '0'
-        && (showNbrPlayers === true && nbrOfPlayersInput.value === '0'))
+    if (((timerInput.value === '0' || timerInput.value === '') && nbrPointsInput.value === '0')
+        || (isTournament && !isNbrPlayersEven()))
         addDisableButtonEffect(buttonStart);
     else
         removeDisableButtonEffect(buttonStart);
