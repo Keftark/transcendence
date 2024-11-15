@@ -26,7 +26,6 @@
     <script type="module" src="{% static 'js/rules.js' %}"></script>
     <script type="module" src="{% static 'js/pages.js' %}"></script>
     <script type="module" src="{% static 'js/menu.js' %}"></script>
-    <script type="module" src="{% static 'js/translate.js' %}"></script>
     <script type="module" src="{% static 'js/levelLocal.js' %}"></script>
     <script type="module" src="{% static 'js/vars.js' %}"></script>
     <script type="module" src="{% static 'js/eventsListener.js' %}"></script>
@@ -42,6 +41,7 @@
     <script type="module" src="{% static 'js/main.js' %}"></script>
     <script type="module" src="{% static 'js/tournament.js' %}"></script>
     <script type="module" src="{% static 'js/deathSphere.js' %}"></script>
+    <script type="module" src="{% static 'js/translate.js' %}"></script>
 
     <div id="game-local" class="page"></div>
     <div id="game-ai" class="page"></div>
@@ -185,11 +185,10 @@
         <h2 class="headerText" id="tournamentLobbyHeaderText"></h2>
         <div id="tournamentLobbyPanel">
             <div id="listPlayers">
-                <div class="listPlayersTournament" id="listPlayersTournament">
-                </div>
+                <div class="listPlayersTournament" id="listPlayersTournament"></div>
                 <p id="nbrPlayersTournament">test 0/20</p>
+                <button id="sendTournamentInvitToChat"></button>
             </div>
-            <button id="sendTournamentInvitToChat"></button>
             <button class="buttonAccept" id="startTournamentButton"></button>
             <button class="buttonCancel" id="cancelTournamentLobbyButton"></button>
         </div>

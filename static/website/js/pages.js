@@ -5,7 +5,7 @@ import { onModesClose, onModesOpen, onPlayGame, onMainMenuOpen } from "./menu.js
 import { onRegistrationClose, onRegistrationOpen } from "./registration.js";
 import { onCloseRules, onOpenRules } from "./rules.js";
 import { onSignInClose, onSignInOpen } from "./signIn.js";
-import { onTournamentMenuOpen } from "./tournament.js";
+import { onTournamentLobbyOpen, onTournamentMenuOpen } from "./tournament.js";
 
 let currentPath = 'home';
 let lastMode = null;
@@ -40,6 +40,9 @@ function onOpenPage(path, otherVar = null)
         break;
         case 'tournament-menu':
             onTournamentMenuOpen();
+        break;
+        case 'tournament-lobby':
+            onTournamentLobbyOpen(otherVar);
         break;
     }
 }
@@ -102,4 +105,4 @@ window.onpopstate = function(event) {
 setTimeout(() => {
     // navigateTo('home');
     navigateTo('tournament-lobby');
-}, 0);
+}, 100);
