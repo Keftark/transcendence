@@ -99,7 +99,7 @@ function fillRulesInfos(tournament)
 
 function addTournamentInList(tournamentName)
 {
-    const tournamentDiv = document.createElement('div');
+    const tournamentDiv = document.createElement('button');
     tournamentDiv.setAttribute('name', tournamentName);
     tournamentDiv.addEventListener('click', function(event)
     {
@@ -110,6 +110,11 @@ function addTournamentInList(tournamentName)
         lastClickedTournament.classList.add('selectedTournament');
         removeDisableButtonEffect(joinTournamentLobbyButton);
     });
+    tournamentDiv.addEventListener('focus', function()
+    {
+        fillRulesInfos(tournamentName);
+        rulesJoinTournamentDiv.style.display = 'flex';
+    });
     tournamentDiv.addEventListener('mouseenter', function()
     {
         fillRulesInfos(tournamentName);
@@ -117,7 +122,13 @@ function addTournamentInList(tournamentName)
     });
     tournamentDiv.addEventListener('mouseleave', function()
     {
-        rulesJoinTournamentDiv.style.display = 'none';
+        if (lastClickedTournament === null)
+            rulesJoinTournamentDiv.style.display = 'none';
+    });
+    tournamentDiv.addEventListener('blur', function()
+    {
+        if (lastClickedTournament === null)
+            rulesJoinTournamentDiv.style.display = 'none';
     });
     
     tournamentDiv.classList.add('tournamentDiv');

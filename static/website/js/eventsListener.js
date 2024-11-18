@@ -13,12 +13,10 @@ function mainMenuEvents(event)
     if (chatIsFocused)
         return;
     if (event.key === 'ArrowDown') {
-        document.body.classList.add('hide-cursor');
         event.preventDefault();
         const nextIndex = (currentIndex + 1) % focusable.length;
         focusable[nextIndex].focus();
     } else if (event.key === 'ArrowUp') {
-        document.body.classList.add('hide-cursor');
         event.preventDefault();
         const prevIndex = (currentIndex - 1 + focusable.length) % focusable.length;
         focusable[prevIndex].focus();
@@ -28,26 +26,18 @@ function mainMenuEvents(event)
 function escapeEvent(event)
 {
     if (event.key === 'Escape') {
-        document.body.classList.add('hide-cursor');
         checkEscapeKey();
     }
-}
-
-export function showCursor()
-{
-    document.body.classList.remove('hide-cursor');
 }
 
 export function removeMainEvents()
 {
     document.removeEventListener('keydown', mainMenuEvents);
-    document.removeEventListener('mousemove', showCursor);
 }
 
 export function addMainEvents()
 {
     document.addEventListener('keydown', mainMenuEvents);
-    document.addEventListener('mousemove', showCursor);
 }
 
 

@@ -7,7 +7,7 @@ import { setScores, addScore, setVisibleScore } from './scoreManager.js';
 import { createLights, createPlayers, setVisibilityRightWall } from './objects.js';
 import { setLevelState } from './main.js';
 import { unloadScene } from './unloadScene.js';
-import { removeMainEvents, showCursor } from './eventsListener.js';
+import { removeMainEvents } from './eventsListener.js';
 import { setAccessAllDuelsInChat, tryCloseChat } from './chat.js';
 import { addMatchToHistory, getPlayerName, playerStats } from './playerManager.js';
 import { getTranslation } from './translate.js';
@@ -160,12 +160,10 @@ function pressArrowsMenu(event)
     const focusable = Array.prototype.slice.call(focusableElements);
     const currentIndex = focusable.indexOf(document.activeElement);
     if (event.key === 'ArrowDown') {
-        document.body.classList.add('hide-cursor');
         event.preventDefault();
         const nextIndex = (currentIndex + 1) % focusable.length;
         focusable[nextIndex].focus();
     } else if (event.key === 'ArrowUp') {
-        document.body.classList.add('hide-cursor');
         event.preventDefault();
         const prevIndex = (currentIndex - 1 + focusable.length) % focusable.length;
         focusable[prevIndex].focus();
@@ -355,7 +353,6 @@ export function StartLevel(levelMode)
     // resetStopwatch();
     setStopWatch(getRules().maxTime);
     document.getElementById('loading').style.display = 'block';
-    showCursor();
     setLevelState(levelMode);
     removeMainEvents();
     setUpScene(levelMode);
