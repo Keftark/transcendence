@@ -107,6 +107,11 @@ export function updateHTML(translations)
 	document.getElementById('availableTournamentHeader').innerText = translations.availableTournamentHeader;
 	document.getElementById('joinTournamentLobbyButton').innerText = translations.join;
 	document.getElementById('cancelJoinTournamentLobbyButton').innerText = translations.cancel;
+	document.getElementById('rulesJoinHeaderTournament').innerText = translations.rulesHeaderText;
+	document.getElementById('rulesJoinArenaTextTournament').innerText = translations.rulesArenaText;
+	document.getElementById('rulesJoinPointsTextTournament').innerText = translations.rulesPointsText;
+	document.getElementById('rulesJoinTimeTextTournament').innerText = translations.rulesTimerText;
+	document.getElementById('rulesJoinPlayersTextTournament').innerText = translations.rulesMaxPlayersText;
 
 	
 }

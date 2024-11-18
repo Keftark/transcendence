@@ -2,6 +2,7 @@ import { balle, getPlayer } from "./levelLocal.js";
 import { getLevelState } from "./main.js";
 import { LevelMode } from "./variables.js";
 
+const myInput = document.getElementById('inputChat');
 const moveSpeed = 300;
 let onKeyUpFunction = null;
 let onKeyDownFunction = null;
@@ -53,7 +54,6 @@ export function resetBoostedStatus()
     isBoostedLeft = isBoostedRight = false;
 }
 
-const myInput = document.getElementById('inputChat');
 export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
 {
     let moveUp1 = false;

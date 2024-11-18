@@ -17,12 +17,26 @@ document.getElementById('rulesArenaTypeSpace').addEventListener('click', () => {
 });
 
 const nbrPointsInput = document.getElementById('rulesPointsInput');
-let selectedArena = 0;
 const timerInput = document.getElementById('rulesTimerInput');
 const buttonStart = document.getElementById('buttonAcceptRules');
 const nbrOfPlayersField = document.getElementById('rulesMaxPlayers');
 const nbrOfPlayersInput = document.getElementById('rulesMaxPlayersInput');
 const arenas = document.getElementById('arenas').querySelectorAll('.arena');
+
+nbrPointsInput.addEventListener("focus", function() {
+    nbrPointsInput.select();
+});
+timerInput.addEventListener("focus", function() {
+    timerInput.select();
+});
+nbrOfPlayersField.addEventListener("focus", function() {
+    nbrOfPlayersField.select();
+});
+nbrOfPlayersInput.addEventListener("focus", function() {
+    nbrOfPlayersInput.select();
+});
+
+let selectedArena = 0;
 let playerDuelId = "";
 let isTournament = false;
 
@@ -82,7 +96,6 @@ export function resetInputfieldsRules()
     selectedArena = 0;
     timerInput.value = '0';
     nbrOfPlayersInput.value = '0';
-    addDisableButtonEffect(buttonStart);
 }
 
 export function getRules()
@@ -115,6 +128,7 @@ export function onOpenRules(fromTournament)
     nbrOfPlayersField.style.display = fromTournament === null ? 'none' : 'flex';
     playerDuelId = playerStats.id;
     nbrPointsInput.select();
+    endEditInputFieldRules();
 }
 
 export function clickCancelRules()
