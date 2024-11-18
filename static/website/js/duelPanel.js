@@ -6,7 +6,7 @@ import { getPlayerName, playerStats } from "./playerManager.js";
 import { getTranslation } from "./translate.js";
 
 document.getElementById('leaveDuelButton').addEventListener('click', () => {
-    navigateTo('home');
+    closeDuelPanel();
 });
 
 const player1NameText = document.getElementById('player1NameDuel');

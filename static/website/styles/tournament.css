@@ -179,3 +179,18 @@
     height: 28px;
     background-color: rgba(255, 255, 255, 0.03);
 }
+
+#availableTournamentHeader
+{
+    text-align: center;
+}
+
+.tournamentDiv
+{
+    width: 95%;
+    height: 28px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    background-color: rgba(253, 255, 127, 0.048);
+}

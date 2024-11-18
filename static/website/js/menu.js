@@ -2,7 +2,7 @@ import { sendInvitationDuel } from './chat.js';
 import { addMainEvents } from './eventsListener.js';
 import { isInGame, reinitLevelFunction, setCameraType, StartLevel, unloadLevel } from './levelLocal.js';
 import { getLevelState, setLevelState } from './main.js';
-import { navigateTo } from './pages.js';
+import { getCurrentView, navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
 import { getRules, openRules, setCustomRules } from './rules.js';
 import { loadScores, removeAllScores } from './scoreManager.js';
@@ -35,6 +35,7 @@ let currentLangIndex = 0;
 let currentCameraType = 0;
 let settingsIsOpen = false;
 let profileIsOpen = false;
+let currentModeButton;
 
 document.getElementById('header-title').addEventListener('click', () => {
     navigateTo('home');
@@ -89,15 +90,25 @@ document.getElementById('mainButton').addEventListener('click', () => {
 });
 
 document.getElementById('modeLocalButton').addEventListener('click', () => {
+    currentModeButton = document.getElementById('modeLocalButton');
     selectedMode = LevelMode.LOCAL;
     openRules();
-    // clickPlayGame(LevelMode.LOCAL);
 });
 
 document.getElementById('modeComputerButton').addEventListener('click', () => {
+    currentModeButton = document.getElementById('modeComputerButton');
     selectedMode = LevelMode.ADVENTURE;
     openRules();
-    // clickPlayGame(LevelMode.ADVENTURE);
+});
+
+document.getElementById('modeDuelButton').addEventListener('click', () => {
+    currentModeButton = document.getElementById('modeDuelButton');
+    openDuelPanel();
+});
+
+document.getElementById('modeTournamentButton').addEventListener('click', () => {
+    currentModeButton = document.getElementById('modeTournamentButton');
+    openTournamentMenu();
 });
 
 document.getElementById('createTournamentButton').addEventListener('click', () => {
@@ -121,14 +132,6 @@ document.getElementById('perspectiveButton').addEventListener('click', () => {
 document.getElementById('orthographicButton').addEventListener('click', () => {
     playerStats.cameraOrthographic = true;
     toggleCameraType(1);
-});
-
-document.getElementById('modeDuelButton').addEventListener('click', () => {
-    openDuelPanel();
-});
-
-document.getElementById('modeTournamentButton').addEventListener('click', () => {
-    openTournamentMenu();
 });
 
 document.querySelectorAll('.mainMenuButton').forEach(button => {
@@ -186,7 +189,7 @@ export function openProfile(player = playerStats)
     document.getElementById('mailProfile').innerText = player.mail;
     overlayPanel.style.display = 'block';
     profilePanel.style.display = 'flex';
-    if (getLevelState() === LevelMode.MENU)
+    if (getCurrentView() === 'home')
         oldButton = document.getElementById('mainProfileButton');
     document.getElementById('closeProfileButton').focus();
 }
@@ -241,7 +244,7 @@ export function openSettings()
     settingsIsOpen = true;
     overlayPanel.style.display = 'block';
     document.getElementById('settingsPanel').style.display = 'flex';
-    if (getLevelState() === LevelMode.MENU)
+    if (getCurrentView() === 'home')
         oldButton = document.getElementById('mainSettingsButton');
     else
         oldButton = gameSettingsButton;
@@ -370,7 +373,10 @@ export function onModesOpen()
     if (getLevelState() === LevelMode.MENU)
         oldButton = mainPlayButton;
     setLevelState(LevelMode.MODESELECTION);
-    document.getElementById('modeLocalButton').focus();
+    if (currentModeButton != null)
+        currentModeButton.focus();
+    else
+        document.getElementById('modeLocalButton').focus();
 }
 
 export function clickBackButtonMenu()

@@ -1,5 +1,5 @@
 import { addDisableButtonEffect, removeDisableButtonEffect, setLevelState } from "./main.js";
-import { navigateTo } from "./pages.js";
+import { getCurrentView, navigateTo } from "./pages.js";
 import { playerStats } from "./playerManager.js";
 import { getRules } from "./rules.js";
 import { getTranslation } from "./translate.js";
@@ -21,13 +21,12 @@ document.getElementById('cancelTournamentButton').addEventListener('click', () =
 });
 
 document.getElementById('cancelJoinTournamentLobbyButton').addEventListener('click', () => {
-    closeTournamentMenu();
+    closeTournamentJoinMenu();
 });
 
-document.getElementById('joinTournamentButton').addEventListener('click', () => {
+document.getElementById('joinTournamentLobbyButton').addEventListener('click', () => {
     joinSpecificTournament();
 });
-
 
 document.getElementById('startTournamentButton').addEventListener('click', () => {
     startTournament();
@@ -37,8 +36,11 @@ document.getElementById('cancelTournamentLobbyButton').addEventListener('click',
     closeTournamentLobbyMenu();
 });
 
+let previousPage = '';
+
 function joinSpecificTournament()
 {
+    previousPage = getCurrentView();
     // select a tournament with getAttribute('name') on the selected item
     navigateTo('tournament-lobby');
 }
@@ -73,11 +75,12 @@ export function onTournamentLobbyOpen(otherVar)
 
 function getNameFromDatabase()
 {
-
+    return "tournament name";
 }
 
 export function onTournamentJoinOpen()
 {
+    console.log("ici");
     // charger tous les tournois a partir de la database
     // creer un div qui sera cliquable
     const playerName = getNameFromDatabase();
@@ -87,7 +90,15 @@ export function onTournamentJoinOpen()
     tournamentDiv.addEventListener('click', function(event) {
         const clickedDiv = event.target;
         curSelectedTournament = clickedDiv.getAttribute('name');
+        removeDisableButtonEffect(joinTournamentLobbyButton);
     });
+    tournamentDiv.classList.add('tournamentDiv');
+    const tournamentName = document.createElement('div');
+    tournamentName.classList.add('playerNameTournament');
+    tournamentName.textContent = playerName;
+    tournamentDiv.appendChild(tournamentName);
+    listTournamentsDiv.appendChild(tournamentDiv);
+    addDisableButtonEffect(joinTournamentLobbyButton);
 }
 
 export function startTournament()
@@ -115,16 +126,25 @@ function deleteEveryTournament()
         listTournamentsDiv.removeChild(listTournamentsDiv.firstChild);
 }
 
+export function goTournamentMenu()
+{
+    navigateTo('tournament-menu');
+}
+
 export function closeTournamentLobbyMenu()
 {
     deleteEveryone();
-    navigateTo('tournament-menu');
+    if (playerStats.nickname === tournamentLeader)
+        goTournamentMenu();
+    else
+        navigateTo(previousPage);
+    // else go to the previous page
 }
 
 export function closeTournamentJoinMenu()
 {
     deleteEveryTournament();
-    navigateTo('tournament-menu');
+    goTournamentMenu();
 }
 
 function addPlayerToCount()
@@ -152,6 +172,9 @@ export function addPlayerToTournament(playerName)
     // ne pas afficher le bouton si le joueur qui rejoint n'est pas le leader
     const redCross = document.createElement('button');
     redCross.classList.add('redCrossButton');
+    redCross.addEventListener('click', function() {
+        redCrossButtonClick(playerName);
+    });
     const redCrossImg = document.createElement('img');
     redCrossImg.src = '../static/icons/redCross.png';
     redCrossImg.classList.add('redCrossButtonImg');
@@ -160,7 +183,7 @@ export function addPlayerToTournament(playerName)
     listplayersDiv.appendChild(newPlayer);
 }
 
-function redCrossButtonClick()
+function redCrossButtonClick(playerName)
 {
     // on supprime le joueur du lobby, il revient donc a sa page precedente
     // le nom du joueur est supprime dans la base de donnees et son bouton aussi

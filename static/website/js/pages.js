@@ -5,7 +5,7 @@ import { onModesClose, onModesOpen, onPlayGame, onMainMenuOpen } from "./menu.js
 import { onRegistrationClose, onRegistrationOpen } from "./registration.js";
 import { onCloseRules, onOpenRules } from "./rules.js";
 import { onSignInClose, onSignInOpen } from "./signIn.js";
-import { onTournamentLobbyOpen, onTournamentMenuOpen } from "./tournament.js";
+import { onTournamentJoinOpen, onTournamentLobbyOpen, onTournamentMenuOpen } from "./tournament.js";
 
 let currentPath = 'home';
 let lastMode = null;
@@ -44,6 +44,9 @@ function onOpenPage(path, otherVar = null)
         case 'tournament-lobby':
             onTournamentLobbyOpen(otherVar);
         break;
+        case 'tournament-join':
+            onTournamentJoinOpen();
+        break;
     }
 }
 
@@ -73,6 +76,11 @@ function onClosePage(path)
             unloadLevel();
         break;
     }
+}
+
+export function getCurrentView()
+{
+    return currentPath;
 }
 
 export function navigateTo(path, otherVar = null) {

@@ -4,6 +4,7 @@ import { clickPlayGame, showModeChoice } from "./menu.js";
 import { navigateTo } from "./pages.js";
 import { playerStats } from "./playerManager.js";
 import { endOfMatch } from "./scoreManager.js";
+import { goTournamentMenu } from "./tournament.js";
 import { ArenaType } from "./variables.js";
 
 document.getElementById('buttonCancelRules').addEventListener('click', clickCancelRules);
@@ -22,7 +23,6 @@ const buttonStart = document.getElementById('buttonAcceptRules');
 const nbrOfPlayersField = document.getElementById('rulesMaxPlayers');
 const nbrOfPlayersInput = document.getElementById('rulesMaxPlayersInput');
 const arenas = document.getElementById('arenas').querySelectorAll('.arena');
-let rulesOpen = false;
 let playerDuelId = "";
 let isTournament = false;
 
@@ -46,7 +46,6 @@ function isNbrPlayersEven()
     return !isNaN(nbr) && Number.isInteger(nbr) && nbr != 0 && nbr % 2 === 0;
 }
 
-export function isRulesOpen() {return rulesOpen;}
 
 export function setDefaultRules()
 {
@@ -115,19 +114,20 @@ export function onOpenRules(fromTournament)
     isTournament = fromTournament === null ? false : true;
     nbrOfPlayersField.style.display = fromTournament === null ? 'none' : 'flex';
     playerDuelId = playerStats.id;
-    rulesOpen = true;
     nbrPointsInput.select();
 }
 
 export function clickCancelRules()
 {
-    showModeChoice();
+    if (isTournament)
+        goTournamentMenu();
+    else
+        showModeChoice();
 }
 
 export function onCloseRules()
 {
     playerDuelId = "";
-    rulesOpen = false;
     resetInputfieldsRules();
 }
 
