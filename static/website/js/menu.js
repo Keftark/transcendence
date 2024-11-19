@@ -134,6 +134,14 @@ document.getElementById('orthographicButton').addEventListener('click', () => {
     toggleCameraType(1);
 });
 
+document.getElementById('modesLocalButton').addEventListener('click', () => {
+    clickModesLocal();
+});
+
+document.getElementById('modesOnlineButton').addEventListener('click', () => {
+    clickModesOnline();
+});
+
 document.querySelectorAll('.mainMenuButton').forEach(button => {
   button.addEventListener('mouseover', () => showImage(button.id));
   button.addEventListener('mouseout', hideImage);
@@ -146,6 +154,7 @@ document.getElementById('lang1Button').classList.add('applyBorderOptions');
 document.getElementById('color1Button').classList.add('applyBorderOptions');
 
 let oldButton = mainPlayButton;
+let isInsideModes = false;
 
 export function openGameMenu()
 {
@@ -362,10 +371,38 @@ export function onPlayGame(mode)
     StartLevel(mode);
 }
 
+function closeInsideModes()
+{
+    isInsideModes = false;
+    document.getElementById('modesLocal').style.display = 'none';
+    document.getElementById('modesOnline').style.display = 'none';
+    document.getElementById('modesSelectionParent').style.display = 'flex';
+    document.getElementById('modesLocalButton').focus();
+}
+
 export function showModeChoice()
 {
+    closeInsideModes();
     navigateTo('modes');
     selectedMode = LevelMode.MODESELECTION;
+}
+
+function clickModesLocal()
+{
+    isInsideModes = true;
+    document.getElementById('modesSelectionParent').style.display = 'none';
+    document.getElementById('modesLocal').style.display = 'flex';
+    document.getElementById('modeLocalButton').focus();
+}
+
+function clickModesOnline()
+{
+    if (!playerStats.isRegistered)
+        return;
+    isInsideModes = true;
+    document.getElementById('modesSelectionParent').style.display = 'none';
+    document.getElementById('modesOnline').style.display = 'flex';
+    document.getElementById('modeDuelButton').focus();
 }
 
 export function onModesOpen()
@@ -376,12 +413,15 @@ export function onModesOpen()
     if (currentModeButton != null)
         currentModeButton.focus();
     else
-        document.getElementById('modeLocalButton').focus();
+        document.getElementById('modesLocalButton').focus();
 }
 
 export function clickBackButtonMenu()
 {
-    navigateTo('home', getLevelState());
+    if (isInsideModes)
+        closeInsideModes();
+    else
+        navigateTo('home', getLevelState());
 }
 
 export function onModesClose()

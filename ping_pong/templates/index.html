@@ -73,27 +73,49 @@
     <div id="modes" class="page">
         <h2 class="headerText" id="modeSelectionText"></h2>
         <div class="modeSelectionPanel" id="modeSelection">
+            <div id="modesSelectionParent">
+                <div id="modesLocalDiv">
+                    <h2 id="modesLocalText"></h2>
+                    <button class="bigModeSelectionButton" id="modesLocalButton">
+                        <img id="modesLocalImg" src="{% static 'images/modesLocal.png' %}" alt="">
+                    </button>
+                </div>
+                <div id="modesOnlineDiv">
+                    <h2 id="modesOnlineText"></h2>
+                    <button class="bigModeSelectionButton" id="modesOnlineButton">
+                        <img id="modesOnlineImg" src="{% static 'images/modesOnline.png' %}" alt="">
+                    </button>
+                </div>
+            </div>
             <div id="modesLocal">
                 <h1 id="modesLocalHeader"></h1>
-                <button class="modeSelectionButton" id="modeLocalButton">
-                    <img id="versusImg" src="{% static 'images/versusImage.png' %}">
-                </button>
-                <p id="1vs1"></p>
-                <button class="modeSelectionButton" id="modeComputerButton">
-                    <img id="vsIAImg" src="{% static 'images/vsComputerImage.png' %}">
-                </button>
-                <p id="modeComputer"></p>
+                <div class="modeClass">
+                    <button class="modeSelectionButton" id="modeLocalButton">
+                        <img id="versusImg" src="{% static 'images/versusImage.png' %}">
+                    </button>
+                    <p id="1vs1"></p>
+                </div>
+                <div class="modeClass">
+                    <button class="modeSelectionButton" id="modeComputerButton">
+                        <img id="vsIAImg" src="{% static 'images/vsComputerImage.png' %}">
+                    </button>
+                    <p id="modeComputer"></p>
+                </div>
             </div>
             <div id="modesOnline">
                 <h1 id="modesOnlineHeader"></h1>
-                <button class="modeSelectionButton" id="modeDuelButton">
-                    <img id="duelImg" src="{% static 'images/duelImage.png' %}">
-                </button>
-                <p id="modeDuelText"></p>
-                <button class="modeSelectionButton" id="modeTournamentButton">
-                    <img id="tournamentImg" src="{% static 'images/tournamentImage.png' %}">
-                </button>
-                <p id="tournamentText"></p>
+                <div class="modeClass">
+                    <button class="modeSelectionButton" id="modeDuelButton">
+                        <img id="duelImg" src="{% static 'images/duelImage.png' %}">
+                    </button>
+                    <p id="modeDuelText"></p>
+                </div>
+                <div class="modeClass">
+                    <button class="modeSelectionButton" id="modeTournamentButton">
+                        <img id="tournamentImg" src="{% static 'images/tournamentImage.png' %}">
+                    </button>
+                    <p id="tournamentText"></p>
+                </div>
             </div>
             <button class="buttonCancel" id="modeBackButton"></button>
         </div>

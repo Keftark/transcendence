@@ -251,19 +251,13 @@ function checkAccessModes()
 {
     if (playerStats.isRegistered)
     {
-        removeDisableButtonEffect(document.getElementById('modeDuelButton'));
-        removeDisableButtonEffect(document.getElementById('modeTournamentButton'));
-        document.getElementById('modesOnlineHeader').classList.remove('disabledText');
-        document.getElementById('modeDuelText').classList.remove('disabledText');
-        document.getElementById('tournamentText').classList.remove('disabledText');
+        removeDisableButtonEffect(document.getElementById('modesOnlineButton'));
+        document.getElementById('modesOnlineText').classList.remove('disabledText');
     }
     else
     {
-        addDisableButtonEffect(document.getElementById('modeDuelButton'));
-        addDisableButtonEffect(document.getElementById('modeTournamentButton'));
-        document.getElementById('modesOnlineHeader').classList.add('disabledText');
-        document.getElementById('modeDuelText').classList.add('disabledText');
-        document.getElementById('tournamentText').classList.add('disabledText');
+        addDisableButtonEffect(document.getElementById('modesOnlineButton'));
+        document.getElementById('modesOnlineText').classList.add('disabledText');
     }
 }
 

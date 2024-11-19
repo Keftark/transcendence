@@ -112,6 +112,8 @@ export function updateHTML(translations)
 	document.getElementById('rulesJoinPointsTextTournament').innerText = translations.rulesPointsText;
 	document.getElementById('rulesJoinTimeTextTournament').innerText = translations.rulesTimerText;
 	document.getElementById('rulesJoinPlayersTextTournament').innerText = translations.rulesMaxPlayersText;
+	document.getElementById('modesLocalText').innerText = translations.modesLocalHeader;
+	document.getElementById('modesOnlineText').innerText = translations.modesOnlineHeader;
 
 	
 }

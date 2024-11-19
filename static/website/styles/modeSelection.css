@@ -3,11 +3,12 @@
     display: none;
 }
 
-#modeSelection
+#modeSelection, #modesSelectionParent
 {
     display: flex;
     flex-direction: row;
     justify-content:space-around;
+    align-items: center;
     width: 80vw;
     max-width: 900px;
     height: 54vh;
@@ -17,18 +18,41 @@
     border-radius: 15px;
 }
 
-#modesLocal, #modesOnline
+#modesLocal, #modesOnline, #modesLocalDiv, #modesOnlineDiv
 {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-content: space-around;
     justify-content:space-around;
     align-items: center;
     height: 100%;
     width: 50%;
+    gap: 1vw;
 }
 
-#modesLocal p, #modesOnline p, #modesLocal h1, #modesOnline h1
+.modeClass
+{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content:center;
+    align-items: center;
+    height: 100%;
+    width: 50%;
+}
+
+.modeClass p
+{
+    transform: translateY(5vh);
+}
+
+#modesLocalText, #modesOnlineText, #modesLocalHeader, #modesOnlineHeader
+{
+    position: absolute;
+    transform: translateY(-20vh);
+}
+
+#modesLocal h1, #modesOnline h1
 {
     margin: 0;
 }
@@ -38,10 +62,11 @@
     margin-top: -3vh;
 }
 
-.modeSelectionButton {
+.modeSelectionButton
+{
     display: flex;
-    height: 14vh;
-    width: 14vh;
+    height: calc(10vh + 7vw);
+    width: calc(10vh + 7vw);
     min-width: 4rem;
     min-height: 4rem;
     background-color: #000000;
@@ -50,7 +75,20 @@
     border-radius: 15px;
 }
 
-.modeSelectionButton img
+.bigModeSelectionButton
+{
+    display: flex;
+    height: calc(16vh + 10vw);
+    width: calc(16vh + 10vw);
+    min-width: 6rem;
+    min-height: 6rem;
+    background-color: #000000;
+    color: rgb(255, 255, 255);
+    border: 3px solid #00776d;
+    border-radius: 15px;
+}
+
+.modeSelectionButton img, .bigModeSelectionButton img
 {
     width: 100%;
     height: 100%;
