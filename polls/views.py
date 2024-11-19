@@ -3,15 +3,16 @@ from django.http import HttpResponse
 from django.contrib.auth.models import Group, User
 from rest_framework import permissions, viewsets
 
-from polls.serializers import GroupSerializer, UserSerializer
+from polls.serializers import GroupSerializer, AccountSerializer
+from polls.models import *
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class AccountViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
-    queryset = User.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
+    queryset = Account.objects.all().order_by('-date_joined')
+    serializer_class = AccountSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
