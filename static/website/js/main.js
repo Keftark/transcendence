@@ -1,4 +1,4 @@
-import { setButtonsColors, clickBackButtonMenu, closeProfile, closeSettings, focusOldButton, isProfileOpen, isSettingsOpen, openOrCloseGameMenu, setLanguageButtons } from './menu.js';
+import { setButtonsColors, closeProfile, closeSettings, focusOldButton, isProfileOpen, isSettingsOpen, openOrCloseGameMenu, setLanguageButtons } from './menu.js';
 import { initTranslation } from './translate.js';
 import { addMainEvents } from './eventsListener.js';
 import { ArenaType, LevelMode } from './variables.js';
@@ -9,6 +9,7 @@ import { clickCancelRegister, isRegistrationOpen } from './registration.js';
 import { closeTournamentJoinMenu, closeTournamentLobbyMenu, closeTournamentMenu } from './tournament.js';
 import { getCurrentView } from './pages.js';
 import { closeDuelPanel } from './duelPanel.js';
+import { clickBackButtonMenu } from './modesSelection.js';
 
 let levelMode = LevelMode.MENU;
 

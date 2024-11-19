@@ -1,4 +1,4 @@
-import { clickBackButtonMenu } from "./menu.js";
+import { clickBackButtonMenu } from "./modesSelection.js";
 import { getTranslation } from "./translate.js";
 import { VictoryType } from "./variables.js";
 

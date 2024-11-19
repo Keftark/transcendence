@@ -1,8 +1,7 @@
 import { deleteDuelInChat } from "./chat.js";
 import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
-import { showModeChoice } from "./menu.js";
-import { navigateTo } from "./pages.js";
-import { getPlayerName, playerStats } from "./playerManager.js";
+import { showModeChoice } from "./modesSelection.js";
+import { getPlayerName } from "./playerManager.js";
 import { getTranslation } from "./translate.js";
 
 document.getElementById('leaveDuelButton').addEventListener('click', () => {

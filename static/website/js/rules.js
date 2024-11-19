@@ -1,6 +1,6 @@
 import { endMatch } from "./levelLocal.js";
 import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
-import { clickPlayGame, showModeChoice } from "./menu.js";
+import { clickPlayGame, showModeChoice } from "./modesSelection.js";
 import { navigateTo } from "./pages.js";
 import { playerStats } from "./playerManager.js";
 import { endOfMatch } from "./scoreManager.js";

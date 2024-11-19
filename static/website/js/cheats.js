@@ -1,7 +1,7 @@
 import { sendSystemMessage } from "./chat.js";
 import { setDuelTargetPlayer } from "./duelPanel.js";
 import { changeBallSizeInstance, changeBallSpeedInstance, changePlayersSize } from "./levelLocal.js";
-import { askForDuel } from "./menu.js";
+import { askForDuel } from "./modesSelection.js";
 
 export const cheatCodes =
 {

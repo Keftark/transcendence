@@ -1,10 +1,9 @@
-import { sendInvitationDuel } from './chat.js';
 import { addMainEvents } from './eventsListener.js';
-import { isInGame, reinitLevelFunction, setCameraType, StartLevel, unloadLevel } from './levelLocal.js';
-import { getLevelState, setLevelState } from './main.js';
+import { isInGame, reinitLevelFunction, setCameraType, StartLevel } from './levelLocal.js';
+import { setLevelState } from './main.js';
+import { clickBackButtonMenu, showModeChoice } from './modesSelection.js';
 import { getCurrentView, navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
-import { getRules, openRules, setCustomRules } from './rules.js';
 import { loadScores, removeAllScores } from './scoreManager.js';
 import { changeLanguage, getTranslation } from './translate.js';
 import { LevelMode } from './variables.js';
@@ -29,13 +28,11 @@ const imageSources = {
   mainProfileButton: 'static/images/profileImage.png',
   mainSettingsButton: 'static/images/settingsImage.png',
 };
-let selectedMode;
 let currentColorIndex = 0;
 let currentLangIndex = 0;
 let currentCameraType = 0;
 let settingsIsOpen = false;
 let profileIsOpen = false;
-let currentModeButton;
 
 document.getElementById('header-title').addEventListener('click', () => {
     navigateTo('home');
@@ -89,41 +86,6 @@ document.getElementById('mainButton').addEventListener('click', () => {
     clickBackButtonMenu();
 });
 
-document.getElementById('modeLocalButton').addEventListener('click', () => {
-    currentModeButton = document.getElementById('modeLocalButton');
-    selectedMode = LevelMode.LOCAL;
-    openRules();
-});
-
-document.getElementById('modeComputerButton').addEventListener('click', () => {
-    currentModeButton = document.getElementById('modeComputerButton');
-    selectedMode = LevelMode.ADVENTURE;
-    openRules();
-});
-
-document.getElementById('modeDuelButton').addEventListener('click', () => {
-    currentModeButton = document.getElementById('modeDuelButton');
-    openDuelPanel();
-});
-
-document.getElementById('modeTournamentButton').addEventListener('click', () => {
-    currentModeButton = document.getElementById('modeTournamentButton');
-    openTournamentMenu();
-});
-
-document.getElementById('createTournamentButton').addEventListener('click', () => {
-    selectedMode = LevelMode.TOURNAMENTLOBBY;
-    openRules(" ");
-});
-
-document.getElementById('joinTournamentButton').addEventListener('click', () => {
-    joinTournament();
-});
-
-document.getElementById('modeBackButton').addEventListener('click', () => {
-    clickBackButtonMenu();
-});
-
 document.getElementById('perspectiveButton').addEventListener('click', () => {
     playerStats.cameraOrthographic = false;
     toggleCameraType(0);
@@ -132,14 +94,6 @@ document.getElementById('perspectiveButton').addEventListener('click', () => {
 document.getElementById('orthographicButton').addEventListener('click', () => {
     playerStats.cameraOrthographic = true;
     toggleCameraType(1);
-});
-
-document.getElementById('modesLocalButton').addEventListener('click', () => {
-    clickModesLocal();
-});
-
-document.getElementById('modesOnlineButton').addEventListener('click', () => {
-    clickModesOnline();
 });
 
 document.querySelectorAll('.mainMenuButton').forEach(button => {
@@ -154,7 +108,6 @@ document.getElementById('lang1Button').classList.add('applyBorderOptions');
 document.getElementById('color1Button').classList.add('applyBorderOptions');
 
 let oldButton = mainPlayButton;
-let isInsideModes = false;
 
 export function openGameMenu()
 {
@@ -349,99 +302,10 @@ export function clickPlay()
     showModeChoice();
 }
 
-export function clickPlayGame()
-{
-    setCustomRules();
-    if (selectedMode === LevelMode.LOCAL)
-        navigateTo('game-local', selectedMode);
-    else if (selectedMode === LevelMode.ADVENTURE)
-        navigateTo('game-ai', selectedMode);
-    else if (selectedMode === LevelMode.DUEL)
-    {
-        sendInvitationDuel(playerStats.nickname);
-        navigateTo('duel');
-    }
-    else if (selectedMode === LevelMode.TOURNAMENTLOBBY)
-        navigateTo('tournament-lobby', selectedMode);
-}
-
 export function onPlayGame(mode)
 {
     hideMainMenu();
     StartLevel(mode);
-}
-
-function closeInsideModes()
-{
-    isInsideModes = false;
-    document.getElementById('modesLocal').style.display = 'none';
-    document.getElementById('modesOnline').style.display = 'none';
-    document.getElementById('modesSelectionParent').style.display = 'flex';
-    document.getElementById('modesLocalButton').focus();
-}
-
-export function showModeChoice()
-{
-    closeInsideModes();
-    navigateTo('modes');
-    selectedMode = LevelMode.MODESELECTION;
-}
-
-function clickModesLocal()
-{
-    isInsideModes = true;
-    document.getElementById('modesSelectionParent').style.display = 'none';
-    document.getElementById('modesLocal').style.display = 'flex';
-    document.getElementById('modeLocalButton').focus();
-}
-
-function clickModesOnline()
-{
-    if (!playerStats.isRegistered)
-        return;
-    isInsideModes = true;
-    document.getElementById('modesSelectionParent').style.display = 'none';
-    document.getElementById('modesOnline').style.display = 'flex';
-    document.getElementById('modeDuelButton').focus();
-}
-
-export function onModesOpen()
-{
-    if (getLevelState() === LevelMode.MENU)
-        oldButton = mainPlayButton;
-    setLevelState(LevelMode.MODESELECTION);
-    if (currentModeButton != null)
-        currentModeButton.focus();
-    else
-        document.getElementById('modesLocalButton').focus();
-}
-
-export function clickBackButtonMenu()
-{
-    if (isInsideModes)
-        closeInsideModes();
-    else
-        navigateTo('home', getLevelState());
-}
-
-export function onModesClose()
-{
-    // showMainMenu();
-}
-
-function openDuelPanel()
-{
-    if (playerStats.isRegistered)
-        navigateTo('duel');
-    // else
-        
-    // if otherPlayer != "" and if isInTheDatabase(otherPlayer), sends an invitation to this player
-}
-
-export function openTournamentMenu()
-{
-    if (playerStats.isRegistered)
-        navigateTo('tournament-menu');
 }
 
 export function setHeaderVisibility(isVisible)
@@ -485,13 +349,13 @@ function hideImage() {
 
 export function focusOldButton()
 {
-        setTimeout(() => {
-            if (oldButton != null)
-            {
-                oldButton.focus();
-                oldButton = null;
-            }
-        }, 0);
+    setTimeout(() => {
+        if (oldButton != null)
+        {
+            oldButton.focus();
+            oldButton = null;
+        }
+    }, 0);
 }
 
 export function onMainMenuOpen()
@@ -502,14 +366,6 @@ export function onMainMenuOpen()
     mainPlayButton.focus();
 }
 
-export function askForDuel()
-{
-    if (selectedMode === LevelMode.DUEL || isInGame)
-        return;
-    selectedMode = LevelMode.DUEL;
-    navigateTo('rules');
-}
-
 export function isSettingsOpen()
 {
     return settingsIsOpen;
@@ -518,9 +374,4 @@ export function isSettingsOpen()
 export function isProfileOpen()
 {
     return profileIsOpen;
-}
-
-function joinTournament()
-{
-    navigateTo('tournament-join');
 }

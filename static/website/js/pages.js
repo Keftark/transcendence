@@ -1,7 +1,8 @@
 import { onCloseDuel, onOpenDuel } from "./duelPanel.js";
 import { unloadLevel } from "./levelLocal.js";
 import { isALevelMode } from "./main.js";
-import { onModesClose, onModesOpen, onPlayGame, onMainMenuOpen } from "./menu.js";
+import { onPlayGame, onMainMenuOpen } from "./menu.js";
+import { onModesClose, onModesOpen } from "./modesSelection.js";
 import { onRegistrationClose, onRegistrationOpen } from "./registration.js";
 import { onCloseRules, onOpenRules } from "./rules.js";
 import { onSignInClose, onSignInOpen } from "./signIn.js";
