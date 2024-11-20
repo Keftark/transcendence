@@ -94,6 +94,11 @@
     animation: bigModeAppear 0.3s ease forwards;
 }
 
+.littleAppearAnim
+{
+    animation: littleModeAppear 0.3s ease forwards;
+}
+
 /* .modeAppear
 {
     transform: translateY(0%);
