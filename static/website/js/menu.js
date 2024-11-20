@@ -12,6 +12,11 @@ const overlayPanel = document.getElementById('overlay');
 const profilePanel = document.getElementById('profilePanel');
 const matchListPanel = document.getElementById('matchListPanel');
 const mainPlayButton = document.getElementById('mainPlayButton');
+const mainProfileButton = document.getElementById('mainProfileButton');
+const mainSettingsButton = document.getElementById('mainSettingsButton');
+const mainPlayDiv = document.getElementById('mainPlayDiv');
+const mainProfileDiv = document.getElementById('mainProfileDiv');
+const mainSettingsDiv = document.getElementById('mainSettingsDiv');
 const menuPanel = document.getElementById('gameMenuPanel');
 const hoverImage = document.getElementById('homeImg');
 const buttonsColors = document.querySelectorAll('.colorize-btn');
@@ -58,7 +63,7 @@ document.getElementById('profileButton').addEventListener('click', () => {
     openProfile();
 });
 
-document.getElementById('mainProfileButton').addEventListener('click', () => {
+mainProfileButton.addEventListener('click', () => {
     openProfile();
 });
 
@@ -74,7 +79,7 @@ document.getElementById('reinitLevelButton').addEventListener('click', () => {
     reinitLevelFunction();
 });
 
-document.getElementById('mainSettingsButton').addEventListener('click', () => {
+mainSettingsButton.addEventListener('click', () => {
     openSettings();
 });
 
@@ -152,7 +157,7 @@ export function openProfile(player = playerStats)
     overlayPanel.style.display = 'block';
     profilePanel.style.display = 'flex';
     if (getCurrentView() === 'home')
-        oldButton = document.getElementById('mainProfileButton');
+        oldButton = mainProfileButton;
     document.getElementById('closeProfileButton').focus();
 }
 
@@ -207,7 +212,7 @@ export function openSettings()
     overlayPanel.style.display = 'block';
     document.getElementById('settingsPanel').style.display = 'flex';
     if (getCurrentView() === 'home')
-        oldButton = document.getElementById('mainSettingsButton');
+        oldButton = mainSettingsButton;
     else
         oldButton = gameSettingsButton;
     document.getElementById('closeSettingsButton').focus();
@@ -358,12 +363,38 @@ export function focusOldButton()
     }, 0);
 }
 
+function resetAnimMainMenu()
+{
+    mainPlayDiv.style.opacity = 0;
+    mainSettingsDiv.style.opacity = 0;
+    mainProfileDiv.style.opacity = 0;
+    mainPlayDiv.classList.remove('fadeMainButton');
+    mainSettingsDiv.classList.remove('fadeMainButton');
+    mainProfileDiv.classList.remove('fadeMainButton');
+    void mainPlayDiv.offsetWidth;
+    void mainSettingsDiv.offsetWidth;
+    void mainProfileDiv.offsetWidth;
+    animMainMenu();
+}
+
+function animMainMenu()
+{
+    mainPlayDiv.classList.add('fadeMainButton');
+    setTimeout(() => {
+        mainProfileDiv.classList.add('fadeMainButton');
+    }, 150);
+    setTimeout(() => {
+        mainSettingsDiv.classList.add('fadeMainButton');
+    }, 300);
+}
+
 export function onMainMenuOpen()
 {
     setHeaderVisibility(true);
     showMainMenu();
     addMainEvents();
     mainPlayButton.focus();
+    resetAnimMainMenu();
 }
 
 export function isSettingsOpen()
