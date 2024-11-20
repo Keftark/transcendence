@@ -20,6 +20,7 @@ const modeTournament = document.getElementById('modeTournamentDiv');
 
 modeLocalButton.addEventListener('click', () => {
     selectedMode = LevelMode.LOCAL;
+    isInsideModes = false;
     closeLocalModes();
     setTimeout(() => {
         openRules();
@@ -28,6 +29,7 @@ modeLocalButton.addEventListener('click', () => {
 
 modeComputerButton.addEventListener('click', () => {
     selectedMode = LevelMode.ADVENTURE;
+    isInsideModes = false;
     closeLocalModes();
     setTimeout(() => {
         openRules();
@@ -36,6 +38,7 @@ modeComputerButton.addEventListener('click', () => {
 
 modeDuelButton.addEventListener('click', () => {
     closeOnlineModes();
+    isInsideModes = false;
     setTimeout(() => {
         openDuelPanel();
     }, 300);
@@ -43,6 +46,7 @@ modeDuelButton.addEventListener('click', () => {
 
 modeTournamentButton.addEventListener('click', () => {
     closeOnlineModes();
+    isInsideModes = false;
     setTimeout(() => {
         openTournamentMenu();
     }, 300);

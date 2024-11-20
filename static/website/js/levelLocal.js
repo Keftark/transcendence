@@ -1,6 +1,6 @@
 import * as THREE from '../node_modules/.vite/deps/three.js';
 import { animateCamera, getCameraActiveState, resetCamera } from './cameranim.js';
-import { resetBoostedStatus, setupPlayerMovement } from './playerMovement.js';
+import { resetBoostedStatus, setupPlayerMovement, stopBoostPlayers } from './playerMovement.js';
 import { createBall } from './ball.js';
 import { ScreenShake } from './screenShake.js';
 import { setScores, addScore, setVisibleScore } from './scoreManager.js';
@@ -84,6 +84,7 @@ let animateLevelFunction = null;
 export let gameEnded = false;
 let deathSphere = null;
 let scaleSphere = 0;
+let isCamEventAdded = false;
 
 function onWindowResize() {
     if (!isCameraAnimationComplete)
@@ -149,12 +150,12 @@ export function gameEventsListener(event)
 
     pressSpaceFunction(event);
     pressBoostFunction(event);
-    pressArrowsMenu(event);
+    // pressArrowsMenu(event);
 }
 
 function pressArrowsMenu(event)
 {
-    if (!gameMenuPanel.classList.contains('show') || isSettingsOpen())
+    if (!gameMenuPanel.classList.contains('show') || !isSettingsOpen())
         return;
     const focusableElements = document.querySelectorAll('button.gameMenuButton');
     const focusable = Array.prototype.slice.call(focusableElements);
@@ -168,6 +169,23 @@ function pressArrowsMenu(event)
         const prevIndex = (currentIndex - 1 + focusable.length) % focusable.length;
         focusable[prevIndex].focus();
     }
+}
+
+function resetZoomCamera(camera)
+{
+    if (camera instanceof THREE.OrthographicCamera) {
+        const aspect = window.innerWidth / window.innerHeight;
+        const cameraSize = 50;
+    
+        camera.left = -cameraSize * aspect;
+        camera.right = cameraSize * aspect;
+        camera.top = cameraSize;
+        camera.bottom = -cameraSize;
+        camera.updateProjectionMatrix();
+        return;
+    }
+    camera.fov = 75;
+    camera.updateProjectionMatrix();
 }
 
 function setOrthographicCamera()
@@ -403,6 +421,7 @@ export function StartLevel(levelMode)
             setVisibleScore(false);
             setScores(0, 0);
             resetCamera(time);
+            stopBoostPlayers();
         }
         else if (isCameraAnimationComplete === true && !gameEnded)
             setVisiblePlay();
@@ -490,7 +509,49 @@ export function StartLevel(levelMode)
         resetScreen(0);
         animate();
     }
-    
+
+    let cameraZoomSpeed = 2; // Set the zoom speed
+
+    function addCamZoomEvent()
+    {
+        if (isCamEventAdded)
+            return;
+        window.addEventListener('wheel', function(event)
+        {
+            if (camera instanceof THREE.OrthographicCamera) {
+                if (event.deltaY > 0) {
+                    camera.left -= cameraZoomSpeed;
+                    camera.right += cameraZoomSpeed;
+                    camera.top += cameraZoomSpeed;
+                    camera.bottom -= cameraZoomSpeed;
+                } else {
+                    camera.left += cameraZoomSpeed;
+                    camera.right -= cameraZoomSpeed;
+                    camera.top -= cameraZoomSpeed;
+                    camera.bottom += cameraZoomSpeed;
+                }
+                
+                camera.updateProjectionMatrix();
+            }
+            else if (camera instanceof THREE.PerspectiveCamera)
+            {
+                if (event.deltaY < 0) {
+                    camera.fov = Math.max(30, camera.fov - cameraZoomSpeed);
+                } else {
+                    camera.fov = Math.min(100, camera.fov + cameraZoomSpeed);
+                }
+                camera.updateProjectionMatrix();
+            }
+            event.preventDefault();
+        }, { passive: false });
+        window.addEventListener('mousedown', function(event) {
+            if (event.button === 1) {
+                resetZoomCamera(camera);
+            }
+        });
+        isCamEventAdded = true;
+    }
+    addCamZoomEvent();
     // document.addEventListener('visibilitychange', () => {
     //     if (document.hidden)
     //         resetAnim();

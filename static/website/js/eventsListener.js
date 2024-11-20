@@ -1,6 +1,7 @@
 import { checkEscapeKey } from "./main.js";
-import { gameEventsListener } from "./levelLocal.js";
+import { gameEventsListener, isInGame } from "./levelLocal.js";
 import { chatIsFocused } from "./chat.js";
+import { isSettingsOpen } from "./menu.js";
 
 function mainMenuEvents(event)
 {
@@ -11,6 +12,8 @@ function mainMenuEvents(event)
     const focusable = Array.prototype.slice.call(visibleElements);
     const currentIndex = focusable.indexOf(document.activeElement);
     if (chatIsFocused)
+        return;
+    if (isInGame && !document.getElementById('gameMenuPanel').classList.contains('show') && !isSettingsOpen())
         return;
     if (event.key === 'ArrowDown') {
         event.preventDefault();
@@ -32,7 +35,7 @@ function escapeEvent(event)
 
 export function removeMainEvents()
 {
-    document.removeEventListener('keydown', mainMenuEvents);
+    // document.removeEventListener('keydown', mainMenuEvents);
 }
 
 export function addMainEvents()

@@ -76,6 +76,7 @@ gameSettingsButton.addEventListener('click', () => {
 });
 
 document.getElementById('reinitLevelButton').addEventListener('click', () => {
+    document.activeElement.blur();
     reinitLevelFunction();
 });
 
@@ -113,22 +114,26 @@ document.getElementById('lang1Button').classList.add('applyBorderOptions');
 document.getElementById('color1Button').classList.add('applyBorderOptions');
 
 let oldButton = mainPlayButton;
+export let isMenuOpen = false;
 
 export function openGameMenu()
 {
     setTimeout(() => {
+        isMenuOpen = true;
         menuPanel.classList.add('show');
     });
 }
 
 export function closeGameMenu()
 {
+    isMenuOpen = false;
     menuPanel.classList.remove('show');
 }
 
 export function openOrCloseGameMenu()
 {
     menuPanel.classList.toggle('show');
+    isMenuOpen = !isMenuOpen;
     if (menuPanel.classList.contains('show'))
     {
         if (playerStats.isRegistered)

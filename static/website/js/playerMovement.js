@@ -1,8 +1,10 @@
 import { balle, getPlayer } from "./levelLocal.js";
 import { getLevelState } from "./main.js";
+import { isMenuOpen, isSettingsOpen } from "./menu.js";
+import { resetBoostBar } from "./powerUp.js";
 import { LevelMode } from "./variables.js";
 
-const myInput = document.getElementById('inputChat');
+const inputChat = document.getElementById('inputChat');
 const moveSpeed = 300;
 let onKeyUpFunction = null;
 let onKeyDownFunction = null;
@@ -10,6 +12,7 @@ let isBoostedLeft = false;
 let isBoostedRight = false;
 let botTargetPosition = 0;
 const botDelay = 1000;
+let rotationBoost = 0;
 
 export function addPlayerMovementKeyDown(event)
 {
@@ -41,6 +44,13 @@ export function stopBoostPlayer(playerNbr)
     // hide the model
 }
 
+export function stopBoostPlayers()
+{
+    resetBoostBar();
+    isBoostedLeft = isBoostedRight = false;
+    getPlayer(0).children[0].visible = getPlayer(1).children[0].visible = false;
+}
+
 export function getBoostedStatus(playerNbr)
 {
     if (playerNbr === 0)
@@ -52,6 +62,23 @@ export function getBoostedStatus(playerNbr)
 export function resetBoostedStatus()
 {
     isBoostedLeft = isBoostedRight = false;
+}
+
+function animatePlayers(player1, player2)
+{
+    rotationBoost++;
+    if (rotationBoost == 2)
+    {
+        if (isBoostedLeft)
+        {
+            player1.children[0].rotation.y = Math.random() * Math.PI * 2;
+        }
+        if (isBoostedRight)
+        {
+            player2.children[0].rotation.y = Math.random() * Math.PI * 2;
+        }
+        rotationBoost = 0;
+    }
 }
 
 export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
@@ -66,8 +93,14 @@ export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
 
     function checkKeys(event, isTrue)
     {
-        if (document.activeElement === myInput)
+        if (document.activeElement === inputChat || isMenuOpen || isSettingsOpen())
+        {
+            moveUp1 = false;
+            moveDown1 = false;
+            moveUp2 = false;
+            moveDown2 = false;
             return;
+        }
         if (event.key === 'w' && isLocal)
             moveUp1 = isTrue;
         else if (event.key === 's' && isLocal)
@@ -134,6 +167,7 @@ export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
 
     function updatePlayers(deltaTime)
     {
+        animatePlayers(player1, player2);
         const adjustedSpeed = moveSpeed * (deltaTime / 1000);
         checkPlayer1Movements(adjustedSpeed);
         if (getLevelState() === LevelMode.ADVENTURE)
