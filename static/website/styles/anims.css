@@ -42,6 +42,23 @@
     }
 }
 
+
+@keyframes bigModeAppear {
+    0% {
+        transform: translateY(-200%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0%);
+        opacity: 1;
+    }
+}
+
+.reverseAnim
+{
+    animation-direction: reverse;
+}
+
 @keyframes noise-before {
     0% {clip: rect(41px, 9999px, 12px, 0);}
     5% {clip: rect(13px, 9999px, 64px, 0);}

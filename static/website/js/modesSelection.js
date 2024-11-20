@@ -5,6 +5,9 @@ import { LevelMode } from './variables.js';
 import { navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
 
+const modesLocalButton = document.getElementById('modesLocalButton');
+const modesOnlineButton = document.getElementById('modesOnlineButton');
+
 document.getElementById('modeLocalButton').addEventListener('click', () => {
     selectedMode = LevelMode.LOCAL;
     openRules();
@@ -36,16 +39,17 @@ document.getElementById('modeBackButton').addEventListener('click', () => {
     clickBackButtonMenu();
 });
 
-document.getElementById('modesLocalButton').addEventListener('click', () => {
+modesLocalButton.addEventListener('click', () => {
     clickModesLocal();
 });
 
-document.getElementById('modesOnlineButton').addEventListener('click', () => {
+modesOnlineButton.addEventListener('click', () => {
     clickModesOnline();
 });
 
 let isInsideModes = false;
 let selectedMode;
+let animReverse = false;
 
 export function clickPlayGame()
 {
@@ -63,13 +67,22 @@ export function clickPlayGame()
         navigateTo('tournament-lobby', selectedMode);
 }
 
+function resetBigModesAnim()
+{
+    animReverse = false;
+    modesLocalButton.style.animationDirection = 'normal';
+    modesOnlineButton.style.animationDirection = 'normal';
+}
+
 function closeInsideModes()
 {
     isInsideModes = false;
     document.getElementById('modesLocal').style.display = 'none';
     document.getElementById('modesOnline').style.display = 'none';
     document.getElementById('modesSelectionParent').style.display = 'flex';
-    document.getElementById('modesLocalButton').focus();
+    resetBigModesAnim();
+    animBigModes();
+    modesLocalButton.focus();
 }
 
 export function showModeChoice()
@@ -81,26 +94,52 @@ export function showModeChoice()
 
 function clickModesLocal()
 {
-    isInsideModes = true;
-    document.getElementById('modesSelectionParent').style.display = 'none';
-    document.getElementById('modesLocal').style.display = 'flex';
-    document.getElementById('modeLocalButton').focus();
+    closeBigModes();
+    setTimeout(() => {
+        isInsideModes = true;
+        document.getElementById('modesSelectionParent').style.display = 'none';
+        document.getElementById('modesLocal').style.display = 'flex';
+        document.getElementById('modeLocalButton').focus();
+    }, 300);
 }
 
 function clickModesOnline()
 {
     if (!playerStats.isRegistered)
         return;
-    isInsideModes = true;
-    document.getElementById('modesSelectionParent').style.display = 'none';
-    document.getElementById('modesOnline').style.display = 'flex';
-    document.getElementById('modeDuelButton').focus();
+    closeBigModes();
+    setTimeout(() => {
+        isInsideModes = true;
+        document.getElementById('modesSelectionParent').style.display = 'none';
+        document.getElementById('modesOnline').style.display = 'flex';
+        document.getElementById('modeDuelButton').focus();
+    }, 300);
+}
+
+function animBigModes()
+{
+    modesLocalButton.classList.add('bigAppearAnim');
+    modesOnlineButton.classList.add('bigAppearAnim');
+}
+
+function closeBigModes()
+{
+    modesLocalButton.classList.remove('bigAppearAnim');
+    modesOnlineButton.classList.remove('bigAppearAnim');
+    void modesLocalButton.offsetWidth;
+    void modesOnlineButton.offsetWidth;
+    modesLocalButton.style.animationDirection = animReverse ? 'normal' : 'reverse';
+    modesOnlineButton.style.animationDirection = animReverse ? 'normal' : 'reverse';
+    animReverse = !animReverse;
+    animBigModes();
 }
 
 export function onModesOpen()
 {
+    resetBigModesAnim();
     setLevelState(LevelMode.MODESELECTION);
-    document.getElementById('modesLocalButton').focus();
+    animBigModes();
+    modesLocalButton.focus();
 }
 
 export function clickBackButtonMenu()
@@ -108,7 +147,12 @@ export function clickBackButtonMenu()
     if (isInsideModes)
         closeInsideModes();
     else
-        navigateTo('home', getLevelState());
+    {
+        closeBigModes();
+        setTimeout(() => {
+            navigateTo('home', getLevelState());
+        }, 300);
+    }
 }
 
 export function onModesClose()

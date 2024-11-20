@@ -86,7 +86,19 @@
     color: rgb(255, 255, 255);
     border: 3px solid #00776d;
     border-radius: 15px;
+    transform: translateY(-200%);
 }
+
+.bigAppearAnim
+{
+    animation: bigModeAppear 0.3s ease forwards;
+}
+
+/* .modeAppear
+{
+    transform: translateY(0%);
+    opacity: 1;
+} */
 
 .modeSelectionButton img, .bigModeSelectionButton img
 {
