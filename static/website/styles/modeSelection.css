@@ -13,6 +13,10 @@
     max-width: 900px;
     height: 54vh;
     max-height: 480px;
+}
+
+#modeSelection
+{
     background-color: #000000;
     border: 1px solid #002522;
     border-radius: 15px;
@@ -28,6 +32,11 @@
     height: 100%;
     width: 50%;
     gap: 1vw;
+}
+
+#modesLocalButton, #modesOnlineButton
+{
+    transform: translate(0%, 0%);
 }
 
 .modeClass

@@ -11,6 +11,12 @@ const modeDuelButton = document.getElementById('modeDuelButton');
 const modeLocalButton = document.getElementById('modeLocalButton');
 const modeComputerButton = document.getElementById('modeComputerButton');
 const modeTournamentButton = document.getElementById('modeTournamentButton');
+const modesLocal = document.getElementById('modesLocalDiv');
+const modesOnline = document.getElementById('modesOnlineDiv');
+const modeLocal = document.getElementById('modeLocalDiv');
+const modeComputer = document.getElementById('modeComputerDiv');
+const modeDuel = document.getElementById('modeDuelDiv');
+const modeTournament = document.getElementById('modeTournamentDiv');
 
 modeLocalButton.addEventListener('click', () => {
     selectedMode = LevelMode.LOCAL;
@@ -88,8 +94,8 @@ export function clickPlayGame()
 function resetBigModesAnim()
 {
     animReverse = false;
-    modesLocalButton.style.animationDirection = 'normal';
-    modesOnlineButton.style.animationDirection = 'normal';
+    modesLocal.style.animationDirection = 'normal';
+    modesOnline.style.animationDirection = 'normal';
 }
 
 function closeInsideModes()
@@ -120,8 +126,8 @@ function clickModesLocal()
         document.getElementById('modesSelectionParent').style.display = 'none';
         document.getElementById('modesLocal').style.display = 'flex';
         modeLocalButton.focus();
-        modeLocalButton.style.animationDirection = 'normal';
-        modeComputerButton.style.animationDirection = 'normal';
+        modeLocal.style.animationDirection = 'normal';
+        modeComputer.style.animationDirection = 'normal';
         animLocalModes();
     }, 300);
 }
@@ -137,73 +143,72 @@ function clickModesOnline()
         document.getElementById('modesSelectionParent').style.display = 'none';
         document.getElementById('modesOnline').style.display = 'flex';
         modeDuelButton.focus();
+        modeDuel.style.animationDirection = 'normal';
+        modeTournament.style.animationDirection = 'normal';
         animOnlineModes();
     }, 300);
 }
 
 function animLocalModes()
 {
-    modeLocalButton.classList.add('littleAppearAnim');
-    modeComputerButton.classList.add('littleAppearAnim');
+    modeLocal.classList.add('littleAppearAnim');
+    modeComputer.classList.add('littleAppearAnim');
 }
 
 function resetLocalAnim()
 {
-    modeLocalButton.classList.remove('littleAppearAnim');
-    modeComputerButton.classList.remove('littleAppearAnim');
-    void modeLocalButton.offsetWidth;
-    void modeComputerButton.offsetWidth;
+    modeLocal.classList.remove('littleAppearAnim');
+    modeComputer.classList.remove('littleAppearAnim');
+    void modeLocal.offsetWidth;
+    void modeComputer.offsetWidth;
     animLocalModes();
 }
 
 function closeLocalModes()
 {
-    modeLocalButton.style.animationDirection = 'reverse';
-    modeComputerButton.style.animationDirection = 'reverse';
+    modeLocal.style.animationDirection = 'reverse';
+    modeComputer.style.animationDirection = 'reverse';
     resetLocalAnim();
-}
-
-function resetOnlineAnim()
-{
-    animReverse = false;
-    modeDuelButton.style.animationDirection = 'normal';
-    modeTournamentButton.style.animationDirection = 'normal';
+    isLocalModes = false;
 }
 
 function animOnlineModes()
 {
-    modeDuelButton.classList.add('littleAppearAnim');
-    modeTournamentButton.classList.add('littleAppearAnim');
+    modeDuel.classList.add('littleAppearAnim');
+    modeTournament.classList.add('littleAppearAnim');
+}
+
+function resetOnlineAnim()
+{
+    modeDuel.classList.remove('littleAppearAnim');
+    modeTournament.classList.remove('littleAppearAnim');
+    void modeDuel.offsetWidth;
+    void modeTournament.offsetWidth;
+    animOnlineModes();
+    isOnlineModes = false;
 }
 
 function closeOnlineModes()
 {
-    isOnlineModes = false;
-    modeDuelButton.classList.remove('littleAppearAnim');
-    modeTournamentButton.classList.remove('littleAppearAnim');
-    void modeDuelButton.offsetWidth;
-    void modeTournamentButton.offsetWidth;
-    modeDuelButton.style.animationDirection = animReverse ? 'normal' : 'reverse';
-    modeTournamentButton.style.animationDirection = animReverse ? 'normal' : 'reverse';
-    animReverse = !animReverse;
+    modeDuel.style.animationDirection = 'reverse';
+    modeTournament.style.animationDirection = 'reverse';
     resetOnlineAnim();
-    animOnlineModes();
 }
 
 function animBigModes()
 {
-    modesLocalButton.classList.add('bigAppearAnim');
-    modesOnlineButton.classList.add('bigAppearAnim');
+    modesLocal.classList.add('bigAppearAnim');
+    modesOnline.classList.add('bigAppearAnim');
 }
 
 function closeBigModes()
 {
-    modesLocalButton.classList.remove('bigAppearAnim');
-    modesOnlineButton.classList.remove('bigAppearAnim');
-    void modesLocalButton.offsetWidth;
-    void modesOnlineButton.offsetWidth;
-    modesLocalButton.style.animationDirection = animReverse ? 'normal' : 'reverse';
-    modesOnlineButton.style.animationDirection = animReverse ? 'normal' : 'reverse';
+    modesLocal.classList.remove('bigAppearAnim');
+    modesOnline.classList.remove('bigAppearAnim');
+    void modesLocal.offsetWidth;
+    void modesOnline.offsetWidth;
+    modesLocal.style.animationDirection = animReverse ? 'normal' : 'reverse';
+    modesOnline.style.animationDirection = animReverse ? 'normal' : 'reverse';
     animReverse = !animReverse;
     animBigModes();
 }

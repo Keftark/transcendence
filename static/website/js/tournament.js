@@ -1,4 +1,5 @@
 import { addDisableButtonEffect, removeDisableButtonEffect, setLevelState } from "./main.js";
+import { showModeChoice } from "./modesSelection.js";
 import { getCurrentView, navigateTo } from "./pages.js";
 import { playerStats } from "./playerManager.js";
 import { getRules } from "./rules.js";
@@ -7,10 +8,12 @@ import { ArenaType, LevelMode } from "./variables.js";
 
 const nbrPlayersTournament = document.getElementById('nbrPlayersTournament');
 const listplayersDiv = document.getElementById('listPlayersTournament');
-const buttonStartTournament = document.getElementById('startTournamentButton');
+const startTournamentButton = document.getElementById('startTournamentButton');
 const rulesTextTournament = document.getElementById('rulesTextTournament');
 const listTournamentsDiv = document.getElementById('listTournaments');
 const rulesJoinTournamentDiv = document.getElementById('rulesJoinTournamentDiv');
+const createTournamentButton = document.getElementById('createTournament');
+const joinTournamentButton = document.getElementById('joinTournament');
 
 let countPlayers = 0;
 let maxPlayers = 0;
@@ -29,7 +32,7 @@ document.getElementById('joinTournamentLobbyButton').addEventListener('click', (
     joinSpecificTournament();
 });
 
-document.getElementById('startTournamentButton').addEventListener('click', () => {
+startTournamentButton.addEventListener('click', () => {
     startTournament();
 });
 
@@ -38,6 +41,28 @@ document.getElementById('cancelTournamentLobbyButton').addEventListener('click',
 });
 
 let previousPage = '';
+
+function animTournamentButtons()
+{
+    createTournamentButton.classList.add('bigAppearAnim');
+    joinTournamentButton.classList.add('bigAppearAnim');
+}
+
+function resetTournamentButtons()
+{
+    createTournamentButton.classList.remove('bigAppearAnim');
+    joinTournamentButton.classList.remove('bigAppearAnim');
+    void createTournamentButton.offsetWidth;
+    void joinTournamentButton.offsetWidth;
+    animTournamentButtons();
+}
+
+function closeTournamentButtons()
+{
+    createTournamentButton.style.animationDirection = 'reverse';
+    joinTournamentButton.style.animationDirection = 'reverse';
+    resetTournamentButtons();
+}
 
 function joinSpecificTournament()
 {
@@ -50,6 +75,9 @@ export function onTournamentMenuOpen()
 {
     setLevelState(LevelMode.TOURNAMENTLOBBY);
     document.getElementById('createTournamentButton').focus();
+    createTournamentButton.style.animationDirection = 'normal';
+    joinTournamentButton.style.animationDirection = 'normal';
+    animTournamentButtons();
 }
 
 function showTournamentRules()
@@ -108,7 +136,7 @@ function addTournamentInList(tournamentName)
         lastClickedTournament = event.target;
         curSelectedTournament = lastClickedTournament.getAttribute('name');
         lastClickedTournament.classList.add('selectedTournament');
-        removeDisableButtonEffect(joinTournamentLobbyButton);
+        removeDisableButtonEffect(document.getElementById('joinTournamentLobbyButton'));
     });
     tournamentDiv.addEventListener('focus', function()
     {
@@ -154,19 +182,22 @@ export function onTournamentJoinOpen()
     rulesJoinTournamentDiv.style.display = 'none';
     // charger tous les tournois a partir de la database
     getTournamentsFromDatabase();
-    addDisableButtonEffect(joinTournamentLobbyButton);
+    addDisableButtonEffect(document.getElementById('joinTournamentLobbyButton'));
 }
 
 export function startTournament()
 {
-    if (buttonStartTournament.classList.contains('disabledButtonHover'))
+    if (startTournamentButton.classList.contains('disabledButtonHover'))
         return;
     // code pour lancer le tournoi
 }
 
 export function closeTournamentMenu()
 {
-    navigateTo('modes');
+    closeTournamentButtons();
+    setTimeout(() => {
+        showModeChoice();
+    }, 300);
 }
 
 function deleteEveryone()
@@ -207,9 +238,9 @@ function addPlayerToCount()
 {
     countPlayers++;
     if (countPlayers === maxPlayers)
-        removeDisableButtonEffect(buttonStartTournament);
+        removeDisableButtonEffect(startTournamentButton);
     else
-        addDisableButtonEffect(buttonStartTournament);
+        addDisableButtonEffect(startTournamentButton);
 }
 
 export function addPlayerToTournament(playerName)
