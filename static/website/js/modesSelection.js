@@ -8,6 +8,7 @@ import { playerStats } from './playerManager.js';
 const modesLocalButton = document.getElementById('modesLocalButton');
 const modesOnlineButton = document.getElementById('modesOnlineButton');
 const modeDuelButton = document.getElementById('modeDuelButton');
+const mode2v2Button = document.getElementById('mode2v2Button');
 const modeLocalButton = document.getElementById('modeLocalButton');
 const modeComputerButton = document.getElementById('modeComputerButton');
 const modeTournamentButton = document.getElementById('modeTournamentButton');
@@ -16,6 +17,7 @@ const modesOnline = document.getElementById('modesOnlineDiv');
 const modeLocal = document.getElementById('modeLocalDiv');
 const modeComputer = document.getElementById('modeComputerDiv');
 const modeDuel = document.getElementById('modeDuelDiv');
+const mode2v2 = document.getElementById('mode2v2Div');
 const modeTournament = document.getElementById('modeTournamentDiv');
 
 modeLocalButton.addEventListener('click', () => {
@@ -41,6 +43,14 @@ modeDuelButton.addEventListener('click', () => {
     isInsideModes = false;
     setTimeout(() => {
         openDuelPanel();
+    }, 300);
+});
+
+mode2v2Button.addEventListener('click', () => {
+    closeOnlineModes();
+    isInsideModes = false;
+    setTimeout(() => {
+        open2v2Panel();
     }, 300);
 });
 
@@ -148,6 +158,7 @@ function clickModesOnline()
         document.getElementById('modesOnline').style.display = 'flex';
         modeDuelButton.focus();
         modeDuel.style.animationDirection = 'normal';
+        mode2v2.style.animationDirection = 'normal';
         modeTournament.style.animationDirection = 'normal';
         animOnlineModes();
     }, 300);
@@ -171,6 +182,7 @@ function resetLocalAnim()
 function closeLocalModes()
 {
     modeLocal.style.animationDirection = 'reverse';
+    mode2v2.style.animationDirection = 'reverse';
     modeComputer.style.animationDirection = 'reverse';
     resetLocalAnim();
     isLocalModes = false;
@@ -179,14 +191,17 @@ function closeLocalModes()
 function animOnlineModes()
 {
     modeDuel.classList.add('littleAppearAnim');
+    mode2v2.classList.add('littleAppearAnim');
     modeTournament.classList.add('littleAppearAnim');
 }
 
 function resetOnlineAnim()
 {
     modeDuel.classList.remove('littleAppearAnim');
+    mode2v2.classList.remove('littleAppearAnim');
     modeTournament.classList.remove('littleAppearAnim');
     void modeDuel.offsetWidth;
+    void mode2v2.offsetWidth;
     void modeTournament.offsetWidth;
     animOnlineModes();
     isOnlineModes = false;
@@ -195,6 +210,7 @@ function resetOnlineAnim()
 function closeOnlineModes()
 {
     modeDuel.style.animationDirection = 'reverse';
+    mode2v2.style.animationDirection = 'reverse';
     modeTournament.style.animationDirection = 'reverse';
     resetOnlineAnim();
 }
@@ -258,6 +274,11 @@ function openDuelPanel()
     // else
         
     // if otherPlayer != "" and if isInTheDatabase(otherPlayer), sends an invitation to this player
+}
+function open2v2Panel()
+{
+    if (playerStats.isRegistered)
+        navigateTo('duel'); // faire la page 2v2 !
 }
 
 export function openTournamentMenu()

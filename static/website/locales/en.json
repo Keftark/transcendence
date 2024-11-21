@@ -13,7 +13,7 @@
     "language": "Language", 
     "mainPlayButton": "PLAY", 
     "modeSelectionText": "Game modes", 
-    "oneVsOne": "1vs1", 
+    "oneVsOne": "1 vs 1", 
     "modeComputer": "Vs computer", 
     "mainMenuText": "Main menu", 
     "backText": "Back",
@@ -98,6 +98,7 @@
     "joinTournamentText": "Join a tournament",
     "sendTournamentInvitToChat": "Send to chat",
     "tournamentLobbyHeaderText": "Tournament - Lobby",
-    "availableTournamentHeader": "Available tournaments"
+    "availableTournamentHeader": "Available tournaments",
+    "coopText": "2 vs 2"
     
 }
