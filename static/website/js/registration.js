@@ -251,11 +251,13 @@ function checkAccessModes()
 {
     if (playerStats.isRegistered)
     {
+        document.getElementById('mainBackground').classList.add('enlightened');
         removeDisableButtonEffect(document.getElementById('modesOnlineButton'));
         document.getElementById('modesOnlineText').classList.remove('disabledText');
     }
     else
     {
+        document.getElementById('mainBackground').classList.remove('enlightened');
         addDisableButtonEffect(document.getElementById('modesOnlineButton'));
         document.getElementById('modesOnlineText').classList.add('disabledText');
     }

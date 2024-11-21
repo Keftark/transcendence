@@ -13,6 +13,12 @@
     min-height: 200px;
     padding: 2vh;
     z-index: 3;
+    opacity: 0;
+    transition: all 0.1s ease;
+    backdrop-filter: blur(5px);
+}
+#settingsPanel.appear {
+    opacity: 1;
 }
 
 #panelSettingsImg
@@ -25,7 +31,6 @@
     left: 0;
     margin: 0;
     z-index: -1;
-    backdrop-filter: blur(5px);
 }
 
 #optionsLanguages, #optionsColors, #cameraType

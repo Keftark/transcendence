@@ -67,3 +67,8 @@
 {
     animation: grow 0.2s ease-out forwards;
 }
+
+.grow-on-appear-fast
+{
+    animation: grow 0.1s ease-out forwards;
+}

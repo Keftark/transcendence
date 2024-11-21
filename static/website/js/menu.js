@@ -10,6 +10,7 @@ import { LevelMode } from './variables.js';
 
 const overlayPanel = document.getElementById('overlay');
 const profilePanel = document.getElementById('profilePanel');
+const settingsPanel = document.getElementById('settingsPanel');
 const matchListPanel = document.getElementById('matchListPanel');
 const mainPlayButton = document.getElementById('mainPlayButton');
 const mainProfileButton = document.getElementById('mainProfileButton');
@@ -161,6 +162,9 @@ export function openProfile(player = playerStats)
     document.getElementById('mailProfile').innerText = player.mail;
     overlayPanel.style.display = 'block';
     profilePanel.style.display = 'flex';
+    setTimeout(() => {
+        profilePanel.classList.add('appear');
+    }, 10);
     if (getCurrentView() === 'home')
         oldButton = mainProfileButton;
     document.getElementById('closeProfileButton').focus();
@@ -196,25 +200,34 @@ export function closeProfile()
     profileIsOpen = false;
     if (profilePanel.classList.contains('toLeft') === true) {
         closeMatchList();
+        profilePanel.classList.remove('appear');
         setTimeout(() => {
             profilePanel.style.display = 'none';
         }, 100);
     }
     else
     {
-        matchListPanel.style.display = 'none';
-        profilePanel.style.display = 'none';
+        profilePanel.classList.remove('appear');
+        setTimeout(() => {
+            matchListPanel.style.display = 'none';
+            profilePanel.style.display = 'none';
+        }, 100);
     }
-    removeAllScores();
-    focusOldButton();
-    overlayPanel.style.display = 'none';
+    setTimeout(() => {
+        removeAllScores();
+        focusOldButton();
+        overlayPanel.style.display = 'none';
+    }, 100);
 }
 
 export function openSettings()
 {
     settingsIsOpen = true;
     overlayPanel.style.display = 'block';
-    document.getElementById('settingsPanel').style.display = 'flex';
+    settingsPanel.style.display = 'flex';
+    setTimeout(() => {
+        settingsPanel.classList.add('appear');
+    }, 10);
     if (getCurrentView() === 'home')
         oldButton = mainSettingsButton;
     document.getElementById('closeSettingsButton').focus();
@@ -223,9 +236,12 @@ export function openSettings()
 export function closeSettings()
 {
     settingsIsOpen = false;
-    document.getElementById('settingsPanel').style.display = 'none';
-    focusOldButton();
-    overlayPanel.style.display = 'none';
+    settingsPanel.classList.remove('appear');
+    setTimeout(() => {
+        settingsPanel.style.display = 'none';
+        focusOldButton();
+        overlayPanel.style.display = 'none';
+    }, 100);
 }
 
 function changeOutlineColors(newIndex)
@@ -318,9 +334,15 @@ export function onPlayGame(mode)
 export function setHeaderVisibility(isVisible)
 {
     if (isVisible === true)
+    {
+        document.getElementById('mainBackground').style.display = 'block';
         document.getElementById('header-title').style.display = 'block';
+    }
     else
+    {
+        document.getElementById('mainBackground').style.display = 'none';
         document.getElementById('header-title').style.display = 'none';
+    }
 }
 
 export function toggleCameraType(cameraType)

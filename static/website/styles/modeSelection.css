@@ -15,13 +15,6 @@
     max-height: 480px;
 }
 
-#modeSelection
-{
-    background-color: #000000;
-    border: 1px solid #002522;
-    border-radius: 15px;
-}
-
 #modesLocal, #modesOnline, #modesLocalDiv, #modesOnlineDiv
 {
     display: flex;

@@ -94,7 +94,7 @@ export function navigateTo(path, otherVar = null) {
     currentPath = path;
     const nextPage = document.getElementById(path);
     if (nextPage) {
-        nextPage.style.display = 'block';
+        nextPage.style.display = 'flex';
         onOpenPage(path, otherVar);
     }
 

@@ -74,6 +74,37 @@
     }
 }
 
+@keyframes glow
+{
+    0% {
+        box-shadow: 0 0 6px rgba(0, 247, 255, 0.415);
+    }
+    50% {
+        box-shadow: 0 0 16px rgba(0, 247, 255, 0.415);
+    }
+    100% {
+        box-shadow: 0 0 6px rgba(0, 247, 255, 0.415);
+    }
+}
+
+@keyframes heartbeat {
+    0%, 100% {
+      box-shadow: 0 0 10px 2px rgba(0, 247, 255, 0.03);
+    }
+    25% {
+      box-shadow: 0 0 20px 8px rgba(0, 247, 255, 0.06); /* First pulse */
+    }
+    30% {
+      box-shadow: 0 0 10px 2px rgba(0, 247, 255, 0.03);
+    }
+    40% {
+      box-shadow: 0 0 30px 12px rgba(0, 247, 255, 0.06); /* Peak pulse */
+    }
+    50% {
+      box-shadow: 0 0 30px 2px rgba(0, 247, 255, 0.03);
+    }
+  }
+
 .reverseAnim
 {
     animation-direction: reverse;

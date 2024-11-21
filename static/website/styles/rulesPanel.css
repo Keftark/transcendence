@@ -13,9 +13,7 @@
     max-width: 56rem;
     height: 54vh;
     max-height: 30rem;
-    background-color: #000000;
-    border: 1px solid #002522;
-    border-radius: 15px;
+    z-index: 0;
 }
 
 #rulesPanel h1
