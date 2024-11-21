@@ -38,9 +38,15 @@ let currentLangIndex = 0;
 let currentCameraType = 0;
 let settingsIsOpen = false;
 let profileIsOpen = false;
+let oldButton = mainPlayButton;
+export let isMenuOpen = false;
 
 document.getElementById('header-title').addEventListener('click', () => {
     navigateTo('home');
+});
+
+document.getElementById('seeMatchesButton').addEventListener('click', () => {
+    showMatchList();
 });
 
 mainPlayButton.addEventListener('click', () => {
@@ -48,6 +54,7 @@ mainPlayButton.addEventListener('click', () => {
 });
 
 gameSettingsButton.addEventListener('click', () => {
+    gameSettingsButton.blur();
     openSettings();
 });
 
@@ -69,10 +76,6 @@ mainProfileButton.addEventListener('click', () => {
 
 document.getElementById('closeProfileButton').addEventListener('click', () => {
     closeProfile();
-});
-
-gameSettingsButton.addEventListener('click', () => {
-    openSettings();
 });
 
 document.getElementById('reinitLevelButton').addEventListener('click', () => {
@@ -112,9 +115,6 @@ document.querySelectorAll('.mainMenuButton').forEach(button => {
 document.getElementById('perspectiveButton').classList.add('applyBorderOptions');
 document.getElementById('lang1Button').classList.add('applyBorderOptions');
 document.getElementById('color1Button').classList.add('applyBorderOptions');
-
-let oldButton = mainPlayButton;
-export let isMenuOpen = false;
 
 export function openGameMenu()
 {
@@ -166,8 +166,7 @@ export function openProfile(player = playerStats)
     document.getElementById('closeProfileButton').focus();
 }
 
-window.showMatchList = showMatchList;
-export function showMatchList()
+function showMatchList()
 {
     if (profilePanel.classList.contains('toLeft') === false)
     {
@@ -175,7 +174,7 @@ export function showMatchList()
         setTimeout(() => {
             profilePanel.classList.add('toLeft');
             matchListPanel.classList.add('toRight');
-        }, 100);
+        }, 10);
     }
     else
     {
@@ -218,8 +217,6 @@ export function openSettings()
     document.getElementById('settingsPanel').style.display = 'flex';
     if (getCurrentView() === 'home')
         oldButton = mainSettingsButton;
-    else
-        oldButton = gameSettingsButton;
     document.getElementById('closeSettingsButton').focus();
 }
 

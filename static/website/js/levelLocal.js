@@ -268,6 +268,8 @@ export function setPlayerRightName()
 {
     if (currentLevelMode === LevelMode.ADVENTURE)
         player2Name.innerText = getTranslation('botName');
+    else
+        player2Name.innerText = getTranslation('playernameright');
 }
 
 function setPlayerNames()

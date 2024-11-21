@@ -1,7 +1,7 @@
 import { setButtonsColors, closeProfile, closeSettings, focusOldButton, isProfileOpen, isSettingsOpen, openOrCloseGameMenu, setLanguageButtons } from './menu.js';
 import { initTranslation } from './translate.js';
 import { addMainEvents } from './eventsListener.js';
-import { ArenaType, LevelMode } from './variables.js';
+import { LevelMode } from './variables.js';
 import { isChatOpen, tryCloseChat } from './chat.js';
 import { clickCancelRules } from './rules.js';
 import { gameEnded, isInGame } from './levelLocal.js';
@@ -25,6 +25,7 @@ export function getLevelState()
 
 export function checkEscapeKey()
 {
+    const currentView = getCurrentView();
     if (isRegistrationOpen())
         clickCancelRegister();
     else if (isChatOpen())
@@ -33,17 +34,17 @@ export function checkEscapeKey()
         closeSettings();
     else if (isProfileOpen())
         closeProfile();
-    else if (getCurrentView() === 'rules')
+    else if (currentView === 'rules')
         clickCancelRules();
-    else if (getCurrentView() === 'modes')
+    else if (currentView === 'modes')
         clickBackButtonMenu();
-    else if (getCurrentView() === 'tournament-lobby')
+    else if (currentView === 'tournament-lobby')
         closeTournamentLobbyMenu();
-    else if (getCurrentView() === 'tournament-menu')
+    else if (currentView === 'tournament-menu')
         closeTournamentMenu();
-    else if (getCurrentView() === 'tournament-join')
+    else if (currentView === 'tournament-join')
         closeTournamentJoinMenu();
-    else if (getCurrentView() === 'duel')
+    else if (currentView === 'duel')
         closeDuelPanel();
     else if (isInGame && !gameEnded)
         openOrCloseGameMenu();
