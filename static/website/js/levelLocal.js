@@ -363,6 +363,49 @@ function resetAnim()
     }
 }
 
+let deathSphereGrew = false;
+function animateDeathSphere()
+{
+    if (deathSphere != null)
+        {
+            if (!deathSphereGrew)
+            {
+                if (scaleSphere < 20)
+                    scaleSphere += 1;
+                else if (scaleSphere < 25)
+                    scaleSphere += 0.75;
+                else if (scaleSphere < 28)
+                    scaleSphere += 0.5;
+                else if (scaleSphere < 30)
+                    scaleSphere += 0.4;
+                else if (scaleSphere < 32)
+                    scaleSphere += 0.3;
+                else if (scaleSphere < 35)
+                    scaleSphere += 0.2;
+                else if (scaleSphere < 36)
+                    scaleSphere += 0.05;
+                else if (scaleSphere >= 35)
+                {
+                    deathSphereGrew = true;
+                    balle.visible = false;
+                }
+                deathSphere.scale.set(scaleSphere, scaleSphere, scaleSphere);  
+            }
+            else
+            {
+                if (scaleSphere > 0)
+                {
+                    scaleSphere -= 2;
+                    if (scaleSphere < 0)
+                        scaleSphere = 0;
+                    deathSphere.scale.set(scaleSphere, scaleSphere, scaleSphere);
+                }
+            }
+            deathSphere.children[0].rotation.y += 0.01;
+            deathSphere.children[0].rotation.x += 0.01;
+        }
+}
+
 export function StartLevel(levelMode)
 {
     deathSphere = null;
@@ -461,16 +504,7 @@ export function StartLevel(levelMode)
         }
         if (animateLevelFunction != null)
             animateLevelFunction();
-        if (deathSphere != null)
-        {
-            if (scaleSphere < 30)
-            {
-                scaleSphere += 1;
-                deathSphere.scale.set(scaleSphere, scaleSphere, scaleSphere);
-            }
-            deathSphere.children[0].rotation.y += 0.01;
-            deathSphere.children[0].rotation.x += 0.01;
-        }
+        animateDeathSphere();
         renderer.render(scene, camera);
         if (!toggleReset)
             animationId = requestAnimationFrame(animate);
@@ -574,6 +608,7 @@ export function endMatch(scoreP1, scoreP2)
     addMatchToHistory(scoreP1, scoreP2, player2NameText, getMatchTime());
     pressPlayDiv.style.display = 'none';
     stopStopwatch();
+    deathSphereGrew = false;
     deathSphere = createDeathSphere();
     scene.add(deathSphere);
     deathSphere.position.set(balle.position.x, balle.position.y, balle.position.z);
@@ -592,5 +627,5 @@ export function endMatch(scoreP1, scoreP2)
         }
         else
             callVictoryScreen(VictoryType.EXAEQUO);
-    }, 1200);
+    }, 1800);
 }

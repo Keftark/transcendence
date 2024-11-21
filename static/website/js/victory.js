@@ -1,6 +1,8 @@
+import { getLevelState } from "./main.js";
 import { clickBackButtonMenu } from "./modesSelection.js";
+import { getPlayerName } from "./playerManager.js";
 import { getTranslation } from "./translate.js";
-import { VictoryType } from "./variables.js";
+import { LevelMode, VictoryType } from "./variables.js";
 
 const victoryScreen = document.getElementById('victory');
 const victoryPanel = document.getElementById('victoryPanel');
@@ -14,15 +16,16 @@ closeVictoryButton.addEventListener('click', () => {
 export function callVictoryScreen(victoryType) {
     let str;
     let newSrc;
+    const isLocal = getLevelState() === LevelMode.LOCAL;
 
     switch (victoryType) {
         case VictoryType.VICTORY:
-            str = getTranslation('victory');
+            str = isLocal ? getPlayerName() + " " + getTranslation('wins') : getTranslation('victory');
             newSrc = "static/images/victoryImg.png";
             break;
         case VictoryType.DEFEAT:
-            str = getTranslation('defeat');
-            newSrc = "static/images/defeatImg.png";
+            str = isLocal ? getTranslation('playernameright') + " " + getTranslation('wins') : getTranslation('defeat');
+            newSrc = isLocal ? "static/images/victoryImg.png" : "static/images/defeatImg.png";
             break;
         case VictoryType.EXAEQUO:
             str = getTranslation('exaequo');
@@ -34,7 +37,10 @@ export function callVictoryScreen(victoryType) {
 
     victoryImg.onload = function() {
         victoryScreen.style.display = 'flex';
-        victoryPanel.classList.add("grow-on-appear");
+        setTimeout(() => {
+            victoryScreen.classList.add("appearing");
+            victoryPanel.classList.add("grow-on-appear");
+        }, 50);
         closeVictoryButton.focus();
     };
     victoryImg.src = newSrc;
@@ -42,7 +48,8 @@ export function callVictoryScreen(victoryType) {
 
 export function closeVictoryScreen()
 {
-    victoryScreen.style.display = 'none';
     victoryPanel.classList.remove("grow-on-appear");
     clickBackButtonMenu();
+    victoryScreen.classList.remove("appearing");
+    victoryScreen.style.display = 'none';
 }

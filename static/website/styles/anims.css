@@ -51,10 +51,12 @@
     }
 }
 
-
 @keyframes bigModeAppear {
     0% {
-        transform: translateY(-200%);
+        transform: translateY(-80%);
+        opacity: 0;
+    }
+    30% {
         opacity: 0;
     }
     100% {
@@ -65,7 +67,10 @@
 
 @keyframes littleModeAppear {
     0% {
-        transform: translateY(200%);
+        transform: translateY(80%);
+        opacity: 0;
+    }
+    30% {
         opacity: 0;
     }
     100% {

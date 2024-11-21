@@ -93,19 +93,13 @@
 
 .bigAppearAnim
 {
-    animation: bigModeAppear 0.3s ease forwards;
+    animation: bigModeAppear 0.3s ease-in-out forwards;
 }
 
 .littleAppearAnim
 {
-    animation: littleModeAppear 0.3s ease forwards;
+    animation: littleModeAppear 0.3s ease-in-out forwards;
 }
-
-/* .modeAppear
-{
-    transform: translateY(0%);
-    opacity: 1;
-} */
 
 .modeSelectionButton img, .bigModeSelectionButton img
 {
