@@ -59,7 +59,7 @@ export function setScores(player1score, player2score)
 
 export function setVisibleScore(boolean)
 {
-    scores.style.display = boolean === true ? 'flex' : 'none';
+    scores.style.display = boolean === true ? 'block' : 'none';
 }
 
 export function removeAllScores()

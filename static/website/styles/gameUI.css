@@ -80,36 +80,47 @@
     display: none;
     position: absolute;
     top: 0;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 25px rgb(255, 238, 0);
 }
 
 #timer
 {
     font-size: clamp(1rem, 2vw + 1.5rem, 6vw);
     margin: 0 -0.5rem -0.5rem -0.5rem;
-    box-shadow: 0 0 25px rgb(255, 238, 0);
 }
 
 #scorediv
 {
-    display: flex;
-    gap: 3vw;
-    flex-direction: row;
-    box-shadow: 0 0 25px rgb(255, 238, 0);
+    position: absolute;
+    display: block;
+    left: 50%;
 }
 
 #score-left, #score-right{
+    top: 0;
     color: white;
     font-size: clamp(1rem, 1vw + 1.5rem, 6vw);
-
+    position: absolute;
+}
+#score-left{
+    right: 1.5vw;
+}
+#score-right{
+    left: 1.5vw;
 }
 
 #playername-left, #playername-right {
+    top: 0;
     color: white;
     font-size: clamp(1rem, 1vw + 1.5rem, 6vw);
+    position: absolute;
+    white-space: nowrap;
+}
+
+#playername-left{
+    right: 7vw;
+}
+#playername-right{
+    left: 7vw;
 }
 
 .fall-down {
