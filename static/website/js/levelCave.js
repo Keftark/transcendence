@@ -32,9 +32,11 @@ function addRocks(scene)
                 scene.add(model);
                 setObjectRandomPosition(model);
                 let nbr = getRandomNumberBetween(0.5, 2);
+                model.matrixAutoUpdate = false;
                 model.scale.set(nbr, nbr, nbr);
                 model.rotation.x = 90;
                 model.rotation.y = getRandomNumberBetween(0, 360);
+                model.updateMatrix();
             },
             undefined,
             function (error) {
@@ -95,11 +97,15 @@ function createWalls(scene, textureLoader)
     ];
     const geometryHorizontal = new THREE.BoxGeometry(wallSizeHorizontal, 2, wallHeight);
     const wallTop = new THREE.Mesh(geometryHorizontal, materialHorizontal);
-    scene.add(wallTop);
+    wallTop.matrixAutoUpdate = false;
     wallTop.position.set(0, BOUNDARY.Y_MAX + 0.5, 0);
+    scene.add(wallTop);
+    wallTop.updateMatrix();
     const wallBot = new THREE.Mesh(geometryHorizontal, materialHorizontal);
-    scene.add(wallBot);
+    wallBot.matrixAutoUpdate = false;
     wallBot.position.set(0, BOUNDARY.Y_MIN - 0.5, 0);
+    scene.add(wallBot);
+    wallBot.updateMatrix();
 
     const sideTextureVertical = textureLoader.load(texturePath);
     sideTextureVertical.colorSpace = THREE.SRGBColorSpace;
@@ -129,11 +135,15 @@ function createWalls(scene, textureLoader)
     ];
     const geometryVertical = new THREE.BoxGeometry(2, wallSizeVertical, wallHeight);
     wallLeft = new THREE.Mesh(geometryVertical, materialVertical);
-    scene.add(wallLeft);
+    wallLeft.matrixAutoUpdate = false;
     wallLeft.position.set(BOUNDARY.X_MAX + 2.5, 0, 0);
+    scene.add(wallLeft);
+    wallLeft.updateMatrix();
     wallRight = new THREE.Mesh(geometryVertical, materialVertical);
-    scene.add(wallRight);
+    wallRight.matrixAutoUpdate = false;
     wallRight.position.set(BOUNDARY.X_MIN - 2.5, 0, 0);
+    scene.add(wallRight);
+    wallRight.updateMatrix();
 }
 
 export function createCaveLevel(scene, textureLoader)

@@ -83,6 +83,7 @@ export let isInGame = false;
 let animateLevelFunction = null;
 export let gameEnded = false;
 let deathSphere = null;
+let deathSphereExplosion = null;
 let scaleSphere = 0;
 let isCamEventAdded = false;
 
@@ -241,6 +242,7 @@ export function setUpScene(levelMode)
     camera = setUpCamera();
     renderer = new THREE.WebGLRenderer();
     renderer.useLegacyLights = true;
+    renderer.gammaFactor = 2.2;
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     document.body.appendChild(renderer.domElement);
@@ -403,6 +405,7 @@ function animateDeathSphere()
             }
             deathSphere.children[0].rotation.y += 0.01;
             deathSphere.children[0].rotation.x += 0.01;
+            deathSphere.children[1].scale.multiplyScalar(1.08);
         }
 }
 

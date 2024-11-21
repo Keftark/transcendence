@@ -7,7 +7,7 @@ export function createDeathSphere()
         color: 0x000000
     });
     const ballGeometry = new THREE.SphereGeometry(1, 32, 32);
-    const ball = new THREE.Mesh(ballGeometry, ballMaterial);
+    const baseSphere = new THREE.Mesh(ballGeometry, ballMaterial);
 
     const ballOutGeometry = new THREE.SphereGeometry(1.05, 32, 32);
     const ballOutTexture = textureLoader.load('static/mat/deathBall.png');
@@ -18,7 +18,9 @@ export function createDeathSphere()
     });
     ballOutTexture.colorSpace = THREE.SRGBColorSpace;
     const extBall = new THREE.Mesh(ballOutGeometry, material);
+    const explosion = new THREE.Mesh(ballOutGeometry, material);
 
-    ball.add(extBall);
-    return ball;
+    baseSphere.add(extBall);
+    baseSphere.add(explosion);
+    return baseSphere;
 }
