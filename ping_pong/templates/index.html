@@ -345,7 +345,6 @@
         <div id="matchHistoryContainer"></div>
     </div>
     <div id="profilePanel">
-        <img id="panelProfileImg" src="{% static 'images/panel.png' %}" alt="">
         <h2 id="nameProfile"></h2>
         <p id="firstNameProfile"></p>
         <p id="lastNameProfile"></p>
@@ -363,7 +362,6 @@
 
     <!------------------------------ Settings Panel ------------------------------>
     <div id="settingsPanel">
-        <img id="panelSettingsImg" src="{% static 'images/panel.png' %}" alt="">
         <h2 id="settingsHeader"></h2>
         <p id="colors"></p>
         <div id="optionsColors">
@@ -372,24 +370,24 @@
             <button class="colorize-btn" id="color3Button" data-color="#ffbb00" data-index="2"></button>
             <button class="colorize-btn" id="color4Button" data-color="#ff0000" data-index="3"></button>
             <button class="colorize-btn" id="color5Button" data-color="#08ec00" data-index="4"></button>
-            <button class="colorize-btn" id="color6Button" data-color="#00ffff" data-index="5"></button>
+            <button class="colorize-btn" id="color6Button" data-color="#003fff" data-index="5"></button>
         </div>
         <p id="language"></p>
         <div id="optionsLanguages">
             <button class="language" id="lang1Button" data-language="en" data-lang="0">
-                <img src="{% static 'icons/lang-en.png' %}" id="lang-icon" />
+                <img src="{% static 'icons/lang-en.png' %}" id="lang-icon-en" />
             </button>
             <button class="language" id="lang2Button" data-language="fr" data-lang="1">
-                <img src="{% static 'icons/lang-fr.png' %}" id="lang-icon" />
+                <img src="{% static 'icons/lang-fr.png' %}" id="lang-icon-fr" />
             </button>
         </div>
         <p id="cameraTypeHeader"></p>
         <div id="cameraType">
-            <button id="perspectiveButton">
-                <img src="{% static 'icons/cameraPerspective.png' %}" alt="">
+            <button id="perspectiveButton" class="cameraTypeSettings">
+                <img src="{% static 'icons/cameraPerspective.png' %}" id="perspecImg" alt="">
             </button>
-            <button id="orthographicButton">
-                <img src="{% static 'icons/cameraOrthographic.png' %}" alt="">
+            <button id="orthographicButton" class="cameraTypeSettings">
+                <img src="{% static 'icons/cameraOrthographic.png' %}" id="orthoImg" alt="">
             </button>
         </div>
         <button id="closeSettingsButton"></button>

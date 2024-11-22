@@ -257,6 +257,8 @@ function changeOutlineColors(newIndex)
 export function setButtonsColors()
 {
     buttonsColors.forEach(button => {
+        const color = button.getAttribute('data-color');
+        button.style.backgroundColor = color;
         button.addEventListener('click', function() {
             changeOutlineColors(parseInt(this.getAttribute('data-index'), 10));
             changeTextsColor(this.getAttribute('data-color'));
