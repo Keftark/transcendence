@@ -139,9 +139,23 @@
     <div id="rules" class="page">
         <h2 class="headerText" id="rulesHeaderText"></h2>
         <div id="rulesPanel">
-            <div id="rulesPoints">
+            <div class="ruleTextDiv" id="rulesPoints">
                 <h1 id="rulesPointsText"></h1>
                 <input type="text" id="rulesPointsInput" placeholder="3" value="3" min="0" maxlength="2" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+            </div>
+            <div class="ruleTextDiv" id="rulesTimer">
+                <h1 id="rulesTimerText"></h1>
+                <input type="text" id="rulesTimerInput" placeholder="0" value="0" min="0" maxlength="3" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+            </div>
+            <div class="ruleTextDiv" id="rulesMaxPlayers">
+                <h1 id="rulesMaxPlayersText"></h1>
+                <input type="text" id="rulesMaxPlayersInput" placeholder="0" value="0" min="0" maxlength="2" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+            </div>
+            <div class="ruleTextDiv" id="rulesIsPrivate">
+                <h1 id="rulesIsPrivateText"></h1>
+                <button id="rulesIsPrivateToggle">
+                    <img id="imgIsPrivate" src="{% static 'icons/unchecked.png' %}">
+                </button>
             </div>
             <div id="rulesArenaType">
                 <h1 id="rulesArenaText"></h1>
@@ -153,14 +167,6 @@
                         <img src="{% static 'images/arenaSpace.png' %}">
                     </button>
                 </div>
-            </div>
-            <div id="rulesTimer">
-                <h1 id="rulesTimerText"></h1>
-                <input type="text" id="rulesTimerInput" placeholder="0" value="0" min="0" maxlength="3" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-            </div>
-            <div id="rulesMaxPlayers">
-                <h1 id="rulesMaxPlayersText"></h1>
-                <input type="text" id="rulesMaxPlayersInput" placeholder="0" value="0" min="0" maxlength="2" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
             </div>
             <div id="buttonsRules">
                 <button class="buttonAccept" id="buttonAcceptRules"></button>

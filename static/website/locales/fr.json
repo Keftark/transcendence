@@ -99,5 +99,6 @@
     "sendTournamentInvitToChat": "Envoyer dans le chat",
     "tournamentLobbyHeaderText": "Tournoi - Accueil",
     "availableTournamentHeader": "Tournois disponibles",
-    "coopText": "2 contre 2"
+    "coopText": "2 contre 2",
+    "rulesIsPrivateInput": "Match privé : "
 }

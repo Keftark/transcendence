@@ -8,12 +8,15 @@ import { goTournamentMenu } from "./tournament.js";
 import { ArenaType } from "./variables.js";
 
 document.getElementById('buttonCancelRules').addEventListener('click', clickCancelRules);
-
+document.getElementById('rulesArenaTypeCave').classList.add('applyBorder');
 document.getElementById('rulesArenaTypeCave').addEventListener('click', () => {
     selectArena(0);
 });
 document.getElementById('rulesArenaTypeSpace').addEventListener('click', () => {
     selectArena(1);
+});
+document.getElementById('rulesIsPrivateToggle').addEventListener('click', () => {
+    togglePrivate();
 });
 
 const nbrPointsInput = document.getElementById('rulesPointsInput');
@@ -22,6 +25,20 @@ const buttonStart = document.getElementById('buttonAcceptRules');
 const nbrOfPlayersField = document.getElementById('rulesMaxPlayers');
 const nbrOfPlayersInput = document.getElementById('rulesMaxPlayersInput');
 const arenas = document.getElementById('arenas').querySelectorAll('.arena');
+const togglePrivateImg = document.getElementById('imgIsPrivate');
+const togglePrivateDiv = document.getElementById('rulesIsPrivate');
+
+timerInput.addEventListener("input", () => {
+    endEditInputFieldRules();
+});
+
+nbrPointsInput.addEventListener("input", () => {
+    endEditInputFieldRules();
+});
+
+nbrOfPlayersInput.addEventListener("input", () => {
+    endEditInputFieldRules();
+});
 
 nbrPointsInput.addEventListener("focus", function() {
     nbrPointsInput.select();
@@ -39,6 +56,7 @@ nbrOfPlayersInput.addEventListener("focus", function() {
 let selectedArena = 0;
 let playerDuelId = "";
 let isTournament = false;
+let isPrivate = false;
 
 buttonStart.addEventListener('click', () => {
     if (isTournament && !isNbrPlayersEven())
@@ -52,6 +70,7 @@ let rules =
     arena: ArenaType.CAVE,
     maxTime: 0,
     nbrPlayers: 0,
+    isPrivate: false,
 }
 
 function isNbrPlayersEven()
@@ -60,13 +79,13 @@ function isNbrPlayersEven()
     return !isNaN(nbr) && Number.isInteger(nbr) && nbr != 0 && nbr % 2 === 0;
 }
 
-
 export function setDefaultRules()
 {
     rules.pointsToWin = 3;
     rules.arena = ArenaType.CAVE; // faire un random ?
     rules.maxTime = 0;
     rules.nbrPlayers = 0;
+    rules.isPrivate = false;
 }
 
 export function selectArena(arenaIndex)
@@ -86,6 +105,7 @@ export function setCustomRules()
     rules.arena = selectedArena;
     rules.maxTime = timerInput.value === '' ? timerInput.placeholder : timerInput.value;
     rules.nbrPlayers = nbrOfPlayersInput.value === '' ? nbrOfPlayersInput.placeholder : nbrOfPlayersInput.value;
+    rules.isPrivate = isPrivate;
 }
 
 export function resetInputfieldsRules()
@@ -96,6 +116,11 @@ export function resetInputfieldsRules()
     selectedArena = 0;
     timerInput.value = '0';
     nbrOfPlayersInput.value = '0';
+    if (isPrivate)
+    {
+        isPrivate = false;
+        togglePrivateImg.src = 'static/icons/unchecked.png';
+    }
 }
 
 export function getRules()
@@ -122,10 +147,12 @@ export function openRules(fromTournament = null)
     navigateTo('rules', fromTournament);
 }
 
+ // if from 2v2, the parameter should be "2v2"
 export function onOpenRules(fromTournament)
 {
     isTournament = fromTournament === null ? false : true;
-    nbrOfPlayersField.style.display = fromTournament === null ? 'none' : 'flex';
+    nbrOfPlayersField.style.display = fromTournament === "t" ? 'flex' : 'none';
+    togglePrivateDiv.style.display = fromTournament === null ? 'none' : 'flex';
     playerDuelId = playerStats.id;
     nbrPointsInput.select();
     endEditInputFieldRules();
@@ -155,16 +182,8 @@ export function endEditInputFieldRules()
         removeDisableButtonEffect(buttonStart);
 }
 
-document.getElementById('rulesArenaTypeCave').classList.add('applyBorder');
-
-timerInput.addEventListener("input", () => {
-    endEditInputFieldRules();
-});
-
-nbrPointsInput.addEventListener("input", () => {
-    endEditInputFieldRules();
-});
-
-nbrOfPlayersInput.addEventListener("input", () => {
-    endEditInputFieldRules();
-});
+function togglePrivate()
+{
+    isPrivate = !isPrivate;
+    togglePrivateImg.src = isPrivate ? 'static/icons/checked.png' : 'static/icons/unchecked.png';
+}

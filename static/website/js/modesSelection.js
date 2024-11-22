@@ -64,7 +64,7 @@ modeTournamentButton.addEventListener('click', () => {
 
 document.getElementById('createTournamentButton').addEventListener('click', () => {
     selectedMode = LevelMode.TOURNAMENTLOBBY;
-    openRules(" ");
+    openRules("t");
 });
 
 document.getElementById('joinTournamentButton').addEventListener('click', () => {
@@ -275,10 +275,11 @@ function openDuelPanel()
         
     // if otherPlayer != "" and if isInTheDatabase(otherPlayer), sends an invitation to this player
 }
+
 function open2v2Panel()
 {
     if (playerStats.isRegistered)
-        navigateTo('duel'); // faire la page 2v2 !
+        navigateTo('mode2v2', "2v2"); // faire la page 2v2 !
 }
 
 export function openTournamentMenu()

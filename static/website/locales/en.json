@@ -99,6 +99,7 @@
     "sendTournamentInvitToChat": "Send to chat",
     "tournamentLobbyHeaderText": "Tournament - Lobby",
     "availableTournamentHeader": "Available tournaments",
-    "coopText": "2 vs 2"
+    "coopText": "2 vs 2",
+    "rulesIsPrivateInput": "Private match: "
     
 }

@@ -14,23 +14,37 @@
     height: 54vh;
     max-height: 30rem;
     z-index: 0;
+    margin: 0;
 }
 
 #rulesPanel h1
 {
     font-size: clamp(0.5rem + 1vw, 0.5rem + 1vh + 1vw, 6vw);
+    margin: 0;
 }
 
-#rulesPanel input
+#rulesArenaText
 {
-    margin-top: -1rem;
+    margin: 3vh !important;
 }
 
-#rulesPoints, #rulesTimer, #rulesMaxPlayers
+#rulesIsPrivateToggle
+{
+    width: 3vh;
+    height: 3vh;
+    background-color: #1c1e26;
+    color: #00ffff;
+    border: 2px solid #4c4f67;
+    border-radius: 5px;
+}
+
+.ruleTextDiv
 {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    width: 50%;
+    height: auto;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -56,9 +70,9 @@
     font-family: 'MyCustomFont', Arial, sans-serif;
     flex-grow: 1;
     padding: 0.2vh 0.2vh 0px 0.2vh;
-    font-size: clamp(0.5rem + 1vw, 0.5rem + 1vw, 6vw);
+    font-size: clamp(0.5rem + 1vw, 0.5rem + 0.5vh + 0.5vw, 6vw);
     text-align: center;
-    width: 3vw;
+    max-width: 4vw;
     height: 2vh;
     background-color: #1c1e26;
     color: #00ffff;
