@@ -22,3 +22,12 @@ export const VictoryType =
     DEFEAT: 1,
     EXAEQUO: 2
 }
+
+export const BallStats =
+{
+	baseRadius: 0.8,
+	speedLimit: 3,
+	maxBounceAngle: 75 * Math.PI / 180,
+	baseSpeed: 0.75,
+	baseIntensityIncrement: 0.005
+}

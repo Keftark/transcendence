@@ -47,7 +47,8 @@ export class Sparks {
     }
 
     updateSparks() {
-        for (let i = this.particleGroups.length - 1; i >= 0; i--) {
+        for (let i = this.particleGroups.length - 1; i >= 0; i--)
+        {
             const sparkGroup = this.particleGroups[i];
             const { velocities, lifetime } = sparkGroup.userData;
 
@@ -69,9 +70,7 @@ export class Sparks {
             }
 
             sparkGroup.geometry.attributes.position.needsUpdate = true;
-
             sparkGroup.material.opacity = Math.max(0, sparkGroup.material.opacity - 0.075);
-
             sparkGroup.userData.lifetime -= 0.04 * velocities.x;
             if (sparkGroup.userData.lifetime <= 0) {
                 this.scene.remove(sparkGroup);

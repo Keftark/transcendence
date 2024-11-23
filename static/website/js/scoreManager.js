@@ -75,6 +75,7 @@ function getVictoriesText(player = playerStats)
         + " (" + getPlayerVictories(player).percentage + "%)");
 }
 
+// ne prendre que les 10 derniers matches ? La fenetre sera trop grande sinon
 export function loadScores(player = playerStats)
 {
     if (player.matches.length > 0)

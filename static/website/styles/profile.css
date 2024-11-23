@@ -15,8 +15,8 @@
     z-index: 3;
     opacity: 0;
     transition: all 0.1s ease;
-    background: radial-gradient(circle, rgb(1, 105, 97), rgb(0, 59, 59));
-    border: 2px solid rgb(0, 46, 46);
+    background: radial-gradient(circle, rgb(1, 105, 97), rgb(0, 39, 39));
+    border: 2px solid rgb(1, 105, 97);
     border-radius: 8px;
 }
 
@@ -64,7 +64,7 @@
 
 #matchListPanel.toRight
 {
-    transform: translate(10%, -50%);
+    transform: translate(0%, -50%);
 }
 
 #matchListPanel p {

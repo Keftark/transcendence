@@ -1,16 +1,13 @@
 import * as THREE from '../node_modules/.vite/deps/three.js';
-import { ballBaseRadius, ballBaseSpeed, ballStats, BOUNDARY } from './levelLocal.js';
+import { BOUNDARY, spawnSparksFunction, updateSparksFunction } from './levelLocal.js';
 import { Sparks } from './sparks.js';
-import { ArenaType, LevelMode } from './variables.js';
+import { ArenaType, BallStats, LevelMode } from './variables.js';
 import { getRules } from './rules.js';
 import { fillPowerBarLeft, fillPowerBarRight } from './powerUp.js';
 import { getBoostedStatus, stopBoostPlayer } from './playerMovement.js';
 import { getLevelState } from './main.js';
 
-const speedLimit = 3;
-const maxBounceAngle = 75 * Math.PI / 180;
-const baseSpeed = 0.75;
-const baseIntensityIncrement = 0.005;
+const ballBaseStats = BallStats;
 let ballSpeedMult = 1.0;
 let isBallBoosted = false;
 
@@ -43,14 +40,14 @@ function createBallBoostModel(textureLoader)
         emissiveIntensity: 10,
         opacity: 1
     });
-    const boostGeometry = new THREE.SphereGeometry(ballStats.BALL_RADIUS + 0.1, 32, 32);
+    const boostGeometry = new THREE.SphereGeometry(ballBaseStats.baseRadius + 0.1, 32, 32);
     const model = new THREE.Mesh(boostGeometry, boostMaterial);
 
     model.visible = false;
     return model;
 }
 
-function getRandomVelocityComponent() {return Math.random() < 0.5 ? baseSpeed : -baseSpeed;}
+function getRandomVelocityComponent() {return Math.random() < 0.5 ? ballBaseStats.baseSpeed : -ballBaseStats.baseSpeed;}
 
 export function createBall(scene, callBack) {
     isBallBoosted = false;
@@ -63,7 +60,7 @@ export function createBall(scene, callBack) {
         emissive: new THREE.Color(0xff5500),
         emissiveIntensity: 0
     });
-    const ballGeometry = new THREE.SphereGeometry(ballStats.BALL_RADIUS, 32, 32);
+    const ballGeometry = new THREE.SphereGeometry(ballBaseStats.baseRadius, 32, 32);
     const sparks = new Sparks(scene);
     const ballVelocitySpeedUp = new THREE.Vector3(0.07, 0.07, 0);
     const ball = new THREE.Mesh(ballGeometry, ballMaterial);
@@ -72,7 +69,7 @@ export function createBall(scene, callBack) {
     const pointLight = new THREE.PointLight(0xff5500, 0, 0);
     const maxLightIntensity = 30;
     let ballVelocity;
-    let intensityIncrement = baseIntensityIncrement;
+    let intensityIncrement = ballBaseStats.baseIntensityIncrement;
     const boundxmin = BOUNDARY.X_MIN - 0.8;
     const boundxmax = BOUNDARY.X_MAX + 0.8;
 
@@ -124,7 +121,7 @@ export function createBall(scene, callBack) {
         pointLight.intensity = 0; // Reset light intensity
         pointLight.distance = 0;
         ball.material.emissiveIntensity = 0; // Reset emissive intensity
-        intensityIncrement = baseIntensityIncrement;
+        intensityIncrement = ballBaseStats.baseIntensityIncrement;
         resetVelocity();
     }
 
@@ -152,7 +149,7 @@ export function createBall(scene, callBack) {
 
     function checkCollisionTopBottom(nextPos)
     {
-        const radius = ballStats.BALL_RADIUS;
+        const radius = ballBaseStats.baseRadius;
         const posY = nextPos.y;
         if (posY + radius > BOUNDARY.Y_MAX - 1)
         {
@@ -181,11 +178,11 @@ export function createBall(scene, callBack) {
 
     function checkCollisionLeftPaddle(player1)
     {
-        // const radius = ballStats.BALL_RADIUS;
+        // const radius = ballBaseStats.baseRadius;
         const ballPosY = ball.position.y;
         const playerPosY = player1.position.y;
         const dividedPlayerSize = player1.geometry.parameters.height / 2;
-        if (ball.position.x - ballStats.BALL_RADIUS <= getXContactPointPaddle(player1) &&
+        if (ball.position.x - ballBaseStats.baseRadius <= getXContactPointPaddle(player1) &&
             isBallHittingPlayer(ballPosY, playerPosY, dividedPlayerSize))
             {
                 // ball.position.set(getXContactPointPaddle(player1) + radius, ballPosY, 0);
@@ -196,11 +193,11 @@ export function createBall(scene, callBack) {
 
     function checkCollisionRightPaddle(player2)
     {
-        // const radius = ballStats.BALL_RADIUS;
+        // const radius = ballBaseStats.baseRadius;
         const ballPosY = ball.position.y;
         const playerPosY = player2.position.y;
         const dividedPlayerSize = player2.geometry.parameters.height / 2;
-        if (ball.position.x + ballStats.BALL_RADIUS >= getXContactPointPaddle(player2) &&
+        if (ball.position.x + ballBaseStats.baseRadius >= getXContactPointPaddle(player2) &&
             isBallHittingPlayer(ballPosY, playerPosY, dividedPlayerSize))
             {
                 // ball.position.set(getXContactPointPaddle(player2) - radius, ballPosY, 0);
@@ -220,13 +217,13 @@ export function createBall(scene, callBack) {
         
         ballVelocity.x = -ballVelocity.x;
     
-        const bounceAngle = hitPosition * maxBounceAngle;
+        const bounceAngle = hitPosition * ballBaseStats.maxBounceAngle;
     
         const ballSpeed = Math.hypot(ballVelocity.x, ballVelocity.y);
         ballVelocity.x = ballSpeed * Math.cos(bounceAngle);
         ballVelocity.y = ballSpeed * Math.sin(bounceAngle);
     
-        ballVelocity.x = Math.min(ballVelocity.x + ballVelocitySpeedUp.x, speedLimit);
+        ballVelocity.x = Math.min(ballVelocity.x + ballVelocitySpeedUp.x, ballBaseStats.speedLimit);
         const absVeloX = Math.abs(ballVelocity.x);
         if (!isLeft)
         {
@@ -238,7 +235,7 @@ export function createBall(scene, callBack) {
             fillPowerBarLeft(absVeloX * 25);
         if (absVeloX > 1.6) {
             const count = Math.trunc(absVeloX * 15);
-            sparks.spawnSparks(position, count);
+            spawnSparksFunction(position, count);
         }
         ballVelocity.y += isLeft ? ballVelocitySpeedUp.y : -ballVelocitySpeedUp.y;
         ballLookAt();
@@ -265,7 +262,6 @@ export function createBall(scene, callBack) {
         ball.position.add(modVelocity);
 
         pointLight.position.copy(ball.position);
-        sparks.updateSparks();
         checkCollisionTopBottom(ball.position);
         if (checkCollisionLeftPaddle(player1) === true)
             bounceBallOnPaddle(true, new THREE.Vector3(getXContactPointPaddle(player1), ball.position.y, 0), player1);
@@ -273,12 +269,18 @@ export function createBall(scene, callBack) {
             bounceBallOnPaddle(false, new THREE.Vector3(getXContactPointPaddle(player2), ball.position.y, 0), player2);
         else
         {
-            const radius = ballStats.BALL_RADIUS;
+            const radius = ballBaseStats.baseRadius;
             const ballPosX = ball.position.x;
             if (ballPosX - radius < boundxmin)
-                callBack(1);
+            {
+                spawnSparksFunction(ball.position, 400);
+                callBack(1, true);
+            }
             else if (ballPosX + radius > boundxmax)
-                callBack(2);
+            {
+                spawnSparksFunction(ball.position, 400);
+                callBack(2, true);
+            }
         }
         rotateBall();
     }
@@ -286,9 +288,9 @@ export function createBall(scene, callBack) {
     function changeBallSize(newRadius)
     {
         if (isNaN(newRadius))
-            newRadius = ballBaseRadius;
+            newRadius = ballBaseStats.baseRadius;
         let radius = parseFloat(newRadius);
-        ballStats.BALL_RADIUS = radius;
+        ballBaseStats.baseRadius = radius;
         const newBallGeometry = new THREE.SphereGeometry(radius, 32, 32);
         const newBoostGeometry = new THREE.SphereGeometry(radius + 0.1, 32, 32);
         ball.geometry.dispose();

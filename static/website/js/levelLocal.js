@@ -16,10 +16,11 @@ import { createCaveLevel } from './levelCave.js';
 import { getMatchTime, isGamePaused, pauseStopWatch, resetStopwatch, resumeStopWatch, setStopWatch, startStopwatch, stopStopwatch } from './timer.js';
 import { closeGameMenu, isSettingsOpen, setHeaderVisibility } from './menu.js';
 import { getRules } from './rules.js';
-import { ArenaType, LevelMode, VictoryType } from './variables.js';
+import { ArenaType, BallStats, LevelMode, VictoryType } from './variables.js';
 import { callVictoryScreen } from './victory.js';
 import { isBoostReadyLeft, isBoostReadyRight, resetBoostBar, useBoost } from './powerUp.js';
 import { createDeathSphere } from './deathSphere.js';
+import { Sparks } from './sparks.js';
 
 const gameMenuPanel = document.getElementById('gameMenuPanel');
 export const PLAYER_RADIUS = 1;
@@ -46,17 +47,8 @@ export function CreateMatchScore(newScorePlayer, newScoreOpponent)
 
 export let balle;
 
-export const ballBaseRadius = 0.8;
-export const ballBaseSpeed = 0.7;
-
-export let ballStats = 
-{
-    BALL_RADIUS: ballBaseRadius,
-    MOVE_SPEED: ballBaseSpeed
-}
-
 var scene;
-let animationId;
+let animationId = null;
 let renderer;
 let resetFunction;
 export let reinitLevelFunction = null;
@@ -86,6 +78,17 @@ let deathSphere = null;
 let deathSphereExplosion = null;
 let scaleSphere = 0;
 let isCamEventAdded = false;
+let sparks;
+
+export function updateSparksFunction()
+{
+    sparks.updateSparks();
+}
+
+export function spawnSparksFunction(newPosition, count)
+{
+    sparks.spawnSparks(newPosition, count);
+}
 
 function onWindowResize() {
     if (!isCameraAnimationComplete)
@@ -115,17 +118,6 @@ export function getPlayer(playerNbr)
     return playerNbr === 0 ? player1 : player2;
 }
 
-export function getBallStats()
-{
-    return ballStats;
-}
-
-export function setBallStats(newRadius, newSpeed)
-{
-    ballStats.BALL_RADIUS = newRadius;
-    ballStats.MOVE_SPEED = newSpeed;
-}
-
 function hideInGameUI()
 {
     gameUILeft.style.display = 'none';
@@ -134,6 +126,7 @@ function hideInGameUI()
 
 export function unloadLevel()
 {
+    sparks = null;
     currentLevelMode = LevelMode.MENU;
     hideInGameUI();
     resetBoostBar();
@@ -411,20 +404,21 @@ function animateDeathSphere()
 
 export function StartLevel(levelMode)
 {
+    animationId = null;
     deathSphere = null;
     scaleSphere = 0;
     gameEnded = false;
     isInGame = true;
     setHeaderVisibility(false);
-    // resetStopwatch();
     setStopWatch(getRules().maxTime);
     document.getElementById('loading').style.display = 'block';
     setLevelState(levelMode);
     removeMainEvents();
     setUpScene(levelMode);
     setUpLevel(scene);
+    sparks = new Sparks(scene);
     
-    const { updatePlayers } = setupPlayerMovement(player1, player2, BOUNDARY.Y_MIN, BOUNDARY.Y_MAX, ballStats.MOVE_SPEED);
+    const { updatePlayers } = setupPlayerMovement(player1, player2, BOUNDARY.Y_MIN, BOUNDARY.Y_MAX, BallStats.baseSpeed);
     const { ball, updateBall, resetBall, changeBallSize, changeBallSpeed } = createBall(scene, resetScreen);
     balle = ball;
     setUpConsts();
@@ -433,14 +427,13 @@ export function StartLevel(levelMode)
     tryCloseChat();
     setPlayerNames();
     
-    animationId = null;
     let isBallMoving = false;
     let toggleReset = false;
 
     changeBallSizeFunction = changeBallSize;
     changeBallSpeedFunction = changeBallSpeed;
     
-    function resetScreen(playerNbr)
+    function resetScreen(playerNbr, fromScoredPoint = false)
     {
         if (playerNbr != 0)
         {
@@ -448,32 +441,39 @@ export function StartLevel(levelMode)
             pauseStopWatch();
         }
         addScore(playerNbr);
-        resetFunction(false);
+        if (playerNbr != 0)
+            resetFunction(false, fromScoredPoint);
     }
     
-    resetFunction = function resetGame(resetCam, time)
+    resetFunction = function resetGame(resetCam, fromScoredPoint = false, time)
     {
-        closeGameMenu();
-        resetAnim();
-        toggleReset = false;
         isBallMoving = false;
-        if (!gameEnded)
-        {
-            resetPlayersPositions();
-            resetBall();
-        }
-        if (resetCam)
-        {
-            isCameraAnimationComplete = false;
-            hidePlayMessage();
-            setVisibleScore(false);
-            setScores(0, 0);
-            resetCamera(time);
-            stopBoostPlayers();
-        }
-        else if (isCameraAnimationComplete === true && !gameEnded)
-            setVisiblePlay();
+        closeGameMenu();
+        const timer = fromScoredPoint === true ? 1000 : 0;
+        setTimeout(() => {
+            resetAnim();
+            toggleReset = false;
+            if (!gameEnded)
+            {
+                resetPlayersPositions();
+                resetBall();
+            }
+            if (resetCam)
+            {
+                isCameraAnimationComplete = false;
+                hidePlayMessage();
+                setVisibleScore(false);
+                setScores(0, 0);
+                resetCamera(time);
+                stopBoostPlayers();
+            }
+            else if (isCameraAnimationComplete === true && !gameEnded)
+                setVisiblePlay();
+            if (timer != 0)
+                animate();
+        }, timer);
     }
+    
     let lastTimestamp = 0;
 
     function endAnimation()
@@ -499,6 +499,7 @@ export function StartLevel(levelMode)
         else
         {
             screenShake.update();
+            updateSparksFunction();
             if (!gameEnded)
             {
                 if (isBallMoving) updateBall(player1, player2);

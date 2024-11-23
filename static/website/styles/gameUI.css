@@ -35,6 +35,7 @@
     1px -1px 0px rgba(0, 0, 0, 0.459),
     -1px 1px 0px rgba(0, 0, 0, 0.459),
     2px 2px 2px rgba(0, 0, 0, 0.459);
+    margin-top: 10vh;
 }
 
 .glitch:before {
@@ -101,9 +102,11 @@
     font-size: clamp(1rem, 1vw + 1.5rem, 6vw);
     position: absolute;
 }
+
 #score-left{
     right: 1.5vw;
 }
+
 #score-right{
     left: 1.5vw;
 }
