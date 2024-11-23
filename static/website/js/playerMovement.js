@@ -31,7 +31,6 @@ export function boostPlayer(playerNbr)
     else
         isBoostedRight = true;
     getPlayer(playerNbr).children[0].visible = true;
-    // show a model around the player
 }
 
 export function stopBoostPlayer(playerNbr)
@@ -41,7 +40,6 @@ export function stopBoostPlayer(playerNbr)
     else
         isBoostedRight = false;
     getPlayer(playerNbr).children[0].visible = false;
-    // hide the model
 }
 
 export function stopBoostPlayers()
@@ -56,7 +54,7 @@ export function getBoostedStatus(playerNbr)
     if (playerNbr === 0)
         return isBoostedLeft;
     else
-    return isBoostedRight;
+        return isBoostedRight;
 }
 
 export function resetBoostedStatus()
@@ -70,13 +68,9 @@ function animatePlayers(player1, player2)
     if (rotationBoost == 2)
     {
         if (isBoostedLeft)
-        {
             player1.children[0].rotation.y = Math.random() * Math.PI * 2;
-        }
         if (isBoostedRight)
-        {
             player2.children[0].rotation.y = Math.random() * Math.PI * 2;
-        }
         rotationBoost = 0;
     }
 }
@@ -131,6 +125,8 @@ export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
     function checkPlayer1Movements(adjustedSpeed)
     {
         let playerposy = player1.position.y;
+        if (isNaN(playerposy))
+            playerposy = 0;
         if (moveUp1 && !moveDown1 && playerposy < boundymax)
             player1.position.y = lerp(playerposy, playerposy + adjustedSpeed, 0.1);
         if (moveDown1 && !moveUp1 && playerposy > boundymin)
@@ -140,6 +136,8 @@ export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
     function checkPlayer2Movements(adjustedSpeed)
     {
         let playerposy = player2.position.y;
+        if (isNaN(playerposy))
+            playerposy = 0;
         if (moveUp2 && !moveDown2 && playerposy < boundymax)
             player2.position.y = lerp(playerposy, playerposy + adjustedSpeed, 0.1);
         else if (moveDown2 && !moveUp2 && playerposy > boundymin)
@@ -155,10 +153,10 @@ export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
     function checkBotMovements(adjustedSpeed)
     {
         let playerposy = player2.position.y;
+        if (isNaN(playerposy))
+            playerposy = 0;
         if (playerposy < boundYMax && playerposy > boundYMin)
-        {
             player2.position.y = lerp(playerposy, botTargetPosition, 0.013 * adjustedSpeed); // 0.02 = les reflexes du bot. voir pour changer ca en fonction de la difficulte
-        }
         if (player2.position.y > boundymax)
             player2.position.y = boundymax;
         else if (player2.position.y < boundymin)

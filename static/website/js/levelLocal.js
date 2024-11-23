@@ -504,6 +504,8 @@ export function StartLevel(levelMode)
             {
                 if (isBallMoving) updateBall(player1, player2);
                 updatePlayers(deltaTime);
+                // console.log("1. " + player1.position.y);
+                // console.log("2. " + player2.position.y);
             }
         }
         if (animateLevelFunction != null)

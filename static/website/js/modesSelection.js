@@ -4,6 +4,7 @@ import { getLevelState, setLevelState } from './main.js';
 import { LevelMode } from './variables.js';
 import { navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
+import { isInGame } from './levelLocal.js';
 
 const modesLocalButton = document.getElementById('modesLocalButton');
 const modesOnlineButton = document.getElementById('modesOnlineButton');
