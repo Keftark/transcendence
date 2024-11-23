@@ -152,10 +152,6 @@ export function openProfile(player = playerStats)
         return;
     profileIsOpen = true;
     loadScores(player);
-    if (player.matches.length === 0)
-        document.getElementById('seeMatchesButton').style.display = 'none';
-    else
-        document.getElementById('seeMatchesButton').style.display = 'flex';
     document.getElementById('nameProfile').innerText = player.nickname;
     document.getElementById('firstNameProfile').innerText = player.firstName;
     document.getElementById('lastNameProfile').innerText = player.lastName;

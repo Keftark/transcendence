@@ -345,18 +345,30 @@
         <div id="matchHistoryContainer"></div>
     </div>
     <div id="profilePanel">
-        <h2 id="nameProfile"></h2>
-        <p id="firstNameProfile"></p>
-        <p id="lastNameProfile"></p>
-        <div id="profileContainer">
-            <img id="mailImg" src="{% static 'icons/mail.png' %}">
-            <p id="mailProfile"></p>
+        <div id="profileInfos">
+            <div id="profilePictureDiv">
+                <img src="{% static 'icons/guestUser.png' %}" id="profilePicture" alt="">
+                <button id="profilePictureChangeButton"></button>
+            </div>
+            <h2 id="nameProfile"></h2>
+            <p id="firstNameProfile"></p>
+            <p id="lastNameProfile"></p>
+            <div id="profileContainer">
+                <img id="mailImg" src="{% static 'icons/mail.png' %}">
+                <p id="mailProfile"></p>
+            </div>
         </div>
-        <div id="profileContainer">
-            <img id="victoriesImg" src="{% static 'icons/trophy.png' %}">
-            <p id="victories"></p>
+        <div id="profileStats">
+            <div id="profileContainer">
+                <img id="victoriesImg" src="{% static 'images/victoryImg.png' %}">
+                <h1 id="victories"></h1>
+            </div>
+            <div id="profileDefeatsContainer">
+                <img id="defeatsImg" src="{% static 'images/defeatImg.png' %}">
+                <h1 id="defeats"></h1>
+            </div>
+            <button id="seeMatchesButton"></button>
         </div>
-        <button id="seeMatchesButton"></button>
         <button id="closeProfileButton"></button>
     </div>
 

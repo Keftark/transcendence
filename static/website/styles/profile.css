@@ -1,13 +1,14 @@
-#profilePanel {
+#profilePanel
+{
     display: none;
     position: fixed;
-    flex-direction: column;
+    flex-direction: row;
     justify-content:space-evenly;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: calc(15vw + 5vh);
-    max-width: 400px;
+    width: calc(40vw + 25vh);
+    max-width: 800px;
     min-width: 200px;
     height: 45vh;
     min-height: 200px;
@@ -18,6 +19,38 @@
     background: radial-gradient(circle, rgb(1, 105, 97), rgb(0, 39, 39));
     border: 2px solid rgb(1, 105, 97);
     border-radius: 8px;
+    padding-bottom: 10vh;
+}
+
+#profilePictureDiv
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1vh;
+}
+
+#profilePicture
+{
+    width: 10vh;
+    height: 10vh;
+}
+
+#profileInfos, #profileStats {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+#profileInfos
+{
+    justify-content: space-evenly;
+}
+
+#profileStats
+{
+    justify-content: center;
 }
 
 #profilePanel.appear {
@@ -86,6 +119,14 @@
     text-align: center;
     font-size: clamp(0.5rem + 1vw + 1vh, 0.5rem + 1vw + 1vh, 10vw);
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.349);
+    margin-top: 5vh;
+
+}
+
+#closeProfileButton
+{
+    position: absolute;
+    bottom: 2vh;
 }
 
 #closeProfileButton, #closeSettingsButton {
@@ -102,7 +143,13 @@
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.349);
 }
 
-#profileContainer
+#profileContainer, #profileDefeatsContainer
+{
+    display: flex;
+    flex-direction: row;
+}
+
+#profileStatsContainer
 {
     display: flex;
     flex-direction: row;
@@ -118,4 +165,12 @@
 {
     border: 2px solid rgb(1, 168, 163);
     background-color: rgba(0, 255, 255, 0.567);
+}
+
+#victoriesImg, #defeatsImg, #mailImg
+{
+    display: flex;
+    width: calc(1.5vw + 1.5vh);
+    height: calc(1.5vw + 1.5vh);
+    padding: 4px;
 }

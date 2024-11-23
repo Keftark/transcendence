@@ -35,14 +35,6 @@
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
 }
 
-#victoriesImg, #mailImg
-{
-    display: flex;
-    width: calc(1.5vw + 1.5vh);
-    height: calc(1.5vw + 1.5vh);
-    padding: 4px;
-}
-
 .score-container p
 {
     position: absolute;

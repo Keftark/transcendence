@@ -45,6 +45,7 @@
     "seeMatchesButton": "Match history",
     "noMatchHistory": "No match history",
     "victories": "Victories: ",
+    "defeats": "Defeats: ",
     "errEmptyName": "Error: empty nickname.",
     "errEmptyFirstName": "Error: empty first name.",
     "errEmptyLastName": "Error: empty last name.",
@@ -100,6 +101,7 @@
     "tournamentLobbyHeaderText": "Tournament - Lobby",
     "availableTournamentHeader": "Available tournaments",
     "coopText": "2 vs 2",
-    "rulesIsPrivateInput": "Private match: "
+    "rulesIsPrivateInput": "Private match: ",
+    "profilePictureChangeButton": "Change picture"
     
 }

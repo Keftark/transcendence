@@ -445,8 +445,10 @@ export function StartLevel(levelMode)
             resetFunction(false, fromScoredPoint);
     }
     
+    let canPressSpace = true;
     resetFunction = function resetGame(resetCam, fromScoredPoint = false, time)
     {
+        canPressSpace = false;
         isBallMoving = false;
         closeGameMenu();
         const timer = fromScoredPoint === true ? 1000 : 0;
@@ -471,6 +473,9 @@ export function StartLevel(levelMode)
                 setVisiblePlay();
             if (timer != 0)
                 animate();
+            setTimeout(() => {
+                canPressSpace = true;
+            }, 500);
         }, timer);
     }
     
@@ -521,6 +526,8 @@ export function StartLevel(levelMode)
     const myInput = document.getElementById('inputChat');
     pressSpaceFunction = function pressSpaceStart(event)
     {
+        if (!canPressSpace)
+            return;
         if (!gameMenuPanel.classList.contains('show') && !gameEnded && !isBallMoving && event.key === ' ' && isCameraAnimationComplete && document.activeElement != myInput)
         {
             isBallMoving = true;

@@ -69,20 +69,38 @@ export function removeAllScores()
         parentElement.removeChild(parentElement.firstChild);
 }
 
-function getVictoriesText(player = playerStats)
+function getVictoriesRatioText(player = playerStats)
 {
     return (getPlayerVictories(player).victories + "/" + getPlayerVictories(player).total
         + " (" + getPlayerVictories(player).percentage + "%)");
+}
+
+function getVictoriesText(player = playerStats)
+{
+    return (getPlayerVictories(player).victories);
+}
+
+function getDefeatsText(player = playerStats)
+{
+    return (getPlayerVictories(player).total - getPlayerVictories(player).victories);
 }
 
 // ne prendre que les 10 derniers matches ? La fenetre sera trop grande sinon
 export function loadScores(player = playerStats)
 {
     if (player.matches.length > 0)
-        document.getElementById('victories').innerText = getVictoriesText(player);
+    {
+        document.getElementById('seeMatchesButton').style.display = 'flex';
+        document.getElementById('profileDefeatsContainer').style.display = 'flex';
+        document.getElementById('victories').innerText = getTranslation('victories') + getVictoriesText(player);
+        document.getElementById('defeats').innerText = getTranslation('defeats') + getDefeatsText(player);
+    }
     else
+    {
+        document.getElementById('seeMatchesButton').style.display = 'none';
+        document.getElementById('profileDefeatsContainer').style.display = 'none';
         document.getElementById('victories').innerText = getTranslation('noMatchHistory');
-
+    }
     const scoresContainer = document.getElementById('matchHistoryContainer');
     for (let i = 0; i < player.matches.length; i++)
     {
@@ -104,7 +122,6 @@ export function loadScores(player = playerStats)
         else
             newContainer.style.background = 'linear-gradient(to right, #882222 30%, #006666 70%)';
         const timerContent = document.createElement('p');
-        console.log(match.matchTime);
         timerContent.textContent = match.matchTime;
         newContainer.appendChild(timerContent);
         scoresContainer.appendChild(newContainer);

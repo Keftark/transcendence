@@ -1,5 +1,5 @@
 import { createNewPlayer, playerStats, resetPlayerStats } from "./playerManager.js";
-import { loadScores, removeAllScores } from "./scoreManager.js";
+import { removeAllScores } from "./scoreManager.js";
 import { getTranslation } from "./translate.js";
 import { navigateTo } from "./pages.js";
 import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";

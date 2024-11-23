@@ -116,6 +116,7 @@ export function updateHTML(translations)
 	document.getElementById('modesOnlineText').innerText = translations.modesOnlineHeader;
 	document.getElementById('2v2Text').innerText = translations.coopText;
 	document.getElementById('rulesIsPrivateText').innerText = translations.rulesIsPrivateInput;
+	document.getElementById('profilePictureChangeButton').innerText = translations.profilePictureChangeButton;
 
 	
 }
