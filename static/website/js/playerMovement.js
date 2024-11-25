@@ -1,4 +1,4 @@
-import { balle, BOUNDARY, getPlayer, PLAYER_HEIGHT } from "./levelLocal.js";
+import { balle, BOUNDARY, getPlayer, finalHeight, PLAYER_HEIGHT } from "./levelLocal.js";
 import { getLevelState } from "./main.js";
 import { isMenuOpen, isSettingsOpen } from "./menu.js";
 import { resetBoostBar } from "./powerUp.js";
@@ -77,21 +77,21 @@ function animatePlayers(player1, player2)
 
 function setPlayer1Bounds(levelState)
 {
-    const minY = levelState === LevelMode.MULTI ? PLAYER_HEIGHT / 2 : BOUNDARY.Y_MIN + PLAYER_HEIGHT / 2;
+    const minY = levelState === LevelMode.MULTI ? 0 : BOUNDARY.Y_MIN;
     let boundsMovement = 
     {
         min: minY, // - 1.5 ?
-        max: BOUNDARY.Y_MAX - PLAYER_HEIGHT / 2 // + 1.5 ?
+        max: BOUNDARY.Y_MAX // + 1.5 ?
     }
     return boundsMovement;
 }
 
 function setPlayer3Bounds(levelState)
 {
-    const maxY = levelState === LevelMode.MULTI ? 0 - PLAYER_HEIGHT / 2 : BOUNDARY.Y_MAX - PLAYER_HEIGHT / 2;
+    const maxY = levelState === LevelMode.MULTI ? 0 : BOUNDARY.Y_MAX;
     let boundsMovement = 
     {
-        min: BOUNDARY.Y_MIN + PLAYER_HEIGHT / 2,
+        min: BOUNDARY.Y_MIN,
         max: maxY
     }
     return boundsMovement;
@@ -151,59 +151,70 @@ export function setupPlayerMovement(player1, player2)
 
     function checkPlayer1Movements(adjustedSpeed)
     {
-        let playerposy = player1.position.y;
-        if (isNaN(playerposy))
-            playerposy = 0;
-        if (moveUp1 && !moveDown1 && playerposy < boundsPlayer1.max)
-        {
-            player1.position.y = lerp(playerposy, playerposy + adjustedSpeed, 0.1);
-            if (player1.position.y > boundsPlayer1.max || isNaN(player1.position.y))
-                player1.position.y = boundsPlayer1.max;
-        }
-        if (moveDown1 && !moveUp1 && playerposy > boundsPlayer1.min)
-        {
-            player1.position.y = lerp(playerposy, playerposy - adjustedSpeed, 0.1);
-            if (player1.position.y < boundsPlayer1.min || isNaN(player1.position.y))
-                player1.position.y = boundsPlayer1.min;
+        let playerposy = player1.position.y || 0;
+        const playerBound = finalHeight / 2;
+        if (moveUp1 && !moveDown1) {
+            const newPosition = lerp(playerposy, playerposy + adjustedSpeed, 0.1);
+            player1.position.y = Math.min(newPosition, boundsPlayer1.max - playerBound);
+        } else if (moveDown1 && !moveUp1) {
+            const newPosition = lerp(playerposy, playerposy - adjustedSpeed, 0.1);
+            player1.position.y = Math.max(newPosition, boundsPlayer1.min + playerBound);
         }
     }
 
-    function checkPlayer2Movements(adjustedSpeed)
-    {
-        let playerposy = player2.position.y;
-        if (isNaN(playerposy))
-            playerposy = 0;
-        if (moveUp2 && !moveDown2 && playerposy < boundsPlayer2.max)
-        {
-            player2.position.y = lerp(playerposy, playerposy + adjustedSpeed, 0.1);
-            if (player2.position.y > boundsPlayer2.max || isNaN(player2.position.y))
-                player2.position.y = boundsPlayer2.max;
-        }
-        else if (moveDown2 && !moveUp2 && playerposy > boundsPlayer2.min)
-        {
-            player2.position.y = lerp(playerposy, playerposy - adjustedSpeed, 0.1);
-            if (player2.position.y < boundsPlayer2.min || isNaN(player2.position.y))
-                player2.position.y = boundsPlayer2.min;
+    function checkPlayer2Movements(adjustedSpeed) {
+        let playerposy = player2.position.y || 0;
+        const playerBound = finalHeight / 2;
+    
+        if (moveUp2 && !moveDown2) {
+            const newPosition = lerp(playerposy, playerposy + adjustedSpeed, 0.1);
+            player2.position.y = Math.min(newPosition, boundsPlayer2.max - playerBound);
+        } else if (moveDown2 && !moveUp2) {
+            const newPosition = lerp(playerposy, playerposy - adjustedSpeed, 0.1);
+            player2.position.y = Math.max(newPosition, boundsPlayer2.min + playerBound);
         }
     }
 
+    let botCanMove = false;
     function moveBot()
     {
+        botCanMove = !botCanMove;
         if (balle != null)
             botTargetPosition = balle.position.y;
     }
 
-    function checkBotMovements(adjustedSpeed)
-    {
-        let playerposy = player2.position.y;
-        if (isNaN(playerposy))
-            playerposy = 0;
-        if (playerposy < BOUNDARY.Y_MAX - PLAYER_HEIGHT / 2 && playerposy > BOUNDARY.Y_MIN + PLAYER_HEIGHT / 2)
-            player2.position.y = lerp(playerposy, botTargetPosition, 0.013 * adjustedSpeed); // 0.02 = les reflexes du bot. voir pour changer ca en fonction de la difficulte
-        if (player2.position.y > boundymax)
-            player2.position.y = boundymax;
-        else if (player2.position.y < boundymin)
-            player2.position.y = boundymin;
+    function checkBotMovements(adjustedSpeed) {
+        // Return early if the bot is already within a range or cannot move
+        if (
+            (botTargetPosition > player2.position.y - finalHeight / 8 &&
+            botTargetPosition < player2.position.y + finalHeight / 8) ||
+            !botCanMove
+        ) return;
+    
+        let playerposy = player2.position.y || 0;
+        const up = balle.position.y >= player2.position.y;
+    
+        const playerHalfHeight = finalHeight / 4;
+        const playerQuarterHeight = finalHeight / 8;
+        const upperLimit = BOUNDARY.Y_MAX - playerHalfHeight;
+        const lowerLimit = BOUNDARY.Y_MIN + playerHalfHeight;
+    
+        // Ensure player is within the moving bounds before moving
+        if (playerposy > lowerLimit && playerposy < upperLimit) {
+            // Calculate target position based on direction
+            const targetPosition = up ? playerposy + adjustedSpeed : playerposy - adjustedSpeed;
+            player2.position.y = lerp(playerposy, targetPosition, 0.1);
+    
+            // Clamp position to the defined limits
+            const clampedPosition = up
+                ? Math.min(player2.position.y, upperLimit - playerQuarterHeight)
+                : Math.max(player2.position.y, lowerLimit + playerQuarterHeight);
+    
+            player2.position.y = clampedPosition;
+        }
+    
+        // Final clamping to overall bounds
+        player2.position.y = Math.max(boundymin, Math.min(player2.position.y, boundymax));
     }
 
     function updatePlayers(deltaTime)
@@ -211,9 +222,9 @@ export function setupPlayerMovement(player1, player2)
         animatePlayers(player1, player2);
         const adjustedSpeed = moveSpeed * (deltaTime / 1000);
         checkPlayer1Movements(adjustedSpeed);
-        if (getLevelState() === LevelMode.ADVENTURE)
+        if (levelState === LevelMode.ADVENTURE)
             checkBotMovements(adjustedSpeed);
-        else if (getLevelState() != LevelMode.MULTI)
+        else if (levelState != LevelMode.MULTI)
             checkPlayer2Movements(adjustedSpeed);
         else
         {
@@ -224,7 +235,7 @@ export function setupPlayerMovement(player1, player2)
     document.addEventListener('keydown', addPlayerMovementKeyDown);
     document.addEventListener('keyup', addPlayerMovementKeyUp);
 
-    if (getLevelState() === LevelMode.ADVENTURE)
+    if (levelState === LevelMode.ADVENTURE)
         setInterval(moveBot, botDelay);
     return { updatePlayers };
 }

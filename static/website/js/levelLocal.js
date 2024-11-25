@@ -25,6 +25,7 @@ import { Sparks } from './sparks.js';
 const gameMenuPanel = document.getElementById('gameMenuPanel');
 export const PLAYER_RADIUS = 1;
 export const PLAYER_HEIGHT = 12;
+export let finalHeight = PLAYER_HEIGHT;
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
 export const BOUNDARY =
@@ -323,8 +324,9 @@ export function changePlayersSize(newHeight)
 {
     if (isNaN(newHeight))
         newHeight = 1;
-    const newGeometry = new THREE.CylinderGeometry(PLAYER_RADIUS, PLAYER_RADIUS, PLAYER_HEIGHT * newHeight, 8, 1, false);
-    const newBoostGeometry = new THREE.CylinderGeometry(PLAYER_RADIUS + 0.1, PLAYER_RADIUS + 0.1, PLAYER_HEIGHT * newHeight + 0.1, 8, 1, false);
+    finalHeight = PLAYER_HEIGHT * newHeight;
+    const newGeometry = new THREE.CylinderGeometry(PLAYER_RADIUS, PLAYER_RADIUS, finalHeight, 8, 1, false);
+    const newBoostGeometry = new THREE.CylinderGeometry(PLAYER_RADIUS + 0.1, PLAYER_RADIUS + 0.1, finalHeight + 0.1, 8, 1, false);
     player1.geometry.dispose();
     player1.geometry = newGeometry;
     player2.geometry.dispose();
