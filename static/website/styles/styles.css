@@ -102,6 +102,6 @@ input:focus
 }
 
 ::selection {
-    background-color: #00fff22a; /* Custom background color */
+    background-color: #00d9ff8f; /* Custom background color */
     color: #ffd000; /* Custom text color */
   }
