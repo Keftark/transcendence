@@ -5,7 +5,7 @@ import { createBall } from './ball.js';
 import { ScreenShake } from './screenShake.js';
 import { setScores, addScore, setVisibleScore } from './scoreManager.js';
 import { createLights, createPlayers, setVisibilityRightWall } from './objects.js';
-import { setLevelState } from './main.js';
+import { getLevelState, setLevelState } from './main.js';
 import { unloadScene } from './unloadScene.js';
 import { removeMainEvents } from './eventsListener.js';
 import { setAccessAllDuelsInChat, tryCloseChat } from './chat.js';
@@ -54,7 +54,7 @@ let resetFunction;
 export let reinitLevelFunction = null;
 let pressSpaceFunction = null;
 let pressBoostFunction = null;
-let player1, player2;
+let player1, player2, player3, player4;
 let camera = null;
 let screenShake = null;
 const pressPlayDiv = document.getElementById('pressPlayDiv');
@@ -217,13 +217,13 @@ export function setUpCamera()
 {
     let newCamera = playerStats.cameraOrthographic === true ? setOrthographicCamera() : setPerspectiveCamera();
 
-    if (currentLevelMode === LevelMode.LOCAL)
-    {
-        newCamera.position.z = 50;
-    }
-    else if (currentLevelMode === LevelMode.ADVENTURE)
+    if (currentLevelMode === LevelMode.ADVENTURE)
     {
         newCamera.position.set(50, 0, 30);
+    }
+    else
+    {
+        newCamera.position.z = 50;
     }
     return newCamera;
 }
@@ -244,17 +244,17 @@ export function setUpScene(levelMode)
 
 function showInGameUI()
 {
-    if (currentLevelMode === LevelMode.LOCAL)
-    {
-        player1KeysLocal.style.display = 'block';
-        playerKeysAdventure.style.display = 'none';
-        gameUIRight.style.display = 'flex';
-    }
-    else if (currentLevelMode === LevelMode.ADVENTURE)
+    if (currentLevelMode === LevelMode.ADVENTURE)
     {
         player1KeysLocal.style.display = 'none';
         playerKeysAdventure.style.display = 'block';
         gameUIRight.style.display = 'none';
+    }
+    else
+    {
+        player1KeysLocal.style.display = 'block';
+        playerKeysAdventure.style.display = 'none';
+        gameUIRight.style.display = 'flex';
     }
     gameUILeft.style.display = 'flex';
 }
@@ -278,7 +278,7 @@ export function setUpLevel(scene)
     const textureLoader = new THREE.TextureLoader();
     gameMenuPanel.style.display = 'block';
     showInGameUI();
-    [player1, player2] = createPlayers(scene, textureLoader);
+    [player1, player2, player3, player4] = createPlayers(scene, textureLoader);
     createLights(scene);
     resetPlayersPositions();
     if (getRules().arena === ArenaType.SPACE)
@@ -306,6 +306,14 @@ function setUpConsts()
   
 function resetPlayersPositions()
 {
+    if (getLevelState() === LevelMode.MULTI)
+    {
+        player1.position.set(BOUNDARY.X_MIN, (BOUNDARY.Y_MAX - BOUNDARY.Y_MIN) / 4, 0);
+        player2.position.set(BOUNDARY.X_MAX, (BOUNDARY.Y_MAX - BOUNDARY.Y_MIN) / 4, 0);
+        player3.position.set(BOUNDARY.X_MIN, 0 - (BOUNDARY.Y_MAX - BOUNDARY.Y_MIN) / 4, 0);
+        player4.position.set(BOUNDARY.X_MAX, 0 - (BOUNDARY.Y_MAX - BOUNDARY.Y_MIN) / 4, 0);
+        return;
+    }
     player1.position.set(BOUNDARY.X_MIN, 0, 0);
     player2.position.set(BOUNDARY.X_MAX, 0, 0);
 }
@@ -418,7 +426,7 @@ export function StartLevel(levelMode)
     setUpLevel(scene);
     sparks = new Sparks(scene);
     
-    const { updatePlayers } = setupPlayerMovement(player1, player2, BOUNDARY.Y_MIN, BOUNDARY.Y_MAX, BallStats.baseSpeed);
+    const { updatePlayers } = setupPlayerMovement(player1, player2);
     const { ball, updateBall, resetBall, changeBallSize, changeBallSpeed } = createBall(scene, resetScreen);
     balle = ball;
     setUpConsts();

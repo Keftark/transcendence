@@ -1,4 +1,4 @@
-import { balle, getPlayer } from "./levelLocal.js";
+import { balle, BOUNDARY, getPlayer, PLAYER_HEIGHT } from "./levelLocal.js";
 import { getLevelState } from "./main.js";
 import { isMenuOpen, isSettingsOpen } from "./menu.js";
 import { resetBoostBar } from "./powerUp.js";
@@ -75,15 +75,42 @@ function animatePlayers(player1, player2)
     }
 }
 
-export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
+function setPlayer1Bounds(levelState)
+{
+    const minY = levelState === LevelMode.MULTI ? PLAYER_HEIGHT / 2 : BOUNDARY.Y_MIN + PLAYER_HEIGHT / 2;
+    let boundsMovement = 
+    {
+        min: minY, // - 1.5 ?
+        max: BOUNDARY.Y_MAX - PLAYER_HEIGHT / 2 // + 1.5 ?
+    }
+    return boundsMovement;
+}
+
+function setPlayer3Bounds(levelState)
+{
+    const maxY = levelState === LevelMode.MULTI ? 0 - PLAYER_HEIGHT / 2 : BOUNDARY.Y_MAX - PLAYER_HEIGHT / 2;
+    let boundsMovement = 
+    {
+        min: BOUNDARY.Y_MIN + PLAYER_HEIGHT / 2,
+        max: maxY
+    }
+    return boundsMovement;
+}
+
+export function setupPlayerMovement(player1, player2)
 {
     let moveUp1 = false;
     let moveDown1 = false;
     let moveUp2 = false;
     let moveDown2 = false;
-    let isLocal = getLevelState() === LevelMode.LOCAL;
-    const boundymax = boundYMax - 7.2;
-    const boundymin = boundYMin + 7.2;
+    const levelState = getLevelState();
+    let isViewHorizontal = levelState != LevelMode.ADVENTURE;
+    const boundsPlayer1 = setPlayer1Bounds(levelState);
+    const boundsPlayer2 = boundsPlayer1;
+    const boundsPlayer3 = setPlayer3Bounds(levelState);
+    const boundsPlayer4 = boundsPlayer3;
+    const boundymax = setPlayer1Bounds(levelState).max;
+    const boundymin = setPlayer1Bounds(levelState).min;
 
     function checkKeys(event, isTrue)
     {
@@ -95,17 +122,17 @@ export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
             moveDown2 = false;
             return;
         }
-        if (event.key === 'w' && isLocal)
+        if (event.key === 'w' && isViewHorizontal)
             moveUp1 = isTrue;
-        else if (event.key === 's' && isLocal)
+        else if (event.key === 's' && isViewHorizontal)
             moveDown1 = isTrue;
-        else if (event.key === 'ArrowUp' && isLocal)
+        else if (event.key === 'ArrowUp' && isViewHorizontal)
             moveUp2 = isTrue;
-        else if (event.key === 'ArrowDown' && isLocal)
+        else if (event.key === 'ArrowDown' && isViewHorizontal)
             moveDown2 = isTrue;
-        else if (event.key === 'a' && !isLocal)
+        else if (event.key === 'a' && !isViewHorizontal)
             moveUp1 = isTrue;
-        else if (event.key === 'd' && !isLocal)
+        else if (event.key === 'd' && !isViewHorizontal)
             moveDown1 = isTrue;
     }
 
@@ -127,10 +154,18 @@ export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
         let playerposy = player1.position.y;
         if (isNaN(playerposy))
             playerposy = 0;
-        if (moveUp1 && !moveDown1 && playerposy < boundymax)
+        if (moveUp1 && !moveDown1 && playerposy < boundsPlayer1.max)
+        {
             player1.position.y = lerp(playerposy, playerposy + adjustedSpeed, 0.1);
-        if (moveDown1 && !moveUp1 && playerposy > boundymin)
+            if (player1.position.y > boundsPlayer1.max || isNaN(player1.position.y))
+                player1.position.y = boundsPlayer1.max;
+        }
+        if (moveDown1 && !moveUp1 && playerposy > boundsPlayer1.min)
+        {
             player1.position.y = lerp(playerposy, playerposy - adjustedSpeed, 0.1);
+            if (player1.position.y < boundsPlayer1.min || isNaN(player1.position.y))
+                player1.position.y = boundsPlayer1.min;
+        }
     }
 
     function checkPlayer2Movements(adjustedSpeed)
@@ -138,10 +173,18 @@ export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
         let playerposy = player2.position.y;
         if (isNaN(playerposy))
             playerposy = 0;
-        if (moveUp2 && !moveDown2 && playerposy < boundymax)
+        if (moveUp2 && !moveDown2 && playerposy < boundsPlayer2.max)
+        {
             player2.position.y = lerp(playerposy, playerposy + adjustedSpeed, 0.1);
-        else if (moveDown2 && !moveUp2 && playerposy > boundymin)
+            if (player2.position.y > boundsPlayer2.max || isNaN(player2.position.y))
+                player2.position.y = boundsPlayer2.max;
+        }
+        else if (moveDown2 && !moveUp2 && playerposy > boundsPlayer2.min)
+        {
             player2.position.y = lerp(playerposy, playerposy - adjustedSpeed, 0.1);
+            if (player2.position.y < boundsPlayer2.min || isNaN(player2.position.y))
+                player2.position.y = boundsPlayer2.min;
+        }
     }
 
     function moveBot()
@@ -155,7 +198,7 @@ export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
         let playerposy = player2.position.y;
         if (isNaN(playerposy))
             playerposy = 0;
-        if (playerposy < boundYMax && playerposy > boundYMin)
+        if (playerposy < BOUNDARY.Y_MAX - PLAYER_HEIGHT / 2 && playerposy > BOUNDARY.Y_MIN + PLAYER_HEIGHT / 2)
             player2.position.y = lerp(playerposy, botTargetPosition, 0.013 * adjustedSpeed); // 0.02 = les reflexes du bot. voir pour changer ca en fonction de la difficulte
         if (player2.position.y > boundymax)
             player2.position.y = boundymax;
@@ -170,8 +213,12 @@ export function setupPlayerMovement(player1, player2, boundYMin, boundYMax)
         checkPlayer1Movements(adjustedSpeed);
         if (getLevelState() === LevelMode.ADVENTURE)
             checkBotMovements(adjustedSpeed);
-        else if (getLevelState() === LevelMode.LOCAL)
+        else if (getLevelState() != LevelMode.MULTI)
             checkPlayer2Movements(adjustedSpeed);
+        else
+        {
+            // check players 3 and 4
+        }
     }
 
     document.addEventListener('keydown', addPlayerMovementKeyDown);

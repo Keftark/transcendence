@@ -86,10 +86,12 @@ function createPlayerBoostModel(textureLoader)
 
 export function createPlayers(scene, textureLoader)
 {
+    const levelState = getLevelState();
+    const playerSize = levelState === LevelMode.MULTI ? PLAYER_HEIGHT / 1.5 : PLAYER_HEIGHT;
     const cylinderTexture = textureLoader.load('static/mat/player1.jpg'); // changer la texture en fonction du skin que le joueur choisit
     cylinderTexture.colorSpace = THREE.SRGBColorSpace;
     const material = new THREE.MeshStandardMaterial({ map: cylinderTexture });
-    const geometry = new THREE.CylinderGeometry(PLAYER_RADIUS, PLAYER_RADIUS, PLAYER_HEIGHT, 8, 1, false);
+    const geometry = new THREE.CylinderGeometry(PLAYER_RADIUS, PLAYER_RADIUS, playerSize, 8, 1, false);
 
     const player1 = new THREE.Mesh(geometry, material);
     const player2 = new THREE.Mesh(geometry, material);
@@ -97,7 +99,20 @@ export function createPlayers(scene, textureLoader)
     player2.add(createPlayerBoostModel(textureLoader));
     scene.add(player1);
     scene.add(player2);
-    return [player1, player2];
+
+    let player3 = null;
+    let player4 = null;
+    if (levelState === LevelMode.MULTI)
+    {
+        player3 = new THREE.Mesh(geometry, material);
+        player3.add(createPlayerBoostModel(textureLoader));
+        scene.add(player3);
+        player4 = new THREE.Mesh(geometry, material);
+        player4.add(createPlayerBoostModel(textureLoader));
+        scene.add(player4);
+    }
+
+    return [player1, player2, player3, player4];
 }
 
 export function setWallRight(wall)

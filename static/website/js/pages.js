@@ -39,6 +39,9 @@ function onOpenPage(path, otherVar = null)
         case 'game-ai':
             onPlayGame(otherVar);
         break;
+        case 'game-multi':
+            onPlayGame(otherVar);
+        break;
         case 'tournament-menu':
             onTournamentMenuOpen();
         break;
@@ -74,6 +77,9 @@ function onClosePage(path)
             unloadLevel();
         break;
         case 'game-ai':
+            unloadLevel();
+        break;
+        case 'game-multi':
             unloadLevel();
         break;
     }

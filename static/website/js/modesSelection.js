@@ -48,10 +48,11 @@ modeDuelButton.addEventListener('click', () => {
 });
 
 mode2v2Button.addEventListener('click', () => {
+    selectedMode = LevelMode.MULTI;
     closeOnlineModes();
     isInsideModes = false;
     setTimeout(() => {
-        open2v2Panel();
+        openRules();
     }, 300);
 });
 
@@ -97,6 +98,8 @@ export function clickPlayGame()
         navigateTo('game-local', selectedMode);
     else if (selectedMode === LevelMode.ADVENTURE)
         navigateTo('game-ai', selectedMode);
+    else if (selectedMode === LevelMode.MULTI)
+        navigateTo('game-multi', selectedMode);
     else if (selectedMode === LevelMode.DUEL)
     {
         sendInvitationDuel(playerStats.nickname);

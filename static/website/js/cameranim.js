@@ -25,15 +25,7 @@ export function animateCamera(time, camera, callBack)
     const elapsed = time - startTime; // Elapsed time
     const t = Math.min(elapsed / animationDuration, 1); // Normalized time
 
-    if (getLevelState() === LevelMode.LOCAL)
-    {
-        const yPos = 50 - (50 * t * t);
-    
-        // Update camera position
-        camera.position.y = -yPos;
-        camera.lookAt(0, 0, 0);
-    }
-    else if (getLevelState() === LevelMode.ADVENTURE)
+    if (getLevelState() === LevelMode.ADVENTURE)
     {
         const xPos = 65 - (30 * t * t);
         const zPos = 100 - (40 * t * t);
@@ -44,6 +36,14 @@ export function animateCamera(time, camera, callBack)
         camera.rotation.x = 0;
         camera.rotation.z = -(Math.PI / 2);
         camera.rotation.y = -(Math.PI / 6);
+    }
+    else
+    {
+        const yPos = 50 - (50 * t * t);
+    
+        // Update camera position
+        camera.position.y = -yPos;
+        camera.lookAt(0, 0, 0);
     }
 
     // End the animation after the duration
