@@ -80,9 +80,9 @@ function getVictoriesText(player = playerStats)
     return (getPlayerVictories(player).victories);
 }
 
-function getDefeatsText(player = playerStats)
+function getTotalMatchesText(player = playerStats)
 {
-    return (getPlayerVictories(player).total - getPlayerVictories(player).victories);
+    return (getPlayerVictories(player).total);
 }
 
 // ne prendre que les 10 derniers matches ? La fenetre sera trop grande sinon
@@ -91,15 +91,18 @@ export function loadScores(player = playerStats)
     if (player.matches.length > 0)
     {
         document.getElementById('seeMatchesButton').style.display = 'flex';
-        document.getElementById('profileDefeatsContainer').style.display = 'flex';
-        document.getElementById('victories').innerText = getTranslation('victories') + getVictoriesText(player);
-        document.getElementById('defeats').innerText = getTranslation('defeats') + getDefeatsText(player);
+        document.getElementById('profileTotalContainer').style.display = 'flex';
+        document.getElementById('victories').innerText = getTranslation('victories');
+        document.getElementById('victoriesNbr').innerText = getVictoriesText(player);
+        document.getElementById('matchesPlayed').innerText = getTranslation('matchesPlayed');
+        document.getElementById('matchesPlayedNbr').innerText = getTotalMatchesText(player);
     }
     else
     {
         document.getElementById('seeMatchesButton').style.display = 'none';
-        document.getElementById('profileDefeatsContainer').style.display = 'none';
+        document.getElementById('profileTotalContainer').style.display = 'none';
         document.getElementById('victories').innerText = getTranslation('noMatchHistory');
+        document.getElementById('victoriesNbr').innerText = "";
     }
     const scoresContainer = document.getElementById('matchHistoryContainer');
     for (let i = 0; i < player.matches.length; i++)

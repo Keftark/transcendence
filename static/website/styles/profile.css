@@ -19,7 +19,12 @@
     background: radial-gradient(circle, rgb(1, 105, 97), rgb(0, 39, 39));
     border: 2px solid rgb(1, 105, 97);
     border-radius: 8px;
-    padding-bottom: 10vh;
+}
+
+#profilePanel h1
+{
+    margin: 0;
+    font-size: clamp(0.5rem + 1vw + 0.5vh, 1rem + 1vw + 0.5vh, 5rem);
 }
 
 #profilePictureDiv
@@ -29,28 +34,34 @@
     align-items: center;
     justify-content: center;
     gap: 1vh;
+    align-self: center;
 }
 
 #profilePicture
 {
     width: 10vh;
     height: 10vh;
+    border: 2px solid black;
 }
 
 #profileInfos, #profileStats {
     display: flex;
     flex-direction: column;
-    align-items: start;
+    background-color: #00000010;
+    width: 49%;
 }
 
 #profileInfos
 {
-    justify-content: space-evenly;
+    justify-content: start;
+    align-items: start;
 }
 
 #profileStats
 {
     justify-content: center;
+    align-items: center;
+    gap: 2vh;
 }
 
 #profilePanel.appear {
@@ -111,8 +122,6 @@
 #seeMatchesButton
 {
     width: 50%;
-    display: flex;
-    transform: translate(50%, 0%);
     background-color: #005c57;
     color: white;
     border: 1px solid #003a37;
@@ -143,16 +152,19 @@
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.349);
 }
 
-#profileContainer, #profileDefeatsContainer
+#profileContainer
 {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    gap: 4px;
 }
 
-#profileStatsContainer
+#profileStatsContainer, #profileTotalContainer
 {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    align-items: center;
 }
 
 #seeMatchesButton.open
@@ -167,10 +179,29 @@
     background-color: rgba(0, 255, 255, 0.567);
 }
 
-#victoriesImg, #defeatsImg, #mailImg
+#mailImg
 {
     display: flex;
+    padding: 4px;
+}
+
+#mailImg
+{
     width: calc(1.5vw + 1.5vh);
     height: calc(1.5vw + 1.5vh);
-    padding: 4px;
+}
+
+#profilePictureChangeButton
+{
+    background-color: #00302d;
+    border: 1px solid #40977a;
+    height: 3vh;
+    min-height: 24px;
+    border-radius: 4px;
+}
+
+#profilePictureChangeButton:hover
+{
+    background-color: #005e57;
+    border-color: rgb(98, 197, 164);
 }
