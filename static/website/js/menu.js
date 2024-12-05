@@ -27,6 +27,8 @@ const mainPanel = document.getElementById('mainPanel');
 const mainMenuPanel = document.getElementById('mainMenuPanel');
 const toggleCameraText = document.getElementById('cameraTypeHeader');
 const gameSettingsButton = document.getElementById('settingsButton');
+const profilePicture = document.getElementById('profilePicture');
+const fileInput = document.getElementById('fileInput');
 
 const buttonsLanguage = document.querySelectorAll('.language');
 const imageSources = {
@@ -266,7 +268,7 @@ export function changeTextsColor(newColor)
 {
     const textElements = document.querySelectorAll(' \
         h1, h2, div, h3, p, button, #header-title, #menu-label span, #pressplay, #play, #score-left, #score-right, #playername-left, \
-        #playername-right, #inputChat, input');
+        #playername-right, #inputChat, input, label');
     textElements.forEach(element => {
         element.style.color = newColor;
     });
@@ -428,3 +430,17 @@ export function isProfileOpen()
 {
     return profileIsOpen;
 }
+
+// add a way to save the image to the DB and check if the format is ok + no sql injection?
+// injec sql -> verifier metadata
+fileInput.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file)
+    {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+        profilePicture.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+});

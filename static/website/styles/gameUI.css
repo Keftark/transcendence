@@ -42,7 +42,7 @@
     transform: translate(25%, 0%);
     content: attr(data-glitch);
     position: absolute;
-    left: -2px;
+    left: 0;
     width: fit-content;
     height: fit-content;
     font-size: 8vw;
@@ -58,10 +58,10 @@
  }
  
  .glitch:after {
-    transform: translate(25%, 0%);
+    transform: translate(-25%, 0%);
     content: attr(data-glitch);
     position: absolute;
-    left: 2px;
+    right: 0;
     width: fit-content;
     height: fit-content;
     font-size: 9vw;
@@ -155,7 +155,7 @@
     font-size: 5rem;
 }
 
-#controlsLeft, #controlsRight
+#controlsP1, #controlsP2
 {
     display: none;
     position: absolute;
@@ -166,30 +166,21 @@
     gap: 64px;
 }
 
-#controlsLeft
+#controlsP1
 {
     left: 1rem;
 }
 
-#controlsRight
+#controlsP2
 {
     right: 1rem;
 }
 
-#controlsP1LocalImg, #controlsP2LocalImg, #controlsAdventureImg {
+#controlsP1LocalImg, #controlsP2LocalImg {
     bottom: 16px;
     z-index: 1;
     width: 20vw;
     max-width: 12rem;
-}
-
-#controlsP1LocalImg, #controlsAdventureImg {
-    display: none;
-}
-
-#controlsP2LocalImg
-{
-    display: block;
 }
 
 #boostBarUILeft, #boostBarUIRight

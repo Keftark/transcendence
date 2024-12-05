@@ -191,17 +191,26 @@
     height: calc(1.5vw + 1.5vh);
 }
 
-#profilePictureChangeButton
+.profilePictureChangeButton
 {
     background-color: #00302d;
     border: 1px solid #40977a;
     height: 3vh;
     min-height: 24px;
     border-radius: 4px;
+    color: white;
+    padding: 10px 5px 0px 5px;
+    text-align: center;
+    transition: all 0.1s ease-in-out;
 }
 
-#profilePictureChangeButton:hover
+.profilePictureChangeButton:hover
 {
     background-color: #005e57;
     border-color: rgb(98, 197, 164);
+}
+
+#fileInput
+{
+    display: none;
 }

@@ -1,10 +1,16 @@
-.chat-box {
+#boxContainers
+{
+    display: flex;
+    flex-direction: column;
+    align-items: end;
     position: fixed;
     top: 0.5rem;
     right: 0.5rem;
-    /* padding-left: 0.3rem; */
-    /* width: 350px; */
-    /* max-height: 400px; */
+    gap: 4px;
+}
+
+.chat-box {
+    position: relative;
     background-color: #292b37;
     border: 3px solid #4c4f67;
     border-radius: 1rem;
@@ -23,9 +29,14 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.432);
     border-radius: 1rem;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
+}
+
+#overlayChat p
+{
+    text-align: center;
 }
 
 .messages {
@@ -70,13 +81,11 @@
 
 .message-container-left
 {
-    /* box-shadow: 0 0 5px rgba(0, 255, 255, 0.2); */
     background-color: #1c3558;
 }
 
 .message-container-right
 {
-    /* box-shadow: 0 0 5px rgba(0, 255, 255, 0.2); */
     background-color: #004628;
 }
 
@@ -131,6 +140,10 @@
     object-fit: contain;
 }
 
+#sendButton:hover {
+    filter: hue-rotate(240deg);
+}
+
 #sendButton
 {
     width: 2.5rem;
@@ -148,8 +161,14 @@ button:hover {
     width: 2rem;
     height: 2rem;
     border-radius: 1rem;
-    box-shadow: 0 0 10px rgba(255, 0, 127, 0.8);
     transition: width 0.4s ease, height 0.4s ease;
+}
+
+.chat-box.hasNewMessage
+{
+    box-shadow: 0 0 10px rgba(255, 0, 127, 0.8);
+    border: 3px solid #ff0000;
+    animation: vibrate 3s ease-in-out infinite;
 }
 
 .chat-box.shrunk.hide-elements .messages,
@@ -163,20 +182,18 @@ button:hover {
 }
 
 #toggleSizeButton {
-    position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 32px;
     height: 32px;
-    top: 0;
-    right: 0;
     padding: 0;
     background-color: transparent;
     border: none;
     border-radius: 16px;
     transition: all 0.3s ease-in-out;
     z-index: 2;
+    align-self: end;
 }
 
 #toggleSizeButton img {
@@ -197,10 +214,15 @@ button:hover {
     size-adjust: flex;
     flex-direction: row;
     background-color: #1c1e2600;
-    transform: translateX(-30%) translateY(-20%);
+    transform: translateX(-30%) translateY(-12%);
     justify-content: center;
     align-content: center;
     white-space: nowrap;
+}
+
+#unblockUserButton
+{
+    display: none;
 }
 
 #spaceContextMenu
@@ -219,7 +241,7 @@ button:hover {
     gap: 0.3rem;
 }
 
-#addFriendButton, #inviteGameButton, #seeProfileButton
+.contextMenuButton
 {
     position: relative;
     align-self: center;
@@ -229,6 +251,11 @@ button:hover {
     background-color: #005469;
     border: 2px solid #4c4f67;
     border-radius: 4px;
+}
+
+.contextMenuButton:hover
+{
+    background-color: #00708b;
 }
 
 .joinDuelInChat

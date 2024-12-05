@@ -80,8 +80,8 @@
 .bigModeSelectionButton
 {
     display: flex;
-    height: calc(16vh + 10vw);
-    width: calc(16vh + 10vw);
+    height: calc(12vh + 10vw);
+    width: calc(12vh + 10vw);
     min-width: 6rem;
     min-height: 6rem;
     background-color: #000000;
@@ -113,13 +113,13 @@
     transform: translate(0%, 0%);
 }
 
-#modeSelection h3, #mainPanel h3, #rulesPanel h3
+/* #modeSelection h3, #mainPanel h3, #rulesPanel h3
 {
     position: absolute;
     top: 1vh;
     font-size: clamp(2vh, 1rem + 6vh, 6rem);
     color: white;
-}
+} */
 
 .modeSelectionButton:hover,
 #mainPlayButton:hover,

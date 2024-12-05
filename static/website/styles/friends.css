@@ -1,0 +1,150 @@
+.friends-box {
+    background-color: #292b37;
+    border: 3px solid #4c4f67;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.301);
+    transition: all 0.4s ease-in-out;
+    overflow: hidden;
+}
+
+.friends-box.shrunk {
+    padding-left: 0;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 1rem;
+    transition: width 0.4s ease, height 0.4s ease;
+}
+
+.friends-box.hide-elements .friendsListParent,
+.friends-box.hide-elements .friendsHeader
+{
+    display: none !important;
+}
+
+.friends-box.expanded {
+    width: 22rem;
+    height: 25rem;
+}
+
+#toggleSizeButtonFriends {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+    border-radius: 16px;
+    transition: all 0.3s ease-in-out;
+    z-index: 2;
+    align-self: end;
+}
+
+#toggleSizeButtonFriends img {
+    width: 80%;
+    height: 80%;
+    transition: all 0.3s ease;
+}
+
+#toggleSizeButtonFriends:hover {
+    transform: scale(1.3);
+}
+
+#friendsListParent
+{
+    position: relative;
+    display: flex;
+    height: 90%;
+    width: 100%;
+    background-color: #ffffff05;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    bottom: 0;
+}
+
+#friendsList, #blockedList
+{
+    position: relative;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    bottom: 0;
+}
+
+#blockedList
+{
+    display: none;
+}
+
+#friendsHeader
+{
+    /* position: absolute; */
+    margin: 0;
+    align-self: center;
+    margin-top: -8%;
+}
+
+#friendsHeader:hover
+{
+    text-shadow:
+     0px 0px 8px rgb(0, 66, 66),
+     0px 0px 8px rgb(0, 66, 66);
+}
+
+.friendDiv
+{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 95%;
+    height: 32px;
+    justify-content: space-between;
+    border: 2px solid #4c4f67;
+    padding: 6px;
+}
+
+.friendDiv:hover
+{
+    background-color: #3d4053;
+}
+
+.friendStatus
+{
+    width: 12px;
+    height: 12px;
+}
+
+.statusBusy
+{
+    filter: hue-rotate(240deg);
+}
+
+.statusOffline
+{
+    filter:grayscale(100%);
+}
+
+.removeBlockedButton
+{
+    width: 28px;
+    height: 28px;
+    background-image: url('../icons/redCross.png');
+    background-size:100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: hue-rotate(180deg) brightness(150%);
+}
+
+.removeBlockedButton:hover
+{
+    filter: hue-rotate(240deg) brightness(200%);
+}

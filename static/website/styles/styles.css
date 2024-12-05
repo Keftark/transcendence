@@ -104,4 +104,8 @@ input:focus
 ::selection {
     background-color: #00d9ff8f; /* Custom background color */
     color: #ffd000; /* Custom text color */
-  }
+}
+
+#consent-text a {
+    cursor: url('../icons/cursor-button.png'), pointer;
+}

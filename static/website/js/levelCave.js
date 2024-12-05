@@ -14,7 +14,8 @@ function getRandomRock()
     [
         'static/3DModels/rock1.glb',
         'static/3DModels/rock2.glb',
-        'static/3DModels/rock3.glb'
+        'static/3DModels/rock3.glb',
+        'static/3DModels/rock4.glb'
     ]
     return getRandomStringFromArray(paths);
 }

@@ -1,6 +1,7 @@
 import { balle, BOUNDARY, getPlayer, finalHeight, PLAYER_HEIGHT } from "./levelLocal.js";
 import { getLevelState } from "./main.js";
 import { isMenuOpen, isSettingsOpen } from "./menu.js";
+import { playerStats } from "./playerManager.js";
 import { resetBoostBar } from "./powerUp.js";
 import { LevelMode } from "./variables.js";
 
@@ -97,7 +98,7 @@ function setPlayer3Bounds(levelState)
     return boundsMovement;
 }
 
-export function setupPlayerMovement(player1, player2)
+export function setupPlayerMovement(player1, player2, player3, player4)
 {
     let moveUp1 = false;
     let moveDown1 = false;
@@ -105,10 +106,9 @@ export function setupPlayerMovement(player1, player2)
     let moveDown2 = false;
     const levelState = getLevelState();
     let isViewHorizontal = levelState != LevelMode.ADVENTURE;
-    const boundsPlayer1 = setPlayer1Bounds(levelState);
-    const boundsPlayer2 = boundsPlayer1;
-    const boundsPlayer3 = setPlayer3Bounds(levelState);
-    const boundsPlayer4 = boundsPlayer3;
+    let boundsPlayer = [4];
+    boundsPlayer[0] = boundsPlayer[1] = setPlayer1Bounds(levelState);
+    boundsPlayer[2] = boundsPlayer[3] = setPlayer3Bounds(levelState);
     const boundymax = setPlayer1Bounds(levelState).max;
     const boundymin = setPlayer1Bounds(levelState).min;
 
@@ -130,9 +130,9 @@ export function setupPlayerMovement(player1, player2)
             moveUp2 = isTrue;
         else if (event.key === 'ArrowDown' && isViewHorizontal)
             moveDown2 = isTrue;
-        else if (event.key === 'a' && !isViewHorizontal)
+        else if ((event.key === 'a' || event.key === 'ArrowLeft') && !isViewHorizontal)
             moveUp1 = isTrue;
-        else if (event.key === 'd' && !isViewHorizontal)
+        else if ((event.key === 'd' || event.key === 'ArrowRight') && !isViewHorizontal)
             moveDown1 = isTrue;
     }
 
@@ -149,29 +149,54 @@ export function setupPlayerMovement(player1, player2)
         return start + (end - start) * t;
     }
 
+    function getPlayer(playerNbr)
+    {
+        if (playerNbr === 0)
+            return player1;
+        if (playerNbr === 1)
+            return player2;
+        if (playerNbr === 2)
+            return player3;
+        if (playerNbr === 3)
+            return player4;
+    }
+
+    function getPlayerPosition(playerNbr)
+    {
+        // faire la requete pour recuperer la position du joueur
+    }
+
+    function setPlayerPosition(playerNbr)
+    {
+        // envoyer le numero du joueur et la position Y
+    }
+
     function checkPlayer1Movements(adjustedSpeed)
     {
-        let playerposy = player1.position.y || 0;
+        const controller = playerStats.playerController;
+        const player = getPlayer(controller);
+        let playerposy = player.position.y || 0;
         const playerBound = finalHeight / 2;
         if (moveUp1 && !moveDown1) {
             const newPosition = lerp(playerposy, playerposy + adjustedSpeed, 0.1);
-            player1.position.y = Math.min(newPosition, boundsPlayer1.max - playerBound);
+            player.position.y = Math.min(newPosition, boundsPlayer[controller].max - playerBound);
         } else if (moveDown1 && !moveUp1) {
             const newPosition = lerp(playerposy, playerposy - adjustedSpeed, 0.1);
-            player1.position.y = Math.max(newPosition, boundsPlayer1.min + playerBound);
+            player.position.y = Math.max(newPosition, boundsPlayer[controller].min + playerBound);
         }
     }
 
-    function checkPlayer2Movements(adjustedSpeed) {
+    function checkPlayer2Movements(adjustedSpeed)
+    {
         let playerposy = player2.position.y || 0;
         const playerBound = finalHeight / 2;
     
         if (moveUp2 && !moveDown2) {
             const newPosition = lerp(playerposy, playerposy + adjustedSpeed, 0.1);
-            player2.position.y = Math.min(newPosition, boundsPlayer2.max - playerBound);
+            player2.position.y = Math.min(newPosition, boundsPlayer[1].max - playerBound);
         } else if (moveDown2 && !moveUp2) {
             const newPosition = lerp(playerposy, playerposy - adjustedSpeed, 0.1);
-            player2.position.y = Math.max(newPosition, boundsPlayer2.min + playerBound);
+            player2.position.y = Math.max(newPosition, boundsPlayer[1].min + playerBound);
         }
     }
 
@@ -183,37 +208,30 @@ export function setupPlayerMovement(player1, player2)
             botTargetPosition = balle.position.y;
     }
 
-    function checkBotMovements(adjustedSpeed) {
-        // Return early if the bot is already within a range or cannot move
-        if (
-            (botTargetPosition > player2.position.y - finalHeight / 8 &&
-            botTargetPosition < player2.position.y + finalHeight / 8) ||
-            !botCanMove
-        ) return;
+    function checkBotMovements(adjustedSpeed)
+    {
+        if ((botTargetPosition > player2.position.y - finalHeight / 8 &&
+            botTargetPosition < player2.position.y + finalHeight / 8) || !botCanMove)
+            return;
     
         let playerposy = player2.position.y || 0;
         const up = balle.position.y >= player2.position.y;
-    
         const playerHalfHeight = finalHeight / 4;
         const playerQuarterHeight = finalHeight / 8;
         const upperLimit = BOUNDARY.Y_MAX - playerHalfHeight;
         const lowerLimit = BOUNDARY.Y_MIN + playerHalfHeight;
     
-        // Ensure player is within the moving bounds before moving
-        if (playerposy > lowerLimit && playerposy < upperLimit) {
-            // Calculate target position based on direction
+        if (playerposy > lowerLimit && playerposy < upperLimit)
+        {
             const targetPosition = up ? playerposy + adjustedSpeed : playerposy - adjustedSpeed;
             player2.position.y = lerp(playerposy, targetPosition, 0.1);
     
-            // Clamp position to the defined limits
             const clampedPosition = up
                 ? Math.min(player2.position.y, upperLimit - playerQuarterHeight)
                 : Math.max(player2.position.y, lowerLimit + playerQuarterHeight);
     
             player2.position.y = clampedPosition;
         }
-    
-        // Final clamping to overall bounds
         player2.position.y = Math.max(boundymin, Math.min(player2.position.y, boundymax));
     }
 

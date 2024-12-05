@@ -1,5 +1,5 @@
 import * as THREE from '../node_modules/.vite/deps/three.js';
-import { animateCamera, getCameraActiveState, resetCamera } from './cameranim.js';
+import { animateCamera, resetCamera } from './cameranim.js';
 import { resetBoostedStatus, setupPlayerMovement, stopBoostPlayers } from './playerMovement.js';
 import { createBall } from './ball.js';
 import { ScreenShake } from './screenShake.js';
@@ -16,13 +16,14 @@ import { createCaveLevel } from './levelCave.js';
 import { getMatchTime, isGamePaused, pauseStopWatch, resetStopwatch, resumeStopWatch, setStopWatch, startStopwatch, stopStopwatch } from './timer.js';
 import { closeGameMenu, isSettingsOpen, setHeaderVisibility } from './menu.js';
 import { getRules } from './rules.js';
-import { ArenaType, BallStats, LevelMode, VictoryType } from './variables.js';
+import { ArenaType, LevelMode, PlayerStatus, VictoryType } from './variables.js';
 import { callVictoryScreen } from './victory.js';
 import { isBoostReadyLeft, isBoostReadyRight, resetBoostBar, useBoost } from './powerUp.js';
 import { createDeathSphere } from './deathSphere.js';
 import { Sparks } from './sparks.js';
 
 const gameMenuPanel = document.getElementById('gameMenuPanel');
+const myInput = document.getElementById('inputChat');
 export const PLAYER_RADIUS = 1;
 export const PLAYER_HEIGHT = 12;
 export let finalHeight = PLAYER_HEIGHT;
@@ -62,10 +63,10 @@ const pressPlayDiv = document.getElementById('pressPlayDiv');
 const playDiv = document.getElementById('play');
 let changeBallSizeFunction = null;
 let changeBallSpeedFunction = null;
-const gameUILeft = document.getElementById('controlsLeft');
-const player1KeysLocal = document.getElementById('controlsP1LocalImg');
-const playerKeysAdventure = document.getElementById('controlsAdventureImg');
-const gameUIRight = document.getElementById('controlsRight');
+const controlsP1 = document.getElementById('controlsP1');
+const controlsLeftImg = document.getElementById('controlsP1LocalImg');
+const controlsRightImg = document.getElementById('controlsP2LocalImg');
+const controlsP2 = document.getElementById('controlsP2');
 const player1Name = document.getElementById('playername-left');
 const player2Name = document.getElementById('playername-right');
 let currentLevelMode;
@@ -80,6 +81,7 @@ let deathSphereExplosion = null;
 let scaleSphere = 0;
 let isCamEventAdded = false;
 let sparks;
+let cameraZoomSpeed = 2; // Set the zoom speed
 
 export function updateSparksFunction()
 {
@@ -94,24 +96,17 @@ export function spawnSparksFunction(newPosition, count)
 function onWindowResize() {
     if (!isCameraAnimationComplete)
         return;
-    // Update the camera's aspect ratio to match the new window size
     camera.aspect = window.innerWidth / window.innerHeight;
     
-    // Optionally: Adjust camera's position based on window size
     if (window.innerWidth > window.innerHeight) {
-        camera.position.z = cameraRatioWidth / camera.aspect * 2.5; // For wider windows, move the camera further
+        camera.position.z = cameraRatioWidth / camera.aspect * 2.5;
     } else {
-        camera.position.z = cameraRatioHeigth / camera.aspect * 3.5; // For taller windows, move the camera further back
+        camera.position.z = cameraRatioHeigth / camera.aspect * 3.5;
     }
-    
-    // Update the camera's projection matrix after changing the aspect ratio
     camera.updateProjectionMatrix();
-    
-    // Update the renderer size
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-// Listen for the window resize event
 window.addEventListener('resize', onWindowResize, false);
 
 export function getPlayer(playerNbr)
@@ -121,8 +116,8 @@ export function getPlayer(playerNbr)
 
 function hideInGameUI()
 {
-    gameUILeft.style.display = 'none';
-    gameUIRight.style.display = 'none';
+    controlsP1.style.display = 'none';
+    controlsP2.style.display = 'none';
 }
 
 export function unloadLevel()
@@ -136,6 +131,9 @@ export function unloadLevel()
     resetFunction(true);
     isInGame = false;
     setAccessAllDuelsInChat(true);
+    playerStats.status = PlayerStatus.ONLINE;
+
+    window.removeEventListener('wheel', camZoomEvent);
 }
 
 export function gameEventsListener(event)
@@ -143,8 +141,11 @@ export function gameEventsListener(event)
     if (pressSpaceFunction === null)
         return;
 
-    pressSpaceFunction(event);
-    pressBoostFunction(event);
+    if (document.activeElement != myInput)
+    {
+        pressSpaceFunction(event);
+        pressBoostFunction(event);
+    }
     // pressArrowsMenu(event);
 }
 
@@ -245,19 +246,34 @@ export function setUpScene(levelMode)
 
 function showInGameUI()
 {
+    let controlsSrc;
     if (currentLevelMode === LevelMode.ADVENTURE)
     {
-        player1KeysLocal.style.display = 'none';
-        playerKeysAdventure.style.display = 'block';
-        gameUIRight.style.display = 'none';
+        controlsSrc = 'static/images/controlsAdventure.png';
+    }
+    else if (currentLevelMode === LevelMode.LOCAL)
+    {
+        controlsSrc = 'static/images/controlsP1Local.png';
+    }
+    if (currentLevelMode === LevelMode.LOCAL)
+    {
+        controlsP1.style.display = 'flex';
+        controlsLeftImg.src = 'static/images/controlsP1Local.png';
+        controlsP2.style.display = 'flex';
+        controlsRightImg.src = 'static/images/controlsP2Local.png';
+    }
+    else if (playerStats.playerController === 0 || playerStats.playerController === 1 || playerStats.playerController === 3)
+    {
+        controlsP1.style.display = 'flex';
+        controlsLeftImg.src = controlsSrc;
+        controlsP2.style.display = 'none';
     }
     else
     {
-        player1KeysLocal.style.display = 'block';
-        playerKeysAdventure.style.display = 'none';
-        gameUIRight.style.display = 'flex';
+        controlsP2.style.display = 'flex';
+        controlsRightImg.src = controlsSrc;
+        controlsP1.style.display = 'none';
     }
-    gameUILeft.style.display = 'flex';
 }
 
 export function setPlayerRightName()
@@ -276,15 +292,16 @@ function setPlayerNames()
 
 export function setUpLevel(scene)
 {
+    const arenaType = getRules().arena;
     const textureLoader = new THREE.TextureLoader();
     gameMenuPanel.style.display = 'block';
     showInGameUI();
     [player1, player2, player3, player4] = createPlayers(scene, textureLoader);
-    createLights(scene);
+    createLights(scene, arenaType);
     resetPlayersPositions();
-    if (getRules().arena === ArenaType.SPACE)
+    if (arenaType === ArenaType.SPACE)
         animateLevelFunction = createSpaceLevel(scene, textureLoader);
-    else if (getRules().arena === ArenaType.CAVE)
+    else if (arenaType === ArenaType.CAVE)
         createCaveLevel(scene, textureLoader);
 }
 
@@ -319,12 +336,14 @@ function resetPlayersPositions()
     player2.position.set(BOUNDARY.X_MAX, 0, 0);
 }
 
+export let playerSize = PLAYER_HEIGHT;
 
 export function changePlayersSize(newHeight)
 {
     if (isNaN(newHeight))
         newHeight = 1;
-    finalHeight = PLAYER_HEIGHT * newHeight;
+    finalHeight = PLAYER_HEIGHT * parseFloat(newHeight);
+    playerSize = finalHeight;
     const newGeometry = new THREE.CylinderGeometry(PLAYER_RADIUS, PLAYER_RADIUS, finalHeight, 8, 1, false);
     const newBoostGeometry = new THREE.CylinderGeometry(PLAYER_RADIUS + 0.1, PLAYER_RADIUS + 0.1, finalHeight + 0.1, 8, 1, false);
     player1.geometry.dispose();
@@ -412,8 +431,48 @@ function animateDeathSphere()
         }
 }
 
+export function getBallPosition()
+{
+    console.log(balle.position);
+}
+
+
+
+function camZoomEvent(event)
+{
+    if (boxContainers.contains(event.target))
+        return;
+    if (camera instanceof THREE.OrthographicCamera) {
+        const aspect = window.innerWidth / window.innerHeight;
+        if (event.deltaY > 0) {
+            camera.left -= cameraZoomSpeed * aspect;
+            camera.right += cameraZoomSpeed * aspect;
+            camera.top += cameraZoomSpeed;
+            camera.bottom -= cameraZoomSpeed;
+        } else {
+            camera.left += cameraZoomSpeed * aspect;
+            camera.right -= cameraZoomSpeed * aspect;
+            camera.top -= cameraZoomSpeed;
+            camera.bottom += cameraZoomSpeed;
+        }
+        camera.updateProjectionMatrix();
+    }
+    else if (camera instanceof THREE.PerspectiveCamera)
+    {
+        if (event.deltaY < 0) {
+            camera.fov = Math.max(30, camera.fov - cameraZoomSpeed);
+        } else {
+            camera.fov = Math.min(100, camera.fov + cameraZoomSpeed);
+        }
+        camera.updateProjectionMatrix();
+    }
+    event.preventDefault();
+}
+
 export function StartLevel(levelMode)
 {
+    const boxContainers = document.getElementById('boxContainers');
+    playerStats.status = PlayerStatus.BUSY;
     animationId = null;
     deathSphere = null;
     scaleSphere = 0;
@@ -428,7 +487,7 @@ export function StartLevel(levelMode)
     setUpLevel(scene);
     sparks = new Sparks(scene);
     
-    const { updatePlayers } = setupPlayerMovement(player1, player2);
+    const { updatePlayers } = setupPlayerMovement(player1, player2, player3, player4);
     const { ball, updateBall, resetBall, changeBallSize, changeBallSpeed } = createBall(scene, resetScreen);
     balle = ball;
     setUpConsts();
@@ -519,8 +578,6 @@ export function StartLevel(levelMode)
             {
                 if (isBallMoving) updateBall(player1, player2);
                 updatePlayers(deltaTime);
-                // console.log("1. " + player1.position.y);
-                // console.log("2. " + player2.position.y);
             }
         }
         if (animateLevelFunction != null)
@@ -533,12 +590,11 @@ export function StartLevel(levelMode)
             resetFunction(true);
     }
 
-    const myInput = document.getElementById('inputChat');
     pressSpaceFunction = function pressSpaceStart(event)
     {
         if (!canPressSpace)
             return;
-        if (!gameMenuPanel.classList.contains('show') && !gameEnded && !isBallMoving && event.key === ' ' && isCameraAnimationComplete && document.activeElement != myInput)
+        if (!gameMenuPanel.classList.contains('show') && !gameEnded && !isBallMoving && event.key === ' ' && isCameraAnimationComplete)
         {
             isBallMoving = true;
             if (isGamePaused())
@@ -569,40 +625,12 @@ export function StartLevel(levelMode)
         animate();
     }
 
-    let cameraZoomSpeed = 2; // Set the zoom speed
-
     function addCamZoomEvent()
     {
         if (isCamEventAdded)
             return;
-        window.addEventListener('wheel', function(event)
-        {
-            if (camera instanceof THREE.OrthographicCamera) {
-                if (event.deltaY > 0) {
-                    camera.left -= cameraZoomSpeed;
-                    camera.right += cameraZoomSpeed;
-                    camera.top += cameraZoomSpeed;
-                    camera.bottom -= cameraZoomSpeed;
-                } else {
-                    camera.left += cameraZoomSpeed;
-                    camera.right -= cameraZoomSpeed;
-                    camera.top -= cameraZoomSpeed;
-                    camera.bottom += cameraZoomSpeed;
-                }
-                
-                camera.updateProjectionMatrix();
-            }
-            else if (camera instanceof THREE.PerspectiveCamera)
-            {
-                if (event.deltaY < 0) {
-                    camera.fov = Math.max(30, camera.fov - cameraZoomSpeed);
-                } else {
-                    camera.fov = Math.min(100, camera.fov + cameraZoomSpeed);
-                }
-                camera.updateProjectionMatrix();
-            }
-            event.preventDefault();
-        }, { passive: false });
+        window.addEventListener('wheel', 
+            camZoomEvent, { passive: false });
         window.addEventListener('mousedown', function(event) {
             if (event.button === 1) {
                 resetZoomCamera(camera);

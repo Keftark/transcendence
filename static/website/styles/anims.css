@@ -173,3 +173,13 @@
       opacity: 1;
     }
   }
+
+@keyframes vibrate {
+    0% { transform: translateX(0); }
+    46% { transform: translateX(0); }
+    48% { transform: translateX(-2px); }
+    50% { transform: translateX(2px); }
+    52% { transform: translateX(-2px); }
+    54% { transform: translateX(0); }
+    100% { transform: translateX(0); }
+}

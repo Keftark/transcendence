@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="{% static './styles/settings.css' %}">
     <link rel="stylesheet" href="{% static './styles/signIn.css' %}">
     <link rel="stylesheet" href="{% static './styles/tournament.css' %}">
+    <link rel="stylesheet" href="{% static './styles/friends.css' %}">
     <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
 </head>
 <body>
@@ -43,6 +44,7 @@
     <script type="module" src="{% static 'js/deathSphere.js' %}"></script>
     <script type="module" src="{% static 'js/translate.js' %}"></script>
     <script type="module" src="{% static 'js/modesSelection.js' %}"></script>
+    <script type="module" src="{% static 'js/friends.js' %}"></script>
 
     <!-- ajouter la page de tournoi ? -->
     <div id="game-local" class="page"></div>
@@ -306,7 +308,7 @@
             <div id="playername-right"></div>
         </div>
     </div>
-    <div id="controlsLeft">
+    <div id="controlsP1">
         <div id="boostBarUILeft">
             <div id="boostBarLeft">
                 <img id="boostBarBgLeft" src="{% static 'images/boostBarBg.png' %}" alt="">
@@ -315,9 +317,8 @@
             <p id="pressBoostTextLeft"></p>
         </div>
         <img src="{% static 'images/controlsP1Local.png' %}" id="controlsP1LocalImg" />
-        <img src="{% static 'images/controlsAdventure.png' %}" id="controlsAdventureImg" />
     </div>
-    <div id="controlsRight">
+    <div id="controlsP2">
         <div id="boostBarUIRight">
             <div id="boostBarRight">
                 <img id="boostBarBgRight" src="{% static 'images/boostBarBg.png' %}" alt="">
@@ -350,7 +351,9 @@
         <div id="profileInfos">
             <div id="profilePictureDiv">
                 <img src="{% static 'icons/guestUser.png' %}" id="profilePicture" alt="">
-                <button id="profilePictureChangeButton"></button>
+                <label for="fileInput" id="profilePictureChangeButton" class="profilePictureChangeButton"></label>
+                <!-- <button id="profilePictureChangeButton" class="profilePictureChangeButton"></button> -->
+                <input type="file" id="fileInput" accept="image/*" />
             </div>
             <h2 id="nameProfile"></h2>
             <p id="firstNameProfile"></p>
@@ -411,33 +414,58 @@
     <div id="victory">
         <div id="victoryPanel">
             <img id="victoryImg" alt="">
-            <h1 id="victoryText"></h1>
+            <h2 id="victoryText"></h2>
             <button id="closeVictoryButton"></button>
         </div>
     </div>
 
-    <!------------------------------ Chat Box ------------------------------>
-    <div class="chat-box" id="chatBox">
-        <button id="toggleSizeButton">
-            <img src="{% static 'icons/shrink.png' %}" id="toggleIcon"/>
-        </button>
-        <div class="messages" id="messages">
-        </div>
-        <div class="input-container" id="inputContainer">
-            <input type="text" id="inputChat" placeholder="...">
-            <button id="sendButton">
-                <img src="{% static 'icons/send.png' %}" class="button-send-img" />
+    <div id="boxContainers">
+        <!------------------------------ Chat Box ------------------------------>
+        <div class="chat-box shrunk hide-elements" id="chatBox">
+            <button id="toggleSizeButton">
+                <img src="{% static 'icons/chatIcon.png' %}" id="toggleIcon"/>
             </button>
+            <div class="messages" id="messages">
+            </div>
+            <div class="input-container" id="inputContainer">
+                <input type="text" id="inputChat" placeholder="...">
+                <button id="sendButton">
+                    <img src="{% static 'icons/send.png' %}" class="button-send-img" />
+                </button>
+            </div>
+            <div id="overlayChat">
+                <p id="connectToChat"></p>
+            </div>
         </div>
-        <div id="overlayChat">
-            <p id="connectToChat"></p>
+    
+        <!------------------------------ Friends Box ------------------------------>
+        <div class="friends-box shrunk hide-elements" id="friendsBox">
+            <button id="toggleSizeButtonFriends">
+                <img src="{% static 'icons/friendsIcon.png' %}" id="toggleIconFriends"/>
+            </button>
+            <h1 class="friendsHeader" id="friendsHeader"></h1>
+            <div class="friendsListParent" id="friendsListParent">
+                <div id="friendsList">
+                    <div id="friendDiv" class="friendDiv">
+                        <h3 id="friendName">Ton ami</h3>
+                        <img src="{% static 'icons/statusPlayer.png' %}" id="friendStatus" class="friendStatus" alt="">
+                    </div>
+                    <div id="friendDiv" class="friendDiv">
+                        <h3 id="friendName">Ton autre ami</h3>
+                        <img src="{% static 'icons/statusPlayer.png' %}" id="friendStatus" class="friendStatus" alt="">
+                    </div>
+                </div>
+                <div id="blockedList"></div>
+            </div>
         </div>
     </div>
     <div id="chatContextMenu">
         <div id="spaceContextMenu">
-            <button id="addFriendButton"></button>
-            <button id="inviteGameButton"></button>
-            <button id="seeProfileButton"></button>
+            <button class="contextMenuButton" id="sendMessageButton"></button>
+            <button class="contextMenuButton" id="addFriendButton"></button>
+            <button class="contextMenuButton" id="inviteGameButton"></button>
+            <button class="contextMenuButton" id="seeProfileButton"></button>
+            <button class="contextMenuButton" id="blockUserButton"></button>
         </div>
     </div>
 
@@ -447,33 +475,33 @@
             <div id="registeringPanel">
                 <div id="askSignInDiv">
                     <p id="askSignInText"></p>
-                    <p id="askSignIn"></p>
+                    <p id="askSignIn" class="statusBusy"></p>
                 </div>
                 <h1 class="regItem" id="registerHeader"></h1>
                 <div class="regItem">
                     <p id="registerName"></p>
-                    <input type="text" id="inputName" maxlength="20" placeholder="...">
+                    <input type="text" class="inputfield" id="inputName" maxlength="20" placeholder="...">
                     <p class="registerErrorMessage" id="registerErrorName"></p>
                 </div>
                 <div class="regItem">
                     <p id="registerFirstName"></p>
-                    <input type="text" id="inputFirstName" maxlength="20" placeholder="...">
+                    <input type="text" class="inputfield" id="inputFirstName" maxlength="20" placeholder="...">
                     <p class="registerErrorMessage" id="registerErrorFirstName"></p>
                 </div>
                 <div class="regItem">
                     <p id="registerLastName"></p>
-                    <input type="text" id="inputLastName" maxlength="20" placeholder="...">
+                    <input type="text" class="inputfield" id="inputLastName" maxlength="20" placeholder="...">
                     <p class="registerErrorMessage" id="registerErrorLastName"></p>
                 </div>
                 <div class="regItem">
                     <p id="registerMail"></p>
-                    <input type="text" id="inputMail" maxlength="20" placeholder="...">
+                    <input type="text" class="inputfield" id="inputMail" maxlength="20" placeholder="...">
                     <p class="registerErrorMessage" id="registerErrorMail"></p>
                 </div>
                 <div class="regItem">
                     <p id="registerPassword"></p>
                     <div id="passwordDiv">
-                        <input type="password" id="inputPassword" maxlength="20" placeholder="...">
+                        <input type="password" class="inputfield" id="inputPassword" maxlength="20" placeholder="...">
                         <img id="showPasswordButton" src="{% static 'icons/eyeOpen.png' %}" alt="">
                     </div>
                     <p class="registerErrorMessage" id="registerErrorPassword"></p>
@@ -481,10 +509,16 @@
                 <div class="regItem">
                     <p id="registerConfirmPassword"></p>
                     <div id="confirmPasswordDiv">
-                        <input type="password" id="inputConfirmPassword" maxlength="20" placeholder="...">
+                        <input type="password" class="inputfield" id="inputConfirmPassword" maxlength="20" placeholder="...">
                         <img id="showConfirmPasswordButton" src="{% static 'icons/eyeOpen.png' %}" alt="">   
                     </div>
                     <p class="registerErrorMessage" id="registerErrorConfirmPassword"></p> 
+                </div>
+                <div class="regItem">
+                    <label class="consent-label" id="consentText">
+                        <input type="checkbox" id="checkboxGdpr" name="consent" required>
+                        <span id="consent-text"></span>
+                    </label>
                 </div>
                 <div id="regButtons">
                     <button class="regButton" id="registerConfirm"></button>
@@ -500,18 +534,18 @@
             <div id="signInPanel">
                 <div id="askRegisterDiv">
                     <p id="askRegisterText"></p>
-                    <p id="askRegister"></p>
+                    <p id="askRegister" class="statusBusy"></p>
                 </div>
                 <h1 class="regItem" id="signInHeader"></h1>
                 <div class="regItem">
                     <p id="signInName"></p>
-                    <input type="text" id="inputSignInName" maxlength="20" placeholder="...">
+                    <input type="text" class="inputfield" id="inputSignInName" maxlength="20" placeholder="...">
                     <p class="registerErrorMessage" id="signInErrorName"></p>
                 </div>
                 <div class="regItem">
                     <p id="signInPassword"></p>
                     <div id="passwordSignInDiv">
-                        <input type="password" id="inputSignInPassword" maxlength="20" placeholder="...">
+                        <input type="password" class="inputfield" id="inputSignInPassword" maxlength="20" placeholder="...">
                         <img id="showSignInPasswordButton" src="{% static 'icons/eyeOpen.png' %}" alt="">
                     </div>
                     <p class="registerErrorMessage" id="signInErrorPassword"></p>
@@ -521,6 +555,13 @@
                     <button class="signInButton" id="signInCancel"></button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div id="overlayGdpr">
+        <div id="gdprPanel">
+            <p id="gdprText"></p>
+            <button class="regButton" id="gdprBack"></button>
         </div>
     </div>
 

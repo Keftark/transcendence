@@ -1,7 +1,7 @@
 import * as THREE from '../node_modules/.vite/deps/three.js';
 import { PLAYER_HEIGHT, PLAYER_RADIUS, BOUNDARY } from "./levelLocal.js";
-import { getLevelState } from "./main.js";
-import { LevelMode } from './variables.js';
+import { getLevelState } from './main.js';
+import { ArenaType, LevelMode } from './variables.js';
 
 let wallLeft;
 let wallRight;
@@ -125,13 +125,17 @@ export function setVisibilityRightWall(isVisible)
     wallRight.visible = isVisible;
 }
 
-export function createLights(scene)
+export function createLights(scene, arenaType)
 {
-    currentLevelMode = getLevelState();
-    const ambientLight = new THREE.AmbientLight(0xaaaaaa);
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 3);
+    let lightForce = 1;
+    if (arenaType === ArenaType.SPACE)
+    {
+        const ambientLight = new THREE.AmbientLight(0xaaaaaa);
+        scene.add(ambientLight);
+        lightForce = 3;
+    }
+    const directionalLight = new THREE.DirectionalLight(0xffffff, lightForce);
     directionalLight.position.set(1, 1, 1).normalize();
 
-    scene.add(ambientLight);
     scene.add(directionalLight);
 }

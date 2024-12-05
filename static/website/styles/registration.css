@@ -67,7 +67,11 @@
     position: relative;
 }
 
-#inputName, #inputFirstName, #inputLastName, #inputMail, #inputPassword, #inputConfirmPassword, #inputSignInPassword, #inputSignInName
+.consent-label {
+    color: white;
+}
+
+.inputfield
 {
     display: flex;
     flex-grow: 1;
@@ -176,10 +180,70 @@
 {
     font-style: italic;
     text-decoration: underline;
-    color: aqua;
+    color: rgb(255, 150, 255);
 }
 
 #askSignIn:hover, #askRegister:hover
 {
     color: rgb(216, 255, 255);
+}
+
+#consentText
+{
+    padding-top: 16px;
+    max-width: 256px;
+    gap: 16px;
+}
+
+#gdprPanel
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    overflow-wrap: normal;
+    white-space: pre-wrap;
+    transform: translate(-50%, -50%);
+    overflow-y: scroll;
+    background-color: #002e33;
+    padding: 8px;
+    border: 2px solid #066;
+    border-radius: 8px;
+}
+
+.gdpr
+{
+    color: cyan;
+    text-decoration: underline;
+    cursor: url('../icons/cursor-button.png'), pointer;
+}
+
+#gdprBack
+{
+    max-width: 20%;
+    min-height: 32px;
+    align-self: center;
+    margin-bottom: 12px;
+}
+
+.titleGdpr
+{
+    text-decoration: underline;
+    font-size: clamp(0.2rem + 0.8vw + 0.8vh, 0.5rem + 0.8vw + 0.8vh, 8rem);
+}
+
+.chapterGdpr
+{
+    margin: 16px;
+    font-size: clamp(0.2rem + 0.6vw + 0.6vh, 0.5rem + 0.6vw + 0.6vh, 5rem);
+    filter: brightness(0.8);
+}
+
+#gdprText
+{
+    font-family: Arial, sans-serif;
+    font-size: clamp(0.2rem + 0.4vw + 0.4vh, 0.5rem + 0.4vw + 0.4vh, 5rem);
 }

@@ -32,7 +32,7 @@
     transition: all 1s ease;
 }
 
-#victoryPanel h1
+#victoryPanel h2
 {
     position: absolute;
 }
@@ -40,7 +40,7 @@
 #victoryImg
 {
     position: absolute;
-    width: calc(25vw + 15vh);
+    width: calc(15vw + 10vh);
     height: calc(15vw + 10vh);
     top: 0;
 }

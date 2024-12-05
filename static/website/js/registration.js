@@ -25,17 +25,22 @@ const registerErrorLastName = document.getElementById('registerErrorLastName');
 const registerErrorMail = document.getElementById('registerErrorMail');
 const registerErrorPassword = document.getElementById('registerErrorPassword');
 const registerErrorConfirmPassword = document.getElementById('registerErrorConfirmPassword');
+const registerConfirm = document.getElementById('registerConfirm');
+
+const gdprPanel = document.getElementById('overlayGdpr');
+const checkboxGdpr = document.getElementById('checkboxGdpr');
 
 let isRegistOpen = false;
 let showPass = false;
 let showPassConfirm = false;
+export let isGdprOpen = false;
 
 
 document.getElementById('buttonLogOut').addEventListener('click', () => {
     clickLogOut();
 });
 
-document.getElementById('registerConfirm').addEventListener('click', () => {
+registerConfirm.addEventListener('click', () => {
     acceptRegistration();
 });
 
@@ -55,13 +60,22 @@ passwordConfirmImg.addEventListener('click', () => {
     toggleShowPasswordConfirm();
 });
 
-
 document.getElementById('askSignIn').addEventListener('click', () => {
     registrationPanel.classList.remove('showReg');
     setTimeout(() => {
         navigateTo('signIn');
     }, 300);
 });
+
+document.getElementById('gdprBack').addEventListener('click', () => {
+    closeGdprPanel();
+});
+
+checkboxGdpr.addEventListener('click', () => {
+    clickCheckboxGdpr();
+});
+
+
 
 function  resetRegistrationInputs()
 {
@@ -77,7 +91,6 @@ function  resetRegistrationInputs()
     passwordImg.src = 'static/icons/eyeOpen.png';
     inputConfirmPassword.type = "password";
     inputPassword.type = "password";
-    
 }
 
 export function clickCancelRegister()
@@ -103,6 +116,8 @@ export function showRegistrationPanel()
 export function onRegistrationOpen()
 {
     isRegistOpen = true;
+    checkboxGdpr.checked = false;
+    verifyCheckboxGdpr();
     overlayPanel.style.display = 'block';
     setTimeout(() => {
         registrationPanel.classList.add('showReg');
@@ -184,6 +199,8 @@ export function acceptRegistration()
 {
     // if (checkFields() === false)
     //     return;
+    if (registerConfirm.classList.contains('disabledButtonHover'))
+        return;
     createNewPlayer();
     clickCancelRegister();
     replaceLogInButtons();
@@ -269,7 +286,31 @@ export function checkAccessIfRegistered()
     checkAccessModes();
 }
 
+function verifyCheckboxGdpr()
+{
+    if (!checkboxGdpr.checked)
+        addDisableButtonEffect(registerConfirm);
+    else
+        removeDisableButtonEffect(registerConfirm);
+}
 
+function clickCheckboxGdpr()
+{
+    verifyCheckboxGdpr();
+}
+
+export function openGdprPanel()
+{
+    isGdprOpen = true;
+    checkboxGdpr.checked = !checkboxGdpr.checked;
+    gdprPanel.style.display = 'flex';
+}
+
+export function closeGdprPanel()
+{
+    isGdprOpen = false;
+    gdprPanel.style.display = 'none';
+}
 
 addDisableButtonEffect(profileButton);
 resetRegistrationInputs();

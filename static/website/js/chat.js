@@ -1,6 +1,7 @@
 import { cheatCodes } from "./cheats.js";
 import { isInTheDatabase, searchDatabase } from "./database.js";
 import { getDuelTargetPlayer, joinDuel } from "./duelPanel.js";
+import { addBlockedUser, addFriend, checkAndRemoveFriend } from "./friends.js";
 import { isInGame } from "./levelLocal.js";
 import { openProfile } from "./menu.js";
 import { getPlayerName, playerStats } from "./playerManager.js";
@@ -16,7 +17,7 @@ const toggleSizeButton = document.getElementById('toggleSizeButton');
 const toggleIcon = document.getElementById('toggleIcon');
 const overlayChat = document.getElementById('overlayChat');
 let lastSender = "";
-let chatIsOpen = true;
+let chatIsOpen = false;
 export let chatIsFocused = false;
 
 let listDuelsInChat = [];
@@ -44,6 +45,7 @@ function openChat()
     inputElement.focus();
     chatIsOpen = true;
     overlayChat.style.display = playerStats.isRegistered ? 'none' : 'flex';
+    chatBox.classList.remove('hasNewMessage');
 }
 
 function closeChat()
@@ -51,7 +53,7 @@ function closeChat()
     chatIsOpen = false;
     chatBox.classList.remove('expanded');
     chatBox.classList.add('shrunk');
-    toggleIcon.src = 'static/icons/grow.png';
+    toggleIcon.src = 'static/icons/chatIcon.png';
 
     setTimeout(function() {
         chatBox.classList.add('hide-elements');
@@ -92,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     inputElement.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter' && !e.shiftKey) {    
+        if (e.key === 'Enter' && !e.shiftKey) {
             if (document.activeElement === inputElement)
                 sendButton.click();
             else
@@ -107,8 +109,8 @@ document.addEventListener("DOMContentLoaded", function() {
             openChat();
         }
     });
-
-    chatBox.classList.add('expanded');
+    // chatBox.classList.add('expanded');
+    // closeChat();
 });
 
 function messageIsACode(message)
@@ -119,11 +121,12 @@ function messageIsACode(message)
 
     if (words.length > 0) {
         const firstWord = words[0].toUpperCase();
-        const secondWord = words.length > 1 ? words[1].toUpperCase() : undefined;
+        const secondWord = words.length > 1 ? words[1] : undefined;
+        const thirdWord = words.length > 2 ? words.slice(2).join(' ') : undefined;
         resetInputFieldValue();
         if (cheatCodes[firstWord])
         {
-            cheatCodes[firstWord](secondWord);
+            cheatCodes[firstWord](secondWord, thirdWord);
             inputElement.blur();
             return true;
         }
@@ -135,15 +138,17 @@ function messageIsACode(message)
 }
 
 const contextMenuChat = document.getElementById('chatContextMenu');
+const sendMessageButton = document.getElementById('sendMessageButton');
 const addFriendButton = document.getElementById('addFriendButton');
 const seeProfileButton = document.getElementById('seeProfileButton');
+const blockUserButton = document.getElementById('blockUserButton');
 
 contextMenuChat.addEventListener('mouseleave', () => {
     closeNameContextMenu();
 });
 
-contextMenuChat.addEventListener('click', () => {
-    closeNameContextMenu();
+sendMessageButton.addEventListener('click', () => {
+    sendPrivateMessage();
 });
 
 addFriendButton.addEventListener('click', () => {
@@ -153,6 +158,51 @@ addFriendButton.addEventListener('click', () => {
 seeProfileButton.addEventListener('click', () => {
     clickOpenProfile();
 });
+
+blockUserButton.addEventListener('click', () => {
+    clickBlockUser();
+});
+
+function sendPrivateMessage()
+{
+    if (!chatIsOpen)
+        openChat();
+    inputElement.value = "/msg " + selectedName + " ";
+    inputElement.focus();
+    closeNameContextMenu();
+}
+
+function hideMessagesFrom(userName)
+{
+    Array.from(messagesContainer.children).forEach((child) => {
+        if (child.hasAttribute('sender') && child.getAttribute('sender') === userName)
+            child.style.display = 'none';
+    });
+}
+
+export function restoreMessagesFromUser(userName)
+{
+    Array.from(messagesContainer.children).forEach((child) => {
+        if (child.hasAttribute('sender') && child.getAttribute('sender') === userName)
+            child.style.display = 'flex';
+    });
+}
+
+export function clickBlockUser(playerName = "")
+{
+    if (playerStats.blacklist.includes(playerName))
+        return;
+    // bloquer par id de joueur :
+    // const playerId = getPlayerId(selectedName); // recuperer l'id dans la base de donnees
+    // playerStats.blacklist.push(playerId);
+    if (playerName != "")
+        selectedName = playerName;
+    sendSystemMessage("youBlockedPlayer", selectedName, true);
+    playerStats.blacklist.push(selectedName);
+    hideMessagesFrom(selectedName);
+    addBlockedUser(selectedName);
+    closeNameContextMenu();
+}
 
 function clickPlayWith()
 {
@@ -174,18 +224,32 @@ function clickOpenProfile()
     openProfile(player);
 }
 
-function removeFriend(friendName)
+export function removeFriendFunction(playerName)
 {
-    const index = playerStats.friends.indexOf(friendName);
+    const index = playerStats.friends.indexOf(playerName);
+    if (index === -1)
+        return;
+    sendSystemMessage("youDeletedPlayer", playerName, true);
     playerStats.friends.splice(index, 1);
+    checkAndRemoveFriend(playerName);
+}
+
+export function addFriendFunction(playerName)
+{
+    if (playerStats.friends.includes(playerName))
+        return;
+    sendSystemMessage("youAddedPlayer", playerName, true);
+    playerStats.friends.push(playerName);
+    addFriend(playerName);
 }
 
 function clickAddRemoveFriend()
 {
     if (playerStats.friends.includes(selectedName))
-        removeFriend(selectedName);
+        removeFriendFunction(selectedName);
     else
-        playerStats.friends.push(selectedName);
+        addFriendFunction(selectedName);
+    closeNameContextMenu();
 }
 
 function setFriendButtonText()
@@ -210,12 +274,10 @@ function showFriendButtonIfRegistered()
 }
 
 let selectedName = "";
-function openNameContextMenu(name, nameHeader)
+export function openNameContextMenu(name, nameHeader)
 {
     if (contextMenuChat.style.display === 'flex')
-    {
         contextMenuChat.style.display = 'none';
-    }
     else
     {
         if (isInTheDatabase(name) === false)
@@ -224,8 +286,8 @@ function openNameContextMenu(name, nameHeader)
         showFriendButtonIfRegistered();
         contextMenuChat.style.display = 'flex';
         const rect = nameHeader.getBoundingClientRect();
-        contextMenuChat.style.top = (rect.bottom) + 'px';
-        contextMenuChat.style.left = rect.left + 'px';
+        contextMenuChat.style.top = parseInt(rect.bottom) + 'px';
+        contextMenuChat.style.left = parseInt(rect.left) + 'px';
     }
 }
 
@@ -249,7 +311,7 @@ function createMessageElement(name, messageText) {
     const messageContainer = document.createElement('div');
     messageContainer.classList.add('message-container');
 
-    if (name != lastSender)
+    if (name != "" && name != lastSender)
     {
         const nameHeader = document.createElement('div');
         nameHeader.classList.add('message-name');
@@ -270,6 +332,7 @@ function createMessageElement(name, messageText) {
     if (name != '')
         messageContent.style.color = playerStats.colors;
     messageContainer.appendChild(messageContent);
+    messageContainer.setAttribute('sender', name);
 
     return messageContainer;
 }
@@ -324,16 +387,34 @@ function getPlayerNameChat()
     return name;
 }
 
-export function sendSystemMessage(message, otherVar)
+export function sendSystemMessage(message, otherVar, forceUseOtherVar = false)
 {
-    let otherValue = isNaN(otherVar) ? 'its default value' : String(otherVar);
+    const value = forceUseOtherVar ? otherVar : getTranslation('defaultValue');
+    const otherValue = isNaN(otherVar) ? value : String(otherVar);
     const newMessage = createMessageElement("", getTranslation(message) + otherValue);
     newMessage.classList.add('message-middle');
     newMessage.setAttribute("key", message);
     newMessage.setAttribute("value", otherVar);
+    newMessage.setAttribute("forcedValue", forceUseOtherVar);
     messagesContainer.appendChild(newMessage);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
     lastSender = "";
+}
+
+function checkNewMessage()
+{
+    if (!chatIsOpen && playerStats.isRegistered)
+        chatBox.classList.add('hasNewMessage');
+}
+
+function receiveMessage(playerName, message)
+{
+    const newMessage = createMessageElement(playerName, message);
+    sendRandomMessage(newMessage);
+    messagesContainer.appendChild(newMessage);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    lastSender = playerName;
+    checkNewMessage();
 }
 
 /* 
@@ -356,11 +437,7 @@ function trySendMessage() {
         }).join(' ');
 
         let playerName = getPlayerNameChat();
-        const newMessage = createMessageElement(playerName, truncatedMessage);
-        sendRandomMessage(newMessage);
-        messagesContainer.appendChild(newMessage);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        lastSender = playerName;
+        receiveMessage(playerName, truncatedMessage);
     }
     inputElement.value = '';
     inputElement.focus();
@@ -399,7 +476,7 @@ export function sendInvitationDuel(sender)
         joinDuel();
       });
     // ajouter la fonction pour rejoindre un duel fait par la personne
-    // le bouton ne sera pas clicable par l'envoyeur
+    // le bouton ne sera pas cliquable par l'envoyeur
     newMessage.appendChild(invitationButton);
     if (isInGame || getDuelTargetPlayer() != playerStats.nickname)
     {
@@ -440,7 +517,7 @@ export function deleteDuelInChat()
 export function checkAccessToChat()
 {
     inputElement.disabled = !playerStats.isRegistered;
-    overlayChat.style.display = playerStats.isRegistered ? 'none' : 'flex';
+    overlayChat.style.display = playerStats.isRegistered || !chatIsOpen ? 'none' : 'flex';
 }
 
 function handleKeyDownHistory(event)
@@ -461,19 +538,24 @@ function handleKeyDownHistory(event)
             inputElement.value = chatHistory[chatHistory.length - 1 - historyIndex];
         } else if (historyIndex === 0) {
             historyIndex = -1;
-            inputElement.value = ''; // Clear input if no further history
+            inputElement.value = '';
         }
     }
 }
 
-// Add event listener when input is focused
 inputElement.addEventListener('focus', () => {
     chatIsFocused = true;
     inputElement.addEventListener('keydown', handleKeyDownHistory);
 });
 
-// Remove event listener when input is blurred (loses focus)
 inputElement.addEventListener('blur', () => {
     chatIsFocused = false;
     inputElement.removeEventListener('keydown', handleKeyDownHistory);
 });
+
+// testing code
+// document.addEventListener('keydown', function(e) {
+//     if (e.key === 'Q' && e.shiftKey) {
+//         checkNewMessage();
+//     }
+// });

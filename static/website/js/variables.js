@@ -32,3 +32,10 @@ export const BallStats =
 	baseSpeed: 0.75,
 	baseIntensityIncrement: 0.005
 }
+
+export const PlayerStatus =
+{
+    OFFLINE: 0,
+    ONLINE: 1,
+	BUSY: 2
+}

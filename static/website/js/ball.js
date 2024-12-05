@@ -1,5 +1,5 @@
 import * as THREE from '../node_modules/.vite/deps/three.js';
-import { BOUNDARY, spawnSparksFunction, updateSparksFunction } from './levelLocal.js';
+import { BOUNDARY, playerSize, spawnSparksFunction, updateSparksFunction } from './levelLocal.js';
 import { Sparks } from './sparks.js';
 import { ArenaType, BallStats, LevelMode } from './variables.js';
 import { getRules } from './rules.js';
@@ -129,9 +129,9 @@ export function createBall(scene, callBack) {
     {
         if (pointLight.intensity < maxLightIntensity) {
             pointLight.intensity = Math.min(maxLightIntensity, pointLight.intensity + 1);
-            ball.material.emissiveIntensity = Math.min(maxLightIntensity, ball.material.emissiveIntensity + intensityIncrement);
+            ball.material.emissiveIntensity = Math.min(maxLightIntensity, ball.material.emissiveIntensity + intensityIncrement - ballBaseStats.baseIntensityIncrement);
             intensityIncrement *= 1.04;
-            pointLight.distance += intensityIncrement * 15;
+            pointLight.distance += intensityIncrement * 25;
         }
     }
 
@@ -178,16 +178,12 @@ export function createBall(scene, callBack) {
 
     function checkCollisionLeftPaddle(player1)
     {
-        // const radius = ballBaseStats.baseRadius;
         const ballPosY = ball.position.y;
         const playerPosY = player1.position.y;
-        const dividedPlayerSize = player1.geometry.parameters.height / 2;
+        const dividedPlayerSize = playerSize / 2;
         if (ball.position.x - ballBaseStats.baseRadius <= getXContactPointPaddle(player1) &&
             isBallHittingPlayer(ballPosY, playerPosY, dividedPlayerSize))
-            {
-                // ball.position.set(getXContactPointPaddle(player1) + radius, ballPosY, 0);
                 return true;
-            }
         return false;
     }
 
@@ -196,14 +192,31 @@ export function createBall(scene, callBack) {
         // const radius = ballBaseStats.baseRadius;
         const ballPosY = ball.position.y;
         const playerPosY = player2.position.y;
-        const dividedPlayerSize = player2.geometry.parameters.height / 2;
+        const dividedPlayerSize = playerSize / 2;
         if (ball.position.x + ballBaseStats.baseRadius >= getXContactPointPaddle(player2) &&
             isBallHittingPlayer(ballPosY, playerPosY, dividedPlayerSize))
-            {
-                // ball.position.set(getXContactPointPaddle(player2) - radius, ballPosY, 0);
                 return true;
-            }
         return false;
+    }
+
+    function updateBoostBars(absVeloX, isLeft)
+    {
+        if (!isLeft)
+        {
+            ballVelocity.x = -ballVelocity.x;
+            if (getLevelState() === LevelMode.LOCAL)
+                fillPowerBarRight(absVeloX * 25);
+        }
+        else
+            fillPowerBarLeft(absVeloX * 25);
+    }
+
+    function trySpawnSparks(absVeloX, position)
+    {
+        if (absVeloX > 1.6) {
+            const count = Math.trunc(absVeloX * 15);
+            spawnSparksFunction(position, count);
+        }
     }
 
     function bounceBallOnPaddle(isLeft, position, paddle)
@@ -224,19 +237,10 @@ export function createBall(scene, callBack) {
         ballVelocity.y = ballSpeed * Math.sin(bounceAngle);
     
         ballVelocity.x = Math.min(ballVelocity.x + ballVelocitySpeedUp.x, ballBaseStats.speedLimit);
+        
         const absVeloX = Math.abs(ballVelocity.x);
-        if (!isLeft)
-        {
-            ballVelocity.x = -ballVelocity.x;
-            if (getLevelState() === LevelMode.LOCAL)
-                fillPowerBarRight(absVeloX * 25);
-        }
-        else
-            fillPowerBarLeft(absVeloX * 25);
-        if (absVeloX > 1.6) {
-            const count = Math.trunc(absVeloX * 15);
-            spawnSparksFunction(position, count);
-        }
+        updateBoostBars(absVeloX, isLeft);
+        trySpawnSparks(absVeloX, position);
         ballVelocity.y += isLeft ? ballVelocitySpeedUp.y : -ballVelocitySpeedUp.y;
         ballLookAt();
         checkBoostStatus(isLeft);
@@ -253,17 +257,28 @@ export function createBall(scene, callBack) {
         previousPosition.copy(ball.position);
     }
 
+    // use this function when a player gets a point | 1 = left 2 = right
+    function givePlayerPoint(playerNbr)
+    {
+        spawnSparksFunction(ball.position, 400);
+        callBack(playerNbr, true);
+    }
+
+    function setBallPosition(posX, posY)
+    {
+        ball.position.set(posX, posY, 0);
+    }
+
     function updateBall(player1, player2)
     {
-        // let nextPos = new THREE.Vector3(ball.position.x + ballVelocity.x, ball.position.y + ballVelocity.y);
+        // movement logic
         let modVelocity = new THREE.Vector3(ballVelocity.x, ballVelocity.y, ballVelocity.z);
         modVelocity.x *= ballSpeedMult;
         modVelocity.y *= ballSpeedMult;
         ball.position.add(modVelocity);
 
-        pointLight.position.copy(ball.position);
         checkCollisionTopBottom(ball.position);
-        if (checkCollisionLeftPaddle(player1) === true)
+        if (checkCollisionLeftPaddle(player1))
             bounceBallOnPaddle(true, new THREE.Vector3(getXContactPointPaddle(player1), ball.position.y, 0), player1);
         else if (checkCollisionRightPaddle(player2))
             bounceBallOnPaddle(false, new THREE.Vector3(getXContactPointPaddle(player2), ball.position.y, 0), player2);
@@ -272,16 +287,14 @@ export function createBall(scene, callBack) {
             const radius = ballBaseStats.baseRadius;
             const ballPosX = ball.position.x;
             if (ballPosX - radius < boundxmin)
-            {
-                spawnSparksFunction(ball.position, 400);
-                callBack(1, true);
-            }
+                givePlayerPoint(1);
             else if (ballPosX + radius > boundxmax)
-            {
-                spawnSparksFunction(ball.position, 400);
-                callBack(2, true);
-            }
+                givePlayerPoint(2);
         }
+
+        // other functions (to keep!)
+        // setBallPosition(vars x, y from the server);
+        pointLight.position.copy(ball.position);
         rotateBall();
     }
 
@@ -301,10 +314,11 @@ export function createBall(scene, callBack) {
 
     function changeBallSpeed(newSpeed)
     { 
+        console.log(newSpeed);
         if (isNaN(newSpeed))
             ballSpeedMult = 1;
         else
-            ballSpeedMult = newSpeed
+            ballSpeedMult = parseFloat(newSpeed);
     }
 
     resetVelocity();

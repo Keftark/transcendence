@@ -5,7 +5,7 @@ import { LevelMode } from './variables.js';
 import { isChatOpen, tryCloseChat } from './chat.js';
 import { clickCancelRules } from './rules.js';
 import { gameEnded, isInGame } from './levelLocal.js';
-import { clickCancelRegister, isRegistrationOpen } from './registration.js';
+import { clickCancelRegister, closeGdprPanel, isGdprOpen, isRegistrationOpen } from './registration.js';
 import { closeTournamentJoinMenu, closeTournamentLobbyMenu, closeTournamentMenu } from './tournament.js';
 import { getCurrentView } from './pages.js';
 import { closeDuelPanel } from './duelPanel.js';
@@ -26,7 +26,9 @@ export function getLevelState()
 export function checkEscapeKey()
 {
     const currentView = getCurrentView();
-    if (isRegistrationOpen())
+    if (isGdprOpen)
+        closeGdprPanel();
+    else if (isRegistrationOpen())
         clickCancelRegister();
     else if (isChatOpen())
         tryCloseChat();
@@ -52,17 +54,22 @@ export function checkEscapeKey()
 
 function changeCursors()
 {
-    document.body.style.cursor = "url('./static/icons/cursor.png'), auto";
     
-    const buttons = document.querySelectorAll('button, input[type="checkbox"], .arena, #showPasswordButton, #showConfirmPasswordButton, #header-title');
+    const buttons = document.querySelectorAll('button, input[type="checkbox"], .arena, #showPasswordButton, #showConfirmPasswordButton, #header-title, #profilePictureChangeButton, a, #askSignIn, #askRegister');
     buttons.forEach(button => {
-        button.style.cursor = "url('./static/icons/cursor-button.png'), move";
+        button.style.cursor = "url('./static/icons/cursor-button.png'), pointer";
     });
-
+    
     const inputs = document.querySelectorAll('input[type="text"], input[type="number"], input[type="password"]');
     inputs.forEach(input => {
-        input.style.cursor = "url('./static/icons/cursor-text.png') 4 10, move";
+        input.style.cursor = "url('./static/icons/cursor-text.png') 4 10, auto";
     });
+
+    const labels = document.querySelectorAll('label');
+    labels.forEach(label => {
+        label.style.cursor = "url('./static/icons/cursor.png'), auto";
+    });
+    document.body.style.cursor = "url('./static/icons/cursor.png'), auto";
 }
 
 export function isALevelMode(value) {
@@ -91,3 +98,30 @@ setButtonsColors();
 setLanguageButtons();
 
 focusOldButton();
+
+// const websocket = new WebSocket("ws://localhost:8001/");
+// websocket.onopen = () => console.log("Connected");
+// websocket.onmessage = (event) => console.log("Message:", event.data);
+// websocket.onerror = (error) => console.log("Error:", error);
+
+// function sendMoves(board, socket) {
+//     // When clicking a column, send a "play" event for a move in that column.
+//     board.addEventListener("click", ({ target }) => {
+//       const event = {
+//         type: "color",
+//         action: "get"
+//       };
+//       socket.send(JSON.stringify(event));
+//     });
+//   }
+
+// websocket.addEventListener("message", ({ data }) => {
+//     const event = JSON.parse(data);
+//     switch (event.type) {
+//         case "color":
+//             console.log("Event action: " + event.target);
+//         break;
+//     }
+// });
+
+// sendMoves(document.getElementById("header-title"), websocket);

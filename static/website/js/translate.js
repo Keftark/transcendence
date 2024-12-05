@@ -1,6 +1,7 @@
 import { getDuelInvitContent } from "./chat.js";
 import { setPlayerRightName } from "./levelLocal.js";
 import { getPlayerVictories, playerStats } from "./playerManager.js";
+import { openGdprPanel } from "./registration.js";
 
 let translations;
 
@@ -55,6 +56,7 @@ export function updateHTML(translations)
 	document.getElementById('buttonLogOut').innerText = translations.buttonLogOut;
 	document.getElementById('seeMatchesButton').innerText = translations.seeMatchesButton;
 	document.getElementById('addFriendButton').innerText = translations.addFriendButton;
+	document.getElementById('sendMessageButton').innerText = translations.sendMessageButton;
 	document.getElementById('seeProfileButton').innerText = translations.seeProfileButton;
 	document.getElementById('inviteGameButton').innerText = translations.inviteGameButton;
 	document.getElementById('player1NameDuel').innerText = translations.player1Name;
@@ -117,23 +119,35 @@ export function updateHTML(translations)
 	document.getElementById('2v2Text').innerText = translations.coopText;
 	document.getElementById('rulesIsPrivateText').innerText = translations.rulesIsPrivateInput;
 	document.getElementById('profilePictureChangeButton').innerText = translations.profilePictureChangeButton;
+	document.getElementById('friendsHeader').innerText = translations.friendsHeader;
+	document.getElementById('blockUserButton').innerText = translations.blockUserButton;
+	document.getElementById('consent-text').innerHTML = translations.consentText;
+	document.getElementById('gdprText').innerHTML = translations.gdpr;
+	document.getElementById('gdprBack').innerHTML = translations.backText;
 
 	
+    document.querySelector('.gdpr').addEventListener('click', function() {
+        openGdprPanel();
+    });	
 }
 
-function updateChat(translations)
+function updateChat()
 {
 	const messages = document.getElementById('messages');
 	const childDivs = messages.querySelectorAll("div");
 	childDivs.forEach((childDiv) => {
 		if (childDiv.classList.contains('textJoinDuel')) // message de demande de duel
-			childDiv.textContent = getDuelInvitContent();
+			childDiv.innerText = getDuelInvitContent();
 		else if (childDiv.classList.contains('message-middle')) // c'est un message d'un joueur
 		{
-			let otherVar = childDiv.getAttribute("value");
-			let otherKey = childDiv.getAttribute("key");
-			let otherValue = isNaN(otherVar) ? 'its default value' : String(otherVar);
-			childDiv.textContent = getTranslation(otherKey) + otherValue;
+			const otherVar = childDiv.getAttribute("value");
+			const otherKey = childDiv.getAttribute("key");
+			const forceOtherVar = childDiv.getAttribute("forcedValue");
+			const value = forceOtherVar ? otherVar : getTranslation('defaultValue');
+
+			let otherValue = isNaN(otherVar) ? value : String(otherVar);
+			if (otherKey != null)
+				childDiv.children[0].innerText = getTranslation(otherKey) + otherValue;
 		}
 	});
 }
@@ -144,7 +158,7 @@ export async function changeLanguage(lang)
 	{
 		translations = await fetchTranslations(lang);
 		updateHTML(translations);
-		updateChat(translations);
+		updateChat();
   	}
 	catch (error)
 	{

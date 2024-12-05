@@ -4,6 +4,7 @@ import { changeTextsColor } from "./menu.js";
 import { getRandomNumberBetween } from "./objects.js";
 import { MatchResult } from "./scoreManager.js";
 import { getTranslation } from "./translate.js";
+import { PlayerStatus } from "./variables.js";
 
 const inputNick = document.getElementById('inputName');
 const inputFirstName = document.getElementById('inputFirstName');
@@ -12,22 +13,7 @@ const inputMail = document.getElementById('inputMail');
 const inputPassword = document.getElementById('inputPassword');
 const maxId = 99999;
 
-export let playerStats = 
-{
-    id: "",
-    nickname: "",
-    firstName: "",
-    lastName: "",
-    mail: "",
-    password: "",
-    language: "en",
-    colors: "white",
-    photoIndex: 0,
-    isRegistered: false,
-    cameraOrthographic: false,
-    matches: [],
-    friends: []
-}
+export let playerStats = createPlayerStats();
 
 export function createPlayerStats() {
     return {
@@ -39,10 +25,13 @@ export function createPlayerStats() {
         language: "",
         colors: "",
         photoIndex: 0,
+        playerController: 0,
         isRegistered: false,
         cameraOrthographic: false,
         matches: [],
-        friends: []
+        friends: [],
+        blacklist: [],
+        status: PlayerStatus.ONLINE
     };
 }
 
@@ -69,6 +58,8 @@ export function createNewPlayer()
     player.friends.push("ProGamer");
     fakeDatabase.push(player);
     playerStats = player;
+    player.playerController = 0;
+    player.status = PlayerStatus.ONLINE;
     // playerStats.friends.push("Other");
 }
 
@@ -85,6 +76,8 @@ export function resetPlayerStats()
     playerStats.matches = [];
     playerStats.friends = [];
     playerStats.isRegistered = false;
+    playerStats.playerController = 0;
+    playerStats.status = PlayerStatus.ONLINE;
 }
 
 // on laisse le joueur choisir une image parmi une selection
