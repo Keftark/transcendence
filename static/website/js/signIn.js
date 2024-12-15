@@ -1,4 +1,7 @@
+import { logInPlayer } from "./apiFunctions.js";
 import { navigateTo } from "./pages.js";
+import { editPlayerStats } from "./playerManager.js";
+import { logInUserUI } from "./registration.js";
 import { getTranslation } from "./translate.js";
 
 const signInPanel = document.getElementById('signinpanel');
@@ -80,7 +83,7 @@ function toggleShowPassword()
     }
 }
 
-function nameIsInDatabase(name)
+async function nameIsInDatabase(name)
 {
     let isInDb;
 
@@ -90,7 +93,13 @@ function nameIsInDatabase(name)
         return false;
     }
 
+    const userData = await getUserInfos(name);
+    if (!userData)
+        isInDb = false;
+    else
+        isInDb = true;
     // faire l'appel a la base de donnees et verifier si le nom existe
+
 
     if (isInDb === false)
     {
@@ -116,24 +125,32 @@ function passwordIsValid(pass)
     return true;
 }
 
-function clickConfirmSignIn()
+async function clickConfirmSignIn()
 {
-    let errors = 0;
-    if (!nameIsInDatabase(inputNick.value))
-        errors++;
-    if (!passwordIsValid(inputPassword.value))
-        errors++;
+    const username = inputNick.value;
+    const password = inputPassword.value;
 
-    if (errors === 0)
-        console.log("oui !");
-    else
-        console.log("non !");
+    logInPlayer(username, password);
+    // Prepare the data for the POST request
+    
+    // let errors = 0;
+    // if (!nameIsInDatabase(inputNick.value))
+    //     errors++;
+    // if (!passwordIsValid(inputPassword.value))
+    //     errors++;
+
+    // if (errors === 0)
+    //     console.log("oui !");
+    // else
+    //     console.log("non !");
 }
 
-export function clickCancelSignIn()
+export function clickCancelSignIn(login = false)
 {
     signInPanel.classList.remove('showReg');
     setTimeout(() => {
         navigateTo('home');
+        if (login)
+            logInUserUI();
     }, 300);
 }

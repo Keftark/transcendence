@@ -6,28 +6,43 @@ function hideUiElements()
     document.getElementById('gameMenuPanel').style.display = 'none';
 }
 
-export function unloadScene(scene, renderer, animationId)
+export function removeModelFromObject(object)
 {
-    scene.traverse((object) => {
-        if (object instanceof THREE.Mesh)
+    if (object instanceof THREE.Mesh)
+    {
+        if (object.geometry) object.geometry.dispose();
+        if (object.material)
         {
-            if (object.geometry) object.geometry.dispose();
-            if (object.material)
+            if (Array.isArray(object.material))
             {
-                if (Array.isArray(object.material))
-                {
-                    object.material.forEach((material) => {
-                        if (material.map) material.map.dispose();
-                        material.dispose();
-                    });
-                }
-                else
-                {
-                    if (object.material.map) object.material.map.dispose();
-                    object.material.dispose();
-                }
+                object.material.forEach((material) => {
+                    if (material.map) material.map.dispose();
+                    material.dispose();
+                });
+            }
+            else
+            {
+                if (object.material.map) object.material.map.dispose();
+                object.material.dispose();
             }
         }
+    }
+}
+
+export function clearObject(object) {
+    while (object.children.length > 0) {
+        const child = object.children.pop();
+        clearObject(child); // Recursively clear children
+        removeModelFromObject(child); // Dispose of geometry and materials
+    }
+}
+
+export function unloadScene(scene, renderer, animationId)
+{
+    if (!scene)
+        return;
+    scene.traverse((object) => {
+        removeModelFromObject(object);
     });
 
     while (scene.children.length > 0)

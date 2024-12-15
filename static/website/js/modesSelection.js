@@ -5,6 +5,8 @@ import { LevelMode } from './variables.js';
 import { navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
 import { isInGame } from './levelLocal.js';
+import { checkAccessModes, isUserLoggedIn } from './registration.js';
+import { connectToDuel } from './sockets.js';
 
 const modesLocalButton = document.getElementById('modesLocalButton');
 const modesOnlineButton = document.getElementById('modesOnlineButton');
@@ -22,7 +24,7 @@ const mode2v2 = document.getElementById('mode2v2Div');
 const modeTournament = document.getElementById('modeTournamentDiv');
 
 modeLocalButton.addEventListener('click', () => {
-    selectedMode = LevelMode.LOCAL;
+    setSelectedMode(LevelMode.LOCAL);
     isInsideModes = false;
     closeLocalModes();
     setTimeout(() => {
@@ -31,7 +33,7 @@ modeLocalButton.addEventListener('click', () => {
 });
 
 modeComputerButton.addEventListener('click', () => {
-    selectedMode = LevelMode.ADVENTURE;
+    setSelectedMode(LevelMode.ADVENTURE);
     isInsideModes = false;
     closeLocalModes();
     setTimeout(() => {
@@ -40,6 +42,7 @@ modeComputerButton.addEventListener('click', () => {
 });
 
 modeDuelButton.addEventListener('click', () => {
+    connectToDuel();
     closeOnlineModes();
     isInsideModes = false;
     setTimeout(() => {
@@ -48,7 +51,7 @@ modeDuelButton.addEventListener('click', () => {
 });
 
 mode2v2Button.addEventListener('click', () => {
-    selectedMode = LevelMode.MULTI;
+    setSelectedMode(LevelMode.MULTI);
     closeOnlineModes();
     isInsideModes = false;
     setTimeout(() => {
@@ -65,7 +68,7 @@ modeTournamentButton.addEventListener('click', () => {
 });
 
 document.getElementById('createTournamentButton').addEventListener('click', () => {
-    selectedMode = LevelMode.TOURNAMENTLOBBY;
+    setSelectedMode(LevelMode.TOURNAMENTLOBBY);
     openRules("t");
 });
 
@@ -86,27 +89,37 @@ modesOnlineButton.addEventListener('click', () => {
 });
 
 let isInsideModes = false;
-let selectedMode;
 let animReverse = false;
 let isLocalModes = false;
 let isOnlineModes = false;
 
+function setSelectedMode(newSelectedMode)
+{
+    localStorage.setItem('selectedMode', newSelectedMode);
+}
+
+export function getSelectedMode()
+{
+    return parseInt(localStorage.getItem('selectedMode'));
+}
+
 export function clickPlayGame()
 {
+    const selecMode = getSelectedMode();
     setCustomRules();
-    if (selectedMode === LevelMode.LOCAL)
-        navigateTo('game-local', selectedMode);
-    else if (selectedMode === LevelMode.ADVENTURE)
-        navigateTo('game-ai', selectedMode);
-    else if (selectedMode === LevelMode.MULTI)
-        navigateTo('game-multi', selectedMode);
-    else if (selectedMode === LevelMode.DUEL)
+    if (selecMode === LevelMode.LOCAL)
+        navigateTo('game-local', selecMode);
+    else if (selecMode === LevelMode.ADVENTURE)
+        navigateTo('game-ai', selecMode);
+    else if (selecMode === LevelMode.MULTI)
+        navigateTo('game-multi', selecMode);
+    else if (selecMode === LevelMode.DUEL)
     {
         sendInvitationDuel(playerStats.nickname);
         navigateTo('duel');
     }
-    else if (selectedMode === LevelMode.TOURNAMENTLOBBY)
-        navigateTo('tournament-lobby', selectedMode);
+    else if (selecMode === LevelMode.TOURNAMENTLOBBY)
+        navigateTo('tournament-lobby', selecMode);
 }
 
 function resetBigModesAnim()
@@ -132,7 +145,7 @@ export function showModeChoice()
 {
     closeInsideModes();
     navigateTo('modes');
-    selectedMode = LevelMode.MODESELECTION;
+    setSelectedMode(LevelMode.MODESELECTION);
 }
 
 function clickModesLocal()
@@ -239,6 +252,9 @@ function closeBigModes()
 
 export function onModesOpen()
 {
+    document.getElementById('modesLocal').style.display = 'none';
+    document.getElementById('modesOnline').style.display = 'none';
+    checkAccessModes();
     resetBigModesAnim();
     setLevelState(LevelMode.MODESELECTION);
     animBigModes();
@@ -299,8 +315,8 @@ function joinTournament()
 
 export function askForDuel()
 {
-    if (selectedMode === LevelMode.DUEL || isInGame)
+    if (getSelectedMode() === LevelMode.DUEL || isInGame)
         return;
-    selectedMode = LevelMode.DUEL;
+    setSelectedMode(LevelMode.DUEL)
     navigateTo('rules');
 }

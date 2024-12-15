@@ -36,5 +36,3 @@ class Match(models.Model):
     match_id = models.IntegerField()
     status = models.IntegerField(default=NOT_PLAYED)
 
-
-

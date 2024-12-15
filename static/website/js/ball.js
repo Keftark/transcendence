@@ -8,6 +8,7 @@ import { getBoostedStatus, stopBoostPlayer } from './playerMovement.js';
 import { getLevelState } from './main.js';
 
 const ballBaseStats = BallStats;
+let ballRadiusMult = 1.0;
 let ballSpeedMult = 1.0;
 let isBallBoosted = false;
 
@@ -50,6 +51,7 @@ function createBallBoostModel(textureLoader)
 function getRandomVelocityComponent() {return Math.random() < 0.5 ? ballBaseStats.baseSpeed : -ballBaseStats.baseSpeed;}
 
 export function createBall(scene, callBack) {
+    ballRadiusMult = 1;
     isBallBoosted = false;
     ballSpeedMult = 1;
     const textureLoader = new THREE.TextureLoader();
@@ -67,7 +69,7 @@ export function createBall(scene, callBack) {
     const boostedBall = createBallBoostModel(textureLoader);
     ball.add(boostedBall);
     const pointLight = new THREE.PointLight(0xff5500, 0, 0);
-    const maxLightIntensity = 30;
+    const maxLightIntensity = 100;
     let ballVelocity;
     let intensityIncrement = ballBaseStats.baseIntensityIncrement;
     const boundxmin = BOUNDARY.X_MIN - 0.8;
@@ -301,9 +303,8 @@ export function createBall(scene, callBack) {
     function changeBallSize(newRadius)
     {
         if (isNaN(newRadius))
-            newRadius = ballBaseStats.baseRadius;
-        let radius = parseFloat(newRadius);
-        ballBaseStats.baseRadius = radius;
+            newRadius = 1;
+        let radius = ballBaseStats.baseRadius * newRadius;
         const newBallGeometry = new THREE.SphereGeometry(radius, 32, 32);
         const newBoostGeometry = new THREE.SphereGeometry(radius + 0.1, 32, 32);
         ball.geometry.dispose();

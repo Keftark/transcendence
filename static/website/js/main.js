@@ -5,22 +5,26 @@ import { LevelMode } from './variables.js';
 import { isChatOpen, tryCloseChat } from './chat.js';
 import { clickCancelRules } from './rules.js';
 import { gameEnded, isInGame } from './levelLocal.js';
-import { clickCancelRegister, closeGdprPanel, isGdprOpen, isRegistrationOpen } from './registration.js';
+import { clickCancelRegister, closeGdprPanel, isGdprOpen, isRegistrationOpen, isUserLoggedIn } from './registration.js';
 import { closeTournamentJoinMenu, closeTournamentLobbyMenu, closeTournamentMenu } from './tournament.js';
 import { getCurrentView } from './pages.js';
 import { closeDuelPanel } from './duelPanel.js';
 import { clickBackButtonMenu } from './modesSelection.js';
+import { addSocketListener } from './sockets.js';
 
 let levelMode = LevelMode.MENU;
 
 export function setLevelState(newLevelMode)
 {
+    if (!newLevelMode)
+        return;
+    localStorage.setItem('levelMode', newLevelMode);
     levelMode = newLevelMode;
 }
 
 export function getLevelState()
 {
-    return levelMode;
+    return parseInt(localStorage.getItem('levelMode'));
 }
 
 export function checkEscapeKey()
@@ -91,6 +95,34 @@ export function removeDisableButtonEffect(button) {
     button.style.opacity = 1;
 }
 
+export function IsLoggedIn()
+{
+    document.addEventListener("DOMContentLoaded", function() {
+        fetch('/check-login/')
+            .then(response => response.json())
+            .then(data => {
+                return (data.is_logged_in)
+            })
+            .catch(error => {
+                console.error('Error checking login status:', error);
+            });
+    });
+}
+
+// function retrievePlayer()
+// {
+//     if (isUserLoggedIn())
+//     {
+//         const currentPage = getCurrentView();
+//         switch (currentPage)
+//         {
+//             case "home":
+                
+//             break;
+//         }
+//     }
+// }
+
 changeCursors();
 addMainEvents();
 initTranslation();
@@ -98,6 +130,27 @@ setButtonsColors();
 setLanguageButtons();
 
 focusOldButton();
+
+
+export const socket = new WebSocket('ws://10.12.200.194:8001/ws/');
+
+// socket.onmessage = function(event) {
+//     const data = JSON.parse(event.data);
+//     console.log('Message from server:', data.message);
+// };
+
+socket.onopen = function() {
+    console.log("WebSocket connected");
+};
+
+socket.onclose = function() {
+    console.log('WebSocket closed');
+};
+socket.onerror = (error) => console.log("Error:", error);
+
+addSocketListener();
+
+// IsLoggedIn();
 
 // const websocket = new WebSocket("ws://localhost:8001/");
 // websocket.onopen = () => console.log("Connected");

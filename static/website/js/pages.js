@@ -3,121 +3,125 @@ import { unloadLevel } from "./levelLocal.js";
 import { isALevelMode } from "./main.js";
 import { onPlayGame, onMainMenuOpen } from "./menu.js";
 import { onModesClose, onModesOpen } from "./modesSelection.js";
-import { onRegistrationClose, onRegistrationOpen } from "./registration.js";
+import { onRegistrationClose, onRegistrationOpen, welcomeBackUser } from "./registration.js";
 import { onCloseRules, onOpenRules } from "./rules.js";
 import { onSignInClose, onSignInOpen } from "./signIn.js";
 import { onTournamentJoinOpen, onTournamentLobbyOpen, onTournamentMenuOpen } from "./tournament.js";
 
-let currentPath = 'home';
+let currentPath = localStorage.getItem('currentPath') || 'home';;
 let lastMode = null;
 
-function onOpenPage(path, otherVar = null)
-{
-    switch (path)
-    {
+function onOpenPage(path, otherVar = null) {
+    switch (path) {
         case 'home':
             onMainMenuOpen();
-        break;
+            break;
         case 'registering':
             onRegistrationOpen();
-        break;
+            break;
         case 'signIn':
             onSignInOpen();
-        break;
+            break;
         case 'modes':
             onModesOpen();
-        break;
+            break;
         case 'rules':
             onOpenRules(otherVar);
-        break;
+            break;
         case 'duel':
             onOpenDuel();
-        break;
+            break;
         case 'game-local':
             onPlayGame(otherVar);
-        break;
+            break;
         case 'game-ai':
             onPlayGame(otherVar);
-        break;
+            break;
         case 'game-multi':
             onPlayGame(otherVar);
-        break;
+            break;
         case 'tournament-menu':
             onTournamentMenuOpen();
-        break;
+            break;
         case 'tournament-lobby':
             onTournamentLobbyOpen(otherVar);
-        break;
+            break;
         case 'tournament-join':
             onTournamentJoinOpen();
-        break;
+            break;
     }
 }
 
-function onClosePage(path)
-{
-    switch (path)
-    {
+function onClosePage(path) {
+    switch (path) {
         case 'registering':
             onRegistrationClose();
-        break;
+            break;
         case 'signIn':
             onSignInClose();
-        break;
+            break;
         case 'modes':
             onModesClose();
-        break;
+            break;
         case 'rules':
             onCloseRules();
-        break;
+            break;
         case 'duel':
             onCloseDuel();
-        break;
+            break;
         case 'game-local':
             unloadLevel();
-        break;
+            break;
         case 'game-ai':
             unloadLevel();
-        break;
+            break;
         case 'game-multi':
             unloadLevel();
-        break;
+            break;
     }
 }
 
-export function getCurrentView()
-{
+export function getCurrentView() {
     return currentPath;
 }
 
 export function navigateTo(path, otherVar = null) {
-    document.getElementById(currentPath).style.display = 'none';
-    onClosePage(currentPath);
+    // Hide current page
+    if (currentPath != path)
+    {
+        document.getElementById(currentPath).style.display = 'none';
+        onClosePage(currentPath);
+    }
+    
     if (isALevelMode(otherVar))
         lastMode = otherVar;
     else
         lastMode = null;
+
     currentPath = path;
+    localStorage.setItem('currentPath', currentPath);
+    // Show the next page
     const nextPage = document.getElementById(path);
     if (nextPage) {
         nextPage.style.display = 'flex';
         onOpenPage(path, otherVar);
     }
 
+    // Update the URL to reflect the path
     if (history.state?.path !== path) {
-        history.pushState({ path }, "", `/${path}`);
+        history.pushState({ path }, "", `/${path}`);  // Make sure the URL matches Django's path
     }
 }
 
 // Handle back/forward navigation
-window.onpopstate = function(event) {
+window.onpopstate = function (event) {
     const path = event.state ? event.state.path : 'home';
     navigateTo(path, lastMode);
 };
 
 // Initial navigation on page load
-
 setTimeout(() => {
-    navigateTo('home');
-    // navigateTo('tournament-lobby');
+    const initialPath = window.location.pathname.split('/')[1] || currentPath;
+    navigateTo(initialPath);  // Navigate to the path based on the URL
+    welcomeBackUser();
 }, 100);

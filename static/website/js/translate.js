@@ -124,6 +124,7 @@ export function updateHTML(translations)
 	document.getElementById('consent-text').innerHTML = translations.consentText;
 	document.getElementById('gdprText').innerHTML = translations.gdpr;
 	document.getElementById('gdprBack').innerHTML = translations.backText;
+	document.getElementById('waitingMatchText').innerHTML = translations.waitingMatchText;
 
 	
     document.querySelector('.gdpr').addEventListener('click', function() {

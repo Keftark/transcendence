@@ -2,6 +2,8 @@ import * as THREE from '../node_modules/.vite/deps/three.js';
 import { PLAYER_HEIGHT, PLAYER_RADIUS, BOUNDARY } from "./levelLocal.js";
 import { getLevelState } from './main.js';
 import { ArenaType, LevelMode } from './variables.js';
+import { GLTFLoader } from '../node_modules/.vite/deps/three_examples_jsm_loaders_GLTFLoader.js';
+import { clearObject, removeModelFromObject } from './unloadScene.js';
 
 let wallLeft;
 let wallRight;
@@ -84,13 +86,38 @@ function createPlayerBoostModel(textureLoader)
     return model;
 }
 
+export function updatePlayerModel(scene, textureLoader, oldPlayer, onPlayerLoaded) {
+    const loader = new GLTFLoader();
+    const newMaterial = new THREE.MeshStandardMaterial({
+        color: 0x000000,
+        transparent: true,
+        opacity: 0
+    });
+    oldPlayer.material = newMaterial;
+    
+    loader.load(
+        'static/3DModels/playerModel.glb',
+        function (gltf)
+        {
+            const player = gltf.scene;
+            player.children.forEach((child) => {
+                oldPlayer.add(child);
+            });
+        },
+        undefined,
+        function (error) {
+            console.error('An error occurred while loading the player model:', error);
+        }
+    );
+}
+
 export function createPlayers(scene, textureLoader)
 {
     const levelState = getLevelState();
     const playerSize = levelState === LevelMode.MULTI ? PLAYER_HEIGHT / 1.5 : PLAYER_HEIGHT;
-    const cylinderTexture = textureLoader.load('static/mat/player1.jpg'); // changer la texture en fonction du skin que le joueur choisit
+    const cylinderTexture = textureLoader.load('static/mat/player2.png'); // changer la texture en fonction du skin que le joueur choisit
     cylinderTexture.colorSpace = THREE.SRGBColorSpace;
-    const material = new THREE.MeshStandardMaterial({ map: cylinderTexture });
+    const material = new THREE.MeshStandardMaterial({ map: cylinderTexture, transparent: true });
     const geometry = new THREE.CylinderGeometry(PLAYER_RADIUS, PLAYER_RADIUS, playerSize, 8, 1, false);
 
     const player1 = new THREE.Mesh(geometry, material);

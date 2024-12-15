@@ -45,6 +45,8 @@
     <script type="module" src="{% static 'js/translate.js' %}"></script>
     <script type="module" src="{% static 'js/modesSelection.js' %}"></script>
     <script type="module" src="{% static 'js/friends.js' %}"></script>
+    <script type="module" src="{% static 'js/sockets.js' %}"></script>
+    <script type="module" src="{% static 'js/apiFunctions.js' %}"></script>
 
     <!-- ajouter la page de tournoi ? -->
     <div id="game-local" class="page"></div>
@@ -53,7 +55,7 @@
     <!------------------------------ Header Title ------------------------------>
     <div id="header-title">ft_transcendence</div>
     <div id="mainBackground"></div>
-    
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <!------------------------------ Main Menu UI ------------------------------>
     <div id="home" class="page">
         <div class="mainMenuPanel" id="mainMenuPanel">
@@ -292,6 +294,12 @@
             <button class="buttonCancel" id="cancelJoinTournamentLobbyButton"></button>
         </div>
     </div>
+
+    <!------------------------------ Waiting... ------------------------------>
+    <div id="waitingMatch">
+        <h1 id="waitingMatchText"></h1>
+    </div>
+
 
     <!------------------------------ In Game UI ------------------------------>
     <p id="loading"></p>

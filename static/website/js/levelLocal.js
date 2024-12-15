@@ -4,7 +4,7 @@ import { resetBoostedStatus, setupPlayerMovement, stopBoostPlayers } from './pla
 import { createBall } from './ball.js';
 import { ScreenShake } from './screenShake.js';
 import { setScores, addScore, setVisibleScore } from './scoreManager.js';
-import { createLights, createPlayers, setVisibilityRightWall } from './objects.js';
+import { updatePlayerModel, createLights, createPlayers, setVisibilityRightWall } from './objects.js';
 import { getLevelState, setLevelState } from './main.js';
 import { unloadScene } from './unloadScene.js';
 import { removeMainEvents } from './eventsListener.js';
@@ -77,9 +77,8 @@ export let isInGame = false;
 let animateLevelFunction = null;
 export let gameEnded = false;
 let deathSphere = null;
-let deathSphereExplosion = null;
+let deathSphereGrew = false;
 let scaleSphere = 0;
-let isCamEventAdded = false;
 let sparks;
 let cameraZoomSpeed = 2; // Set the zoom speed
 
@@ -122,6 +121,8 @@ function hideInGameUI()
 
 export function unloadLevel()
 {
+    if (!scene)
+        return;
     sparks = null;
     currentLevelMode = LevelMode.MENU;
     hideInGameUI();
@@ -230,9 +231,9 @@ export function setUpCamera()
     return newCamera;
 }
 
-export function setUpScene(levelMode)
+export function setUpScene()
 {
-    currentLevelMode = levelMode;
+    currentLevelMode = parseInt(localStorage.getItem('levelMode'));
     scene = new THREE.Scene();
     camera = setUpCamera();
     renderer = new THREE.WebGLRenderer();
@@ -297,6 +298,7 @@ export function setUpLevel(scene)
     gameMenuPanel.style.display = 'block';
     showInGameUI();
     [player1, player2, player3, player4] = createPlayers(scene, textureLoader);
+    updatePlayerModel(scene, textureLoader, player1);
     createLights(scene, arenaType);
     resetPlayersPositions();
     if (arenaType === ArenaType.SPACE)
@@ -387,7 +389,6 @@ function resetAnim()
     }
 }
 
-let deathSphereGrew = false;
 function animateDeathSphere()
 {
     if (deathSphere != null)
@@ -440,8 +441,6 @@ export function getBallPosition()
 
 function camZoomEvent(event)
 {
-    if (boxContainers.contains(event.target))
-        return;
     if (camera instanceof THREE.OrthographicCamera) {
         const aspect = window.innerWidth / window.innerHeight;
         if (event.deltaY > 0) {
@@ -471,7 +470,6 @@ function camZoomEvent(event)
 
 export function StartLevel(levelMode)
 {
-    const boxContainers = document.getElementById('boxContainers');
     playerStats.status = PlayerStatus.BUSY;
     animationId = null;
     deathSphere = null;
@@ -482,8 +480,8 @@ export function StartLevel(levelMode)
     setStopWatch(getRules().maxTime);
     document.getElementById('loading').style.display = 'block';
     setLevelState(levelMode);
-    removeMainEvents();
-    setUpScene(levelMode);
+    // removeMainEvents();
+    setUpScene();
     setUpLevel(scene);
     sparks = new Sparks(scene);
     
@@ -498,6 +496,8 @@ export function StartLevel(levelMode)
     
     let isBallMoving = false;
     let toggleReset = false;
+    let canPressSpace = true;
+    let lastTimestamp = 0;
 
     changeBallSizeFunction = changeBallSize;
     changeBallSpeedFunction = changeBallSpeed;
@@ -514,7 +514,6 @@ export function StartLevel(levelMode)
             resetFunction(false, fromScoredPoint);
     }
     
-    let canPressSpace = true;
     resetFunction = function resetGame(resetCam, fromScoredPoint = false, time)
     {
         canPressSpace = false;
@@ -547,8 +546,6 @@ export function StartLevel(levelMode)
             }, 500);
         }, timer);
     }
-    
-    let lastTimestamp = 0;
 
     function endAnimation()
     {
@@ -627,8 +624,6 @@ export function StartLevel(levelMode)
 
     function addCamZoomEvent()
     {
-        if (isCamEventAdded)
-            return;
         window.addEventListener('wheel', 
             camZoomEvent, { passive: false });
         window.addEventListener('mousedown', function(event) {
@@ -636,7 +631,6 @@ export function StartLevel(levelMode)
                 resetZoomCamera(camera);
             }
         });
-        isCamEventAdded = true;
     }
     addCamZoomEvent();
     // document.addEventListener('visibilitychange', () => {

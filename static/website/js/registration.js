@@ -1,11 +1,12 @@
-import { createNewPlayer, playerStats, resetPlayerStats } from "./playerManager.js";
+import { createNewPlayer, editPlayerStats, playerStats, resetPlayerStats } from "./playerManager.js";
 import { removeAllScores } from "./scoreManager.js";
 import { getTranslation } from "./translate.js";
 import { navigateTo } from "./pages.js";
 import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
 import { checkAccessToChat } from "./chat.js";
+import { getLoggedInUser, logoutUser, registerUser } from "./apiFunctions.js";
 
-const inputNick = document.getElementById('inputName');
+const inputName = document.getElementById('inputName');
 const inputFirstName = document.getElementById('inputFirstName');
 const inputLastName = document.getElementById('inputLastName');
 const inputMail = document.getElementById('inputMail');
@@ -79,7 +80,7 @@ checkboxGdpr.addEventListener('click', () => {
 
 function  resetRegistrationInputs()
 {
-    inputConfirmPassword.value = inputPassword.value = inputMail.value = inputLastName.value = inputFirstName.value = inputNick.value = "";
+    inputConfirmPassword.value = inputPassword.value = inputMail.value = inputLastName.value = inputFirstName.value = inputName.value = "";
     registerErrorName.innerText = "";
     registerErrorFirstName.innerText = "";
     registerErrorLastName.innerText = "";
@@ -122,12 +123,12 @@ export function onRegistrationOpen()
     setTimeout(() => {
         registrationPanel.classList.add('showReg');
     }, 10);
-    inputNick.focus();
+    inputName.focus();
 }
 
 function checkFields()
 {
-    let inputValue = inputNick.value;
+    let inputValue = inputName.value;
     let errors = 0;
     if (inputValue.trim() === "")
     {
@@ -195,17 +196,39 @@ function checkFields()
     return true;
 }
 
-export function acceptRegistration()
+export async function welcomeBackUser()
+{
+    getLoggedInUser().then(user => {
+        if (user) {
+            editPlayerStats(user);
+            replaceLogInButtons();
+            removeDisableButtonEffect(profileButton);
+            checkAccessIfRegistered();
+        }
+    });
+}
+
+export function logInUserUI()
+{
+    replaceLogInButtons();
+    removeDisableButtonEffect(profileButton);
+    checkAccessIfRegistered();
+}
+
+async function acceptRegistration()
 {
     // if (checkFields() === false)
     //     return;
     if (registerConfirm.classList.contains('disabledButtonHover'))
         return;
+
+    const result = await registerUser();
+    if (!result)
+        return;
+    
     createNewPlayer();
     clickCancelRegister();
-    replaceLogInButtons();
-    removeDisableButtonEffect(profileButton);
-    checkAccessIfRegistered();
+    logInUserUI();
 }
 
 function replaceLogInButtons()
@@ -222,6 +245,7 @@ function replaceLogOutButtons()
 
 export function clickLogOut()
 {
+    logoutUser();
     replaceLogOutButtons();
     resetPlayerStats();
     addDisableButtonEffect(profileButton);
@@ -264,7 +288,7 @@ function toggleShowPasswordConfirm()
     }
 }
 
-function checkAccessModes()
+export function checkAccessModes()
 {
     if (playerStats.isRegistered)
     {
@@ -312,9 +336,9 @@ export function closeGdprPanel()
     gdprPanel.style.display = 'none';
 }
 
+export function isUserLoggedIn() {
+    return document.cookie.includes('sessionid=');  // Check if sessionid cookie exists
+}
+
 addDisableButtonEffect(profileButton);
 resetRegistrationInputs();
-
-setTimeout(() => {
-    checkAccessIfRegistered();
-}, 0);
