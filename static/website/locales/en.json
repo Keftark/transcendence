@@ -74,6 +74,8 @@
     "loading": "Loading...",
     "rulesPointsText": "Points to win: ",
     "rulesArenaText": "Arena: ",
+    "rulesPaddleText": "Paddle",
+    "choosePaddleText": "Choose your paddle",
     "rulesTimerText": "Max. time (in seconds): ",
     "rulesMaxPlayersText": "Number of players: ",
     "players": "Players",

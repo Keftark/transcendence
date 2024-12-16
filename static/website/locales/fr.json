@@ -74,6 +74,8 @@
     "loading": "Chargement...",
     "rulesPointsText": "Points de victoire : ",
     "rulesArenaText": "Arène : ",
+    "rulesPaddleText": "Raquette",
+    "choosePaddleText": "Choisissez votre raquette",
     "rulesTimerText": "Temps max. (en secondes) : ",
     "rulesMaxPlayersText": "Nombre de joueurs : ",
     "players": "Joueurs",

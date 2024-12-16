@@ -27,6 +27,7 @@ export function createPlayerStats() {
         colors: "",
         photoIndex: 0,
         playerController: 0,
+        currentPaddleSkin: 1,
         isRegistered: false,
         cameraOrthographic: false,
         matches: [],

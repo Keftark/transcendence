@@ -3,7 +3,7 @@ import { initTranslation } from './translate.js';
 import { addMainEvents } from './eventsListener.js';
 import { LevelMode } from './variables.js';
 import { isChatOpen, tryCloseChat } from './chat.js';
-import { clickCancelRules } from './rules.js';
+import { clickCancelRules, closePaddleChoice, isPaddleChoiceOpen } from './rules.js';
 import { gameEnded, isInGame } from './levelLocal.js';
 import { clickCancelRegister, closeGdprPanel, isGdprOpen, isRegistrationOpen, isUserLoggedIn } from './registration.js';
 import { closeTournamentJoinMenu, closeTournamentLobbyMenu, closeTournamentMenu } from './tournament.js';
@@ -40,6 +40,8 @@ export function checkEscapeKey()
         closeSettings();
     else if (isProfileOpen())
         closeProfile();
+    else if (isPaddleChoiceOpen())
+        closePaddleChoice();
     else if (currentView === 'rules')
         clickCancelRules();
     else if (currentView === 'modes')
@@ -123,6 +125,29 @@ export function IsLoggedIn()
 //     }
 // }
 
+export let socket;
+
+function openSocket()
+{
+    socket = new WebSocket('ws://10.12.200.194:8001/ws/');
+
+    // socket.onmessage = function(event) {
+    //     const data = JSON.parse(event.data);
+    //     console.log('Message from server:', data.message);
+    // };
+    
+    socket.onopen = function() {
+        console.log("WebSocket connected");
+    };
+    
+    socket.onclose = function() {
+        console.log('WebSocket closed');
+    };
+    socket.onerror = (error) => console.log("Error:", error);
+    
+    addSocketListener(); 
+}
+
 changeCursors();
 addMainEvents();
 initTranslation();
@@ -131,24 +156,7 @@ setLanguageButtons();
 
 focusOldButton();
 
-
-export const socket = new WebSocket('ws://10.12.200.194:8001/ws/');
-
-// socket.onmessage = function(event) {
-//     const data = JSON.parse(event.data);
-//     console.log('Message from server:', data.message);
-// };
-
-socket.onopen = function() {
-    console.log("WebSocket connected");
-};
-
-socket.onclose = function() {
-    console.log('WebSocket closed');
-};
-socket.onerror = (error) => console.log("Error:", error);
-
-addSocketListener();
+// openSocket();
 
 // IsLoggedIn();
 

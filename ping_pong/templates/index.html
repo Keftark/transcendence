@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="{% static './styles/signIn.css' %}">
     <link rel="stylesheet" href="{% static './styles/tournament.css' %}">
     <link rel="stylesheet" href="{% static './styles/friends.css' %}">
+    <link rel="stylesheet" href="{% static './styles/choosePaddle.css' %}">
     <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
 </head>
 <body>
@@ -163,6 +164,10 @@
                     <img id="imgIsPrivate" src="{% static 'icons/unchecked.png' %}">
                 </button>
             </div>
+            <h1 id="choosePaddleButtonText"></h1>
+            <button id="choosePaddleButton">
+                <img id="choosePaddleImg" src="{% static 'images/paddle1Img.png' %}">
+            </button>
             <div id="rulesArenaType">
                 <h1 id="rulesArenaText"></h1>
                 <div id="arenas">
@@ -293,6 +298,19 @@
             <button class="buttonAccept" id="joinTournamentLobbyButton"></button>
             <button class="buttonCancel" id="cancelJoinTournamentLobbyButton"></button>
         </div>
+    </div>
+
+    <!------------------------------ ChoosePaddle ------------------------------>
+    <div id="choosePaddlePanel">
+        <h1 id="choosePaddleText"></h1>
+        <div id="choosePaddleList">
+            <button class="paddleListItem" id="choosePaddle1Button">
+                <img class="paddleInList" id="choosePaddle1" src="{% static 'images/paddle1Img.png' %}" data-index="1">
+            </button>
+            <button class="paddleListItem" id="choosePaddle2Button">
+                <img class="paddleInList" id="choosePaddle2" src="{% static 'images/paddle2Img.png' %}" data-index="2">
+            </button>
+    </div>
     </div>
 
     <!------------------------------ Waiting... ------------------------------>

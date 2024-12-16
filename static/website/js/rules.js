@@ -1,7 +1,7 @@
 import { endMatch } from "./levelLocal.js";
 import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
 import { clickPlayGame, showModeChoice } from "./modesSelection.js";
-import { navigateTo } from "./pages.js";
+import { getCurrentView, navigateTo } from "./pages.js";
 import { playerStats } from "./playerManager.js";
 import { endOfMatch } from "./scoreManager.js";
 import { goTournamentMenu } from "./tournament.js";
@@ -18,6 +18,9 @@ document.getElementById('rulesArenaTypeSpace').addEventListener('click', () => {
 document.getElementById('rulesIsPrivateToggle').addEventListener('click', () => {
     togglePrivate();
 });
+document.getElementById('choosePaddleButton').addEventListener('click', () => {
+    clickChoosePaddleButton();
+});
 
 const nbrPointsInput = document.getElementById('rulesPointsInput');
 const timerInput = document.getElementById('rulesTimerInput');
@@ -27,6 +30,7 @@ const nbrOfPlayersInput = document.getElementById('rulesMaxPlayersInput');
 const arenas = document.getElementById('arenas').querySelectorAll('.arena');
 const togglePrivateImg = document.getElementById('imgIsPrivate');
 const togglePrivateDiv = document.getElementById('rulesIsPrivate');
+const choosePaddlePanel = document.getElementById('choosePaddlePanel');
 
 timerInput.addEventListener("input", () => {
     endEditInputFieldRules();
@@ -110,6 +114,7 @@ export function setCustomRules()
 
 export function resetInputfieldsRules()
 {
+    document.getElementById('choosePaddleImg').src = `static/images/paddle1Img.png`;
     arenas[selectedArena].classList.remove('applyBorder');
     arenas[0].classList.add('applyBorder');
     nbrPointsInput.value = '3';
@@ -186,4 +191,48 @@ function togglePrivate()
 {
     isPrivate = !isPrivate;
     togglePrivateImg.src = isPrivate ? 'static/icons/checked.png' : 'static/icons/unchecked.png';
+}
+
+function clickChoosePaddleButton()
+{
+    paddleChoiceIsOpen = true;
+    choosePaddlePanel.style.display = "flex";
+    document.getElementById('choosePaddleList').children[0].focus();
+    setTimeout(() => {
+        choosePaddlePanel.classList.add("appearing");
+    }, 100);
+}
+document.getElementById('choosePaddle1Button').addEventListener('click', () => {
+    choosePaddleSkin(1);
+});
+document.getElementById('choosePaddle2Button').addEventListener('click', () => {
+    choosePaddleSkin(2);
+});
+
+let paddleChoiceIsOpen = false;
+
+export function isPaddleChoiceOpen()
+{
+    return paddleChoiceIsOpen;
+}
+
+export function closePaddleChoice()
+{
+    paddleChoiceIsOpen = false;
+    const currentView = getCurrentView();
+    if (currentView === 'rules')
+        document.getElementById('choosePaddleButton').focus();
+    choosePaddlePanel.classList.remove("appearing");
+    setTimeout(() => {
+        choosePaddlePanel.style.display = "none";
+    }, 100);
+}
+
+function choosePaddleSkin(nbr)
+{
+    document.getElementById('choosePaddleImg').src = `static/images/paddle${nbr}Img.png`;
+    playerStats.currentPaddleSkin = nbr;
+    // envoyer nbr au serveur lors d'un match online
+    // genre setPaddleSkin(nbr, playerId);
+    closePaddleChoice();
 }

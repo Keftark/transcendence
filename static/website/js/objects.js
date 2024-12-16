@@ -4,6 +4,7 @@ import { getLevelState } from './main.js';
 import { ArenaType, LevelMode } from './variables.js';
 import { GLTFLoader } from '../node_modules/.vite/deps/three_examples_jsm_loaders_GLTFLoader.js';
 import { clearObject, removeModelFromObject } from './unloadScene.js';
+import { playerStats } from './playerManager.js';
 
 let wallLeft;
 let wallRight;
@@ -86,7 +87,7 @@ function createPlayerBoostModel(textureLoader)
     return model;
 }
 
-export function updatePlayerModel(scene, textureLoader, oldPlayer, onPlayerLoaded) {
+export function updatePlayerModel(oldPlayer) {
     const loader = new GLTFLoader();
     const newMaterial = new THREE.MeshStandardMaterial({
         color: 0x000000,
@@ -115,7 +116,9 @@ export function createPlayers(scene, textureLoader)
 {
     const levelState = getLevelState();
     const playerSize = levelState === LevelMode.MULTI ? PLAYER_HEIGHT / 1.5 : PLAYER_HEIGHT;
-    const cylinderTexture = textureLoader.load('static/mat/player2.png'); // changer la texture en fonction du skin que le joueur choisit
+    // faire une fonction qui va recuperer le skin choisi par chaque joueur.
+    // le skin de l'ia va etre par defaut ou aleatoire ?
+    const cylinderTexture = textureLoader.load(`static/mat/player${playerStats.currentPaddleSkin}.png`);
     cylinderTexture.colorSpace = THREE.SRGBColorSpace;
     const material = new THREE.MeshStandardMaterial({ map: cylinderTexture, transparent: true });
     const geometry = new THREE.CylinderGeometry(PLAYER_RADIUS, PLAYER_RADIUS, playerSize, 8, 1, false);

@@ -298,7 +298,7 @@ export function setUpLevel(scene)
     gameMenuPanel.style.display = 'block';
     showInGameUI();
     [player1, player2, player3, player4] = createPlayers(scene, textureLoader);
-    updatePlayerModel(scene, textureLoader, player1);
+    // updatePlayerModel(player1);
     createLights(scene, arenaType);
     resetPlayersPositions();
     if (arenaType === ArenaType.SPACE)
@@ -335,6 +335,8 @@ function resetPlayersPositions()
         return;
     }
     player1.position.set(BOUNDARY.X_MIN, 0, 0);
+    // player1.position.set(0, 0, 0);
+    player1.rotation.y = Math.PI / 6;
     player2.position.set(BOUNDARY.X_MAX, 0, 0);
 }
 

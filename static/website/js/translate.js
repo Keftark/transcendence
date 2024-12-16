@@ -67,6 +67,8 @@ export function updateHTML(translations)
 	document.getElementById('loading').innerText = translations.loading;
 	document.getElementById('rulesPointsText').innerText = translations.rulesPointsText;
 	document.getElementById('rulesArenaText').innerText = translations.rulesArenaText;
+	document.getElementById('choosePaddleButtonText').innerText = translations.rulesPaddleText;
+	document.getElementById('choosePaddleText').innerText = translations.choosePaddleText;
 	document.getElementById('rulesTimerText').innerText = translations.rulesTimerText;
 	document.getElementById('rulesMaxPlayersText').innerText = translations.rulesMaxPlayersText;
 	document.getElementById('buttonAcceptRules').innerText = translations.start;

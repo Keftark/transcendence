@@ -20,7 +20,8 @@ export function connectToDuel()
             board_y: 25,
             ball_radius: 0.8,
             ball_speed: 0.5,
-            ball_increment: 0.05
+            ball_increment: 0.05,
+            max_time: 300
         },
     };
     socket.send(JSON.stringify(event));
@@ -58,7 +59,7 @@ export function exitDuel()
 export async function addSocketListener()
 {
     socket.addEventListener("message", ({ data }) => {
-        // console.log(data);
+        console.log(data);
         const event = JSON.parse(data);
         switch (event.type) {
         case "wait":
@@ -75,7 +76,7 @@ export async function addSocketListener()
             updateReadyButtons(event.p1_state, event.p2_state);
             // document.getElementById("waitA").innerHTML = "Awaiting start : <br/>P1 :" + event.p1 + "</br>P2 :" + event.p2;
             break;
-        case "match_start":
+        case "match_init":
             room_id = event.room_id;
             console.log("Found a match against player " + event.id_p2);
             setTimeout(() => {
