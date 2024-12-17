@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
+from django.core.mail import send_mail
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 # from django.views.decorators.csrf import csrf_exempt
@@ -81,6 +82,30 @@ def register_user(request):
             )
             user.save()
             login(request, user)
+                            
+            if user.emailAlerts:
+                message = f"""
+			    <p>Hello <b>{user.username}</b>,</p>
+			    <p>
+			    Welcome to transcendence! We are glad to have you with us.</br>
+			    Feel free to explore the platform and join the different channels to chat with other users
+			    and play games.
+			    </p>
+			    <p>If you received this email by mistake, please ignore it.</p>
+			    <p>
+			    Have a good day,<br>
+			    <i>The transcendence team</i>
+			    </p>
+			    """
+                send_mail(
+				    'Welcome to transcendence',
+				    message,
+				    'Transcendence Team <transcendence.42lyon.project@gmail.com>',
+				    [user.email],
+				    html_message=message,
+				    fail_silently=True,
+                )
+
 
             return JsonResponse({'success': True, 'message': 'User registered and logged in successfully.'})
 

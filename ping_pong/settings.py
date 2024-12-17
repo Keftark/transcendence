@@ -84,7 +84,7 @@ ASGI_APPLICATION = 'ping_pong.asgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DB_NAME'),
+        'NAME': 'transcendance',
         'USER': 'postgres',
         'PASSWORD': '1234',
         'HOST': 'localhost',
