@@ -14,6 +14,7 @@ urlpatterns = [
     path('duel', views.duel, name='duel'),  # Duel page
     path('game-local', views.game_local, name='game-local'),  # Game local page
     path('game-ai', views.game_ai, name='game-ai'),  # Game AI page
+    path('game-online', views.game_online, name='game-online'),  # Game online duel page
     path('tournament-menu', views.tournament_menu, name='tournament-menu'),  # Tournament menu page
     path('tournament-lobby', views.tournament_lobby, name='tournament-lobby'),  # Tournament lobby page
     path('tournament-join', views.tournament_join, name='tournament-join'),  # Tournament join page

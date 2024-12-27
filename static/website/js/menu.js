@@ -5,6 +5,7 @@ import { clickBackButtonMenu, showModeChoice } from './modesSelection.js';
 import { getCurrentView, navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
 import { loadScores, removeAllScores } from './scoreManager.js';
+import { exitGameSocket } from './sockets.js';
 import { changeLanguage, getTranslation } from './translate.js';
 import { LevelMode } from './variables.js';
 
@@ -95,6 +96,7 @@ document.getElementById('closeSettingsButton').addEventListener('click', () => {
 });
 
 document.getElementById('mainButton').addEventListener('click', () => {
+    exitGameSocket();
     clickBackButtonMenu();
 });
 
@@ -114,6 +116,28 @@ document.querySelectorAll('.mainMenuButton').forEach(button => {
   button.addEventListener('focus', () => showImage(button.id));
   button.addEventListener('blur', hideImage);
 });
+
+document.getElementById('profilePictureChangeButton').addEventListener('click', function() {
+    document.getElementById('fileInput').click();
+});
+
+// document.getElementById('fileInput').addEventListener('change', function(event) {
+//     const file = event.target.files[0];
+//     if (file) {
+//         console.log("Selected file:", file);
+
+//         // Example: Display the selected image (optional)
+//         const reader = new FileReader();
+//         reader.onload = function(e) {
+//             const img = document.createElement('img');
+//             img.src = e.target.result;
+//             img.style.maxWidth = "200px";
+//             img.style.border = "1px solid #ccc";
+//             document.body.appendChild(img);
+//         };
+//         reader.readAsDataURL(file);
+//     }
+// });
 
 document.getElementById('perspectiveButton').classList.add('applyBorderOptions');
 document.getElementById('lang1Button').classList.add('applyBorderOptions');
@@ -267,7 +291,7 @@ export function setButtonsColors()
 export function changeTextsColor(newColor)
 {
     const textElements = document.querySelectorAll(' \
-        h1, h2, div, h3, p, button, #header-title, #menu-label span, #pressplay, #play, #score-left, #score-right, #playername-left, \
+        h1, h2, div, h3, p, button, #header-title, #menu-label span, #pressplay, #play, #score-left, #score-right, .score-timer, #playername-left, \
         #playername-right, #inputChat, input, label');
     textElements.forEach(element => {
         element.style.color = newColor;

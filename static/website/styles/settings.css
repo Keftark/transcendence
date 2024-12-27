@@ -52,8 +52,8 @@
 }
 
 .colorize-btn {
-    width: 3.5vh;
-    height: 3.5vh;
+    width: calc(1.5vh + 1.5vw);
+    height: calc(1.5vh + 1.5vw);
     min-height: 18px;
     min-width: 18px;
     border: none;

@@ -34,6 +34,9 @@ function onOpenPage(path, otherVar = null) {
         case 'game-local':
             onPlayGame(otherVar);
             break;
+        case 'game-online':
+            onPlayGame(otherVar);
+            break;
         case 'game-ai':
             onPlayGame(otherVar);
             break;
@@ -73,6 +76,9 @@ function onClosePage(path) {
             unloadLevel();
             break;
         case 'game-ai':
+            unloadLevel();
+            break;
+        case 'game-online':
             unloadLevel();
             break;
         case 'game-multi':

@@ -23,10 +23,11 @@ export function createPlayerStats() {
         lastName: "",
         mail: "",
         password: "",
-        language: "",
-        colors: "",
+        language: "en",
+        colors: "white",
         photoIndex: 0,
-        playerController: 0,
+        room_id: -1,
+        playerController: 1,
         currentPaddleSkin: 1,
         isRegistered: false,
         cameraOrthographic: false,
@@ -40,6 +41,7 @@ export function createPlayerStats() {
 
 export function addMatchToHistory(playerScore, opponentScore, opponentName, matchTime = '0')
 {
+    console.log("Adding match to history:\nplayer score: " + playerScore + "\nOpponent score: " + opponentScore + "\nOpponent name: " + opponentName);
     setTimeout(() => {
         playerStats.matches.push(new MatchResult(playerScore, opponentScore, opponentName, matchTime));
     }, 50);
@@ -56,11 +58,12 @@ export async function createNewPlayer()
     player.password = inputPassword.value;
     player.language = "en";
     player.photoIndex = 0;
+    player.room_id = -1;
     player.colors = "white";
     player.isRegistered = true;
     player.friends.push("ProGamer");
     player.paddleSkins.push(0);
-    player.playerController = 0;
+    player.playerController = 1;
     player.status = PlayerStatus.ONLINE;
     const userData = await getUserInfos(inputNick.value);
     player.id = userData.id;
@@ -86,7 +89,7 @@ export function editPlayerStats(userData)
     player.language = userData.language;
     player.photoIndex = userData.photoIndex;
     player.colors = userData.colors;
-    player.playerController = userData.playerController;
+    player.playerController = 0;
     player.paddleSkins = userData.paddleSkins;
 
     playerStats = player;
@@ -103,11 +106,12 @@ export function resetPlayerStats()
     playerStats.password = "";
     playerStats.language = "en";
     playerStats.photoIndex = 0;
+    playerStats.room_id = -1;
     playerStats.colors = "white";
     playerStats.matches = [];
     playerStats.friends = [];
     playerStats.isRegistered = false;
-    playerStats.playerController = 0;
+    playerStats.playerController = 1;
     playerStats.status = PlayerStatus.ONLINE;
 }
 

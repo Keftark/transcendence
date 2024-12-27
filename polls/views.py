@@ -29,6 +29,9 @@ def duel(request):
 def game_local(request):
     return render(request, 'index.html', {'current_page': 'game-local'})
 
+def game_online(request):
+    return render(request, 'index.html', {'current_page': 'game-online'})
+
 def game_ai(request):
     return render(request, 'index.html', {'current_page': 'game-ai'})
 

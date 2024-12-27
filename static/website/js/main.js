@@ -14,12 +14,23 @@ import { addSocketListener } from './sockets.js';
 
 let levelMode = LevelMode.MENU;
 
+window.onbeforeunload = function() {
+    localStorage.removeItem('currentPath');
+};
+
 export function setLevelState(newLevelMode)
 {
     if (!newLevelMode)
         return;
     localStorage.setItem('levelMode', newLevelMode);
     levelMode = newLevelMode;
+}
+
+export function isAnOnlineMode(currentMode)
+{
+    return currentMode === LevelMode.ONLINE ||
+           currentMode === LevelMode.MULTI ||
+           currentMode === LevelMode.TOURNAMENT;
 }
 
 export function getLevelState()
@@ -82,6 +93,11 @@ export function isALevelMode(value) {
     return Object.values(LevelMode).includes(value);
 }
 
+export function hasDisabledButtonEffect(button)
+{
+    return button.classList.contains('disabledButtonHover');
+}
+
 export function addDisableButtonEffect(button) {
     if (button.classList.contains('disabledButtonHover'))
         return;
@@ -129,7 +145,8 @@ export let socket;
 
 function openSocket()
 {
-    socket = new WebSocket('ws://10.12.200.194:8001/ws/');
+    // socket = new WebSocket('ws://10.12.200.194:8001/ws/');
+    socket = new WebSocket('ws://10.11.200.72:8001/ws/');
 
     // socket.onmessage = function(event) {
     //     const data = JSON.parse(event.data);
@@ -156,7 +173,7 @@ setLanguageButtons();
 
 focusOldButton();
 
-// openSocket();
+openSocket();
 
 // IsLoggedIn();
 

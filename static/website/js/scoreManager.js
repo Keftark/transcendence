@@ -107,16 +107,17 @@ export function loadScores(player = playerStats)
     const scoresContainer = document.getElementById('matchHistoryContainer');
     for (let i = 0; i < player.matches.length; i++)
     {
+        const color = playerStats.colors || "white";
         let match = player.matches[i];
         const newContainer = document.createElement('div');
         newContainer.classList.add('score-container');
         const leftContent = document.createElement('div');
-        leftContent.style.color = playerStats.colors;
+        leftContent.style.color = color;
         leftContent.classList.add('score-left');
         leftContent.textContent = player.nickname + "\n" + match.scorePlayer;
         newContainer.appendChild(leftContent);
         const rightContent = document.createElement('div');
-        rightContent.style.color = playerStats.colors;
+        rightContent.style.color = color;
         rightContent.classList.add('score-right');
         rightContent.textContent = match.nameOpponent + "\n" + match.scoreOpponent;
         newContainer.appendChild(rightContent);
@@ -125,6 +126,8 @@ export function loadScores(player = playerStats)
         else
             newContainer.style.background = 'linear-gradient(to right, #882222 30%, #006666 70%)';
         const timerContent = document.createElement('p');
+        timerContent.classList.add('score-timer');
+        timerContent.style.color = color;
         timerContent.textContent = match.matchTime;
         newContainer.appendChild(timerContent);
         scoresContainer.appendChild(newContainer);

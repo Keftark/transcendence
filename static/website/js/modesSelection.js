@@ -113,6 +113,8 @@ export function clickPlayGame()
         navigateTo('game-ai', selecMode);
     else if (selecMode === LevelMode.MULTI)
         navigateTo('game-multi', selecMode);
+    else if (selecMode === LevelMode.ONLINE)
+        navigateTo('game-online', selecMode);
     else if (selecMode === LevelMode.DUEL)
     {
         sendInvitationDuel(playerStats.nickname);
@@ -290,7 +292,10 @@ export function onModesClose()
 function openDuelPanel()
 {
     if (playerStats.isRegistered)
+    {
         navigateTo('duel');
+        setSelectedMode(LevelMode.ONLINE);
+    }
     // else
         
     // if otherPlayer != "" and if isInTheDatabase(otherPlayer), sends an invitation to this player
@@ -317,6 +322,6 @@ export function askForDuel()
 {
     if (getSelectedMode() === LevelMode.DUEL || isInGame)
         return;
-    setSelectedMode(LevelMode.DUEL)
+    setSelectedMode(LevelMode.DUEL);
     navigateTo('rules');
 }

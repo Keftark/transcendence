@@ -111,6 +111,10 @@
     left: 1.5vw;
 }
 
+#score-timer{
+    transform: translate(0, 0);
+}
+
 #playername-left, #playername-right {
     top: 0;
     color: white;

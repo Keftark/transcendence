@@ -193,8 +193,11 @@ function togglePrivate()
     togglePrivateImg.src = isPrivate ? 'static/icons/checked.png' : 'static/icons/unchecked.png';
 }
 
-function clickChoosePaddleButton()
+let currentPlayer = -1;
+export function clickChoosePaddleButton(nbr = -1)
 {
+    if (nbr != -1)
+        currentPlayer = nbr;
     paddleChoiceIsOpen = true;
     choosePaddlePanel.style.display = "flex";
     document.getElementById('choosePaddleList').children[0].focus();
@@ -218,6 +221,7 @@ export function isPaddleChoiceOpen()
 
 export function closePaddleChoice()
 {
+    currentPlayer = -1;
     paddleChoiceIsOpen = false;
     const currentView = getCurrentView();
     if (currentView === 'rules')
@@ -230,7 +234,12 @@ export function closePaddleChoice()
 
 function choosePaddleSkin(nbr)
 {
-    document.getElementById('choosePaddleImg').src = `static/images/paddle${nbr}Img.png`;
+    if (getCurrentView() === "duel")
+    {
+        document.getElementById(`choosePaddleImgPlayer${currentPlayer}`).src = `static/images/paddle${nbr}Img.png`;
+    }
+    else
+        document.getElementById('choosePaddleImg').src = `static/images/paddle${nbr}Img.png`;
     playerStats.currentPaddleSkin = nbr;
     // envoyer nbr au serveur lors d'un match online
     // genre setPaddleSkin(nbr, playerId);

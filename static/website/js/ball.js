@@ -12,6 +12,18 @@ let ballRadiusMult = 1.0;
 let ballSpeedMult = 1.0;
 let isBallBoosted = false;
 
+let ballPosition =
+{
+    x: 0,
+    y: 0
+}
+
+export function setBallPosition(xPos, yPos)
+{
+    ballPosition.x = xPos;
+    ballPosition.y = yPos;
+}
+
 function getDimensions(object) {
     const boundingBox = new THREE.Box3().setFromObject(object);
     return {
@@ -50,7 +62,8 @@ function createBallBoostModel(textureLoader)
 
 function getRandomVelocityComponent() {return Math.random() < 0.5 ? ballBaseStats.baseSpeed : -ballBaseStats.baseSpeed;}
 
-export function createBall(scene, callBack) {
+export function createBall(scene, callBack)
+{
     ballRadiusMult = 1;
     isBallBoosted = false;
     ballSpeedMult = 1;
@@ -271,7 +284,7 @@ export function createBall(scene, callBack) {
         ball.position.set(posX, posY, 0);
     }
 
-    function updateBall(player1, player2)
+    function moveBall(player1, player2)
     {
         // movement logic
         let modVelocity = new THREE.Vector3(ballVelocity.x, ballVelocity.y, ballVelocity.z);
@@ -296,6 +309,14 @@ export function createBall(scene, callBack) {
 
         // other functions (to keep!)
         // setBallPosition(vars x, y from the server);
+    }
+
+    function updateBall(player1, player2)
+    {
+        if (getLevelState() === LevelMode.LOCAL || getLevelState() === LevelMode.ADVENTURE)
+            moveBall(player1, player2);
+        else if (getLevelState() === LevelMode.ONLINE)
+            setBallPosition(ballPosition.x, ballPosition.y);
         pointLight.position.copy(ball.position);
         rotateBall();
     }

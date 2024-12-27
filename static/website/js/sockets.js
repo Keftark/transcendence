@@ -1,6 +1,13 @@
-import { matchFound, updateReadyButtons } from "./duelPanel.js";
-import { socket } from "./main.js";
+import { setBallPosition } from "./ball.js";
+import { closeDuelPanel, matchFound, setPlayersControllers, updateReadyButtons } from "./duelPanel.js";
+import { getBallPosition, getPlayerSideById, resetScreenFunction, spawnSparksFunction } from "./levelLocal.js";
+import { getLevelState, socket } from "./main.js";
+import { clickPlayGame } from "./modesSelection.js";
 import { playerStats } from "./playerManager.js";
+import { setPlayersPositions } from "./playerMovement.js";
+import { endOfMatch } from "./scoreManager.js";
+import { LevelMode, VictoryType } from "./variables.js";
+import { callVictoryScreen } from "./victory.js";
 
 let room_id = 0;
 
@@ -47,46 +54,162 @@ export function notReadyToDuel()
     socket.send(JSON.stringify(event));
 }
 
+export function exitLobby()
+{
+    const event = {
+        type: "quit_lobby",
+        room: playerStats.room_id,
+        id: playerStats.id,
+    };
+    socket.send(JSON.stringify(event));
+}
+
 export function exitDuel()
 {
     const event = {
-        type: "quit",
+        type: "quit_lobby",
+        room: playerStats.room_id,
         id: playerStats.id,
     };
     socket.send(JSON.stringify(event));    
 }
 
+export function sendPlayerReady()
+{
+    const event = {
+        type: "ready",
+        room: playerStats.room_id,
+        id: playerStats.id
+    };
+    socket.send(JSON.stringify(event));
+}
+
+export function playerUp()
+{
+    // console.log("sending up, " + playerStats.room_id + ", " + playerStats.id);
+    const event = {
+        type: "input",
+        room: playerStats.room_id,
+        id: playerStats.id,
+        move: "up",
+        method: "none"
+    };
+    socket.send(JSON.stringify(event));
+}
+
+export function playerDown()
+{
+    const event = {
+        type: "input",
+        room: playerStats.room_id,
+        id: playerStats.id,
+        move: "down",
+        method: "none"
+    };
+    socket.send(JSON.stringify(event));
+}
+
+export function exitGameSocket()
+{
+    const currentMode = getLevelState();
+    switch (currentMode)
+    {
+        case LevelMode.ONLINE:
+            exitDuel();
+        break;
+    }
+}
+
 export async function addSocketListener()
 {
-    socket.addEventListener("message", ({ data }) => {
-        console.log(data);
+    socket.addEventListener("message", async ({ data }) => {
+        // console.log(data);
         const event = JSON.parse(data);
+        // console.log(event);
         switch (event.type) {
         case "wait":
             console.log("Waiting in queue");
             break;
         case "exit_queue":
+            playerStats.room_id = -1;
             // le joueur quitte la file d'attente du match ( l'ecran de duel)
             // il faut verifier s'il y a un autre joueur de connecte 
             // (2 joueurs connectes = une room creee, on est plus dans la queue)
             console.log("Exit queue");
             break;
-        case "wait_ready":
-            console.log(event.p1_state + ", " + event.p2_state);
+        case "wait_start":
+            // console.log(event.p1_state + ", " + event.p2_state);
             updateReadyButtons(event.p1_state, event.p2_state);
             // document.getElementById("waitA").innerHTML = "Awaiting start : <br/>P1 :" + event.p1 + "</br>P2 :" + event.p2;
             break;
+        case "wait_ready":
+            if (event.p1_state && event.p2_state)
+            {
+                console.log("ready !");
+            }
+            break;
         case "match_init":
             room_id = event.room_id;
+            playerStats.room_id = room_id;
             console.log("Found a match against player " + event.id_p2);
             setTimeout(() => {
                 matchFound(event.id_p1, event.id_p2);
             }, 1000);
             break;
+        case "match_start":
+            // ne fonctionne pas encore, les id ne sont pas envoyees
+            await setPlayersControllers();
+            clickPlayGame();
+            break;
+        case "victory": // end of match, dans le lobby ou dans le match
+            if (event.room_id != playerStats.room_id)
+                return;
+            console.log(data);
+            if (event.mode === "abandon" && event.player != playerStats.id)
+            {
+                closeDuelPanel();
+            }
+            else if (event.mode === "ragequit" && event.player != playerStats.id)
+            {
+                endOfMatch();// mettre un argument pour forcer la victoire et indiquer que l'autre a quitte
+            }
+            else if (event.mode === "points" || event.mode === "timer")
+            {
+                if (event.player === playerStats.id)
+                    callVictoryScreen(VictoryType.VICTORY);
+                else
+                    callVictoryScreen(VictoryType.DEFEAT);
+            }
+            else if (event.mode === "equal")
+                callVictoryScreen(VictoryType.EXAEQUO);
+            break;
         case "error":
             console.log("Got error : " + event.content);
             break;
+        case "point":
+            if (event.room_id === playerStats.room_id);
+            {
+                spawnSparksFunction(getBallPosition(), 400);
+                let nbr = getPlayerSideById(event.player) + 1;
+                // inversion du joueur ayant marque un but
+                if (nbr === 1)
+                    nbr = 2;
+                else if (nbr === 2)
+                    nbr = 1;
+                resetScreenFunction(nbr, true);
+            }
+            break;
         case "tick":
+            // x = parseInt(event.ball_x);
+            // y = parseInt(event.ball_y);
+            // console.log("room: " + event.room_id + ", player room: " + playerStats.room_id);
+            if (event.room_id === playerStats.room_id);
+            {
+                setPlayersPositions(event.p1_pos, event.p2_pos);
+                setBallPosition(event.ball_x, event.ball_y);
+            }
+            // y1 = event.p1_pos;
+            // y2 = event.p2_pos;
             break;
         case "ping":
             break;

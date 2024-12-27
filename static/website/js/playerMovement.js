@@ -1,19 +1,34 @@
 import { balle, BOUNDARY, getPlayer, finalHeight, PLAYER_HEIGHT } from "./levelLocal.js";
-import { getLevelState } from "./main.js";
+import { getLevelState, isAnOnlineMode } from "./main.js";
 import { isMenuOpen, isSettingsOpen } from "./menu.js";
 import { playerStats } from "./playerManager.js";
 import { resetBoostBar } from "./powerUp.js";
+import { playerDown, playerUp } from "./sockets.js";
 import { LevelMode } from "./variables.js";
 
 const inputChat = document.getElementById('inputChat');
 const moveSpeed = 300;
 let onKeyUpFunction = null;
 let onKeyDownFunction = null;
+let setPlayersPositionsFunction = null;
 let isBoostedLeft = false;
 let isBoostedRight = false;
 let botTargetPosition = 0;
 const botDelay = 1000;
 let rotationBoost = 0;
+
+export function setPlayerController(id_p1, id_p2)
+{
+    if (playerStats.id === id_p1)
+        playerStats.playerController = 1;
+    else if (playerStats.id === id_p2)
+        playerStats.playerController = 2;
+}
+
+export function setPlayersPositions(p1Pos, p2Pos)
+{
+    setPlayersPositionsFunction(p1Pos, p2Pos);
+}
 
 export function addPlayerMovementKeyDown(event)
 {
@@ -151,24 +166,22 @@ export function setupPlayerMovement(player1, player2, player3, player4)
 
     function getPlayer(playerNbr)
     {
-        if (playerNbr === 0)
+        if (playerNbr === 0 || playerNbr === 1)
             return player1;
-        if (playerNbr === 1)
-            return player2;
         if (playerNbr === 2)
-            return player3;
+            return player2;
         if (playerNbr === 3)
+            return player3;
+        if (playerNbr === 4)
             return player4;
     }
 
-    function getPlayerPosition(playerNbr)
+    setPlayersPositionsFunction = function setPlayerPosition(p1Pos, p2Pos)
     {
         // faire la requete pour recuperer la position du joueur
-    }
-
-    function setPlayerPosition(playerNbr)
-    {
-        // envoyer le numero du joueur et la position Y
+        // console.log(p1Pos + ", " + p2Pos);
+        player1.position.y = p1Pos;
+        player2.position.y = p2Pos;
     }
 
     function checkPlayer1Movements(adjustedSpeed)
@@ -177,12 +190,29 @@ export function setupPlayerMovement(player1, player2, player3, player4)
         const player = getPlayer(controller);
         let playerposy = player.position.y || 0;
         const playerBound = finalHeight / 2;
-        if (moveUp1 && !moveDown1) {
-            const newPosition = lerp(playerposy, playerposy + adjustedSpeed, 0.1);
-            player.position.y = Math.min(newPosition, boundsPlayer[controller].max - playerBound);
-        } else if (moveDown1 && !moveUp1) {
-            const newPosition = lerp(playerposy, playerposy - adjustedSpeed, 0.1);
-            player.position.y = Math.max(newPosition, boundsPlayer[controller].min + playerBound);
+        if (moveUp1 && !moveDown1)
+        {
+            if (isAnOnlineMode(levelState))
+            {
+                playerUp();
+            }
+            else
+            {
+                const newPosition = lerp(playerposy, playerposy + adjustedSpeed, 0.1);
+                player.position.y = Math.min(newPosition, boundsPlayer[controller].max - playerBound);    
+            }
+        }
+        else if (moveDown1 && !moveUp1)
+        {
+            if (isAnOnlineMode(levelState))
+            {
+                playerDown();
+            }
+            else
+            {
+                const newPosition = lerp(playerposy, playerposy - adjustedSpeed, 0.1);
+                player.position.y = Math.max(newPosition, boundsPlayer[controller].min + playerBound);
+            }
         }
     }
 
@@ -242,7 +272,7 @@ export function setupPlayerMovement(player1, player2, player3, player4)
         checkPlayer1Movements(adjustedSpeed);
         if (levelState === LevelMode.ADVENTURE)
             checkBotMovements(adjustedSpeed);
-        else if (levelState != LevelMode.MULTI)
+        else if (levelState === LevelMode.LOCAL)
             checkPlayer2Movements(adjustedSpeed);
         else
         {

@@ -5,7 +5,7 @@ import { createBall } from './ball.js';
 import { ScreenShake } from './screenShake.js';
 import { setScores, addScore, setVisibleScore } from './scoreManager.js';
 import { updatePlayerModel, createLights, createPlayers, setVisibilityRightWall } from './objects.js';
-import { getLevelState, setLevelState } from './main.js';
+import { getLevelState, isAnOnlineMode, setLevelState } from './main.js';
 import { unloadScene } from './unloadScene.js';
 import { removeMainEvents } from './eventsListener.js';
 import { setAccessAllDuelsInChat, tryCloseChat } from './chat.js';
@@ -21,6 +21,8 @@ import { callVictoryScreen } from './victory.js';
 import { isBoostReadyLeft, isBoostReadyRight, resetBoostBar, useBoost } from './powerUp.js';
 import { createDeathSphere } from './deathSphere.js';
 import { Sparks } from './sparks.js';
+import { sendPlayerReady } from './sockets.js';
+import { getUserById } from './apiFunctions.js';
 
 const gameMenuPanel = document.getElementById('gameMenuPanel');
 const myInput = document.getElementById('inputChat');
@@ -82,6 +84,31 @@ let scaleSphere = 0;
 let sparks;
 let cameraZoomSpeed = 2; // Set the zoom speed
 
+let playersId = [0, 0, 0, 0];
+let playerProfile1;
+let playerProfile2;
+
+export function setPlayersIds(player1Id, player2Id)
+{
+    playersId[0] = player1Id;
+    playersId[1] = player2Id;
+    playersId[2] = 0;
+    playersId[3] = 0;
+}
+
+export function getPlayerSideById(playerId)
+{
+    // console.log("List: ");
+    // console.log("0: " + playersId[0]);
+    // console.log("1: " + playersId[1]);
+    // console.log("2: " + playersId[2]);
+    // console.log("3: " + playersId[3]);
+    // console.log(" ");
+    // console.log("Get player id: " + playerId);
+    // console.log("Index: " + playersId.indexOf(playerId));
+    return playersId.indexOf(playerId);
+}
+
 export function updateSparksFunction()
 {
     sparks.updateSparks();
@@ -133,6 +160,9 @@ export function unloadLevel()
     isInGame = false;
     setAccessAllDuelsInChat(true);
     playerStats.status = PlayerStatus.ONLINE;
+    playerStats.playerController = 1;
+    playerProfile1 = null;
+    playerProfile2 = null;
 
     window.removeEventListener('wheel', camZoomEvent);
 }
@@ -242,6 +272,7 @@ export function setUpScene()
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     document.body.appendChild(renderer.domElement);
+    document.getElementById('reinitLevelButton').style.display = isAnOnlineMode(currentLevelMode) ? 'none' : 'block';
     document.getElementById('profileButton').style.display = playerStats.isRegistered ? 'block' : 'none';
 }
 
@@ -252,7 +283,7 @@ function showInGameUI()
     {
         controlsSrc = 'static/images/controlsAdventure.png';
     }
-    else if (currentLevelMode === LevelMode.LOCAL)
+    else// if (currentLevelMode === LevelMode.LOCAL)
     {
         controlsSrc = 'static/images/controlsP1Local.png';
     }
@@ -285,10 +316,24 @@ export function setPlayerRightName()
         player2Name.innerText = getTranslation('playernameright');
 }
 
+export async function passInfosPlayersToLevel(idP1, idP2)
+{
+    playerProfile1 = await getUserById(idP1);
+    playerProfile2 = await getUserById(idP2);
+}
+
 function setPlayerNames()
 {
-    setPlayerRightName();
-    player1Name.innerText = getPlayerName();
+    if (isAnOnlineMode(currentLevelMode))
+    {
+        player1Name.innerText = playerProfile1.username;
+        player2Name.innerText = playerProfile2.username;
+    }
+    else
+    {
+        setPlayerRightName();
+        player1Name.innerText = getPlayerName();
+    }
 }
 
 export function setUpLevel(scene)
@@ -436,10 +481,9 @@ function animateDeathSphere()
 
 export function getBallPosition()
 {
-    console.log(balle.position);
+    // console.log(balle.position);
+    return balle.position;
 }
-
-
 
 function camZoomEvent(event)
 {
@@ -470,6 +514,8 @@ function camZoomEvent(event)
     event.preventDefault();
 }
 
+export let resetScreenFunction = null;
+
 export function StartLevel(levelMode)
 {
     playerStats.status = PlayerStatus.BUSY;
@@ -486,16 +532,16 @@ export function StartLevel(levelMode)
     setUpScene();
     setUpLevel(scene);
     sparks = new Sparks(scene);
-    
+
     const { updatePlayers } = setupPlayerMovement(player1, player2, player3, player4);
-    const { ball, updateBall, resetBall, changeBallSize, changeBallSpeed } = createBall(scene, resetScreen);
+    const { ball, updateBall, resetBall, changeBallSize, changeBallSpeed } = createBall(scene, resetScreenFunction);
     balle = ball;
     setUpConsts();
     setScores(0, 0);
     setAccessAllDuelsInChat(false);
     tryCloseChat();
     setPlayerNames();
-    
+
     let isBallMoving = false;
     let toggleReset = false;
     let canPressSpace = true;
@@ -503,8 +549,8 @@ export function StartLevel(levelMode)
 
     changeBallSizeFunction = changeBallSize;
     changeBallSpeedFunction = changeBallSpeed;
-    
-    function resetScreen(playerNbr, fromScoredPoint = false)
+
+    resetScreenFunction = function resetScreen(playerNbr, fromScoredPoint = false)
     {
         if (playerNbr != 0)
         {
@@ -589,19 +635,32 @@ export function StartLevel(levelMode)
             resetFunction(true);
     }
 
+    function startGame()
+    {
+        isBallMoving = true;
+        if (isGamePaused())
+            resumeStopWatch();
+        else
+        {
+            resetStopwatch();
+            startStopwatch(getRules().maxTime);
+        }
+    }
+
     pressSpaceFunction = function pressSpaceStart(event)
     {
         if (!canPressSpace)
             return;
         if (!gameMenuPanel.classList.contains('show') && !gameEnded && !isBallMoving && event.key === ' ' && isCameraAnimationComplete)
         {
-            isBallMoving = true;
-            if (isGamePaused())
-                resumeStopWatch();
+            if (currentLevelMode === LevelMode.ONLINE)
+            {
+                isBallMoving = true;
+                sendPlayerReady();
+            }
             else
             {
-                resetStopwatch();
-                startStopwatch(getRules().maxTime);
+                startGame();
             }
             hidePlayMessage();
         }
@@ -610,9 +669,15 @@ export function StartLevel(levelMode)
     pressBoostFunction = function pressBoostFunction(event)
     {
         if (event.key === 'e' && isBoostReadyLeft())
+        {
             useBoost(0);
+            event.preventDefault();
+        }
         else if (event.code === 'ControlRight' && currentLevelMode === LevelMode.LOCAL && isBoostReadyRight())
+        {
             useBoost(1);
+            event.preventDefault();
+        }
     }
 
     reinitLevelFunction = function reinitLevel()
@@ -652,7 +717,22 @@ export function endMatch(scoreP1, scoreP2)
     gameEnded = true;
     const player1NameText = player1Name.innerText;
     const player2NameText = player2Name.innerText;
-    addMatchToHistory(scoreP1, scoreP2, player2NameText, getMatchTime());
+    let scorePlayer;
+    let scoreOpponent;
+    let opponentName;
+    if (player1NameText === playerStats.nickname)
+    {
+        scorePlayer = scoreP1;
+        scoreOpponent = scoreP2;
+        opponentName = player2NameText;
+    }
+    else
+    {
+        scorePlayer = scoreP2;
+        scoreOpponent = scoreP1;
+        opponentName = player1NameText;
+    }
+    addMatchToHistory(scorePlayer, scoreOpponent, opponentName, getMatchTime());
     pressPlayDiv.style.display = 'none';
     stopStopwatch();
     deathSphereGrew = false;

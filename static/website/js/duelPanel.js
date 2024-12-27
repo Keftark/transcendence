@@ -1,9 +1,12 @@
 import { getLoggedInUser, getUserById } from "./apiFunctions.js";
 import { deleteDuelInChat } from "./chat.js";
-import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
+import { passInfosPlayersToLevel, setPlayersIds } from "./levelLocal.js";
+import { addDisableButtonEffect, hasDisabledButtonEffect, removeDisableButtonEffect } from "./main.js";
 import { showModeChoice } from "./modesSelection.js";
 import { getPlayerName } from "./playerManager.js";
-import { notReadyToDuel, readyToDuel } from "./sockets.js";
+import { setPlayerController } from "./playerMovement.js";
+import { clickChoosePaddleButton } from "./rules.js";
+import { exitLobby, notReadyToDuel, readyToDuel } from "./sockets.js";
 import { getTranslation } from "./translate.js";
 
 document.getElementById('leaveDuelButton').addEventListener('click', () => {
@@ -17,9 +20,11 @@ const player2Img = document.getElementById('player2ImgDuel');
 const player1ReadyButton = document.getElementById('ready1DuelButton');
 const player2ReadyButton = document.getElementById('ready2DuelButton');
 const waitingPlayer2 = document.getElementById('waitingForPlayer');
-const startButtonDuel = document.getElementById('startDuelButton');
+// const startButtonDuel = document.getElementById('startDuelButton');
 const animDiv = document.getElementById('vsImg');
 const baseImgPath = "static/icons/playerNoImg.png";
+const choosePaddleButtonPlayer1 = document.getElementById('choosePaddleButtonPlayer1');
+const choosePaddleButtonPlayer2 = document.getElementById('choosePaddleButtonPlayer2');
 
 let isOtherConnected = false;
 let duelTargetPlayer = "";
@@ -27,11 +32,31 @@ let duelSender = "";
 let player1IsReady = false;
 let player2IsReady = false;
 
+let idP1 = -1;
+let idP2 = -1;
+
 player1ReadyButton.addEventListener('click', () => {
     clickReadyDuel(1);
 });
 player2ReadyButton.addEventListener('click', () => {
     clickReadyDuel(2);
+});
+
+choosePaddleButtonPlayer1.addEventListener('click', () => {
+    if (!hasDisabledButtonEffect(choosePaddleButtonPlayer1))
+        clickChoosePaddleButton(1);
+});
+choosePaddleButtonPlayer2.addEventListener('click', () => {
+    if (!hasDisabledButtonEffect(choosePaddleButtonPlayer2))
+        clickChoosePaddleButton(2);
+});
+
+document.getElementById('helpRulesDuel').addEventListener('mouseover', () => {
+    document.getElementById('helpRulesTextPanel').style.display = 'flex';
+});
+
+document.getElementById('helpRulesDuel').addEventListener('mouseout', () => {
+    document.getElementById('helpRulesTextPanel').style.display = 'none';
 });
 
 export function getDuelTargetPlayer()
@@ -67,7 +92,7 @@ function resetDuelPanel()
     player2NameText.innerText = getTranslation('player2Name');
     removeDisableButtonEffect(player1ReadyButton);
     removeDisableButtonEffect(player2ReadyButton);
-    addDisableButtonEffect(startButtonDuel);
+    // addDisableButtonEffect(startButtonDuel);
     // reset all the fields/settings
 }
 
@@ -80,6 +105,9 @@ function resetVSAnimation()
 
 export function closeDuelPanel()
 {
+    // double chargement de la page de retour pour le joueur qui quitte
+    // mettre un message indiquant que l'autre joueur a quitte
+    exitLobby(); // fonction pas encore faite
     showModeChoice();
 }
 
@@ -92,6 +120,8 @@ export function onOpenDuel()
 
 export function onCloseDuel()
 {
+    idP1 = -1;
+    idP2 = -1;
     resetDuelPanel();
     document.getElementById('duelPanel').style.display = 'none'; // inutile ??
     animDiv.classList.remove('vsAnim');
@@ -161,10 +191,10 @@ export function clickReadyDuel(playerNbr)
         else
             notReadyToDuel();
     }
-    if (player1ReadyButton.classList.contains('active') && player2ReadyButton.classList.contains('active'))
-        removeDisableButtonEffect(startButtonDuel);
-    else
-        addDisableButtonEffect(startButtonDuel);
+    // if (player1ReadyButton.classList.contains('active') && player2ReadyButton.classList.contains('active'))
+    //     removeDisableButtonEffect(startButtonDuel);
+    // else
+    //     addDisableButtonEffect(startButtonDuel);
 }
 
 export function joinDuel()
@@ -179,30 +209,49 @@ export function startWaitingForPlayer()
     document.getElementById('waitingMatch').style.display = "grid";
 }
 
-async function lockReadyButtonOtherPlayer(player1, player2)
+async function displayUIPlayer(player1, player2)
 {
     getLoggedInUser().then(user => {
         if (user) {
             if (user.id === player1)
+            {
+                addDisableButtonEffect(choosePaddleButtonPlayer2);
                 addDisableButtonEffect(player2ReadyButton);
+            }
             else if (user.id === player2)
+            {
                 addDisableButtonEffect(player1ReadyButton);
+                addDisableButtonEffect(choosePaddleButtonPlayer1);
+            }
         } else {
             console.log("No user is currently logged in or an error occurred.");
         }
     });
+}
 
+export async function setPlayersControllers()
+{
+    if (idP1 === -1 || idP2 === -1)
+    {
+        console.error("The players don't have ids.");
+        return;
+    }
+    await passInfosPlayersToLevel(idP1, idP2);
+    setPlayersIds(idP1, idP2);
+    setPlayerController(idP1, idP2);
 }
 
 export async function matchFound(player1, player2)
 {
-    console.log("Player1: " + player1);
-    console.log("Player2: " + player2);
-    lockReadyButtonOtherPlayer(player1, player2);
+    // console.log("Player1: " + player1);
+    // console.log("Player2: " + player2);
+    idP1 = player1;
+    idP2 = player2;
+    displayUIPlayer(player1, player2);
+    await fillInfosPlayer(1, player1);
+    await fillInfosPlayer(2, player2);
     document.getElementById('waitingMatch').style.display = "none";
-    fillInfosPlayer(1, player1);
-    fillInfosPlayer(2, player2);
     // on met a jour l'interface apres avoir recupere les deux joueurs
 }
 
-addDisableButtonEffect(startButtonDuel);
+// addDisableButtonEffect(startButtonDuel);

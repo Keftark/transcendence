@@ -62,7 +62,7 @@ export function updateHTML(translations)
 	document.getElementById('player1NameDuel').innerText = translations.player1Name;
 	document.getElementById('player2NameDuel').innerText = translations.player2Name;
 	document.getElementById('waitingForPlayer').innerText = translations.waitingForPlayer;
-	document.getElementById('startDuelButton').innerText = translations.start;
+	// document.getElementById('startDuelButton').innerText = translations.start;
 	document.getElementById('leaveDuelButton').innerText = translations.leaveDuelButton;
 	document.getElementById('loading').innerText = translations.loading;
 	document.getElementById('rulesPointsText').innerText = translations.rulesPointsText;
@@ -127,7 +127,8 @@ export function updateHTML(translations)
 	document.getElementById('gdprText').innerHTML = translations.gdpr;
 	document.getElementById('gdprBack').innerHTML = translations.backText;
 	document.getElementById('waitingMatchText').innerHTML = translations.waitingMatchText;
-
+	document.getElementById('helpRulesTitle').innerHTML = translations.helpRulesTitle;
+	document.getElementById('helpRulesText').innerHTML = translations.helpRulesText;
 	
     document.querySelector('.gdpr').addEventListener('click', function() {
         openGdprPanel();
