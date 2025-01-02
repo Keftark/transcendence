@@ -7,6 +7,7 @@ import { getPlayerName } from "./playerManager.js";
 import { clickChoosePaddleButton } from "./rules.js";
 import { exitLobby, notReadyToDuel, readyToDuel } from "./sockets.js";
 import { getTranslation } from "./translate.js";
+import { clickPlayGame } from "./modesSelection.js";
 
 document.getElementById('leaveDuelButton').addEventListener('click', () => {
     closeDuelPanel();
@@ -122,7 +123,7 @@ export function onCloseDuel()
     idP1 = -1;
     idP2 = -1;
     resetDuelPanel();
-    document.getElementById('duelPanel').style.display = 'none'; // inutile ??
+    // document.getElementById('duelPanel').style.display = 'none'; // inutile ??
     animDiv.classList.remove('vsAnim');
     animDiv.style.display = 'none';
     duelSender = duelTargetPlayer = null;
@@ -235,7 +236,13 @@ export function setPlayersControllers()
         console.error("The players don't have ids.");
         return;
     }
-    passInfosPlayersToLevel(idP1, idP2);
+    passInfosPlayersToLevel(idP1, idP2)
+    .then(() => {
+        clickPlayGame(); // Call after everything is done
+    })
+    .catch((error) => {
+        console.error("Failed to set up players' controllers:", error);
+    });
 }
 
 export function matchFound(player1, player2)

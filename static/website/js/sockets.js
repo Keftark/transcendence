@@ -149,7 +149,14 @@ export function addSocketListener()
         // console.log(data);
         if (data === "Message received!")
             return;
-        const event = JSON.parse(data);
+        let event;
+        try {
+            event = JSON.parse(data); // Attempt to parse JSON
+        } catch (error) {
+            console.log(data);
+            console.error("Failed to parse JSON:", error);
+            return; // Exit if there's a syntax error
+        }
         // console.log(event);
         switch (event.type) {
         case "wait":
@@ -184,9 +191,6 @@ export function addSocketListener()
         case "match_start":
             // ne fonctionne pas encore, les id ne sont pas envoyees
             setPlayersControllers();
-            setTimeout(() => {
-                clickPlayGame();
-            }, 100);
             break;
         case "victory": // end of match, dans le lobby ou dans le match
             if (event.room_id != playerStats.room_id)

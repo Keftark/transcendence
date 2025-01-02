@@ -318,13 +318,21 @@ export function setPlayerRightName()
 
 export function passInfosPlayersToLevel(idP1, idP2)
 {
-    playerProfile1 = getUserById(idP1);
-    playerProfile2 = getUserById(idP2);
-    console.log(playerProfile1.username);
-    setTimeout(() => {
-        setPlayersIds(idP1, idP2);
-        setPlayerController(idP1, idP2);
-    }, 100);
+    return Promise.all([getUserById(idP1), getUserById(idP2)])
+        .then(([profile1, profile2]) => {
+            playerProfile1 = profile1;
+            playerProfile2 = profile2;
+
+            console.log(playerProfile1.username); // Log the username after data is resolved
+
+            // Call other functions in order and ensure they're completed
+            setPlayersIds(idP1, idP2);
+            return setPlayerController(idP1, idP2); // Ensure this returns a promise if async
+        })
+        .catch((error) => {
+            console.error("Error in passInfosPlayersToLevel:", error);
+            throw error; // Rethrow for upstream handling
+        });
 }
 
 function setPlayerNames()
