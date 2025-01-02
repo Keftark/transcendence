@@ -1,6 +1,6 @@
 import * as THREE from '../node_modules/.vite/deps/three.js';
 import { animateCamera, resetCamera } from './cameranim.js';
-import { resetBoostedStatus, setupPlayerMovement, stopBoostPlayers } from './playerMovement.js';
+import { resetBoostedStatus, setPlayerController, setupPlayerMovement, stopBoostPlayers } from './playerMovement.js';
 import { createBall } from './ball.js';
 import { ScreenShake } from './screenShake.js';
 import { setScores, addScore, setVisibleScore } from './scoreManager.js';
@@ -316,10 +316,15 @@ export function setPlayerRightName()
         player2Name.innerText = getTranslation('playernameright');
 }
 
-export async function passInfosPlayersToLevel(idP1, idP2)
+export function passInfosPlayersToLevel(idP1, idP2)
 {
-    playerProfile1 = await getUserById(idP1);
-    playerProfile2 = await getUserById(idP2);
+    playerProfile1 = getUserById(idP1);
+    playerProfile2 = getUserById(idP2);
+    console.log(playerProfile1.username);
+    setTimeout(() => {
+        setPlayersIds(idP1, idP2);
+        setPlayerController(idP1, idP2);
+    }, 100);
 }
 
 function setPlayerNames()

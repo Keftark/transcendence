@@ -3,7 +3,7 @@ import { getLevelState, isAnOnlineMode } from "./main.js";
 import { isMenuOpen, isSettingsOpen } from "./menu.js";
 import { playerStats } from "./playerManager.js";
 import { resetBoostBar } from "./powerUp.js";
-import { playerDown, playerUp } from "./sockets.js";
+import { playerDown, playerDownNot, playerUp, playerUpNot } from "./sockets.js";
 import { LevelMode } from "./variables.js";
 
 const inputChat = document.getElementById('inputChat');
@@ -184,6 +184,8 @@ export function setupPlayerMovement(player1, player2, player3, player4)
         player2.position.y = p2Pos;
     }
 
+    let isUp = false;
+    let isDown = false;
     function checkPlayer1Movements(adjustedSpeed)
     {
         const controller = playerStats.playerController;
@@ -192,8 +194,14 @@ export function setupPlayerMovement(player1, player2, player3, player4)
         const playerBound = finalHeight / 2;
         if (moveUp1 && !moveDown1)
         {
-            if (isAnOnlineMode(levelState))
+            if (isAnOnlineMode(levelState) && !isUp)
             {
+                if (isDown)
+                {
+                    isDown = false;
+                    playerDownNot();
+                }
+                isUp = true;
                 playerUp();
             }
             else
@@ -204,8 +212,14 @@ export function setupPlayerMovement(player1, player2, player3, player4)
         }
         else if (moveDown1 && !moveUp1)
         {
-            if (isAnOnlineMode(levelState))
+            if (isAnOnlineMode(levelState) && !isDown)
             {
+                if (isUp)
+                {
+                    isUp = false;
+                    playerUpNot();
+                }
+                isDown = true;
                 playerDown();
             }
             else
@@ -214,6 +228,20 @@ export function setupPlayerMovement(player1, player2, player3, player4)
                 player.position.y = Math.max(newPosition, boundsPlayer[controller].min + playerBound);
             }
         }
+        else if ((moveUp1 && moveDown1) || (!moveUp1 && !moveDown1))
+        {
+            if (isUp)
+            {
+                isUp = false;
+                playerUpNot();
+            }
+            if (isDown)
+            {
+                isDown = false;
+                playerDownNot();
+            }
+        }
+
     }
 
     function checkPlayer2Movements(adjustedSpeed)

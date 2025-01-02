@@ -77,7 +77,7 @@
     border-radius: 15px;
 }
 
-.modeSelectionButton:focus
+.modeSelectionButton:focus, .bigModeSelectionButton:focus
 {
     box-shadow: 0 0 16px rgba(0, 247, 255, 0.915);
 }
@@ -94,11 +94,6 @@
     border: 3px solid #00776d;
     border-radius: 15px;
     transform: translateY(-200%);
-}
-
-.bigModeSelectionButton:focus
-{
-    box-shadow: 0 0 16px rgba(0, 247, 255, 0.915);
 }
 
 .bigAppearAnim

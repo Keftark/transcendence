@@ -29,7 +29,7 @@ export function connectToDuel()
             ball_speed: 0.5,
             ball_increment: 0.05,
             max_time: 300
-        },
+        }
     };
     socket.send(JSON.stringify(event));
 }
@@ -39,7 +39,7 @@ export function readyToDuel()
     const event = {
         type: "ready",
         room: room_id,
-        id: playerStats.id,
+        id: playerStats.id
     };
     socket.send(JSON.stringify(event));
 }
@@ -49,7 +49,7 @@ export function notReadyToDuel()
     const event = {
         type: "pause",
         room: room_id,
-        id: playerStats.id,
+        id: playerStats.id
     };
     socket.send(JSON.stringify(event));
 }
@@ -59,7 +59,7 @@ export function exitLobby()
     const event = {
         type: "quit_lobby",
         room: playerStats.room_id,
-        id: playerStats.id,
+        id: playerStats.id
     };
     socket.send(JSON.stringify(event));
 }
@@ -69,7 +69,7 @@ export function exitDuel()
     const event = {
         type: "quit_lobby",
         room: playerStats.room_id,
-        id: playerStats.id,
+        id: playerStats.id
     };
     socket.send(JSON.stringify(event));    
 }
@@ -86,13 +86,24 @@ export function sendPlayerReady()
 
 export function playerUp()
 {
-    // console.log("sending up, " + playerStats.room_id + ", " + playerStats.id);
     const event = {
         type: "input",
         room: playerStats.room_id,
         id: playerStats.id,
         move: "up",
-        method: "none"
+        method: "held"
+    };
+    socket.send(JSON.stringify(event));
+}
+
+export function playerUpNot()
+{
+    const event = {
+        type: "input",
+        room: playerStats.room_id,
+        id: playerStats.id,
+        move: "up",
+        method: "release"
     };
     socket.send(JSON.stringify(event));
 }
@@ -104,7 +115,19 @@ export function playerDown()
         room: playerStats.room_id,
         id: playerStats.id,
         move: "down",
-        method: "none"
+        method: "held"
+    };
+    socket.send(JSON.stringify(event));
+}
+
+export function playerDownNot()
+{
+    const event = {
+        type: "input",
+        room: playerStats.room_id,
+        id: playerStats.id,
+        move: "down",
+        method: "release"
     };
     socket.send(JSON.stringify(event));
 }
@@ -120,10 +143,12 @@ export function exitGameSocket()
     }
 }
 
-export async function addSocketListener()
+export function addSocketListener()
 {
-    socket.addEventListener("message", async ({ data }) => {
+    socket.addEventListener("message", ({ data }) => {
         // console.log(data);
+        if (data === "Message received!")
+            return;
         const event = JSON.parse(data);
         // console.log(event);
         switch (event.type) {
@@ -158,8 +183,10 @@ export async function addSocketListener()
             break;
         case "match_start":
             // ne fonctionne pas encore, les id ne sont pas envoyees
-            await setPlayersControllers();
-            clickPlayGame();
+            setPlayersControllers();
+            setTimeout(() => {
+                clickPlayGame();
+            }, 100);
             break;
         case "victory": // end of match, dans le lobby ou dans le match
             if (event.room_id != playerStats.room_id)

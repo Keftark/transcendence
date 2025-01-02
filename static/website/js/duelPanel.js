@@ -1,10 +1,9 @@
 import { getLoggedInUser, getUserById } from "./apiFunctions.js";
 import { deleteDuelInChat } from "./chat.js";
-import { passInfosPlayersToLevel, setPlayersIds } from "./levelLocal.js";
+import { passInfosPlayersToLevel } from "./levelLocal.js";
 import { addDisableButtonEffect, hasDisabledButtonEffect, removeDisableButtonEffect } from "./main.js";
 import { showModeChoice } from "./modesSelection.js";
 import { getPlayerName } from "./playerManager.js";
-import { setPlayerController } from "./playerMovement.js";
 import { clickChoosePaddleButton } from "./rules.js";
 import { exitLobby, notReadyToDuel, readyToDuel } from "./sockets.js";
 import { getTranslation } from "./translate.js";
@@ -114,7 +113,7 @@ export function closeDuelPanel()
 export function onOpenDuel()
 {
     // fillInfosPlayer(1);
-    document.getElementById('duelPanel').style.display = 'flex'; // inutile ??
+    // document.getElementById('duelPanel').style.display = 'flex'; // inutile ??
     startWaitingForPlayer();
 }
 
@@ -131,9 +130,9 @@ export function onCloseDuel()
     deleteDuelInChat();
 }
 
-async function fillInfosPlayer(playerNbr, playerInfos)
+function fillInfosPlayer(playerNbr, playerInfos)
 {
-    const playerProfile = await getUserById(playerInfos);
+    const playerProfile = getUserById(playerInfos);
     if (playerNbr === 1)
     {
         player1NameText.innerText = playerProfile.username; // recuperer le nom du joueur avec l'id
@@ -229,27 +228,25 @@ async function displayUIPlayer(player1, player2)
     });
 }
 
-export async function setPlayersControllers()
+export function setPlayersControllers()
 {
     if (idP1 === -1 || idP2 === -1)
     {
         console.error("The players don't have ids.");
         return;
     }
-    await passInfosPlayersToLevel(idP1, idP2);
-    setPlayersIds(idP1, idP2);
-    setPlayerController(idP1, idP2);
+    passInfosPlayersToLevel(idP1, idP2);
 }
 
-export async function matchFound(player1, player2)
+export function matchFound(player1, player2)
 {
     // console.log("Player1: " + player1);
     // console.log("Player2: " + player2);
     idP1 = player1;
     idP2 = player2;
     displayUIPlayer(player1, player2);
-    await fillInfosPlayer(1, player1);
-    await fillInfosPlayer(2, player2);
+    fillInfosPlayer(1, player1);
+    fillInfosPlayer(2, player2);
     document.getElementById('waitingMatch').style.display = "none";
     // on met a jour l'interface apres avoir recupere les deux joueurs
 }
