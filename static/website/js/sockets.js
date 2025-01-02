@@ -1,7 +1,7 @@
 import { setBallPosition } from "./ball.js";
 import { closeDuelPanel, matchFound, setPlayersControllers, updateReadyButtons } from "./duelPanel.js";
 import { getBallPosition, getPlayerSideById, resetScreenFunction, spawnSparksFunction } from "./levelLocal.js";
-import { getLevelState, socket } from "./main.js";
+import { getLevelState, socket, listener } from "./main.js";
 import { clickPlayGame } from "./modesSelection.js";
 import { playerStats } from "./playerManager.js";
 import { setPlayersPositions } from "./playerMovement.js";
@@ -31,7 +31,7 @@ export function connectToDuel()
             max_time: 300
         }
     };
-    socket.send(JSON.stringify(event));
+    listener.send(JSON.stringify(event));
 }
 
 export function readyToDuel()
@@ -145,7 +145,7 @@ export function exitGameSocket()
 
 export function addSocketListener()
 {
-    socket.addEventListener("message", ({ data }) => {
+    listener.addEventListener("message", ({ data }) => {
         // console.log(data);
         if (data === "Message received!")
             return;
