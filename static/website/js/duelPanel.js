@@ -13,6 +13,8 @@ document.getElementById('leaveDuelButton').addEventListener('click', () => {
     closeDuelPanel();
 });
 
+const player1Duel = document.getElementById('player1Duel');
+const player2Duel = document.getElementById('player2Duel');
 const player1NameText = document.getElementById('player1NameDuel');
 const player2NameText = document.getElementById('player2NameDuel');
 const player1Img = document.getElementById('player1ImgDuel');
@@ -81,6 +83,8 @@ export function setDuelSenderPlayer(playerNick)
 
 function resetDuelPanel()
 {
+    player2Duel.classList.remove('selectedPlayer');
+    player1Duel.classList.remove('selectedPlayer');
     player1IsReady = false;
     player2IsReady = false;
     player1ReadyButton.classList.remove('active');
@@ -131,20 +135,26 @@ export function onCloseDuel()
     deleteDuelInChat();
 }
 
-function fillInfosPlayer(playerNbr, playerInfos)
-{
-    const playerProfile = getUserById(playerInfos);
-    if (playerNbr === 1)
-    {
-        player1NameText.innerText = playerProfile.username; // recuperer le nom du joueur avec l'id
-        // mettre la photo de profil
-    }
-    else
-    {
-        waitingPlayer2.innerText = " ";
-        player2NameText.innerText = playerProfile.username;
-        // mettre la photo de profil
-    }
+function fillInfosPlayer(playerNbr, playerInfos) {
+    return new Promise((resolve, reject) => {
+        getUserById(playerInfos)
+            .then(playerProfile => {
+                // This will resolve the promise when playerProfile is retrieved
+                if (playerNbr === 1) {
+                    player1NameText.innerText = playerProfile.username;
+                    // mettre la photo de profil
+                } else {
+                    waitingPlayer2.innerText = " ";
+                    player2NameText.innerText = playerProfile.username;
+                    // mettre la photo de profil
+                }
+                resolve(); // Resolve when done
+            })
+            .catch(error => {
+                console.error("Error fetching user profile:", error);
+                reject(error); // Reject if an error occurs
+            });
+    });
 }
 
 export function updateReadyButtons(p1, p2)
@@ -217,11 +227,13 @@ async function displayUIPlayer(player1, player2)
             {
                 addDisableButtonEffect(choosePaddleButtonPlayer2);
                 addDisableButtonEffect(player2ReadyButton);
+                player1Duel.classList.add('selectedPlayer');
             }
             else if (user.id === player2)
             {
                 addDisableButtonEffect(player1ReadyButton);
                 addDisableButtonEffect(choosePaddleButtonPlayer1);
+                player2Duel.classList.add('selectedPlayer');
             }
         } else {
             console.log("No user is currently logged in or an error occurred.");
@@ -252,9 +264,18 @@ export function matchFound(player1, player2)
     idP1 = player1;
     idP2 = player2;
     displayUIPlayer(player1, player2);
-    fillInfosPlayer(1, player1);
-    fillInfosPlayer(2, player2);
-    document.getElementById('waitingMatch').style.display = "none";
+    Promise.all([
+        fillInfosPlayer(1, player1),
+        fillInfosPlayer(2, player2)
+    ])
+    .then(() => {
+        // This will execute once both fillInfosPlayer calls are done
+        document.getElementById('waitingMatch').style.display = "none";
+        // on met à jour l'interface après avoir récupéré les deux joueurs
+    })
+    .catch(error => {
+        console.error("Error in matchFound:", error);
+    });
     // on met a jour l'interface apres avoir recupere les deux joueurs
 }
 

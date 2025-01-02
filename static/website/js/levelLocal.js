@@ -1,10 +1,10 @@
 import * as THREE from '../node_modules/.vite/deps/three.js';
 import { animateCamera, resetCamera } from './cameranim.js';
-import { resetBoostedStatus, setPlayerController, setupPlayerMovement, stopBoostPlayers } from './playerMovement.js';
+import { animatePlayers, resetBoostedStatus, setPlayerController, setupPlayerMovement, stopBoostPlayers } from './playerMovement.js';
 import { createBall } from './ball.js';
 import { ScreenShake } from './screenShake.js';
 import { setScores, addScore, setVisibleScore } from './scoreManager.js';
-import { updatePlayerModel, createLights, createPlayers, setVisibilityRightWall } from './objects.js';
+import { updatePlayerModel, createLights, createPlayers, setVisibilityRightWall, addLightPlayerReady } from './objects.js';
 import { getLevelState, isAnOnlineMode, setLevelState } from './main.js';
 import { unloadScene } from './unloadScene.js';
 import { removeMainEvents } from './eventsListener.js';
@@ -96,6 +96,12 @@ export function setPlayersIds(player1Id, player2Id)
     playersId[3] = 0;
 }
 
+export function animateBoostPlayers()
+{
+    console.log("trying to animate...");
+    animatePlayers(player1, player2);
+}
+
 export function getPlayerSideById(playerId)
 {
     // console.log("List: ");
@@ -138,6 +144,30 @@ window.addEventListener('resize', onWindowResize, false);
 export function getPlayer(playerNbr)
 {
     return playerNbr === 0 ? player1 : player2;
+}
+
+let player1Ready = false;
+let player2Ready = false;
+export function addReadyPlayer(playerNbr)
+{
+    if (playerNbr === 1 && player1Ready === false)
+    {
+        player1Ready = true;
+        addLightPlayerReady(player1, true);
+    }
+    else if (playerNbr === 2 && player2Ready === false)
+    {
+        player2Ready = true;
+        addLightPlayerReady(player2, true);
+    }
+}
+
+export function removeReadyPlayers()
+{
+    player1Ready = false;
+    addLightPlayerReady(player1, false);
+    player2Ready = false;
+    addLightPlayerReady(player2, false);
 }
 
 function hideInGameUI()
@@ -322,16 +352,12 @@ export function passInfosPlayersToLevel(idP1, idP2)
         .then(([profile1, profile2]) => {
             playerProfile1 = profile1;
             playerProfile2 = profile2;
-
-            console.log(playerProfile1.username); // Log the username after data is resolved
-
-            // Call other functions in order and ensure they're completed
             setPlayersIds(idP1, idP2);
-            return setPlayerController(idP1, idP2); // Ensure this returns a promise if async
+            return setPlayerController(idP1, idP2);
         })
         .catch((error) => {
             console.error("Error in passInfosPlayersToLevel:", error);
-            throw error; // Rethrow for upstream handling
+            throw error;
         });
 }
 
@@ -686,7 +712,7 @@ export function StartLevel(levelMode)
             useBoost(0);
             event.preventDefault();
         }
-        else if (event.code === 'ControlRight' && currentLevelMode === LevelMode.LOCAL && isBoostReadyRight())
+        else if (event.code === 'ControlRight' && (currentLevelMode === LevelMode.LOCAL || currentLevelMode === LevelMode.ONLINE) && isBoostReadyRight())
         {
             useBoost(1);
             event.preventDefault();

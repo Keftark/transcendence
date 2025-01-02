@@ -1,10 +1,11 @@
 import { setBallPosition } from "./ball.js";
 import { closeDuelPanel, matchFound, setPlayersControllers, updateReadyButtons } from "./duelPanel.js";
-import { getBallPosition, getPlayerSideById, resetScreenFunction, spawnSparksFunction } from "./levelLocal.js";
+import { addReadyPlayer, getBallPosition, getPlayerSideById, removeReadyPlayers, resetScreenFunction, spawnSparksFunction } from "./levelLocal.js";
 import { getLevelState, socket, listener } from "./main.js";
 import { clickPlayGame } from "./modesSelection.js";
 import { playerStats } from "./playerManager.js";
 import { setPlayersPositions } from "./playerMovement.js";
+import { checkPowerUpState, setPowerBarsPlayers } from "./powerUp.js";
 import { endOfMatch } from "./scoreManager.js";
 import { LevelMode, VictoryType } from "./variables.js";
 import { callVictoryScreen } from "./victory.js";
@@ -143,6 +144,18 @@ export function exitGameSocket()
     }
 }
 
+export function boostPaddle()
+{
+    const event = {
+        type: "input",
+        room: room_id,
+        id: playerStats.id,
+        move: "boost",
+        method: "osef"
+    };
+    socket.send(JSON.stringify(event));
+}
+
 export function addSocketListener()
 {
     listener.addEventListener("message", ({ data }) => {
@@ -175,9 +188,13 @@ export function addSocketListener()
             // document.getElementById("waitA").innerHTML = "Awaiting start : <br/>P1 :" + event.p1 + "</br>P2 :" + event.p2;
             break;
         case "wait_ready":
-            if (event.p1_state && event.p2_state)
+            if (event.p1_state)
             {
-                console.log("ready !");
+                addReadyPlayer(1);
+            }
+            else if (event.p2_state)
+            {
+                addReadyPlayer(2);
             }
             break;
         case "match_init":
@@ -188,8 +205,10 @@ export function addSocketListener()
                 matchFound(event.id_p1, event.id_p2);
             }, 1000);
             break;
+        case "match_resume":
+            removeReadyPlayers();
+            break;
         case "match_start":
-            // ne fonctionne pas encore, les id ne sont pas envoyees
             setPlayersControllers();
             break;
         case "victory": // end of match, dans le lobby ou dans le match
@@ -238,6 +257,8 @@ export function addSocketListener()
             {
                 setPlayersPositions(event.p1_pos, event.p2_pos);
                 setBallPosition(event.ball_x, event.ball_y);
+                setPowerBarsPlayers(event.p1_juice, event.p2_juice);
+                checkPowerUpState(event.p1_boosting, event.p2_boosting, event.ball_boosting);
             }
             // y1 = event.p1_pos;
             // y2 = event.p2_pos;

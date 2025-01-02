@@ -49,6 +49,7 @@
 #player1NameDuel, #player2NameDuel
 {
     font-size: clamp(1rem + 0.2vw + 0.2vh, 1rem + 1.5vw + 1.5vh, 6rem);
+    margin: 0;
 }
 
 #playersDuel
@@ -93,6 +94,12 @@
     transform: translateY(20px);
 }
 
+.selectedPlayer
+{
+    box-shadow: 0 0 16px rgba(0, 255, 28, 0.5);
+    background-color: rgba(0, 255, 28, 0.03);
+}
+
 #player1Duel, #player2Duel
 {
     align-items: center;
@@ -105,10 +112,9 @@
 
 #player1ImgDuel, #player2ImgDuel
 {
-    width: 7vw;
+    width: calc(5vw + 5vh);
     min-width: 64px;
-    height: 7vw;
-    min-height: 64px;
+    height: auto;
 }
 
 #ready1DuelButton, #ready2DuelButton

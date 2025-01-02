@@ -3,7 +3,7 @@ import { getLevelState, isAnOnlineMode } from "./main.js";
 import { isMenuOpen, isSettingsOpen } from "./menu.js";
 import { playerStats } from "./playerManager.js";
 import { resetBoostBar } from "./powerUp.js";
-import { playerDown, playerDownNot, playerUp, playerUpNot } from "./sockets.js";
+import { boostPaddle, playerDown, playerDownNot, playerUp, playerUpNot } from "./sockets.js";
 import { LevelMode } from "./variables.js";
 
 const inputChat = document.getElementById('inputChat');
@@ -40,13 +40,30 @@ export function addPlayerMovementKeyUp(event)
     onKeyUpFunction(event);
 }
 
+export function showBoostPlayer(playerNbr, showOrHide)
+{
+    if (playerNbr === 0)
+    {
+        isBoostedLeft = showOrHide;
+    }
+    else
+    {
+        isBoostedRight = showOrHide;
+    }
+    getPlayer(playerNbr).children[0].visible = showOrHide;
+}
+
 export function boostPlayer(playerNbr)
 {
     if (playerNbr === 0)
-        isBoostedLeft = true;
+    {
+        boostPaddle();
+    }
     else
-        isBoostedRight = true;
-    getPlayer(playerNbr).children[0].visible = true;
+    {
+        boostPaddle();
+    }
+    showBoostPlayer(playerNbr, true);
 }
 
 export function stopBoostPlayer(playerNbr)
@@ -55,7 +72,7 @@ export function stopBoostPlayer(playerNbr)
         isBoostedLeft = false;
     else
         isBoostedRight = false;
-    getPlayer(playerNbr).children[0].visible = false;
+    showBoostPlayer(playerNbr, false);
 }
 
 export function stopBoostPlayers()
@@ -78,8 +95,9 @@ export function resetBoostedStatus()
     isBoostedLeft = isBoostedRight = false;
 }
 
-function animatePlayers(player1, player2)
+export function animatePlayers(player1, player2)
 {
+    console.log("animating...");
     rotationBoost++;
     if (rotationBoost == 2)
     {

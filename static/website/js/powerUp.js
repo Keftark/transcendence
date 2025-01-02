@@ -1,4 +1,4 @@
-import { boostPlayer } from "./playerMovement.js";
+import { boostPlayer, showBoostPlayer } from "./playerMovement.js";
 
 const boostBarUILeft = document.getElementById('boostBarUILeft');
 const bonusBarLeft = document.getElementById('boostBarFillLeft');
@@ -14,6 +14,12 @@ let fillAmountRight = 0;
 let isReadyRight = false;
 let doOnceRight = false;
 
+export function setPowerBarsPlayers(p1Amount, p2Amount)
+{
+    setPowerBarLeft(p1Amount);
+    setPowerBarRight(p2Amount);
+}
+
 export function resetPowerBarLeft()
 {
     boostBarUILeft.classList.remove('ready');
@@ -26,6 +32,14 @@ export function resetPowerBarLeft()
 export function fillPowerBarLeft(amount)
 {
     fillAmountLeft += amount;
+    updateBarLeft();
+}
+
+function setPowerBarLeft(amount)
+{
+    if (amount === fillAmountLeft)
+        return;
+    fillAmountLeft = amount;
     updateBarLeft();
 }
 
@@ -89,6 +103,14 @@ export function fillPowerBarRight(amount)
     updateBarRight();
 }
 
+function setPowerBarRight(amount)
+{
+    if (amount === fillAmountRight)
+        return;
+    fillAmountRight = amount;
+    updateBarRight();
+}
+
 function updateBarRight()
 {
     if (fillAmountRight >= 100)
@@ -146,6 +168,53 @@ export function useBoost(playerNbr = 0)
     else if (playerNbr === 1)
         resetPowerBarRight();
     boostPlayer(playerNbr);
+}
+
+let oldP1Boosted = false;
+let oldP2Boosted = false;
+let oldBallBoosted = false;
+export function checkPowerUpState(p1Boosted, p2Boosted, ballBoosted)
+{
+    if (p1Boosted != oldP1Boosted)
+    {
+        if (p1Boosted && !oldP1Boosted)
+        {
+            showBoostPlayer(0, true);
+            // on montre le boost du joueur 1
+        }
+        else if (!p1Boosted && oldP1Boosted)
+        {
+            showBoostPlayer(0, false);
+            // on cache le boost du joueur 1
+        }
+        oldP1Boosted = p1Boosted;
+    }
+    if (p2Boosted != oldP2Boosted)
+    {
+        if (p2Boosted && !oldP2Boosted)
+        {
+            showBoostPlayer(1, true);
+            // on montre le boost du joueur 2
+        }
+        else if (!p2Boosted && oldP2Boosted)
+        {
+            showBoostPlayer(1, false);
+            // on cache le boost du joueur 2
+        }
+        oldP2Boosted = p2Boosted;
+    }
+    if (ballBoosted != oldBallBoosted)
+    {
+        if (ballBoosted && !oldBallBoosted)
+        {
+            // on affiche le boost de la balle
+        }
+        else if (!ballBoosted && oldBallBoosted)
+        {
+            // on cache le boost de la balle
+        }
+        oldBallBoosted = ballBoosted;
+    }
 }
 
 resetPowerBarLeft();

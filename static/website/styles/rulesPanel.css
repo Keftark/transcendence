@@ -125,9 +125,9 @@
 .choosePaddleButtonPlayer
 {
     position: relative;
-    width: 214px;
-    min-height: 35px;
-    /* height: 35px; */
+    width: 25vw;
+    aspect-ratio: 16/3;
+    max-width: 214px;
     border: none;
     background: none;
 }

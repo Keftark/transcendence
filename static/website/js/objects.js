@@ -120,11 +120,12 @@ export function createPlayers(scene, textureLoader)
     // le skin de l'ia va etre par defaut ou aleatoire ?
     const cylinderTexture = textureLoader.load(`static/mat/player${playerStats.currentPaddleSkin}.png`);
     cylinderTexture.colorSpace = THREE.SRGBColorSpace;
-    const material = new THREE.MeshStandardMaterial({ map: cylinderTexture, transparent: true });
+    const material1 = new THREE.MeshStandardMaterial({ map: cylinderTexture, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });
+    const material2 = new THREE.MeshStandardMaterial({ map: cylinderTexture, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });
     const geometry = new THREE.CylinderGeometry(PLAYER_RADIUS, PLAYER_RADIUS, playerSize, 8, 1, false);
 
-    const player1 = new THREE.Mesh(geometry, material);
-    const player2 = new THREE.Mesh(geometry, material);
+    const player1 = new THREE.Mesh(geometry, material1);
+    const player2 = new THREE.Mesh(geometry, material2);
     player1.add(createPlayerBoostModel(textureLoader));
     player2.add(createPlayerBoostModel(textureLoader));
     scene.add(player1);
@@ -134,10 +135,12 @@ export function createPlayers(scene, textureLoader)
     let player4 = null;
     if (levelState === LevelMode.MULTI)
     {
-        player3 = new THREE.Mesh(geometry, material);
+        const material3 = new THREE.MeshStandardMaterial({ map: cylinderTexture, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });
+        const material4 = new THREE.MeshStandardMaterial({ map: cylinderTexture, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });
+        player3 = new THREE.Mesh(geometry, material3);
         player3.add(createPlayerBoostModel(textureLoader));
         scene.add(player3);
-        player4 = new THREE.Mesh(geometry, material);
+        player4 = new THREE.Mesh(geometry, material4);
         player4.add(createPlayerBoostModel(textureLoader));
         scene.add(player4);
     }
@@ -168,4 +171,12 @@ export function createLights(scene, arenaType)
     directionalLight.position.set(1, 1, 1).normalize();
 
     scene.add(directionalLight);
+}
+
+export function addLightPlayerReady(mesh, isReady)
+{
+    const material = mesh.material; 
+    const intensity = isReady === true ? 0.025 : 0;
+    material.emissive.set(0x00ff00);
+    material.emissiveIntensity = intensity;
 }
