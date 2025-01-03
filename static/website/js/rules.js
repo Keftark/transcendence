@@ -237,6 +237,7 @@ function choosePaddleSkin(nbr)
     if (getCurrentView() === "duel")
     {
         document.getElementById(`choosePaddleImgPlayer${currentPlayer}`).src = `static/images/paddle${nbr}Img.png`;
+        document.getElementById(`choosePaddleButtonPlayer${currentPlayer}`).focus();
     }
     else
         document.getElementById('choosePaddleImg').src = `static/images/paddle${nbr}Img.png`;

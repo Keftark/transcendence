@@ -97,7 +97,6 @@ export function resetBoostedStatus()
 
 export function animatePlayers(player1, player2)
 {
-    console.log("animating...");
     rotationBoost++;
     if (rotationBoost == 2)
     {

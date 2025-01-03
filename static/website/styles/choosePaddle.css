@@ -15,7 +15,8 @@
 .paddleListItem
 {
     border: 3px solid transparent;
-    : none;
+    padding: 0;
+    background-color: transparent;
 }
 
 /* #choosePaddleText

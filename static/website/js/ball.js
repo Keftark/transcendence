@@ -11,6 +11,7 @@ const ballBaseStats = BallStats;
 let ballRadiusMult = 1.0;
 let ballSpeedMult = 1.0;
 let isBallBoosted = false;
+let boostedBallModel;
 
 let ballPosition =
 {
@@ -60,6 +61,14 @@ function createBallBoostModel(textureLoader)
     return model;
 }
 
+export function showBoostedBall(trueOrFalse)
+{
+    if (!boostedBallModel)
+        return;
+    boostedBallModel.visible = trueOrFalse;
+    isBallBoosted = trueOrFalse;
+}
+
 function getRandomVelocityComponent() {return Math.random() < 0.5 ? ballBaseStats.baseSpeed : -ballBaseStats.baseSpeed;}
 
 export function createBall(scene, callBack)
@@ -80,6 +89,7 @@ export function createBall(scene, callBack)
     const ballVelocitySpeedUp = new THREE.Vector3(0.07, 0.07, 0);
     const ball = new THREE.Mesh(ballGeometry, ballMaterial);
     const boostedBall = createBallBoostModel(textureLoader);
+    boostedBallModel = boostedBall;
     ball.add(boostedBall);
     const pointLight = new THREE.PointLight(0xff5500, 0, 0);
     const maxLightIntensity = 100;

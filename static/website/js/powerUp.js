@@ -1,3 +1,4 @@
+import { showBoostedBall } from "./ball.js";
 import { boostPlayer, showBoostPlayer } from "./playerMovement.js";
 
 const boostBarUILeft = document.getElementById('boostBarUILeft');
@@ -89,8 +90,7 @@ export function hideBoostBarLeft()
 
 export function resetPowerBarRight()
 {
-    if (boostBarUIRight.classList.contains('ready'))
-        boostBarUIRight.classList.remove('ready');
+    boostBarUIRight.classList.remove('ready');
     doOnceRight = isReadyRight = false;
     fillAmountRight = 0;
     pressTextRight.style.display = 'none';
@@ -207,10 +207,12 @@ export function checkPowerUpState(p1Boosted, p2Boosted, ballBoosted)
     {
         if (ballBoosted && !oldBallBoosted)
         {
+            showBoostedBall(true);
             // on affiche le boost de la balle
         }
         else if (!ballBoosted && oldBallBoosted)
         {
+            showBoostedBall(false);
             // on cache le boost de la balle
         }
         oldBallBoosted = ballBoosted;

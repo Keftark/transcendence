@@ -228,15 +228,17 @@ async function displayUIPlayer(player1, player2)
                 addDisableButtonEffect(choosePaddleButtonPlayer2);
                 addDisableButtonEffect(player2ReadyButton);
                 player1Duel.classList.add('selectedPlayer');
+                player1ReadyButton.focus();
             }
             else if (user.id === player2)
             {
                 addDisableButtonEffect(player1ReadyButton);
                 addDisableButtonEffect(choosePaddleButtonPlayer1);
                 player2Duel.classList.add('selectedPlayer');
+                player2ReadyButton.focus();
             }
         } else {
-            console.log("No user is currently logged in or an error occurred.");
+            console.error("No user is currently logged in or an error occurred.");
         }
     });
 }

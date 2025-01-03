@@ -73,7 +73,7 @@
     min-height: 4rem;
     background-color: #000000;
     color: rgb(255, 255, 255);
-    border: 3px solid #00776d;
+    border: 3px solid #00776d70;
     border-radius: 15px;
 }
 
@@ -91,7 +91,7 @@
     min-height: 6rem;
     background-color: #000000;
     color: rgb(255, 255, 255);
-    border: 3px solid #00776d;
+    border: 3px solid #00776d70;
     border-radius: 15px;
     transform: translateY(-200%);
 }
