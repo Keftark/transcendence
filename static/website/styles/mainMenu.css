@@ -42,16 +42,22 @@
 }
 
 .disabledButtonHover:hover{
-    border-color:transparent !important;
+    border-color: transparent !important;
     border-width: 3px !important;
     background-color: rgba(34, 34, 34, 0.377) !important;
     box-shadow: none !important;
     pointer-events: none !important;
 }
 
+.disabledButtonHover
+{
+    opacity: 0.5 !important;
+    filter: grayscale(85%);
+}
+
 .disabledText
 {
-    opacity: 0.5;
+    opacity: 0.3;
 }
 
 #homeImg

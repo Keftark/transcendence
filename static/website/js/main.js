@@ -99,33 +99,27 @@ export function hasDisabledButtonEffect(button)
 }
 
 export function addDisableButtonEffect(button) {
-    if (button.classList.contains('disabledButtonHover'))
-        return;
     button.classList.add('disabledButtonHover');
-    button.style.opacity = 0.5;
 }
 
 // Function to remove the hover effect
 export function removeDisableButtonEffect(button) {
-    if (!button.classList.contains('disabledButtonHover'))
-        return;
     button.classList.remove('disabledButtonHover');
-    button.style.opacity = 1;
 }
 
-export function IsLoggedIn()
-{
-    document.addEventListener("DOMContentLoaded", function() {
-        fetch('/check-login/')
-            .then(response => response.json())
-            .then(data => {
-                return (data.is_logged_in)
-            })
-            .catch(error => {
-                console.error('Error checking login status:', error);
-            });
-    });
-}
+// export function IsLoggedIn()
+// {
+//     document.addEventListener("DOMContentLoaded", function() {
+//         fetch('/check-login/')
+//             .then(response => response.json())
+//             .then(data => {
+//                 return (data.is_logged_in)
+//             })
+//             .catch(error => {
+//                 console.error('Error checking login status:', error);
+//             });
+//     });
+// }
 
 // function retrievePlayer()
 // {

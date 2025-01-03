@@ -96,6 +96,8 @@ function resetDuelPanel()
     player2NameText.innerText = getTranslation('player2Name');
     removeDisableButtonEffect(player1ReadyButton);
     removeDisableButtonEffect(player2ReadyButton);
+    removeDisableButtonEffect(choosePaddleButtonPlayer1);
+    removeDisableButtonEffect(choosePaddleButtonPlayer2);
     // addDisableButtonEffect(startButtonDuel);
     // reset all the fields/settings
 }

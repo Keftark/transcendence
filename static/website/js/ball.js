@@ -291,6 +291,7 @@ export function createBall(scene, callBack)
 
     function setBallPosition(posX, posY)
     {
+        // console.log(posX + ", " + posY);
         ball.position.set(posX, posY, 0);
     }
 

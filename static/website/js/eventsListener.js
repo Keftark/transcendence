@@ -8,7 +8,7 @@ function mainMenuEvents(event)
 {
     const focusableElements = document.querySelectorAll('button, input, a, textarea, select');
     const visibleElements = Array.from(focusableElements).filter(box => {
-        return box.offsetParent !== null;
+        return box.offsetParent !== null && !box.classList.contains('disabledButtonHover');
     });
     const focusable = Array.prototype.slice.call(visibleElements);
     const currentIndex = focusable.indexOf(document.activeElement);
