@@ -4,7 +4,9 @@ from rest_framework import serializers
 
 
 class AccountSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Account
-        fields = ['username', 'password', 'email', 'emailVerified', 'emailVerificationToken', 'emailVerificationTokenExpiration', 'forgotPasswordCode', 'forgotPasswordCodeExpiration', 'has_2fa', 'totp_secret', 'totp_config_url', 'account_deleted', 'last_login', 'last_activity', 'date_joined', 'elo', 'rank']
-        depth = 2
+    username = serializers.ReadOnlyField(source='user.username')
+    avatar = serializers.ImageField(required=False)
+    online = serializers.SerializerMethodField()
+    is_friend = serializers.SerializerMethodField()
+    has_incoming_request = serializers.SerializerMethodField()
+    has_outgoing_request = serializers.SerializerMethodField()
