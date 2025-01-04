@@ -21,15 +21,15 @@ export function callVictoryScreen(victoryType) {
     switch (victoryType) {
         case VictoryType.VICTORY:
             str = isLocal ? getPlayerName() + getTranslation('wins') : getTranslation('victory');
-            newSrc = "static/images/victoryImg.png";
+            newSrc = "static/images/victoryImg.webp";
             break;
         case VictoryType.DEFEAT:
             str = isLocal ? getTranslation('playernameright') + getTranslation('wins') : getTranslation('defeat');
-            newSrc = isLocal ? "static/images/victoryImg.png" : "static/images/defeatImg.png";
+            newSrc = isLocal ? "static/images/victoryImg.webp" : "static/images/defeatImg.webp";
             break;
         case VictoryType.EXAEQUO:
             str = getTranslation('exaequo');
-            newSrc = "static/images/exaequoImg.png";
+            newSrc = "static/images/exaequoImg.webp";
             break;
     }
 

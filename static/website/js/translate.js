@@ -24,6 +24,7 @@ export function updateHTML(translations)
 	document.getElementById('mainProfileButton').innerText = translations.profileButton;
 	document.getElementById('mainSettingsButton').innerText = translations.settingsButton;
 	document.getElementById('mainButton').innerText = translations.mainButton;
+	document.getElementById('mainCustomizeButton').innerText = translations.mainCustomizeButton;
 	document.getElementById('reinitLevelButton').innerText = translations.reinitLevelButton;
 	document.getElementById('settingsHeader').innerText = translations.settings;
 	document.getElementById('colors').innerText = translations.colors;

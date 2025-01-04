@@ -263,7 +263,7 @@ export function addPlayerToTournament(playerName)
         redCrossButtonClick(playerName);
     });
     const redCrossImg = document.createElement('img');
-    redCrossImg.src = '../static/icons/redCross.png';
+    redCrossImg.src = '../static/icons/redCross.webp';
     redCrossImg.classList.add('redCrossButtonImg');
     redCross.appendChild(redCrossImg);
     newPlayer.appendChild(redCross);

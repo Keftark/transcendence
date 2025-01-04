@@ -70,6 +70,9 @@
                 <div id="mainProfileDiv">
                     <button class="mainMenuButton" id="mainProfileButton"></button>
                 </div>
+                <div id="mainCustomizeDiv">
+                    <button class="mainMenuButton" id="mainCustomizeButton"></button>
+                </div>
                 <div id="mainSettingsDiv">
                     <button class="mainMenuButton" id="mainSettingsButton"></button>
                 </div>
@@ -93,13 +96,13 @@
                 <div id="modesLocalDiv">
                     <h2 id="modesLocalText"></h2>
                     <button class="bigModeSelectionButton" id="modesLocalButton">
-                        <img id="modesLocalImg" src="{% static 'images/modesLocal.png' %}" alt="">
+                        <img id="modesLocalImg" src="{% static 'images/modesLocal.webp' %}" alt="">
                     </button>
                 </div>
                 <div id="modesOnlineDiv">
                     <h2 id="modesOnlineText"></h2>
                     <button class="bigModeSelectionButton" id="modesOnlineButton">
-                        <img id="modesOnlineImg" src="{% static 'images/modesOnline.png' %}" alt="">
+                        <img id="modesOnlineImg" src="{% static 'images/modesOnline.webp' %}" alt="">
                     </button>
                 </div>
             </div>
@@ -107,13 +110,13 @@
                 <h1 id="modesLocalHeader"></h1>
                 <div class="modeClass" id="modeLocalDiv">
                     <button class="modeSelectionButton" id="modeLocalButton">
-                        <img id="versusImg" src="{% static 'images/versusImage.png' %}">
+                        <img id="versusImg" src="{% static 'images/versusImage.webp' %}">
                     </button>
                     <p id="1vs1"></p>
                 </div>
                 <div class="modeClass" id="modeComputerDiv">
                     <button class="modeSelectionButton" id="modeComputerButton">
-                        <img id="vsIAImg" src="{% static 'images/vsComputerImage.png' %}">
+                        <img id="vsIAImg" src="{% static 'images/vsComputerImage.webp' %}">
                     </button>
                     <p id="modeComputer"></p>
                 </div>
@@ -122,19 +125,19 @@
                 <h1 id="modesOnlineHeader"></h1>
                 <div class="modeClass" id="modeDuelDiv">
                     <button class="modeSelectionButton" id="modeDuelButton">
-                        <img id="duelImg" src="{% static 'images/duelImage.png' %}">
+                        <img id="duelImg" src="{% static 'images/duelImage.webp' %}">
                     </button>
                     <p id="modeDuelText"></p>
                 </div>
                 <div class="modeClass" id="mode2v2Div">
                     <button class="modeSelectionButton" id="mode2v2Button">
-                        <img id="2v2Img" src="{% static 'images/2v2Image.png' %}">
+                        <img id="2v2Img" src="{% static 'images/2v2Image.webp' %}">
                     </button>
                     <p id="2v2Text"></p>
                 </div>
                 <div class="modeClass" id="modeTournamentDiv">
                     <button class="modeSelectionButton" id="modeTournamentButton">
-                        <img id="tournamentImg" src="{% static 'images/tournamentImage.png' %}">
+                        <img id="tournamentImg" src="{% static 'images/tournamentImage.webp' %}">
                     </button>
                     <p id="tournamentText"></p>
                 </div>
@@ -162,21 +165,21 @@
             <div class="ruleTextDiv" id="rulesIsPrivate">
                 <h1 id="rulesIsPrivateText"></h1>
                 <button id="rulesIsPrivateToggle">
-                    <img id="imgIsPrivate" src="{% static 'icons/unchecked.png' %}">
+                    <img id="imgIsPrivate" src="{% static 'icons/unchecked.webp' %}">
                 </button>
             </div>
             <h1 id="choosePaddleButtonText"></h1>
             <button id="choosePaddleButton" class="choosePaddleButtonPlayer">
-                <img id="choosePaddleImg" src="{% static 'images/paddle1Img.png' %}">
+                <img id="choosePaddleImg" src="{% static 'images/paddle1Img.webp' %}">
             </button>
             <div id="rulesArenaType">
                 <h1 id="rulesArenaText"></h1>
                 <div id="arenas">
                     <button class="arena" id="rulesArenaTypeCave">
-                        <img src="{% static 'images/arenaCave.png' %}">
+                        <img src="{% static 'images/arenaCave.webp' %}">
                     </button>
                     <button class="arena" id="rulesArenaTypeSpace">
-                        <img src="{% static 'images/arenaSpace.png' %}">
+                        <img src="{% static 'images/arenaSpace.webp' %}">
                     </button>
                 </div>
             </div>
@@ -190,25 +193,25 @@
     <!------------------------------ Duel Panel ------------------------------>
     <div id="duel" class="page">
         <h2 class="headerText" id="duelHeaderText"></h2>
-        <img id="thunderImg" src="{% static 'images/thunder.png' %}">
-        <img id="vsImg" src="{% static 'images/vs.png' %}">
+        <img id="thunderImg" src="{% static 'images/thunder.webp' %}">
+        <img id="vsImg" src="{% static 'images/vs.webp' %}">
         <div id="duelPanel">
             <div id="playersDuel">
-                <img id="helpRulesDuel" src="{% static 'icons/helpIcon.png' %}">
+                <img id="helpRulesDuel" src="{% static 'icons/helpIcon.webp' %}">
                 <div id="player1Duel">
                     <p id="player1NameDuel"></p>
-                    <img id="player1ImgDuel" src="{% static 'icons/playerNoImg.png' %}">
+                    <img id="player1ImgDuel" src="{% static 'icons/playerNoImg.webp' %}">
                     <button id="choosePaddleButtonPlayer1" class="choosePaddleButtonPlayer">
-                        <img id="choosePaddleImgPlayer1" src="{% static 'images/paddle1Img.png' %}">
+                        <img id="choosePaddleImgPlayer1" src="{% static 'images/paddle1Img.webp' %}">
                     </button>
                     <p id="fakewaiting"> </p>
                     <button id="ready1DuelButton"></button>
                 </div>
                 <div id="player2Duel">
                     <p id="player2NameDuel"></p>
-                    <img id="player2ImgDuel" src="{% static 'icons/playerNoImg.png' %}">
+                    <img id="player2ImgDuel" src="{% static 'icons/playerNoImg.webp' %}">
                     <button id="choosePaddleButtonPlayer2" class="choosePaddleButtonPlayer">
-                        <img id="choosePaddleImgPlayer2" src="{% static 'images/paddle1Img.png' %}">
+                        <img id="choosePaddleImgPlayer2" src="{% static 'images/paddle1Img.webp' %}">
                     </button>
                     <p id="waitingForPlayer"></p>
                     <button id="ready2DuelButton"></button>
@@ -232,13 +235,13 @@
             <div id="createTournament">
                 <p id="createTournamentText"></p>
                 <button class="modeSelectionButton" id="createTournamentButton">
-                    <img src="{% static 'images/tournamentCreate.png' %}">
+                    <img src="{% static 'images/tournamentCreate.webp' %}">
                 </button>
             </div>
             <div id="joinTournament">
                 <p id="joinTournamentText"></p>
                 <button class="modeSelectionButton" id="joinTournamentButton">
-                    <img src="{% static 'images/tournamentJoin.png' %}">
+                    <img src="{% static 'images/tournamentJoin.webp' %}">
                 </button>
             </div>
             <button class="buttonCancel" id="cancelTournamentButton"></button>
@@ -317,10 +320,10 @@
         <h1 id="choosePaddleText"></h1>
         <div id="choosePaddleList">
             <button class="paddleListItem" id="choosePaddle1Button">
-                <img class="paddleInList" id="choosePaddle1" src="{% static 'images/paddle1Img.png' %}" data-index="1">
+                <img class="paddleInList" id="choosePaddle1" src="{% static 'images/paddle1Img.webp' %}" data-index="1">
             </button>
             <button class="paddleListItem" id="choosePaddle2Button">
-                <img class="paddleInList" id="choosePaddle2" src="{% static 'images/paddle2Img.png' %}" data-index="2">
+                <img class="paddleInList" id="choosePaddle2" src="{% static 'images/paddle2Img.webp' %}" data-index="2">
             </button>
     </div>
     </div>
@@ -349,22 +352,22 @@
     <div id="controlsP1">
         <div id="boostBarUILeft">
             <div id="boostBarLeft">
-                <img id="boostBarBgLeft" src="{% static 'images/boostBarBg.png' %}" alt="">
-                <img id="boostBarFillLeft" src="{% static 'images/boostBarFill.png' %}" alt="">
+                <img id="boostBarBgLeft" src="{% static 'images/boostBarBg.webp' %}" alt="">
+                <img id="boostBarFillLeft" src="{% static 'images/boostBarFill.webp' %}" alt="">
             </div>
             <p id="pressBoostTextLeft"></p>
         </div>
-        <img src="{% static 'images/controlsP1Local.png' %}" id="controlsP1LocalImg" />
+        <img src="{% static 'images/controlsP1Local.webp' %}" id="controlsP1LocalImg" />
     </div>
     <div id="controlsP2">
         <div id="boostBarUIRight">
             <div id="boostBarRight">
-                <img id="boostBarBgRight" src="{% static 'images/boostBarBg.png' %}" alt="">
-                <img id="boostBarFillRight" src="{% static 'images/boostBarFill.png' %}" alt="">
+                <img id="boostBarBgRight" src="{% static 'images/boostBarBg.webp' %}" alt="">
+                <img id="boostBarFillRight" src="{% static 'images/boostBarFill.webp' %}" alt="">
             </div>
             <p id="pressBoostTextRight"></p>
         </div>
-        <img src="{% static 'images/controlsP2Local.png' %}" id="controlsP2LocalImg" />
+        <img src="{% static 'images/controlsP2Local.webp' %}" id="controlsP2LocalImg" />
     </div>
 
     <!------------------------------ In Game Side Menu Panel ------------------------------>
@@ -388,7 +391,7 @@
     <div id="profilePanel">
         <div id="profileInfos">
             <div id="profilePictureDiv">
-                <img src="{% static 'icons/guestUser.png' %}" id="profilePicture" alt="">
+                <img src="{% static 'icons/guestUser.webp' %}" id="profilePicture" alt="">
                 <input type="file" id="fileInput" accept="image/*" style="display: none;" />
                 <button id="profilePictureChangeButton" class="profilePictureChangeButton"></button>
             </div>
@@ -396,7 +399,7 @@
             <p id="firstNameProfile"></p>
             <p id="lastNameProfile"></p>
             <div id="profileContainer">
-                <img id="mailImg" src="{% static 'icons/mail.png' %}">
+                <img id="mailImg" src="{% static 'icons/mail.webp' %}">
                 <p id="mailProfile"></p>
             </div>
         </div>
@@ -429,19 +432,19 @@
         <p id="language"></p>
         <div id="optionsLanguages">
             <button class="language" id="lang1Button" data-language="en" data-lang="0">
-                <img src="{% static 'icons/lang-en.png' %}" id="lang-icon-en" />
+                <img src="{% static 'icons/lang-en.webp' %}" id="lang-icon-en" />
             </button>
             <button class="language" id="lang2Button" data-language="fr" data-lang="1">
-                <img src="{% static 'icons/lang-fr.png' %}" id="lang-icon-fr" />
+                <img src="{% static 'icons/lang-fr.webp' %}" id="lang-icon-fr" />
             </button>
         </div>
         <p id="cameraTypeHeader"></p>
         <div id="cameraType">
             <button id="perspectiveButton" class="cameraTypeSettings">
-                <img src="{% static 'icons/cameraPerspective.png' %}" id="perspecImg" alt="">
+                <img src="{% static 'icons/cameraPerspective.webp' %}" id="perspecImg" alt="">
             </button>
             <button id="orthographicButton" class="cameraTypeSettings">
-                <img src="{% static 'icons/cameraOrthographic.png' %}" id="orthoImg" alt="">
+                <img src="{% static 'icons/cameraOrthographic.webp' %}" id="orthoImg" alt="">
             </button>
         </div>
         <button id="closeSettingsButton"></button>
@@ -460,14 +463,14 @@
         <!------------------------------ Chat Box ------------------------------>
         <div class="chat-box shrunk hide-elements" id="chatBox">
             <button id="toggleSizeButton">
-                <img src="{% static 'icons/chatIcon.png' %}" id="toggleIcon"/>
+                <img src="{% static 'icons/chatIcon.webp' %}" id="toggleIcon"/>
             </button>
             <div class="messages" id="messages">
             </div>
             <div class="input-container" id="inputContainer">
                 <input type="text" id="inputChat" placeholder="...">
                 <button id="sendButton">
-                    <img src="{% static 'icons/send.png' %}" class="button-send-img" />
+                    <img src="{% static 'icons/send.webp' %}" class="button-send-img" />
                 </button>
             </div>
             <div id="overlayChat">
@@ -478,18 +481,18 @@
         <!------------------------------ Friends Box ------------------------------>
         <div class="friends-box shrunk hide-elements" id="friendsBox">
             <button id="toggleSizeButtonFriends">
-                <img src="{% static 'icons/friendsIcon.png' %}" id="toggleIconFriends"/>
+                <img src="{% static 'icons/friendsIcon.webp' %}" id="toggleIconFriends"/>
             </button>
             <h1 class="friendsHeader" id="friendsHeader"></h1>
             <div class="friendsListParent" id="friendsListParent">
                 <div id="friendsList">
                     <div id="friendDiv" class="friendDiv">
                         <h3 id="friendName">Ton ami</h3>
-                        <img src="{% static 'icons/statusPlayer.png' %}" id="friendStatus" class="friendStatus" alt="">
+                        <img src="{% static 'icons/statusPlayer.webp' %}" id="friendStatus" class="friendStatus" alt="">
                     </div>
                     <div id="friendDiv" class="friendDiv">
                         <h3 id="friendName">Ton autre ami</h3>
-                        <img src="{% static 'icons/statusPlayer.png' %}" id="friendStatus" class="friendStatus" alt="">
+                        <img src="{% static 'icons/statusPlayer.webp' %}" id="friendStatus" class="friendStatus" alt="">
                     </div>
                 </div>
                 <div id="blockedList"></div>
@@ -539,7 +542,7 @@
                     <p id="registerPassword"></p>
                     <div id="passwordDiv">
                         <input type="password" class="inputfield" id="inputPassword" maxlength="20" placeholder="...">
-                        <img id="showPasswordButton" src="{% static 'icons/eyeOpen.png' %}" alt="">
+                        <img id="showPasswordButton" src="{% static 'icons/eyeOpen.webp' %}" alt="">
                     </div>
                     <p class="registerErrorMessage" id="registerErrorPassword"></p>
                 </div>
@@ -547,7 +550,7 @@
                     <p id="registerConfirmPassword"></p>
                     <div id="confirmPasswordDiv">
                         <input type="password" class="inputfield" id="inputConfirmPassword" maxlength="20" placeholder="...">
-                        <img id="showConfirmPasswordButton" src="{% static 'icons/eyeOpen.png' %}" alt="">   
+                        <img id="showConfirmPasswordButton" src="{% static 'icons/eyeOpen.webp' %}" alt="">   
                     </div>
                     <p class="registerErrorMessage" id="registerErrorConfirmPassword"></p> 
                 </div>
@@ -583,7 +586,7 @@
                     <p id="signInPassword"></p>
                     <div id="passwordSignInDiv">
                         <input type="password" class="inputfield" id="inputSignInPassword" maxlength="20" placeholder="...">
-                        <img id="showSignInPasswordButton" src="{% static 'icons/eyeOpen.png' %}" alt="">
+                        <img id="showSignInPasswordButton" src="{% static 'icons/eyeOpen.webp' %}" alt="">
                     </div>
                     <p class="registerErrorMessage" id="signInErrorPassword"></p>
                 </div>

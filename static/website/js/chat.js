@@ -41,7 +41,7 @@ function openChat()
     chatBox.classList.remove('shrunk');
     chatBox.classList.remove('hide-elements');
     chatBox.classList.add('expanded');
-    toggleIcon.src = 'static/icons/shrink.png';
+    toggleIcon.src = 'static/icons/shrink.webp';
     inputElement.focus();
     chatIsOpen = true;
     overlayChat.style.display = playerStats.isRegistered ? 'none' : 'flex';
@@ -53,7 +53,7 @@ function closeChat()
     chatIsOpen = false;
     chatBox.classList.remove('expanded');
     chatBox.classList.add('shrunk');
-    toggleIcon.src = 'static/icons/chatIcon.png';
+    toggleIcon.src = 'static/icons/chatIcon.webp';
 
     setTimeout(function() {
         chatBox.classList.add('hide-elements');

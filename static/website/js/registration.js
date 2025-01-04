@@ -88,8 +88,8 @@ function  resetRegistrationInputs()
     registerErrorPassword.innerText = "";
     registerErrorConfirmPassword.innerText = "";
     showPassConfirm = showPass = false;
-    passwordConfirmImg.src = 'static/icons/eyeOpen.png';
-    passwordImg.src = 'static/icons/eyeOpen.png';
+    passwordConfirmImg.src = 'static/icons/eyeOpen.webp';
+    passwordImg.src = 'static/icons/eyeOpen.webp';
     inputConfirmPassword.type = "password";
     inputPassword.type = "password";
 }
@@ -263,12 +263,12 @@ function toggleShowPassword()
     showPass = !showPass;
     if (showPass)
     {
-        passwordImg.src = 'static/icons/eyeClose.png';
+        passwordImg.src = 'static/icons/eyeClose.webp';
         inputPassword.type = "text";
     }
     else
     {
-        passwordImg.src = 'static/icons/eyeOpen.png';
+        passwordImg.src = 'static/icons/eyeOpen.webp';
         inputPassword.type = "password";
     }
 }
@@ -278,12 +278,12 @@ function toggleShowPasswordConfirm()
     showPassConfirm = !showPassConfirm;
     if (showPassConfirm)
     {
-        passwordConfirmImg.src = 'static/icons/eyeClose.png';
+        passwordConfirmImg.src = 'static/icons/eyeClose.webp';
         inputConfirmPassword.type = "text";
     }
     else
     {
-        passwordConfirmImg.src = 'static/icons/eyeOpen.png';
+        passwordConfirmImg.src = 'static/icons/eyeOpen.webp';
         inputConfirmPassword.type = "password";
     }
 }

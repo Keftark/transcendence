@@ -218,7 +218,7 @@
 {
     color: cyan;
     text-decoration: underline;
-    cursor: url('../icons/cursor-button.png'), pointer;
+    cursor: url('../icons/cursor-button.webp'), pointer;
 }
 
 #gdprBack

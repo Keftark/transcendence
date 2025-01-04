@@ -18,7 +18,7 @@ def upload_to(instance, filename: str):
 
 class Account(models.Model):
     user = OneToOneField(User, on_delete=CASCADE, default=True)
-    avatar = ImageField(upload_to=upload_to, default=".static/website/icons/guestUser.png")
+    avatar = ImageField(upload_to=upload_to, default=".static/website/icons/guestUser.webp")
     status = models.CharField(max_length=150, default="offline")
     description = models.CharField(max_length=150, default='')
     is42 = models.BooleanField(default=False)

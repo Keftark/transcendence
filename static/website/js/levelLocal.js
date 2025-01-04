@@ -39,6 +39,28 @@ export const BOUNDARY =
   X_MAX: 40
 }
 
+
+let rightCtrlPressed = false;
+
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Control' && event.location === KeyboardEvent.DOM_KEY_LOCATION_RIGHT) {
+        console.log("right control pressed");
+        rightCtrlPressed = true;
+        event.preventDefault();
+    }
+    if (rightCtrlPressed && event.key !== 'Control') {
+        alert("preventing default");
+        console.log("preventing default");
+        event.preventDefault();
+    }
+});
+document.addEventListener('keyup', function(event) {
+    if (event.key === 'Control' && event.location === KeyboardEvent.DOM_KEY_LOCATION_RIGHT) {
+        console.log("right control released");
+        rightCtrlPressed = false;
+    }
+});
+
 export function isVictory(match)
 {
     return (match.scorePlayer > match.scoreOpponent);
@@ -131,9 +153,9 @@ function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     
     if (window.innerWidth > window.innerHeight) {
-        camera.position.z = cameraRatioWidth / camera.aspect * 2.5;
+        camera.fov = 5 * Math.atan((cameraRatioWidth / camera.aspect) / (2 * camera.position.z)) * (180 / Math.PI);
     } else {
-        camera.position.z = cameraRatioHeigth / camera.aspect * 3.5;
+        camera.fov = 5 * Math.atan((cameraRatioHeigth / camera.aspect) / (1.5 * camera.position.z)) * (180 / Math.PI);
     }
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -241,7 +263,9 @@ function resetZoomCamera(camera)
         camera.updateProjectionMatrix();
         return;
     }
-    camera.fov = 75;
+    camera.fov = 85;
+    // faire en sorte que ce fov prenne en compte le ratio de l'ecran ? 
+    // le reset zoom n'est pas forcement bon, en fonction du ratio de l'ecran
     camera.updateProjectionMatrix();
 }
 
@@ -311,18 +335,18 @@ function showInGameUI()
     let controlsSrc;
     if (currentLevelMode === LevelMode.ADVENTURE)
     {
-        controlsSrc = 'static/images/controlsAdventure.png';
+        controlsSrc = 'static/images/controlsAdventure.webp';
     }
     else// if (currentLevelMode === LevelMode.LOCAL)
     {
-        controlsSrc = 'static/images/controlsP1Local.png';
+        controlsSrc = 'static/images/controlsP1Local.webp';
     }
     if (currentLevelMode === LevelMode.LOCAL)
     {
         controlsP1.style.display = 'flex';
-        controlsLeftImg.src = 'static/images/controlsP1Local.png';
+        controlsLeftImg.src = 'static/images/controlsP1Local.webp';
         controlsP2.style.display = 'flex';
-        controlsRightImg.src = 'static/images/controlsP2Local.png';
+        controlsRightImg.src = 'static/images/controlsP2Local.webp';
     }
     else if (playerStats.playerController === 0 || playerStats.playerController === 1 || playerStats.playerController === 3)
     {
@@ -546,7 +570,7 @@ function camZoomEvent(event)
         if (event.deltaY < 0) {
             camera.fov = Math.max(30, camera.fov - cameraZoomSpeed);
         } else {
-            camera.fov = Math.min(100, camera.fov + cameraZoomSpeed);
+            camera.fov = Math.min(160, camera.fov + cameraZoomSpeed);
         }
         camera.updateProjectionMatrix();
     }
@@ -571,23 +595,13 @@ export function StartLevel(levelMode)
     setUpScene();
     setUpLevel(scene);
     sparks = new Sparks(scene);
-
-    const { updatePlayers } = setupPlayerMovement(player1, player2, player3, player4);
-    const { ball, updateBall, resetBall, changeBallSize, changeBallSpeed } = createBall(scene, resetScreenFunction);
-    balle = ball;
-    setUpConsts();
-    setScores(0, 0);
-    setAccessAllDuelsInChat(false);
-    tryCloseChat();
-    setPlayerNames();
-
     let isBallMoving = false;
     let toggleReset = false;
     let canPressSpace = true;
     let lastTimestamp = 0;
 
-    changeBallSizeFunction = changeBallSize;
-    changeBallSpeedFunction = changeBallSpeed;
+    const { updatePlayers } = setupPlayerMovement(player1, player2, player3, player4);
+
 
     resetScreenFunction = function resetScreen(playerNbr, fromScoredPoint = false)
     {
@@ -600,6 +614,18 @@ export function StartLevel(levelMode)
         if (playerNbr != 0)
             resetFunction(false, fromScoredPoint);
     }
+
+    const { ball, updateBall, resetBall, changeBallSize, changeBallSpeed } = createBall(scene, resetScreenFunction);
+    balle = ball;
+    setUpConsts();
+    setScores(0, 0);
+    setAccessAllDuelsInChat(false);
+    tryCloseChat();
+    setPlayerNames();
+
+
+    changeBallSizeFunction = changeBallSize;
+    changeBallSpeedFunction = changeBallSpeed;
     
     resetFunction = function resetGame(resetCam, fromScoredPoint = false, time)
     {
@@ -712,7 +738,7 @@ export function StartLevel(levelMode)
             useBoost(0);
             event.preventDefault();
         }
-        else if (event.code === 'ControlRight' && (currentLevelMode === LevelMode.LOCAL || currentLevelMode === LevelMode.ONLINE) && isBoostReadyRight())
+        else if (event.code === 'ArrowLeft' && (currentLevelMode === LevelMode.LOCAL || currentLevelMode === LevelMode.ONLINE) && isBoostReadyRight())
         {
             useBoost(1);
             event.preventDefault();

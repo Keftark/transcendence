@@ -33,9 +33,10 @@ const fileInput = document.getElementById('fileInput');
 
 const buttonsLanguage = document.querySelectorAll('.language');
 const imageSources = {
-  mainPlayButton: 'static/images/playImage.png',
-  mainProfileButton: 'static/images/profileImage.png',
-  mainSettingsButton: 'static/images/settingsImage.png',
+  mainPlayButton: 'static/images/playImage.webp',
+  mainProfileButton: 'static/images/profileImage.webp',
+  mainCustomizeButton: 'static/images/customizeImage.webp',
+  mainSettingsButton: 'static/images/settingsImage.webp',
 };
 let currentColorIndex = 0;
 let currentLangIndex = 0;

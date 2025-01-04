@@ -38,14 +38,14 @@ function openFriends()
     friendsBox.classList.remove('shrunk');
     friendsBox.classList.remove('hide-elements');
     friendsBox.classList.add('expanded');
-    toggleIconFriends.src = 'static/icons/shrink.png';
+    toggleIconFriends.src = 'static/icons/shrink.webp';
 }
 
 function closeFriends()
 {
     friendsBox.classList.remove('expanded');
     friendsBox.classList.add('shrunk');
-    toggleIconFriends.src = 'static/icons/friendsIcon.png';
+    toggleIconFriends.src = 'static/icons/friendsIcon.webp';
 
     setTimeout(function() {
         friendsBox.classList.add('hide-elements');
@@ -154,7 +154,7 @@ export function addFriend(userName)
     nameHeader.style.color = playerStats.colors;
     newDiv.appendChild(nameHeader);
     const imgStatus = document.createElement('img');
-    imgStatus.src = 'static/icons/statusPlayer.png'
+    imgStatus.src = 'static/icons/statusPlayer.webp'
     imgStatus.classList.add('friendStatus');
     let playerStatus = getPlayerStatus();
     setPlayerStatusImg(playerStatus, imgStatus);

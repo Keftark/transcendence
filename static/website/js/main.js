@@ -74,19 +74,19 @@ function changeCursors()
     
     const buttons = document.querySelectorAll('button, input[type="checkbox"], .arena, #showPasswordButton, #showConfirmPasswordButton, #header-title, #profilePictureChangeButton, a, #askSignIn, #askRegister');
     buttons.forEach(button => {
-        button.style.cursor = "url('./static/icons/cursor-button.png'), pointer";
+        button.style.cursor = "url('./static/icons/cursor-button.webp'), pointer";
     });
     
     const inputs = document.querySelectorAll('input[type="text"], input[type="number"], input[type="password"]');
     inputs.forEach(input => {
-        input.style.cursor = "url('./static/icons/cursor-text.png') 4 10, auto";
+        input.style.cursor = "url('./static/icons/cursor-text.webp') 4 10, auto";
     });
 
     const labels = document.querySelectorAll('label');
     labels.forEach(label => {
-        label.style.cursor = "url('./static/icons/cursor.png'), auto";
+        label.style.cursor = "url('./static/icons/cursor.webp'), auto";
     });
-    document.body.style.cursor = "url('./static/icons/cursor.png'), auto";
+    document.body.style.cursor = "url('./static/icons/cursor.webp'), auto";
 }
 
 export function isALevelMode(value) {

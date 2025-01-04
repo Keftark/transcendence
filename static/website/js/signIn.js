@@ -64,7 +64,7 @@ function  resetSignInInputs()
     inputPassword.value = inputNick.value = "";
     signInErrorName.innerText = "";
     showPass = false;
-    passwordImg.src = 'static/icons/eyeOpen.png';
+    passwordImg.src = 'static/icons/eyeOpen.webp';
     inputPassword.type = "password";
 }
 
@@ -73,12 +73,12 @@ function toggleShowPassword()
     showPass = !showPass;
     if (showPass)
     {
-        passwordImg.src = 'static/icons/eyeClose.png';
+        passwordImg.src = 'static/icons/eyeClose.webp';
         inputPassword.type = "text";
     }
     else
     {
-        passwordImg.src = 'static/icons/eyeOpen.png';
+        passwordImg.src = 'static/icons/eyeOpen.webp';
         inputPassword.type = "password";
     }
 }

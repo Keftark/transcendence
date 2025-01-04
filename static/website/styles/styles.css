@@ -107,5 +107,5 @@ input:focus
 }
 
 #consent-text a {
-    cursor: url('../icons/cursor-button.png'), pointer;
+    cursor: url('../icons/cursor-button.webp'), pointer;
 }

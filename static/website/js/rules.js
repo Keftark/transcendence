@@ -114,7 +114,7 @@ export function setCustomRules()
 
 export function resetInputfieldsRules()
 {
-    document.getElementById('choosePaddleImg').src = `static/images/paddle1Img.png`;
+    document.getElementById('choosePaddleImg').src = `static/images/paddle1Img.webp`;
     arenas[selectedArena].classList.remove('applyBorder');
     arenas[0].classList.add('applyBorder');
     nbrPointsInput.value = '3';
@@ -124,7 +124,7 @@ export function resetInputfieldsRules()
     if (isPrivate)
     {
         isPrivate = false;
-        togglePrivateImg.src = 'static/icons/unchecked.png';
+        togglePrivateImg.src = 'static/icons/unchecked.webp';
     }
 }
 
@@ -190,7 +190,7 @@ export function endEditInputFieldRules()
 function togglePrivate()
 {
     isPrivate = !isPrivate;
-    togglePrivateImg.src = isPrivate ? 'static/icons/checked.png' : 'static/icons/unchecked.png';
+    togglePrivateImg.src = isPrivate ? 'static/icons/checked.webp' : 'static/icons/unchecked.webp';
 }
 
 let currentPlayer = -1;
@@ -236,11 +236,11 @@ function choosePaddleSkin(nbr)
 {
     if (getCurrentView() === "duel")
     {
-        document.getElementById(`choosePaddleImgPlayer${currentPlayer}`).src = `static/images/paddle${nbr}Img.png`;
+        document.getElementById(`choosePaddleImgPlayer${currentPlayer}`).src = `static/images/paddle${nbr}Img.webp`;
         document.getElementById(`choosePaddleButtonPlayer${currentPlayer}`).focus();
     }
     else
-        document.getElementById('choosePaddleImg').src = `static/images/paddle${nbr}Img.png`;
+        document.getElementById('choosePaddleImg').src = `static/images/paddle${nbr}Img.webp`;
     playerStats.currentPaddleSkin = nbr;
     // envoyer nbr au serveur lors d'un match online
     // genre setPaddleSkin(nbr, playerId);

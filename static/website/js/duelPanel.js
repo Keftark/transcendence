@@ -24,7 +24,7 @@ const player2ReadyButton = document.getElementById('ready2DuelButton');
 const waitingPlayer2 = document.getElementById('waitingForPlayer');
 // const startButtonDuel = document.getElementById('startDuelButton');
 const animDiv = document.getElementById('vsImg');
-const baseImgPath = "static/icons/playerNoImg.png";
+const baseImgPath = "static/icons/playerNoImg.webp";
 const choosePaddleButtonPlayer1 = document.getElementById('choosePaddleButtonPlayer1');
 const choosePaddleButtonPlayer2 = document.getElementById('choosePaddleButtonPlayer2');
 
