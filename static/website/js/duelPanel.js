@@ -7,7 +7,6 @@ import { getPlayerName } from "./playerManager.js";
 import { exitLobby, notReadyToDuel, readyToDuel } from "./sockets.js";
 import { getTranslation } from "./translate.js";
 import { clickPlayGame } from "./modesSelection.js";
-import { clickChoosePaddleButton } from "./customizeSkins.js";
 
 document.getElementById('leaveDuelButton').addEventListener('click', () => {
     closeDuelPanel();
@@ -25,8 +24,6 @@ const waitingPlayer2 = document.getElementById('waitingForPlayer');
 // const startButtonDuel = document.getElementById('startDuelButton');
 const animDiv = document.getElementById('vsImg');
 const baseImgPath = "static/icons/playerNoImg.webp";
-const choosePaddleButtonPlayer1 = document.getElementById('choosePaddleButtonPlayer1');
-const choosePaddleButtonPlayer2 = document.getElementById('choosePaddleButtonPlayer2');
 
 let isOtherConnected = false;
 let duelTargetPlayer = "";
@@ -43,15 +40,6 @@ player1ReadyButton.addEventListener('click', () => {
 });
 player2ReadyButton.addEventListener('click', () => {
     clickReadyDuel(2);
-});
-
-choosePaddleButtonPlayer1.addEventListener('click', () => {
-    if (!hasDisabledButtonEffect(choosePaddleButtonPlayer1))
-        clickChoosePaddleButton(1);
-});
-choosePaddleButtonPlayer2.addEventListener('click', () => {
-    if (!hasDisabledButtonEffect(choosePaddleButtonPlayer2))
-        clickChoosePaddleButton(2);
 });
 
 document.getElementById('helpRulesDuel').addEventListener('mouseover', () => {
@@ -97,8 +85,6 @@ function resetDuelPanel()
     player2NameText.innerText = getTranslation('player2Name');
     removeDisableButtonEffect(player1ReadyButton);
     removeDisableButtonEffect(player2ReadyButton);
-    removeDisableButtonEffect(choosePaddleButtonPlayer1);
-    removeDisableButtonEffect(choosePaddleButtonPlayer2);
     // addDisableButtonEffect(startButtonDuel);
     // reset all the fields/settings
 }
@@ -230,7 +216,6 @@ async function displayUIPlayer(player1, player2)
         if (user) {
             if (user.id === player1)
             {
-                addDisableButtonEffect(choosePaddleButtonPlayer2);
                 addDisableButtonEffect(player2ReadyButton);
                 player1Duel.classList.add('selectedPlayer');
                 player1ReadyButton.focus();
@@ -238,7 +223,6 @@ async function displayUIPlayer(player1, player2)
             else if (user.id === player2)
             {
                 addDisableButtonEffect(player1ReadyButton);
-                addDisableButtonEffect(choosePaddleButtonPlayer1);
                 player2Duel.classList.add('selectedPlayer');
                 player2ReadyButton.focus();
             }

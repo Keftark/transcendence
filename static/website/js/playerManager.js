@@ -56,6 +56,7 @@ export async function createNewPlayer()
     player.lastName = inputLastName.value;
     player.mail = inputMail.value;
     player.password = inputPassword.value;
+    // faire en sorte de reprendre les preference du joueur avant qu'il ne se soit enregistre ?
     player.language = "en";
     player.photoIndex = 0;
     player.room_id = -1;
@@ -112,6 +113,7 @@ export function resetPlayerStats()
     playerStats.friends = [];
     playerStats.isRegistered = false;
     playerStats.playerController = 1;
+    playerStats.currentPaddleSkin = 1;
     playerStats.status = PlayerStatus.ONLINE;
 }
 
