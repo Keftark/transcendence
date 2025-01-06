@@ -239,9 +239,18 @@ function choosePaddleSkin(nbr)
         document.getElementById(`choosePaddleImgPlayer${currentPlayer}`).src = `static/images/paddle${nbr}Img.webp`;
         document.getElementById(`choosePaddleButtonPlayer${currentPlayer}`).focus();
     }
+    else if (getCurrentView() === "home")
+    {
+        document.getElementById(`mainCustomizeButton`).focus();
+    }
     else
         document.getElementById('choosePaddleImg').src = `static/images/paddle${nbr}Img.webp`;
-    playerStats.currentPaddleSkin = nbr;
+
+    if (playerStats.currentPaddleSkin != nbr)
+    {
+        playerStats.currentPaddleSkin = nbr;
+        // envoyer le changement au backend
+    }
     // envoyer nbr au serveur lors d'un match online
     // genre setPaddleSkin(nbr, playerId);
     closePaddleChoice();

@@ -87,6 +87,7 @@ const pressPlayDiv = document.getElementById('pressPlayDiv');
 const playDiv = document.getElementById('play');
 let changeBallSizeFunction = null;
 let changeBallSpeedFunction = null;
+let updateBallLightFunction = null;
 const controlsP1 = document.getElementById('controlsP1');
 const controlsLeftImg = document.getElementById('controlsP1LocalImg');
 const controlsRightImg = document.getElementById('controlsP2LocalImg');
@@ -135,6 +136,11 @@ export function getPlayerSideById(playerId)
     // console.log("Get player id: " + playerId);
     // console.log("Index: " + playersId.indexOf(playerId));
     return playersId.indexOf(playerId);
+}
+
+export function doUpdateBallLight()
+{
+    updateBallLightFunction();
 }
 
 export function updateSparksFunction()
@@ -615,7 +621,7 @@ export function StartLevel(levelMode)
             resetFunction(false, fromScoredPoint);
     }
 
-    const { ball, updateBall, resetBall, changeBallSize, changeBallSpeed } = createBall(scene, resetScreenFunction);
+    const { ball, updateBall, resetBall, changeBallSize, changeBallSpeed, updateBallLight } = createBall(scene, resetScreenFunction);
     balle = ball;
     setUpConsts();
     setScores(0, 0);
@@ -626,6 +632,7 @@ export function StartLevel(levelMode)
 
     changeBallSizeFunction = changeBallSize;
     changeBallSpeedFunction = changeBallSpeed;
+    updateBallLightFunction = updateBallLight;
     
     resetFunction = function resetGame(resetCam, fromScoredPoint = false, time)
     {
@@ -733,12 +740,12 @@ export function StartLevel(levelMode)
 
     pressBoostFunction = function pressBoostFunction(event)
     {
-        if (event.key === 'e' && isBoostReadyLeft())
+        if (event.key === 'e' && playerStats.playerController === 1 && isBoostReadyLeft())
         {
             useBoost(0);
             event.preventDefault();
         }
-        else if (event.code === 'ArrowLeft' && (currentLevelMode === LevelMode.LOCAL || currentLevelMode === LevelMode.ONLINE) && isBoostReadyRight())
+        else if (event.code === 'ArrowLeft' && playerStats.playerController === 2 && isBoostReadyRight())
         {
             useBoost(1);
             event.preventDefault();
