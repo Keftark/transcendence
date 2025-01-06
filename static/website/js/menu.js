@@ -1,10 +1,10 @@
+import { clickChoosePaddleButton } from './customizeSkins.js';
 import { addMainEvents } from './eventsListener.js';
 import { isInGame, reinitLevelFunction, setCameraType, StartLevel } from './levelLocal.js';
 import { setLevelState } from './main.js';
 import { clickBackButtonMenu, showModeChoice } from './modesSelection.js';
 import { getCurrentView, navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
-import { clickChoosePaddleButton } from './rules.js';
 import { loadScores, removeAllScores } from './scoreManager.js';
 import { exitGameSocket } from './sockets.js';
 import { changeLanguage, getTranslation } from './translate.js';

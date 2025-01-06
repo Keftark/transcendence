@@ -1,3 +1,4 @@
+import { choosePaddleSkin, clickChoosePaddleButton } from "./customizeSkins.js";
 import { endMatch } from "./levelLocal.js";
 import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
 import { clickPlayGame, showModeChoice } from "./modesSelection.js";
@@ -30,7 +31,6 @@ const nbrOfPlayersInput = document.getElementById('rulesMaxPlayersInput');
 const arenas = document.getElementById('arenas').querySelectorAll('.arena');
 const togglePrivateImg = document.getElementById('imgIsPrivate');
 const togglePrivateDiv = document.getElementById('rulesIsPrivate');
-const choosePaddlePanel = document.getElementById('choosePaddlePanel');
 
 timerInput.addEventListener("input", () => {
     endEditInputFieldRules();
@@ -193,65 +193,9 @@ function togglePrivate()
     togglePrivateImg.src = isPrivate ? 'static/icons/checked.webp' : 'static/icons/unchecked.webp';
 }
 
-let currentPlayer = -1;
-export function clickChoosePaddleButton(nbr = -1)
-{
-    if (nbr != -1)
-        currentPlayer = nbr;
-    paddleChoiceIsOpen = true;
-    choosePaddlePanel.style.display = "flex";
-    document.getElementById('choosePaddleList').children[0].focus();
-    setTimeout(() => {
-        choosePaddlePanel.classList.add("appearing");
-    }, 100);
-}
 document.getElementById('choosePaddle1Button').addEventListener('click', () => {
     choosePaddleSkin(1);
 });
 document.getElementById('choosePaddle2Button').addEventListener('click', () => {
     choosePaddleSkin(2);
 });
-
-let paddleChoiceIsOpen = false;
-
-export function isPaddleChoiceOpen()
-{
-    return paddleChoiceIsOpen;
-}
-
-export function closePaddleChoice()
-{
-    currentPlayer = -1;
-    paddleChoiceIsOpen = false;
-    const currentView = getCurrentView();
-    if (currentView === 'rules')
-        document.getElementById('choosePaddleButton').focus();
-    choosePaddlePanel.classList.remove("appearing");
-    setTimeout(() => {
-        choosePaddlePanel.style.display = "none";
-    }, 100);
-}
-
-function choosePaddleSkin(nbr)
-{
-    if (getCurrentView() === "duel")
-    {
-        document.getElementById(`choosePaddleImgPlayer${currentPlayer}`).src = `static/images/paddle${nbr}Img.webp`;
-        document.getElementById(`choosePaddleButtonPlayer${currentPlayer}`).focus();
-    }
-    else if (getCurrentView() === "home")
-    {
-        document.getElementById(`mainCustomizeButton`).focus();
-    }
-    else
-        document.getElementById('choosePaddleImg').src = `static/images/paddle${nbr}Img.webp`;
-
-    if (playerStats.currentPaddleSkin != nbr)
-    {
-        playerStats.currentPaddleSkin = nbr;
-        // envoyer le changement au backend
-    }
-    // envoyer nbr au serveur lors d'un match online
-    // genre setPaddleSkin(nbr, playerId);
-    closePaddleChoice();
-}
