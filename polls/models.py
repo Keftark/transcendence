@@ -16,15 +16,23 @@ def upload_to(instance, filename: str):
     return f"./profiles/static/avatars/{instance.pk}{splitext(filename)[1]}"
 
 
-class Account(models.Model):
+class AccountModel(models.Model):
     user = OneToOneField(User, on_delete=CASCADE, default=True)
     avatar = ImageField(upload_to=upload_to, default=".static/website/icons/guestUser.webp")
     status = models.CharField(max_length=150, default="offline")
     description = models.CharField(max_length=150, default='')
     is42 = models.BooleanField(default=False)
 
-    def get_friends(self) -> list[Account]:
-        friends: list[Account] = []
+    def get_game(self) -> int:
+        from ping_pong.consumers import game_manager
+        for game in game_manager._game_list:
+            for player in game.get_players_connected():
+                if (player.user_id == self.user.pk):
+                    return game.game_id
+        return None
+
+    def get_friends(self) -> list[AccountModel]:
+        friends: list[AccountModel] = []
 
         for friendship in FriendModel.objects.filter(Q(friend1=self) | Q(friend2=self)):
             friends.append(friendship.friend1 if friendship.friend1 != self else friendship.friend2)
@@ -43,26 +51,26 @@ class Account(models.Model):
             (Q(friend2=self) & Q(friend1=friend))
         ).delete()
 
-    def is_friend_requested_by(self, profile):
-        return FriendRequestModel.objects.filter(author=profile, target=self).exists()
+    def is_friend_requested_by(self, account):
+        return FriendRequestModel.objects.filter(author=account, target=self).exists()
 
-    def get_received_friend_request_from(self, profile):
-        return FriendRequestModel.objects.filter(author=profile, target=self).first()
+    def get_received_friend_request_from(self, account):
+        return FriendRequestModel.objects.filter(author=account, target=self).first()
 
-    def is_friend_requesting(self, profile):
-        return FriendRequestModel.objects.filter(author=self, target=profile).exists()
+    def is_friend_requesting(self, account):
+        return FriendRequestModel.objects.filter(author=self, target=account).exists()
 
-    def get_outgoing_friend_request_to(self, profile):
-        return FriendRequestModel.objects.filter(author=self, target=profile).first()
+    def get_outgoing_friend_request_to(self, account):
+        return FriendRequestModel.objects.filter(author=self, target=account).first()
 
-    def get_outgoing_friend_requests(self) -> list[Account]:
+    def get_outgoing_friend_requests(self) -> list[AccountModel]:
         return FriendRequestModel.objects.filter(author=self)
 
-    def get_incoming_friend_requests(self) -> list[Account]:
+    def get_incoming_friend_requests(self) -> list[AccountModel]:
         return FriendRequestModel.objects.filter(target=self)
 
 
-@receiver(pre_delete, sender=Account)
+@receiver(pre_delete, sender=AccountModel)
 def delete_profile_picture(sender, instance, **kwargs):
     if instance.avatar.name != './profiles/static/avatars/default.avif':
         instance.avatar.storage.delete(instance.avatar.name)
@@ -71,18 +79,18 @@ def delete_profile_picture(sender, instance, **kwargs):
 @receiver(post_save, sender=User)
 def on_user_created(sender, instance, created, **kwargs):
     if created:
-        profile: Account = Account.objects.create(pk=instance.pk, user=instance)
-        profile.save()
+        accountmodel: AccountModel = AccountModel.objects.create(pk=instance.pk, user=instance)
+        accountmodel.save()
 
 
 class FriendModel(Model):
-    friend1 = ForeignKey(Account, on_delete=CASCADE, related_name='friend1')
-    friend2 = ForeignKey(Account, on_delete=CASCADE, related_name='friend2')
+    friend1 = ForeignKey(AccountModel, on_delete=CASCADE, related_name='friend1')
+    friend2 = ForeignKey(AccountModel, on_delete=CASCADE, related_name='friend2')
 
 
 class FriendRequestModel(Model):
-    author = ForeignKey(Account, on_delete=CASCADE, related_name='author')
-    target = ForeignKey(Account, on_delete=CASCADE, related_name='target')
+    author = ForeignKey(AccountModel, on_delete=CASCADE, related_name='author')
+    target = ForeignKey(AccountModel, on_delete=CASCADE, related_name='target')
 
     def accept(self):
         FriendModel(friend1=self.author, friend2=self.target).save()
@@ -90,8 +98,8 @@ class FriendRequestModel(Model):
 
 
 class BlockModel(Model):
-    blocker = ForeignKey(Account, on_delete=CASCADE, related_name='blocker')
-    blocked = ForeignKey(Account, on_delete=CASCADE, related_name='blocked')
+    blocker = ForeignKey(AccountModel, on_delete=CASCADE, related_name='blocker')
+    blocked = ForeignKey(AccountModel, on_delete=CASCADE, related_name='blocked')
 
     
 class Match(models.Model):
@@ -99,20 +107,20 @@ class Match(models.Model):
     IN_PROGRESS = 1
     FINISHED = 2
     match_id = models.IntegerField()
-    player_1 = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, related_name='player_1')
+    player_1 = models.ForeignKey(AccountModel, on_delete=models.SET_NULL, null=True, related_name='player_1')
     player_1_score = models.IntegerField(null=True)
     
-    player_2 = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, related_name='player_2')
+    player_2 = models.ForeignKey(AccountModel, on_delete=models.SET_NULL, null=True, related_name='player_2')
     player_2_score = models.IntegerField(null=True)
 
     start_timestamp = models.BigIntegerField(null = True, blank = True)
     stop_timestamp = models.BigIntegerField(null = True, blank = True)
     
-    winner = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, related_name='winner')
+    winner = models.ForeignKey(AccountModel, on_delete=models.SET_NULL, null=True, related_name='winner')
     status = models.IntegerField(default=NOT_PLAYED)
 
 class Historique(models.Model):
     histo_id = models.IntegerField()
     match = models.ForeignKey(Match, on_delete=models.SET_NULL , null=True, related_name='match')
     goal_timestamp = models.BigIntegerField(null = True, blank = True)
-    player = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, related_name='player')
+    player = models.ForeignKey(AccountModel, on_delete=models.SET_NULL, null=True, related_name='player')

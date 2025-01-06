@@ -2,6 +2,9 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 
+#game_manager: GameManager = GameManager()
+
+
 class GameConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = "game_room"  # Define the room or game ID

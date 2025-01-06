@@ -1,6 +1,11 @@
 from django.urls import path
 from . import views
 
+from .viewsets.MyAccountViewSet import MyAccountViewSet
+from .serializers import AccountSerializer
+from .models import AccountModel
+
+
 urlpatterns = [
     path("", views.index, name="home"),
     path('home', views.index, name='home'),
@@ -22,5 +27,7 @@ urlpatterns = [
     path('current_user', views.get_logged_in_user, name='current_user'),
     path('get-user/<str:username>/', views.get_user_by_name, name='get-user-by-name'),
     path('user/<int:user_id>/', views.get_user_by_id, name='user_detail'),
+    path("me", MyAccountViewSet.as_view({'get': 'retrieve'}), name="my_account_page"),
+
 ]
 
