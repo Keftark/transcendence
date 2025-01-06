@@ -4,10 +4,10 @@ import { passInfosPlayersToLevel } from "./levelLocal.js";
 import { addDisableButtonEffect, hasDisabledButtonEffect, removeDisableButtonEffect } from "./main.js";
 import { showModeChoice } from "./modesSelection.js";
 import { getPlayerName } from "./playerManager.js";
-import { clickChoosePaddleButton } from "./rules.js";
 import { exitLobby, notReadyToDuel, readyToDuel } from "./sockets.js";
 import { getTranslation } from "./translate.js";
 import { clickPlayGame } from "./modesSelection.js";
+import { clickChoosePaddleButton } from "./customizeSkins.js";
 
 document.getElementById('leaveDuelButton').addEventListener('click', () => {
     closeDuelPanel();

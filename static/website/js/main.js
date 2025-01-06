@@ -3,7 +3,7 @@ import { initTranslation } from './translate.js';
 import { addMainEvents } from './eventsListener.js';
 import { LevelMode } from './variables.js';
 import { isChatOpen, tryCloseChat } from './chat.js';
-import { clickCancelRules, closePaddleChoice, isPaddleChoiceOpen } from './rules.js';
+import { clickCancelRules } from './rules.js';
 import { gameEnded, isInGame } from './levelLocal.js';
 import { clickCancelRegister, closeGdprPanel, isGdprOpen, isRegistrationOpen, isUserLoggedIn } from './registration.js';
 import { closeTournamentJoinMenu, closeTournamentLobbyMenu, closeTournamentMenu } from './tournament.js';
@@ -11,6 +11,7 @@ import { getCurrentView } from './pages.js';
 import { closeDuelPanel } from './duelPanel.js';
 import { clickBackButtonMenu } from './modesSelection.js';
 import { addSocketListener } from './sockets.js';
+import { closePaddleChoice, isPaddleChoiceOpen } from './customizeSkins.js';
 
 let levelMode = LevelMode.MENU;
 
