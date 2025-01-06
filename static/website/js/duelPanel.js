@@ -36,6 +36,7 @@ let player2IsReady = false;
 
 let idP1 = -1;
 let idP2 = -1;
+export let playersSkins = [0, 0, 0, 0];
 
 player1ReadyButton.addEventListener('click', () => {
     clickReadyDuel(1);
@@ -113,7 +114,8 @@ export function closeDuelPanel()
 {
     // double chargement de la page de retour pour le joueur qui quitte
     // mettre un message indiquant que l'autre joueur a quitte
-    exitLobby(); // fonction pas encore faite
+    document.getElementById('waitingMatch').style.display = "none";
+    exitLobby();
     showModeChoice();
 }
 
@@ -129,6 +131,7 @@ export function onCloseDuel()
     idP1 = -1;
     idP2 = -1;
     resetDuelPanel();
+
     // document.getElementById('duelPanel').style.display = 'none'; // inutile ??
     animDiv.classList.remove('vsAnim');
     animDiv.style.display = 'none';

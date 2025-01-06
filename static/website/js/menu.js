@@ -4,6 +4,7 @@ import { setLevelState } from './main.js';
 import { clickBackButtonMenu, showModeChoice } from './modesSelection.js';
 import { getCurrentView, navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
+import { clickChoosePaddleButton } from './rules.js';
 import { loadScores, removeAllScores } from './scoreManager.js';
 import { exitGameSocket } from './sockets.js';
 import { changeLanguage, getTranslation } from './translate.js';
@@ -16,8 +17,10 @@ const matchListPanel = document.getElementById('matchListPanel');
 const mainPlayButton = document.getElementById('mainPlayButton');
 const mainProfileButton = document.getElementById('mainProfileButton');
 const mainSettingsButton = document.getElementById('mainSettingsButton');
+const mainCustomizeButton = document.getElementById('mainCustomizeButton');
 const mainPlayDiv = document.getElementById('mainPlayDiv');
 const mainProfileDiv = document.getElementById('mainProfileDiv');
+const mainCustomizeDiv = document.getElementById('mainCustomizeDiv');
 const mainSettingsDiv = document.getElementById('mainSettingsDiv');
 const menuPanel = document.getElementById('gameMenuPanel');
 const hoverImage = document.getElementById('homeImg');
@@ -77,6 +80,10 @@ document.getElementById('profileButton').addEventListener('click', () => {
 
 mainProfileButton.addEventListener('click', () => {
     openProfile();
+});
+
+mainCustomizeButton.addEventListener('click', () => {
+    clickChoosePaddleButton();
 });
 
 document.getElementById('closeProfileButton').addEventListener('click', () => {
@@ -417,11 +424,14 @@ function resetAnimMainMenu()
     mainPlayDiv.style.opacity = 0;
     mainSettingsDiv.style.opacity = 0;
     mainProfileDiv.style.opacity = 0;
+    mainCustomizeDiv.style.opacity = 0;
     mainPlayDiv.classList.remove('fadeMainButton');
     mainSettingsDiv.classList.remove('fadeMainButton');
     mainProfileDiv.classList.remove('fadeMainButton');
+    mainCustomizeDiv.classList.remove('fadeMainButton');
     void mainPlayDiv.offsetWidth;
     void mainSettingsDiv.offsetWidth;
+    void mainCustomizeDiv.offsetWidth;
     void mainProfileDiv.offsetWidth;
     animMainMenu();
 }
@@ -433,8 +443,11 @@ function animMainMenu()
         mainProfileDiv.classList.add('fadeMainButton');
     }, 150);
     setTimeout(() => {
-        mainSettingsDiv.classList.add('fadeMainButton');
+        mainCustomizeDiv.classList.add('fadeMainButton');
     }, 300);
+    setTimeout(() => {
+        mainSettingsDiv.classList.add('fadeMainButton');
+    }, 450);
 }
 
 export function onMainMenuOpen()

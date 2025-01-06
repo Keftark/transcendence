@@ -89,7 +89,7 @@ export function editPlayerStats(userData)
     player.language = userData.language;
     player.photoIndex = userData.photoIndex;
     player.colors = userData.colors;
-    player.playerController = 0;
+    player.playerController = 1;
     player.paddleSkins = userData.paddleSkins;
 
     playerStats = player;

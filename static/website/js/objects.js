@@ -5,6 +5,7 @@ import { ArenaType, LevelMode } from './variables.js';
 import { GLTFLoader } from '../node_modules/.vite/deps/three_examples_jsm_loaders_GLTFLoader.js';
 import { clearObject, removeModelFromObject } from './unloadScene.js';
 import { playerStats } from './playerManager.js';
+import { playersSkins } from './duelPanel.js';
 
 let wallLeft;
 let wallRight;
@@ -112,13 +113,21 @@ export function updatePlayerModel(oldPlayer) {
     );
 }
 
+function getPlayerTexture(playerNbr)
+{
+    // on recupere la variable du skin du joueur a l'emplacement playerNbr
+    // le mieux serait de sauvegarder les int lors de l'initialisation du match, on aurait juste a les prendre ici
+    return textureLoader.load(`static/mat/player${playersSkins[playerNbr]}.png`);
+}
+
 export function createPlayers(scene, textureLoader)
 {
     const levelState = getLevelState();
     const playerSize = levelState === LevelMode.MULTI ? PLAYER_HEIGHT / 1.5 : PLAYER_HEIGHT;
     // faire une fonction qui va recuperer le skin choisi par chaque joueur.
     // le skin de l'ia va etre par defaut ou aleatoire ?
-    const cylinderTexture = textureLoader.load(`static/mat/player${playerStats.currentPaddleSkin}.png`);
+    // const cylinderTexture = getPlayerTexture(1);
+    const cylinderTexture = textureLoader.load(`static/mat/player${playerStats.currentPaddleSkin}.png`); // supprimer ca et mettre la ligne du dessus !
     cylinderTexture.colorSpace = THREE.SRGBColorSpace;
     const material1 = new THREE.MeshStandardMaterial({ map: cylinderTexture, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });
     const material2 = new THREE.MeshStandardMaterial({ map: cylinderTexture, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });

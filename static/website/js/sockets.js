@@ -1,12 +1,13 @@
 import { setBallPosition } from "./ball.js";
 import { closeDuelPanel, matchFound, setPlayersControllers, updateReadyButtons } from "./duelPanel.js";
-import { addReadyPlayer, getBallPosition, getPlayerSideById, removeReadyPlayers, resetScreenFunction, spawnSparksFunction } from "./levelLocal.js";
+import { addReadyPlayer, doUpdateBallLight, getBallPosition, getPlayerSideById, removeReadyPlayers, resetScreenFunction, spawnSparksFunction } from "./levelLocal.js";
 import { getLevelState, socket, listener } from "./main.js";
 import { clickPlayGame } from "./modesSelection.js";
 import { playerStats } from "./playerManager.js";
 import { setPlayersPositions } from "./playerMovement.js";
 import { checkPowerUpState, setPowerBarsPlayers } from "./powerUp.js";
 import { endOfMatch } from "./scoreManager.js";
+import { setTimeFromServer } from "./timer.js";
 import { LevelMode, VictoryType } from "./variables.js";
 import { callVictoryScreen } from "./victory.js";
 
@@ -211,6 +212,13 @@ export function addSocketListener()
         case "match_start":
             setPlayersControllers();
             break;
+        case "bounce":
+            console.log("bouncing");
+            if (event.room_id != playerStats.room_id)
+                return;
+            doUpdateBallLight();
+            spawnSparksFunction(new THREE.Vector3(event.ball_x, event.ball_y, 0), event.ball_speed * 20);
+            break;
         case "victory": // end of match, dans le lobby ou dans le match
             if (event.room_id != playerStats.room_id)
                 return;
@@ -259,6 +267,7 @@ export function addSocketListener()
                 setBallPosition(event.ball_x, event.ball_y);
                 setPowerBarsPlayers(event.p1_juice, event.p2_juice);
                 checkPowerUpState(event.p1_boosting, event.p2_boosting, event.ball_boosting);
+                setTimeFromServer(event.timer);
             }
             // y1 = event.p1_pos;
             // y2 = event.p2_pos;

@@ -356,5 +356,5 @@ export function createBall(scene, callBack)
 
     resetVelocity();
 
-    return { ball, updateBall, resetBall, changeBallSize, changeBallSpeed };
+    return { ball, updateBall, resetBall, changeBallSize, changeBallSpeed, updateBallLight };
 }

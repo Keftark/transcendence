@@ -7,6 +7,15 @@ let isPaused = false;
 let isReverse = false;
 let baseTimer = 0;
 
+export function setTimeFromServer(timeFromServer)
+{
+    if (elapsedTime !== timeFromServer)
+    {
+        elapsedTime = timeFromServer;
+        updateDisplay();
+    }
+}
+
 // Function to format time as HH:MM:SS
 function formatTime(seconds) {
     const hours = Math.floor(seconds / 3600);
