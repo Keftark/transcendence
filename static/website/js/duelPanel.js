@@ -260,14 +260,13 @@ export function matchFound(player1, player2)
         fillInfosPlayer(2, player2)
     ])
     .then(() => {
-        // This will execute once both fillInfosPlayer calls are done
         document.getElementById('waitingMatch').style.display = "none";
+        resetVSAnimation();
         // on met à jour l'interface après avoir récupéré les deux joueurs
     })
     .catch(error => {
         console.error("Error in matchFound:", error);
     });
-    // on met a jour l'interface apres avoir recupere les deux joueurs
 }
 
 // addDisableButtonEffect(startButtonDuel);

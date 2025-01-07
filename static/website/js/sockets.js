@@ -226,7 +226,7 @@ export function addSocketListener()
         case "victory": // end of match, dans le lobby ou dans le match
             if (event.room_id != playerStats.room_id)
                 return;
-            console.log(data);
+            // console.log(data);
             if (event.mode === "abandon" && event.player != playerStats.id)
             {
                 closeDuelPanel();
