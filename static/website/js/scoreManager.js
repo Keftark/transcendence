@@ -2,6 +2,7 @@ import { endMatch } from "./levelLocal.js";
 import { getPlayerVictories, playerStats } from "./playerManager.js";
 import { checkPoints } from "./rules.js";
 import { getTranslation } from "./translate.js";
+import { VictoryType } from "./variables.js";
 
 const scores = document.getElementById('scores');
 const scoreRight = document.getElementById('score-right');
@@ -11,11 +12,12 @@ let player2Score = 0;
 
 export class MatchResult
 {
-    constructor(playerScore = 0, opponentScore = 0,  opponentName = "", matchTime = 0) {
-      this.scorePlayer = playerScore;
-      this.scoreOpponent = opponentScore;
-      this.nameOpponent = opponentName;
-      this.matchTime = matchTime;
+    constructor(victoryType, playerScore = 0, opponentScore = 0,  opponentName = "", matchTime = 0) {
+        this.victoryType = victoryType;
+        this.scorePlayer = playerScore;
+        this.scoreOpponent = opponentScore;
+        this.nameOpponent = opponentName;
+        this.matchTime = matchTime;
     }
 }
 
@@ -121,9 +123,9 @@ export function loadScores(player = playerStats)
         rightContent.classList.add('score-right');
         rightContent.textContent = match.nameOpponent + "\n" + match.scoreOpponent;
         newContainer.appendChild(rightContent);
-        if (match.scorePlayer > match.scoreOpponent)
+        if (match.victoryType === VictoryType.VICTORY)
             newContainer.style.background = 'linear-gradient(to right, #228822 30%, #006666 70%)';
-        else
+        else if (match.victoryType === VictoryType.DEFEAT)
             newContainer.style.background = 'linear-gradient(to right, #882222 30%, #006666 70%)';
         const timerContent = document.createElement('p');
         timerContent.classList.add('score-timer');
@@ -134,7 +136,7 @@ export function loadScores(player = playerStats)
     }
 }
 
-export function endOfMatch()
+export function endOfMatch(forcedVictory = false)
 {
-    endMatch(player1Score, player2Score);
+    endMatch(player1Score, player2Score, forcedVictory);
 }

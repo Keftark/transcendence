@@ -1,6 +1,6 @@
 import { setBallPosition } from "./ball.js";
 import { closeDuelPanel, matchFound, setPlayersControllers, updateReadyButtons } from "./duelPanel.js";
-import { addReadyPlayer, doUpdateBallLight, getBallPosition, getPlayerSideById, removeReadyPlayers, resetScreenFunction, spawnSparksFunction } from "./levelLocal.js";
+import { addReadyPlayer, doUpdateBallLight, getBallPosition, getPlayerSideById, removeReadyPlayers, resetScreenFunction, spawnSparksFunction, startScreenShake } from "./levelLocal.js";
 import { getLevelState, socket, listener } from "./main.js";
 import { clickPlayGame } from "./modesSelection.js";
 import { playerStats } from "./playerManager.js";
@@ -212,12 +212,14 @@ export function addSocketListener()
         case "match_start":
             setPlayersControllers();
             break;
-        case "bounce":
-            console.log("bouncing");
+        case "bounce_player":
             if (event.room_id != playerStats.room_id)
                 return;
+            const strength = event.ball_boosted ? event.ball_speed * 150 : event.ball_speed * 75;
+            startScreenShake(event.ball_speed / 6, strength);
             doUpdateBallLight();
-            spawnSparksFunction(new THREE.Vector3(event.ball_x, event.ball_y, 0), event.ball_speed * 20);
+            if (event.ball_speed > 0.78)
+                spawnSparksFunction(getBallPosition(), event.ball_speed * 20);
             break;
         case "victory": // end of match, dans le lobby ou dans le match
             if (event.room_id != playerStats.room_id)
@@ -227,9 +229,10 @@ export function addSocketListener()
             {
                 closeDuelPanel();
             }
-            else if (event.mode === "ragequit" && event.player != playerStats.id)
+            else if ((event.mode === "disconnected" || event.mode === "ragequit") && event.player != playerStats.id)
             {
-                endOfMatch();// mettre un argument pour forcer la victoire et indiquer que l'autre a quitte
+                // aficher un message different si le mode est disconnected ou ragequit?
+                endOfMatch(true);// mettre un argument pour forcer la victoire et indiquer que l'autre a quitte
             }
             else if (event.mode === "points" || event.mode === "timer")
             {
@@ -240,6 +243,9 @@ export function addSocketListener()
             }
             else if (event.mode === "equal")
                 callVictoryScreen(VictoryType.EXAEQUO);
+            break;
+        case "connection_lost":
+            // la meme chose que victory
             break;
         case "error":
             console.log("Got error : " + event.content);

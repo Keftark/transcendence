@@ -141,9 +141,10 @@ export let listener;
 
 function openSocket()
 {
-    socket = new WebSocket('ws://10.12.200.194:8001/ws/');
-    listener = new WebSocket('ws://10.12.200.194:8001/ws/');
-    // socket = new WebSocket('ws://10.11.200.72:8001/ws/');
+    // socket = new WebSocket('ws://10.12.200.194:8001/ws/');
+    // listener = new WebSocket('ws://10.12.200.194:8001/ws/');
+    socket = new WebSocket('ws://10.11.200.72:8001/ws/');
+    listener = new WebSocket('ws://10.11.200.72:8001/ws/');
     // socket = new WebSocket('ws://localhost:8001/ws/game');
 
     // socket.onmessage = function(event) {

@@ -1,10 +1,9 @@
 import { fakeDatabase } from "./database.js";
-import { isVictory } from "./levelLocal.js";
 import { changeTextsColor } from "./menu.js";
 import { getRandomNumberBetween } from "./objects.js";
 import { MatchResult } from "./scoreManager.js";
 import { getTranslation } from "./translate.js";
-import { PlayerStatus } from "./variables.js";
+import { PlayerStatus, VictoryType } from "./variables.js";
 
 const inputNick = document.getElementById('inputName');
 const inputFirstName = document.getElementById('inputFirstName');
@@ -39,11 +38,11 @@ export function createPlayerStats() {
     };
 }
 
-export function addMatchToHistory(playerScore, opponentScore, opponentName, matchTime = '0')
+export function addMatchToHistory(victoryType, playerScore, opponentScore, opponentName, matchTime = '0')
 {
     console.log("Adding match to history:\nplayer score: " + playerScore + "\nOpponent score: " + opponentScore + "\nOpponent name: " + opponentName);
     setTimeout(() => {
-        playerStats.matches.push(new MatchResult(playerScore, opponentScore, opponentName, matchTime));
+        playerStats.matches.push(new MatchResult(victoryType, playerScore, opponentScore, opponentName, matchTime));
     }, 50);
     // prendre le joueur depuis la base de donnees et inserer le nouveau score
 }
@@ -141,7 +140,7 @@ export function getPlayerVictories(player = playerStats)
     let victories = 0;
     for (let i = 0; i < total; i++)
     {
-        if (isVictory(player.matches[i]))
+        if (player.matches[i].victoryType === VictoryType.VICTORY)
             victories++;
     }
     let percentage = victories * 100 / total;

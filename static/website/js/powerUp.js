@@ -163,10 +163,12 @@ export function resetBoostBar()
 
 export function useBoost(playerNbr = 0)
 {
-    if (playerNbr === 0)
-        resetPowerBarLeft();
-    else if (playerNbr === 1)
-        resetPowerBarRight();
+    setTimeout(() => {
+        if (playerNbr === 0)
+            resetPowerBarLeft();
+        else if (playerNbr === 1)
+            resetPowerBarRight();
+    }, 20);
     boostPlayer(playerNbr);
 }
 

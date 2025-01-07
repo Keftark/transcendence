@@ -61,11 +61,6 @@ document.addEventListener('keyup', function(event) {
     }
 });
 
-export function isVictory(match)
-{
-    return (match.scorePlayer > match.scoreOpponent);
-}
-
 export function CreateMatchScore(newScorePlayer, newScoreOpponent)
 {
     return {scorePlayer:newScorePlayer, scoreOpponent:newScoreOpponent};
@@ -437,6 +432,11 @@ function setUpConsts()
         return;
     screenShake = new ScreenShake(camera);
 }
+
+export function startScreenShake(duration, strength)
+{
+    screenShake.start(duration, strength);
+}
   
 function resetPlayersPositions()
 {
@@ -784,7 +784,7 @@ export function StartLevel(levelMode)
     }, 500);
 }
 
-export function endMatch(scoreP1, scoreP2)
+export function endMatch(scoreP1, scoreP2, forcedVictory = false)
 {
     gameEnded = true;
     const player1NameText = player1Name.innerText;
@@ -804,7 +804,27 @@ export function endMatch(scoreP1, scoreP2)
         scoreOpponent = scoreP1;
         opponentName = player1NameText;
     }
-    addMatchToHistory(scorePlayer, scoreOpponent, opponentName, getMatchTime());
+
+    let victoryType;
+    let winner = '';
+    if (scoreP1 > scoreP2)
+        winner = player1NameText;
+    else if (scoreP1 < scoreP2)
+        winner = player2NameText;
+    if (forcedVictory)
+        victoryType = VictoryType.VICTORY;
+    else if (winner != '')
+    {
+        if (winner === getPlayerName())
+            victoryType = VictoryType.VICTORY;
+        else
+            victoryType = VictoryType.DEFEAT;
+    }
+    else
+        victoryType = VictoryType.EXAEQUO;
+
+
+    addMatchToHistory(victoryType, scorePlayer, scoreOpponent, opponentName, getMatchTime());
     pressPlayDiv.style.display = 'none';
     stopStopwatch();
     deathSphereGrew = false;
@@ -817,7 +837,9 @@ export function endMatch(scoreP1, scoreP2)
             winner = player1NameText;
         else if (scoreP1 < scoreP2)
             winner = player2NameText;
-        if (winner != '')
+        if (forcedVictory)
+            callVictoryScreen(VictoryType.VICTORY);
+        else if (winner != '')
         {
             if (winner === getPlayerName())
                 callVictoryScreen(VictoryType.VICTORY);
