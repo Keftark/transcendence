@@ -34,7 +34,8 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'rest_framework',
     'daphne',
-    'polls.apps.PollsConfig',
+    'accounts.apps.AccountConfig',
+    'notifications.apps.NoticeConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -16,9 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.urls import path, include, re_path
+from .views import handler_404_view
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", include("polls.urls")),
+    path("", include("accounts.urls")),
     path('api-auth/', include('rest_framework.urls'))
 ]
