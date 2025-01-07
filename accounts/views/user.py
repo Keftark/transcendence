@@ -4,16 +4,12 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required
 from django.utils.translation import gettext as _
-from django.shortcuts import get_object_or_404
 from accounts.models import *
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import permissions, status
-from rest_framework.authentication import SessionAuthentication
-from notifications.consumers import notification_manager
-from accounts.serializers import AccountSerializer
+from ..serializers import UpdateUserSerializer, UpdatePasswordSerializer
+from rest_framework.generics import UpdateAPIView
+from rest_framework.permissions import IsAuthenticated
+
 
 
 
@@ -183,5 +179,22 @@ def login_user(request):
             return JsonResponse({"message": "Invalid credentials"}, status=400)
 
     return JsonResponse({"message": "Invalid request method"}, status=405)
+
+class UpdateProfileView(UpdateAPIView):
+
+    queryset = User.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UpdateUserSerializer
+
+    def get_object(self):
+        return self.queryset.get(pk=self.request.user.pk)
+    
+class UpdatePasswordView(UpdateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UpdatePasswordSerializer
+
+    def get_object(self):
+        return self.queryset.get(pk=self.request.user.pk)
 
 
