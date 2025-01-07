@@ -10,7 +10,7 @@ import { closeTournamentJoinMenu, closeTournamentLobbyMenu, closeTournamentMenu 
 import { getCurrentView } from './pages.js';
 import { closeDuelPanel } from './duelPanel.js';
 import { clickBackButtonMenu } from './modesSelection.js';
-import { addSocketListener, chatSocketListener, connectToServerInput, connectToServerOutput } from './sockets.js';
+import { addSocketListener, connectToServerInput, connectToServerOutput } from './sockets.js';
 import { closePaddleChoice, isPaddleChoiceOpen } from './customizeSkins.js';
 
 let levelMode = LevelMode.MENU;
