@@ -5,7 +5,7 @@ import { navigateTo } from "./pages.js";
 import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
 import { checkAccessToChat } from "./chat.js";
 import { getLoggedInUser, logoutUser, registerUser } from "./apiFunctions.js";
-import { joinChat } from "./sockets.js";
+import { joinChat, quitChat } from "./sockets.js";
 
 const inputName = document.getElementById('inputName');
 const inputFirstName = document.getElementById('inputFirstName');
@@ -247,6 +247,7 @@ function replaceLogOutButtons()
 
 export function clickLogOut()
 {
+    quitChat();
     logoutUser();
     replaceLogOutButtons();
     resetPlayerStats();

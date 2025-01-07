@@ -10,7 +10,7 @@ import { closeTournamentJoinMenu, closeTournamentLobbyMenu, closeTournamentMenu 
 import { getCurrentView } from './pages.js';
 import { closeDuelPanel } from './duelPanel.js';
 import { clickBackButtonMenu } from './modesSelection.js';
-import { addSocketListener, chatSocketListener } from './sockets.js';
+import { addSocketListener, chatSocketListener, connectToServerInput, connectToServerOutput } from './sockets.js';
 import { closePaddleChoice, isPaddleChoiceOpen } from './customizeSkins.js';
 
 let levelMode = LevelMode.MENU;
@@ -145,9 +145,8 @@ function openSocket()
     // socket = new WebSocket('ws://10.12.200.194:8001/ws/');
     // listener = new WebSocket('ws://10.12.200.194:8001/ws/');
     // chatSocket = new WebSocket('ws://10.12.200.194:7878/ws/');
-    socket = new WebSocket('ws://10.11.200.72:8001/ws/');
-    listener = new WebSocket('ws://10.11.200.72:8001/ws/');
-    chatSocket = new WebSocket('ws://10.11.200.72:7878/ws/');
+    socket = new WebSocket('ws://10.11.200.72:7777/ws/');
+    listener = new WebSocket('ws://10.11.200.72:7777/ws/');
     // socket = new WebSocket('ws://localhost:8001/ws/game');
 
     // socket.onmessage = function(event) {
@@ -172,18 +171,12 @@ function openSocket()
         console.log('WebSocket closed');
     };
     listener.onerror = (error) => console.log("Error:", error);
-
-    chatSocket.onopen = function() {
-        console.log("Chat Socket connected");
-    };
-    
-    chatSocket.onclose = function() {
-        console.log('Chat Socket closed');
-    };
-    chatSocket.onerror = (error) => console.log("Chat Error:", error);
     
     addSocketListener(); 
-    chatSocketListener();
+    setTimeout(() => {
+        connectToServerInput();
+        connectToServerOutput();
+    }, 150);
 }
 
 changeCursors();
