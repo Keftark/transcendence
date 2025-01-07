@@ -15,6 +15,31 @@ import { callVictoryScreen } from "./victory.js";
 
 let room_id = 0;
 
+export function connectToServerInput()
+{
+    const event = {
+        server: "main",
+        type: "log",
+        id: playerStats.id,
+        name: playerStats.nickname, // mettre les id au lieu des noms
+        socket: "input",
+        answer: "no"
+    };
+    socket.send(JSON.stringify(event));   
+}
+export function connectToServerOutput()
+{
+    const event = {
+        server: "main",
+        type: "log",
+        id: playerStats.id,
+        name: playerStats.nickname, // mettre les id au lieu des noms
+        socket: "output",
+        answer: "no"
+    };
+    listener.send(JSON.stringify(event));   
+}
+
 export function connectToDuel()
 {
     const event = {
@@ -175,6 +200,11 @@ export function addSocketListener()
         }
         // console.log(event);
         switch (event.type) {
+
+        case "message":
+            receiveMessage(event.name, event.content);
+            // console.log("Message received from " + event.name + ": " + event.content);
+            break;
         case "wait":
             console.log("Waiting in queue");
             break;
@@ -290,21 +320,27 @@ export function addSocketListener()
 
 export function joinChat()
 {
+    console.log("Joining the chat");
     const event = {
         type: "join_chat",
         id: playerStats.id,
-        blacklist: playerStats.blacklist
+        blacklist: playerStats.blacklist,
+        answer: "no",
+        server: "chat"
     };
-    chatSocket.send(JSON.stringify(event));   
+    listener.send(JSON.stringify(event));
 }
 
 export function quitChat()
 {
+    console.log("Quitting the chat");
     const event = {
         type: "quit_chat",
-        id: playerStats.id
+        id: playerStats.id,
+        answer: "no",
+        server: "chat"
     };
-    chatSocket.send(JSON.stringify(event));   
+    listener.send(JSON.stringify(event));
 }
 
 export function sendMessage(messageContent)
@@ -314,14 +350,16 @@ export function sendMessage(messageContent)
         type: "message",
         name: playerStats.nickname,
         id: playerStats.id,
-        content: messageContent
+        content: messageContent,
+        answer: "no",
+        server: "chat"
     };
-    chatSocket.send(JSON.stringify(event));   
+    listener.send(JSON.stringify(event));   
 }
 
 export function chatSocketListener()
 {
-    chatSocket.addEventListener("message", ({ data }) => {
+    listener.addEventListener("message", ({ data }) => {
         // console.log(data);
         let event;
         try {
