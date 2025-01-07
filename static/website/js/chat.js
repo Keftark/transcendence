@@ -408,7 +408,7 @@ function checkNewMessage()
         chatBox.classList.add('hasNewMessage');
 }
 
-export function receiveMessage(playerName, message)
+export function receiveMessage(playerName, message, isPrivate = false)
 {
     const newMessage = createMessageElement(playerName, message);
     // sendRandomMessage(newMessage);

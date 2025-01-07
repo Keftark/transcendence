@@ -184,6 +184,73 @@ export function boostPaddle()
     socket.send(JSON.stringify(event));
 }
 
+export function joinChat()
+{
+    console.log("Joining the chat");
+    const event = {
+        type: "join_chat",
+        id: playerStats.id,
+        blacklist: playerStats.blacklist,
+        answer: "no",
+        server: "chat"
+    };
+    listener.send(JSON.stringify(event));
+}
+
+export function quitChat()
+{
+    console.log("Quitting the chat");
+    const event = {
+        type: "quit_chat",
+        id: playerStats.id,
+        answer: "no",
+        server: "chat"
+    };
+    listener.send(JSON.stringify(event));
+}
+
+export function sendMessage(messageContent)
+{
+    // console.log("Id: " + playerStats.id);
+    const event = {
+        type: "message",
+        name: playerStats.nickname,
+        id: playerStats.id,
+        content: messageContent,
+        answer: "no",
+        server: "chat"
+    };
+    listener.send(JSON.stringify(event));
+}
+
+export function sendPrivateMessage(messageContent, targetMsg)
+{
+    // console.log("Id: " + playerStats.id);
+    const event = {
+        type: "private_message",
+        name: playerStats.nickname,
+        target: targetMsg,
+        id: playerStats.id,
+        content: messageContent,
+        answer: "no",
+        server: "chat"
+    };
+    listener.send(JSON.stringify(event));
+}
+
+export function sendFriendRequest(friendId)
+{
+    const event = { // c'est pas fait !
+        type: "message",
+        name: playerStats.nickname,
+        id: playerStats.id,
+        content: messageContent,
+        answer: "no",
+        server: "chat"
+    };
+    listener.send(JSON.stringify(event));
+}
+
 export function addSocketListener()
 {
     listener.addEventListener("message", ({ data }) => {
@@ -192,15 +259,20 @@ export function addSocketListener()
         //     return;
         let event;
         try {
-            event = JSON.parse(data); // Attempt to parse JSON
+            event = JSON.parse(data);
         } catch (error) {
             console.log(data);
             console.error("Failed to parse JSON:", error);
-            return; // Exit if there's a syntax error
+            return;
         }
         // console.log(event);
         switch (event.type) {
 
+        case "private_message":
+            if (event.target === playerStats.id)
+                receiveMessage(event.name, event.content, true);
+            // console.log("Message received from " + event.name + ": " + event.content);
+            break;
         case "message":
             receiveMessage(event.name, event.content);
             // console.log("Message received from " + event.name + ": " + event.content);
@@ -276,7 +348,7 @@ export function addSocketListener()
             else if (event.mode === "equal")
                 callVictoryScreen(VictoryType.EXAEQUO);
             break;
-        case "connection_lost":
+        case "connection_lost": // plus utile ?
             // la meme chose que victory
             break;
         case "error":
@@ -296,9 +368,6 @@ export function addSocketListener()
             }
             break;
         case "tick":
-            // x = parseInt(event.ball_x);
-            // y = parseInt(event.ball_y);
-            // console.log("room: " + event.room_id + ", player room: " + playerStats.room_id);
             if (event.room_id === playerStats.room_id);
             {
                 setPlayersPositions(event.p1_pos, event.p2_pos);
@@ -307,8 +376,6 @@ export function addSocketListener()
                 checkPowerUpState(event.p1_boosting, event.p2_boosting, event.ball_boosting);
                 setTimeFromServer(event.timer);
             }
-            // y1 = event.p1_pos;
-            // y2 = event.p2_pos;
             break;
         case "ping":
             break;
@@ -318,66 +385,27 @@ export function addSocketListener()
     });    
 }
 
-export function joinChat()
-{
-    console.log("Joining the chat");
-    const event = {
-        type: "join_chat",
-        id: playerStats.id,
-        blacklist: playerStats.blacklist,
-        answer: "no",
-        server: "chat"
-    };
-    listener.send(JSON.stringify(event));
-}
-
-export function quitChat()
-{
-    console.log("Quitting the chat");
-    const event = {
-        type: "quit_chat",
-        id: playerStats.id,
-        answer: "no",
-        server: "chat"
-    };
-    listener.send(JSON.stringify(event));
-}
-
-export function sendMessage(messageContent)
-{
-    // console.log("Id: " + playerStats.id);
-    const event = {
-        type: "message",
-        name: playerStats.nickname,
-        id: playerStats.id,
-        content: messageContent,
-        answer: "no",
-        server: "chat"
-    };
-    listener.send(JSON.stringify(event));   
-}
-
-export function chatSocketListener()
-{
-    listener.addEventListener("message", ({ data }) => {
-        // console.log(data);
-        let event;
-        try {
-            event = JSON.parse(data); // Attempt to parse JSON
-        } catch (error) {
-            console.log(data);
-            console.error("Failed to parse JSON:", error);
-            return; // Exit if there's a syntax error
-        }
-        // console.log(event);
-        switch (event.type)
-        {
-            case "message":
-                receiveMessage(event.name, event.content);
-                // console.log("Message received from " + event.name + ": " + event.content);
-                break;
-            default:
-                throw new Error(`Unsupported event type: ${event.type}.`);
-        }
-    });
-}
+// export function chatSocketListener()
+// {
+//     listener.addEventListener("message", ({ data }) => {
+//         // console.log(data);
+//         let event;
+//         try {
+//             event = JSON.parse(data);
+//         } catch (error) {
+//             console.log(data);
+//             console.error("Failed to parse JSON:", error);
+//             return;
+//         }
+//         // console.log(event);
+//         switch (event.type)
+//         {
+//             case "message":
+//                 receiveMessage(event.name, event.content);
+//                 // console.log("Message received from " + event.name + ": " + event.content);
+//                 break;
+//             default:
+//                 throw new Error(`Unsupported event type: ${event.type}.`);
+//         }
+//     });
+// }
