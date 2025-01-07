@@ -1,18 +1,24 @@
-import { getCurrentView } from "./pages.js";
 import { playerStats } from "./playerManager.js";
 
 const choosePaddlePanel = document.getElementById('choosePaddlePanel');
+const paddleList = document.getElementById('choosePaddleList');
+
+
+document.getElementById('choosePaddle1Button').addEventListener('click', () => {
+    choosePaddleSkin(1);
+});
+document.getElementById('choosePaddle2Button').addEventListener('click', () => {
+    choosePaddleSkin(2);
+});
+
 
 let paddleChoiceIsOpen = false;
-let currentPlayer = -1;
 
-export function clickChoosePaddleButton(nbr = -1)
+export function clickChoosePaddleButton()
 {
-    if (nbr != -1)
-        currentPlayer = nbr;
     paddleChoiceIsOpen = true;
     choosePaddlePanel.style.display = "flex";
-    document.getElementById('choosePaddleList').children[0].focus();
+    paddleList.children[playerStats.currentPaddleSkin - 1].focus();
     setTimeout(() => {
         choosePaddlePanel.classList.add("appearing");
     }, 100);
@@ -25,11 +31,7 @@ export function isPaddleChoiceOpen()
 
 export function closePaddleChoice()
 {
-    currentPlayer = -1;
     paddleChoiceIsOpen = false;
-    const currentView = getCurrentView();
-    if (currentView === 'rules')
-        document.getElementById('choosePaddleButton').focus();
     choosePaddlePanel.classList.remove("appearing");
     setTimeout(() => {
         choosePaddlePanel.style.display = "none";
@@ -38,17 +40,7 @@ export function closePaddleChoice()
 
 export function choosePaddleSkin(nbr)
 {
-    if (getCurrentView() === "duel")
-    {
-        document.getElementById(`choosePaddleImgPlayer${currentPlayer}`).src = `static/images/paddle${nbr}Img.webp`;
-        document.getElementById(`choosePaddleButtonPlayer${currentPlayer}`).focus();
-    }
-    else if (getCurrentView() === "home")
-    {
-        document.getElementById(`mainCustomizeButton`).focus();
-    }
-    else
-        document.getElementById('choosePaddleImg').src = `static/images/paddle${nbr}Img.webp`;
+    document.getElementById(`mainCustomizeButton`).focus();
 
     if (playerStats.currentPaddleSkin != nbr)
     {

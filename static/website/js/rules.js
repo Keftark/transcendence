@@ -1,4 +1,3 @@
-import { choosePaddleSkin, clickChoosePaddleButton } from "./customizeSkins.js";
 import { endMatch } from "./levelLocal.js";
 import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
 import { clickPlayGame, showModeChoice } from "./modesSelection.js";
@@ -18,9 +17,6 @@ document.getElementById('rulesArenaTypeSpace').addEventListener('click', () => {
 });
 document.getElementById('rulesIsPrivateToggle').addEventListener('click', () => {
     togglePrivate();
-});
-document.getElementById('choosePaddleButton').addEventListener('click', () => {
-    clickChoosePaddleButton();
 });
 
 const nbrPointsInput = document.getElementById('rulesPointsInput');
@@ -114,7 +110,6 @@ export function setCustomRules()
 
 export function resetInputfieldsRules()
 {
-    document.getElementById('choosePaddleImg').src = `static/images/paddle1Img.webp`;
     arenas[selectedArena].classList.remove('applyBorder');
     arenas[0].classList.add('applyBorder');
     nbrPointsInput.value = '3';
@@ -192,10 +187,3 @@ function togglePrivate()
     isPrivate = !isPrivate;
     togglePrivateImg.src = isPrivate ? 'static/icons/checked.webp' : 'static/icons/unchecked.webp';
 }
-
-document.getElementById('choosePaddle1Button').addEventListener('click', () => {
-    choosePaddleSkin(1);
-});
-document.getElementById('choosePaddle2Button').addEventListener('click', () => {
-    choosePaddleSkin(2);
-});

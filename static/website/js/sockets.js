@@ -1,7 +1,9 @@
+import { getUserById } from "./apiFunctions.js";
 import { setBallPosition } from "./ball.js";
+import { receiveMessage } from "./chat.js";
 import { closeDuelPanel, matchFound, setPlayersControllers, updateReadyButtons } from "./duelPanel.js";
-import { addReadyPlayer, doUpdateBallLight, getBallPosition, getPlayerSideById, removeReadyPlayers, resetScreenFunction, spawnSparksFunction } from "./levelLocal.js";
-import { getLevelState, socket, listener } from "./main.js";
+import { addReadyPlayer, doUpdateBallLight, getBallPosition, getPlayerSideById, removeReadyPlayers, resetScreenFunction, spawnSparksFunction, startScreenShake } from "./levelLocal.js";
+import { getLevelState, socket, listener, chatSocket } from "./main.js";
 import { clickPlayGame } from "./modesSelection.js";
 import { playerStats } from "./playerManager.js";
 import { setPlayersPositions } from "./playerMovement.js";
@@ -161,8 +163,8 @@ export function addSocketListener()
 {
     listener.addEventListener("message", ({ data }) => {
         // console.log(data);
-        if (data === "Message received!")
-            return;
+        // if (data === "Message received!")
+        //     return;
         let event;
         try {
             event = JSON.parse(data); // Attempt to parse JSON
@@ -212,24 +214,27 @@ export function addSocketListener()
         case "match_start":
             setPlayersControllers();
             break;
-        case "bounce":
-            console.log("bouncing");
+        case "bounce_player":
             if (event.room_id != playerStats.room_id)
                 return;
+            const strength = event.ball_boosted ? event.ball_speed * 150 : event.ball_speed * 75;
+            startScreenShake(event.ball_speed / 6, strength);
             doUpdateBallLight();
-            spawnSparksFunction(new THREE.Vector3(event.ball_x, event.ball_y, 0), event.ball_speed * 20);
+            if (event.ball_speed > 0.78)
+                spawnSparksFunction(getBallPosition(), event.ball_speed * 20);
             break;
         case "victory": // end of match, dans le lobby ou dans le match
             if (event.room_id != playerStats.room_id)
                 return;
-            console.log(data);
+            // console.log(data);
             if (event.mode === "abandon" && event.player != playerStats.id)
             {
                 closeDuelPanel();
             }
-            else if (event.mode === "ragequit" && event.player != playerStats.id)
+            else if ((event.mode === "disconnected" || event.mode === "ragequit") && event.player != playerStats.id)
             {
-                endOfMatch();// mettre un argument pour forcer la victoire et indiquer que l'autre a quitte
+                // aficher un message different si le mode est disconnected ou ragequit?
+                endOfMatch(true);// mettre un argument pour forcer la victoire et indiquer que l'autre a quitte
             }
             else if (event.mode === "points" || event.mode === "timer")
             {
@@ -240,6 +245,9 @@ export function addSocketListener()
             }
             else if (event.mode === "equal")
                 callVictoryScreen(VictoryType.EXAEQUO);
+            break;
+        case "connection_lost":
+            // la meme chose que victory
             break;
         case "error":
             console.log("Got error : " + event.content);
@@ -278,4 +286,60 @@ export function addSocketListener()
             throw new Error(`Unsupported event type: ${event.type}.`);
         }
     });    
+}
+
+export function joinChat()
+{
+    const event = {
+        type: "join_chat",
+        id: playerStats.id,
+        blacklist: playerStats.blacklist
+    };
+    chatSocket.send(JSON.stringify(event));   
+}
+
+export function quitChat()
+{
+    const event = {
+        type: "quit_chat",
+        id: playerStats.id
+    };
+    chatSocket.send(JSON.stringify(event));   
+}
+
+export function sendMessage(messageContent)
+{
+    // console.log("Id: " + playerStats.id);
+    const event = {
+        type: "message",
+        name: playerStats.nickname,
+        id: playerStats.id,
+        content: messageContent
+    };
+    chatSocket.send(JSON.stringify(event));   
+}
+
+export function chatSocketListener()
+{
+    chatSocket.addEventListener("message", ({ data }) => {
+        // console.log(data);
+        let event;
+        try {
+            event = JSON.parse(data); // Attempt to parse JSON
+        } catch (error) {
+            console.log(data);
+            console.error("Failed to parse JSON:", error);
+            return; // Exit if there's a syntax error
+        }
+        // console.log(event);
+        switch (event.type)
+        {
+            case "message":
+                receiveMessage(event.name, event.content);
+                // console.log("Message received from " + event.name + ": " + event.content);
+                break;
+            default:
+                throw new Error(`Unsupported event type: ${event.type}.`);
+        }
+    });
 }

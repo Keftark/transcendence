@@ -1,10 +1,9 @@
 import { fakeDatabase } from "./database.js";
-import { isVictory } from "./levelLocal.js";
 import { changeTextsColor } from "./menu.js";
 import { getRandomNumberBetween } from "./objects.js";
 import { MatchResult } from "./scoreManager.js";
 import { getTranslation } from "./translate.js";
-import { PlayerStatus } from "./variables.js";
+import { PlayerStatus, VictoryType } from "./variables.js";
 
 const inputNick = document.getElementById('inputName');
 const inputFirstName = document.getElementById('inputFirstName');
@@ -39,11 +38,11 @@ export function createPlayerStats() {
     };
 }
 
-export function addMatchToHistory(playerScore, opponentScore, opponentName, matchTime = '0')
+export function addMatchToHistory(victoryType, playerScore, opponentScore, opponentName, matchTime = '0')
 {
     console.log("Adding match to history:\nplayer score: " + playerScore + "\nOpponent score: " + opponentScore + "\nOpponent name: " + opponentName);
     setTimeout(() => {
-        playerStats.matches.push(new MatchResult(playerScore, opponentScore, opponentName, matchTime));
+        playerStats.matches.push(new MatchResult(victoryType, playerScore, opponentScore, opponentName, matchTime));
     }, 50);
     // prendre le joueur depuis la base de donnees et inserer le nouveau score
 }
@@ -56,6 +55,7 @@ export async function createNewPlayer()
     player.lastName = inputLastName.value;
     player.mail = inputMail.value;
     player.password = inputPassword.value;
+    // faire en sorte de reprendre les preference du joueur avant qu'il ne se soit enregistre ?
     player.language = "en";
     player.photoIndex = 0;
     player.room_id = -1;
@@ -112,6 +112,7 @@ export function resetPlayerStats()
     playerStats.friends = [];
     playerStats.isRegistered = false;
     playerStats.playerController = 1;
+    playerStats.currentPaddleSkin = 1;
     playerStats.status = PlayerStatus.ONLINE;
 }
 
@@ -139,7 +140,7 @@ export function getPlayerVictories(player = playerStats)
     let victories = 0;
     for (let i = 0; i < total; i++)
     {
-        if (isVictory(player.matches[i]))
+        if (player.matches[i].victoryType === VictoryType.VICTORY)
             victories++;
     }
     let percentage = victories * 100 / total;
