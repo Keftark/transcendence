@@ -6,6 +6,7 @@ import { isInGame } from "./levelLocal.js";
 import { openProfile } from "./menu.js";
 import { getPlayerName, playerStats } from "./playerManager.js";
 import { getRules, resetInputfieldsRules } from "./rules.js";
+import { joinChat, sendMessage } from "./sockets.js";
 import { getTranslation } from "./translate.js";
 import { ArenaType, LevelMode } from "./variables.js";
 
@@ -407,10 +408,14 @@ function checkNewMessage()
         chatBox.classList.add('hasNewMessage');
 }
 
-function receiveMessage(playerName, message)
+export function receiveMessage(playerName, message)
 {
     const newMessage = createMessageElement(playerName, message);
-    sendRandomMessage(newMessage);
+    // sendRandomMessage(newMessage);
+    if (playerName === playerStats.nickname)
+        sendMessageRight(newMessage);
+    else
+        sendMessageLeft(newMessage);
     messagesContainer.appendChild(newMessage);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
     lastSender = playerName;
@@ -436,8 +441,9 @@ function trySendMessage() {
             return word.length > 30 ? word.substring(0, 30) + '...' : word;
         }).join(' ');
 
-        let playerName = getPlayerNameChat();
-        receiveMessage(playerName, truncatedMessage);
+        // let playerName = getPlayerNameChat();
+        sendMessage(truncatedMessage);
+        receiveMessage(playerStats.nickname, truncatedMessage);
     }
     inputElement.value = '';
     inputElement.focus();
@@ -559,3 +565,7 @@ inputElement.addEventListener('blur', () => {
 //         checkNewMessage();
 //     }
 // });
+
+// setTimeout(() => {
+//     joinChat();
+// }, 150);

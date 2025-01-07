@@ -1,7 +1,9 @@
+import { getUserById } from "./apiFunctions.js";
 import { setBallPosition } from "./ball.js";
+import { receiveMessage } from "./chat.js";
 import { closeDuelPanel, matchFound, setPlayersControllers, updateReadyButtons } from "./duelPanel.js";
 import { addReadyPlayer, doUpdateBallLight, getBallPosition, getPlayerSideById, removeReadyPlayers, resetScreenFunction, spawnSparksFunction, startScreenShake } from "./levelLocal.js";
-import { getLevelState, socket, listener } from "./main.js";
+import { getLevelState, socket, listener, chatSocket } from "./main.js";
 import { clickPlayGame } from "./modesSelection.js";
 import { playerStats } from "./playerManager.js";
 import { setPlayersPositions } from "./playerMovement.js";
@@ -161,8 +163,8 @@ export function addSocketListener()
 {
     listener.addEventListener("message", ({ data }) => {
         // console.log(data);
-        if (data === "Message received!")
-            return;
+        // if (data === "Message received!")
+        //     return;
         let event;
         try {
             event = JSON.parse(data); // Attempt to parse JSON
@@ -284,4 +286,60 @@ export function addSocketListener()
             throw new Error(`Unsupported event type: ${event.type}.`);
         }
     });    
+}
+
+export function joinChat()
+{
+    const event = {
+        type: "join_chat",
+        id: playerStats.id,
+        blacklist: playerStats.blacklist
+    };
+    chatSocket.send(JSON.stringify(event));   
+}
+
+export function quitChat()
+{
+    const event = {
+        type: "quit_chat",
+        id: playerStats.id
+    };
+    chatSocket.send(JSON.stringify(event));   
+}
+
+export function sendMessage(messageContent)
+{
+    // console.log("Id: " + playerStats.id);
+    const event = {
+        type: "message",
+        name: playerStats.nickname,
+        id: playerStats.id,
+        content: messageContent
+    };
+    chatSocket.send(JSON.stringify(event));   
+}
+
+export function chatSocketListener()
+{
+    chatSocket.addEventListener("message", ({ data }) => {
+        // console.log(data);
+        let event;
+        try {
+            event = JSON.parse(data); // Attempt to parse JSON
+        } catch (error) {
+            console.log(data);
+            console.error("Failed to parse JSON:", error);
+            return; // Exit if there's a syntax error
+        }
+        // console.log(event);
+        switch (event.type)
+        {
+            case "message":
+                receiveMessage(event.name, event.content);
+                // console.log("Message received from " + event.name + ": " + event.content);
+                break;
+            default:
+                throw new Error(`Unsupported event type: ${event.type}.`);
+        }
+    });
 }
