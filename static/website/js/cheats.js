@@ -1,8 +1,10 @@
-import { addFriendFunction, clickBlockUser, removeFriendFunction, sendSystemMessage } from "./chat.js";
+import { addFriendFunction, clickBlockUser, receiveMessage, removeFriendFunction, sendSystemMessage } from "./chat.js";
 import { setDuelTargetPlayer } from "./duelPanel.js";
 import { removeBlockedUser } from "./friends.js";
 import { changeBallSizeInstance, changeBallSpeedInstance, changePlayersSize, getBallPosition } from "./levelLocal.js";
 import { askForDuel } from "./modesSelection.js";
+import { playerStats } from "./playerManager.js";
+import { sendPrivMessage } from "./sockets.js";
 
 export const cheatCodes =
 {
@@ -43,9 +45,11 @@ function sendInvitDuel(playerInvit = "")
         setDuelTargetPlayer(playerInvit)
 }
 
-function sendPrivateMessage(playerName = "", message = "")
+function sendPrivateMessage(target = "", message = "")
 {
-    console.log("Message to: " + playerName + ": " + message);
+    // console.log("Message to: " + target + ": " + message);
+    sendPrivMessage(target, message);
+    receiveMessage(playerStats.nickname, message, true, target);
     // on check si le player existe dans la bdd et est connecte
     // si oui, on envoie un message prive et lui seul le recoit.
     // evidemment, le joueur voit ce qu'il ecrit.

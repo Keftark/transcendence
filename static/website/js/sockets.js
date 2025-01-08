@@ -3,7 +3,7 @@ import { setBallPosition } from "./ball.js";
 import { receiveMessage } from "./chat.js";
 import { closeDuelPanel, matchFound, setPlayersControllers, updateReadyButtons } from "./duelPanel.js";
 import { addReadyPlayer, doUpdateBallLight, getBallPosition, getPlayerSideById, removeReadyPlayers, resetScreenFunction, spawnSparksFunction, startScreenShake } from "./levelLocal.js";
-import { getLevelState, socket, listener, chatSocket } from "./main.js";
+import { getLevelState, socket, listener } from "./main.js";
 import { clickPlayGame } from "./modesSelection.js";
 import { playerStats } from "./playerManager.js";
 import { setPlayersPositions } from "./playerMovement.js";
@@ -223,13 +223,13 @@ export function sendMessage(messageContent)
     listener.send(JSON.stringify(event));
 }
 
-export function sendPrivateMessage(messageContent, targetMsg)
+export function sendPrivMessage(targetMsg, messageContent)
 {
-    // console.log("Id: " + playerStats.id);
+    const targetId = getUserById(targetMsg); // fonction pas encore faite, Martin devrait la faire !
     const event = {
         type: "private_message",
         name: playerStats.nickname,
-        target: targetMsg,
+        target: targetId,
         id: playerStats.id,
         content: messageContent,
         answer: "no",

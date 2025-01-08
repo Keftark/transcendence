@@ -119,5 +119,7 @@
     "consentText": "Je consente au traitement de mes données personnelles pour la création de compte et la fourniture des services comme indiqué dans la <span class='gdpr'>Politique de confidentialité</span>.",
     "waitingMatchText": "En attente...",
     "helpRulesTitle": "Règles par defaut",
-    "helpRulesText": "Les règles par défaut sont :\n\nPoints gagnants : 3\nLimite de temps : aucune\nArène : Aléatoire"
+    "helpRulesText": "Les règles par défaut sont :\n\nPoints gagnants : 3\nLimite de temps : aucune\nArène : Aléatoire",
+    "from": "De ",
+    "to": "A "
 }

@@ -142,11 +142,11 @@ export let chatSocket;
 
 function openSocket()
 {
-    // socket = new WebSocket('ws://10.12.200.194:8001/ws/');
-    // listener = new WebSocket('ws://10.12.200.194:8001/ws/');
+    socket = new WebSocket('ws://10.12.200.194:7777/ws/');
+    listener = new WebSocket('ws://10.12.200.194:7777/ws/');
     // chatSocket = new WebSocket('ws://10.12.200.194:7878/ws/');
-    socket = new WebSocket('ws://10.11.200.72:7777/ws/');
-    listener = new WebSocket('ws://10.11.200.72:7777/ws/');
+    // socket = new WebSocket('ws://10.11.200.72:7777/ws/');
+    // listener = new WebSocket('ws://10.11.200.72:7777/ws/');
     // socket = new WebSocket('ws://localhost:8001/ws/game');
 
     // socket.onmessage = function(event) {

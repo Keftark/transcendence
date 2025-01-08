@@ -318,3 +318,15 @@ button:hover {
     border-radius: 8px;
     background-color: rgba(0, 0, 0, 0.432);
 }
+
+.private-message-left
+{
+    background-color: rgba(247, 0, 255, 0.26);
+    border: 2px ridge black;
+}
+
+.private-message-right
+{
+    background-color: rgba(255, 255, 0, 0.26);
+    border: 2px ridge black;
+}

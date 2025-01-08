@@ -308,11 +308,11 @@ function isNotThePlayer(name)
     return (name != getPlayerName());
 }
 
-function createMessageElement(name, messageText) {
+function createMessageElement(name, messageText, isPrivate = false) {
     const messageContainer = document.createElement('div');
     messageContainer.classList.add('message-container');
 
-    if (name != "" && name != lastSender)
+    if (!isPrivate && name != "" && name != lastSender)
     {
         const nameHeader = document.createElement('div');
         nameHeader.classList.add('message-name');
@@ -338,18 +338,28 @@ function createMessageElement(name, messageText) {
     return messageContainer;
 }
 
-function sendMessageLeft(newMessage)
+function sendMessageLeft(newMessage, playerName, isPrivate = false)
 {
     const messageContent = newMessage.querySelector('.message');
     messageContent.classList.add('message-container-left');
     newMessage.classList.add('message-left');
+    if (isPrivate)
+    {
+        newMessage.lastElementChild.innerHTML = "<b>" + getTranslation("from") + playerName + ":</b> " + newMessage.lastElementChild.textContent;
+        messageContent.classList.add('private-message-left');
+    }
 }
 
-function sendMessageRight(newMessage)
+function sendMessageRight(newMessage, playerName, isPrivate = false)
 {
     const messageContent = newMessage.querySelector('.message');
     messageContent.classList.add('message-container-right');
     newMessage.classList.add('message-right');
+    if (isPrivate)
+    {
+        newMessage.lastElementChild.innerHTML = "<b>" + getTranslation("to") + playerName + ":</b> " + newMessage.lastElementChild.textContent;
+        messageContent.classList.add('private-message-right');
+    }
 }
 
 function sendMessageMiddle(newMessage)
@@ -357,36 +367,36 @@ function sendMessageMiddle(newMessage)
     newMessage.classList.add('message-middle');
 }
 
-let messageCount = 0;
-function sendRandomMessage(newMessage)
-{
-    if (messageCount % 3 === 0)
-        sendMessageRight(newMessage);
-    else if (messageCount % 3 === 1)
-        sendMessageLeft(newMessage);
-    else
-        sendMessageMiddle(newMessage);
-}
+// let messageCount = 0;
+// function sendRandomMessage(newMessage)
+// {
+//     if (messageCount % 3 === 0)
+//         sendMessageRight(newMessage);
+//     else if (messageCount % 3 === 1)
+//         sendMessageLeft(newMessage);
+//     else
+//         sendMessageMiddle(newMessage);
+// }
 
-function getPlayerNameChat()
-{
-    messageCount = Math.floor(Math.random() * 3);
-    let name = "";
+// function getPlayerNameChat()
+// {
+//     messageCount = Math.floor(Math.random() * 3);
+//     let name = "";
 
-    /* Bloc a supprimer, c'est juste pour des tests */
-    if (messageCount % 3 === 0)
-    {
-        name = getPlayerName();
-    }
-    else if (messageCount % 3 === 1)
-        name = "ProGamer";
+//     /* Bloc a supprimer, c'est juste pour des tests */
+//     if (messageCount % 3 === 0)
+//     {
+//         name = getPlayerName();
+//     }
+//     else if (messageCount % 3 === 1)
+//         name = "ProGamer";
 
-    /*
-        Logique pour avoir le nom du joueur.
-    */
+//     /*
+//         Logique pour avoir le nom du joueur.
+//     */
 
-    return name;
-}
+//     return name;
+// }
 
 export function sendSystemMessage(message, otherVar, forceUseOtherVar = false)
 {
@@ -408,14 +418,19 @@ function checkNewMessage()
         chatBox.classList.add('hasNewMessage');
 }
 
-export function receiveMessage(playerName, message, isPrivate = false)
+export function receiveMessage(playerName, message, isPrivate = false, toPlayer = "")
 {
-    const newMessage = createMessageElement(playerName, message);
+    const newMessage = createMessageElement(playerName, message, isPrivate);
     // sendRandomMessage(newMessage);
     if (playerName === playerStats.nickname)
-        sendMessageRight(newMessage);
+    {
+        if (toPlayer === "")
+            sendMessageRight(newMessage, playerName, isPrivate);
+        else
+            sendMessageRight(newMessage, toPlayer, isPrivate);
+    }
     else
-        sendMessageLeft(newMessage);
+        sendMessageLeft(newMessage, playerName, isPrivate);
     messagesContainer.appendChild(newMessage);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
     lastSender = playerName;

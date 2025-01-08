@@ -119,6 +119,8 @@
     "consentText": "I consent to the processing of my personal data for account creation and service delivery as outlined in the <span class='gdpr'>Privacy Policy</span>.",
     "waitingMatchText": "Waiting...",
     "helpRulesTitle": "Default Rules",
-    "helpRulesText": "The default rules are:\n\nPoints to win: 3\nTime limit: none\nArena: Random"
+    "helpRulesText": "The default rules are:\n\nPoints to win: 3\nTime limit: none\nArena: Random",
+    "from": "From ",
+    "to": "To "
 
 }
