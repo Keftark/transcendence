@@ -237,9 +237,13 @@ export function removeFriendFunction(playerName)
 
 export function addFriendFunction(playerName)
 {
-    if (playerStats.friends.includes(playerName))
+    if (playerStats.friends.includes(playerName)) // remplacer ca par la requete serveur, pour plus de securite
+    {
+        sendSystemMessage("alreadyfriend", playerName, true);
         return;
+    }
     sendSystemMessage("youAddedPlayer", playerName, true);
+    // faire la requete serveur pour ajouter l'id de la personne aux amis
     playerStats.friends.push(playerName);
     addFriend(playerName);
 }

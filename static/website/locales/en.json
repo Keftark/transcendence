@@ -121,6 +121,7 @@
     "helpRulesTitle": "Default Rules",
     "helpRulesText": "The default rules are:\n\nPoints to win: 3\nTime limit: none\nArena: Random",
     "from": "From ",
-    "to": "To "
+    "to": "To ",
+    "alreadyfriend": "You are already friend with "
 
 }
