@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import user
+#from .views.user import update_profile, update_password
 
 from .viewsets.MyAccountViewSet import MyAccountViewSet
 from .serializers import AccountSerializer
@@ -33,6 +34,8 @@ urlpatterns = [
     path('get-user/<str:username>/', user.get_user_by_name, name='get-user-by-name'),
     path('user/<int:user_id>/', user.get_user_by_id, name='user_detail'),
     path("me", MyAccountViewSet.as_view({'get': 'retrieve'}), name="my_account_page"), #My Account page
+    #path("update-profile", update_profile.UpdateProfileView.as_view(), name="update-user"), # update user
+    #path('update_password', update_password.UpdatePasswordView.as_view(), name='update_password'), # update user password
     path("settings", MyAccountViewSet.as_view({'patch': 'partial_update', 'delete': 'delete_avatar'}), name="my_profile_page"), #Update account page
     path("friends", GetFriendsView.as_view(), name="friends_list_page"), # Friends list page
     path("friends/<int:pk>", EditFriendView.as_view(), name="friends_edit_page"), # Edit friend (remove friend)
