@@ -1,3 +1,4 @@
+from os import path
 from django.conf import settings
 from django.utils.translation import gettext as _
 from django.contrib.auth.models import Group, User
@@ -33,7 +34,7 @@ class AccountSerializer(serializers.ModelSerializer):
                   'has_outgoing_request', 'has_incoming_request']
 
     def get_status(self, obj: AccountModel):
-        from ..notifications.consumers import notification_manager
+        from notifications.consumers import notification_manager
 
         user = self.context.get('user')
         if user is None or not user.is_authenticated:
@@ -43,7 +44,7 @@ class AccountSerializer(serializers.ModelSerializer):
             return None
 
         return notification_manager.get_consumer_by_user(obj.user) is not None
-
+    
     def get_is_friend(self, obj: AccountModel):
         user = self.context.get('user')
         if user is None or not user.is_authenticated or user.pk == obj.pk:
