@@ -6,6 +6,7 @@ import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
 import { checkAccessToChat } from "./chat.js";
 import { getLoggedInUser, logoutUser, registerUser } from "./apiFunctions.js";
 import { joinChat, quitChat } from "./sockets.js";
+import { connectToServer } from "./signIn.js";
 
 const inputName = document.getElementById('inputName');
 const inputFirstName = document.getElementById('inputFirstName');
@@ -228,6 +229,7 @@ async function acceptRegistration()
     if (!result)
         return;
     
+    connectToServer();
     createNewPlayer();
     clickCancelRegister();
     logInUserUI();

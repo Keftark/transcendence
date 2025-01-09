@@ -38,6 +38,11 @@ document.getElementById('askRegister').addEventListener('click', () => {
     }, 300);
 });
 
+export function isSigninOpen()
+{
+    return isSignInOpen;
+}
+
 function showLogInPanel()
 {
     navigateTo('signIn');
@@ -126,7 +131,7 @@ function passwordIsValid(pass)
     return true;
 }
 
-function connectToServer()
+export function connectToServer()
 {
     connectToServerInput();
     connectToServerOutput();

@@ -12,6 +12,7 @@ import { closeDuelPanel } from './duelPanel.js';
 import { clickBackButtonMenu } from './modesSelection.js';
 import { addSocketListener } from './sockets.js';
 import { closePaddleChoice, isPaddleChoiceOpen } from './customizeSkins.js';
+import { clickCancelSignIn, isSigninOpen } from './signIn.js';
 
 let levelMode = LevelMode.MENU;
 
@@ -44,6 +45,8 @@ export function checkEscapeKey()
     const currentView = getCurrentView();
     if (isGdprOpen)
         closeGdprPanel();
+    else if (isSigninOpen())
+        clickCancelSignIn();
     else if (isRegistrationOpen())
         clickCancelRegister();
     else if (isChatOpen())
