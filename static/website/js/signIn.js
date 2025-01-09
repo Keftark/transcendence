@@ -2,6 +2,7 @@ import { logInPlayer } from "./apiFunctions.js";
 import { navigateTo } from "./pages.js";
 import { editPlayerStats } from "./playerManager.js";
 import { logInUserUI } from "./registration.js";
+import { connectToServerInput, connectToServerOutput } from "./sockets.js";
 import { getTranslation } from "./translate.js";
 
 const signInPanel = document.getElementById('signinpanel');
@@ -125,12 +126,19 @@ function passwordIsValid(pass)
     return true;
 }
 
+function connectToServer()
+{
+    connectToServerInput();
+    connectToServerOutput();
+}
+
 async function clickConfirmSignIn()
 {
     const username = inputNick.value;
     const password = inputPassword.value;
 
-    logInPlayer(username, password);
+    await logInPlayer(username, password);
+    connectToServer();
     // Prepare the data for the POST request
     
     // let errors = 0;

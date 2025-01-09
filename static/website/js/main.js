@@ -10,7 +10,7 @@ import { closeTournamentJoinMenu, closeTournamentLobbyMenu, closeTournamentMenu 
 import { getCurrentView } from './pages.js';
 import { closeDuelPanel } from './duelPanel.js';
 import { clickBackButtonMenu } from './modesSelection.js';
-import { addSocketListener, connectToServerInput, connectToServerOutput } from './sockets.js';
+import { addSocketListener } from './sockets.js';
 import { closePaddleChoice, isPaddleChoiceOpen } from './customizeSkins.js';
 
 let levelMode = LevelMode.MENU;
@@ -173,10 +173,10 @@ function openSocket()
     listener.onerror = (error) => console.log("Error:", error);
     
     addSocketListener(); 
-    setTimeout(() => {
-        connectToServerInput();
-        connectToServerOutput();
-    }, 150);
+    // setTimeout(() => {
+    //     connectToServerInput();
+    //     connectToServerOutput();
+    // }, 150);
 }
 
 changeCursors();

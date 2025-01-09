@@ -43,6 +43,8 @@ export function connectToServerOutput()
 export function connectToDuel()
 {
     const event = {
+        key: keySocket,
+        server: "1v1_classic",
         type: "join",
         id: playerStats.id,
         blacklist: {}, // mettre les id au lieu des noms
@@ -66,6 +68,8 @@ export function connectToDuel()
 export function readyToDuel()
 {
     const event = {
+        key: keySocket,
+        server: "1v1_classic",
         type: "ready",
         room: room_id,
         id: playerStats.id
@@ -76,6 +80,8 @@ export function readyToDuel()
 export function notReadyToDuel()
 {
     const event = {
+        key: keySocket,
+        server: "1v1_classic",
         type: "pause",
         room: room_id,
         id: playerStats.id
@@ -86,6 +92,8 @@ export function notReadyToDuel()
 export function exitLobby()
 {
     const event = {
+        key: keySocket,
+        server: "1v1_classic",
         type: "quit_lobby",
         room: playerStats.room_id,
         id: playerStats.id
@@ -96,6 +104,8 @@ export function exitLobby()
 export function exitDuel()
 {
     const event = {
+        key: keySocket,
+        server: "1v1_classic",
         type: "quit_lobby",
         room: playerStats.room_id,
         id: playerStats.id
@@ -106,6 +116,8 @@ export function exitDuel()
 export function sendPlayerReady()
 {
     const event = {
+        key: keySocket,
+        server: "1v1_classic",
         type: "ready",
         room: playerStats.room_id,
         id: playerStats.id
@@ -116,6 +128,8 @@ export function sendPlayerReady()
 export function playerUp()
 {
     const event = {
+        key: keySocket,
+        server: "1v1_classic",
         type: "input",
         room: playerStats.room_id,
         id: playerStats.id,
@@ -128,6 +142,8 @@ export function playerUp()
 export function playerUpNot()
 {
     const event = {
+        key: keySocket,
+        server: "1v1_classic",
         type: "input",
         room: playerStats.room_id,
         id: playerStats.id,
@@ -140,6 +156,8 @@ export function playerUpNot()
 export function playerDown()
 {
     const event = {
+        key: keySocket,
+        server: "1v1_classic",
         type: "input",
         room: playerStats.room_id,
         id: playerStats.id,
@@ -152,6 +170,8 @@ export function playerDown()
 export function playerDownNot()
 {
     const event = {
+        key: keySocket,
+        server: "1v1_classic",
         type: "input",
         room: playerStats.room_id,
         id: playerStats.id,
@@ -175,6 +195,8 @@ export function exitGameSocket()
 export function boostPaddle()
 {
     const event = {
+        key: keySocket,
+        server: "1v1_classic",
         type: "input",
         room: room_id,
         id: playerStats.id,
@@ -188,6 +210,7 @@ export function joinChat()
 {
     console.log("Joining the chat");
     const event = {
+        key: keySocket,
         type: "join_chat",
         id: playerStats.id,
         blacklist: playerStats.blacklist,
@@ -201,6 +224,7 @@ export function quitChat()
 {
     console.log("Quitting the chat");
     const event = {
+        key: keySocket,
         type: "quit_chat",
         id: playerStats.id,
         answer: "no",
@@ -213,6 +237,7 @@ export function sendMessage(messageContent)
 {
     // console.log("Id: " + playerStats.id);
     const event = {
+        key: keySocket,
         type: "message",
         name: playerStats.nickname,
         id: playerStats.id,
@@ -227,6 +252,7 @@ export function sendPrivMessage(targetMsg, messageContent)
 {
     const targetId = getUserById(targetMsg); // fonction pas encore faite, Martin devrait la faire !
     const event = {
+        key: keySocket,
         type: "private_message",
         name: playerStats.nickname,
         target: targetId,
@@ -241,6 +267,7 @@ export function sendPrivMessage(targetMsg, messageContent)
 export function sendFriendRequest(friendId)
 {
     const event = { // c'est pas fait !
+        key: keySocket,
         type: "message",
         name: playerStats.nickname,
         id: playerStats.id,
@@ -251,10 +278,11 @@ export function sendFriendRequest(friendId)
     listener.send(JSON.stringify(event));
 }
 
+export let keySocket = null;
 export function addSocketListener()
 {
     listener.addEventListener("message", ({ data }) => {
-        // console.log(data);
+        console.log(data);
         // if (data === "Message received!")
         //     return;
         let event;
@@ -264,6 +292,10 @@ export function addSocketListener()
             console.log(data);
             console.error("Failed to parse JSON:", error);
             return;
+        }
+        if (keySocket == null && 'id' in event && 'key' in event && event.id === playerStats.id)
+        {
+            keySocket = event.key;
         }
         // console.log(event);
         switch (event.type) {
