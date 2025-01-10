@@ -43,7 +43,8 @@ function openChat()
     chatBox.classList.remove('hide-elements');
     chatBox.classList.add('expanded');
     toggleIcon.src = 'static/icons/shrink.webp';
-    inputElement.focus();
+    if (playerStats.isRegistered)
+        inputElement.focus();
     chatIsOpen = true;
     overlayChat.style.display = playerStats.isRegistered ? 'none' : 'flex';
     chatBox.classList.remove('hasNewMessage');
