@@ -197,6 +197,7 @@ export async function getUserByName(userName) {
         if (userData.error) {
             console.error(userData.error);
         }
+        console.log("user data: " + userData);
         // else {
         //     console.log("User Details:", userData);
         // }

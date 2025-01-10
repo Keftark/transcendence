@@ -188,6 +188,7 @@
     overflow-y: scroll;
     margin-top: 10px;
     margin-bottom: 10px;
+    color: white;
 }
 
 .matchInList
@@ -198,6 +199,12 @@
     border: 1px solid #00776d70;
     background-color: rgb(0, 40, 40);
     justify-content: center;
+}
+
+.matchInList:hover
+{
+    border: 1px solid #00918570;
+    background-color: rgb(0, 70, 70);
 }
 
 .centeredText

@@ -300,7 +300,7 @@ export function changeTextsColor(newColor)
 {
     const textElements = document.querySelectorAll(' \
         h1, h2, div, h3, p, button, #header-title, #menu-label span, #pressplay, #play, #score-left, #score-right, .score-timer, #playername-left, \
-        #playername-right, #inputChat, input, label');
+        #playername-right, #inputChat, input, label, #spectateList');
     textElements.forEach(element => {
         element.style.color = newColor;
     });

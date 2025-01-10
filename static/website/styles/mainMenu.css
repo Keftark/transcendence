@@ -137,6 +137,32 @@
     box-shadow: 0 0 16px rgba(0, 255, 255, 0.301);
 }
 
+.buttonSpectate
+{
+    position: absolute;
+    bottom: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 17vw;
+    height: 8vh;
+    margin: 0.5vh 0;
+    color: white;
+    font-size: clamp(0.5rem + 1vw, 0.5rem + 1vw + 1vh, 6vw);
+    border-radius: 8px;
+    border: 3px solid #006b6b;
+    transform: translate(-60%, 0%);
+    background-color:rgba(0, 255, 255, 0.219);
+    box-shadow: 0 0 8px rgba(0, 255, 255, 0.452);
+}
+
+.buttonSpectate:hover
+{
+    border-color: #00fff2;
+    background-color: rgba(0, 255, 255, 0.418);
+    opacity: 0.8;
+    box-shadow: 0 0 16px rgba(0, 255, 255, 0.637);
+}
 
 .fadeMainButton
 {

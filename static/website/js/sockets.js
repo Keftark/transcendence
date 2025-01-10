@@ -249,21 +249,27 @@ export function sendMessage(messageContent)
     listener.send(JSON.stringify(event));
 }
 
-export function sendPrivMessage(targetMsg, messageContent)
-{
-    const target = getUserByName(targetMsg); // fonction pas encore faite, Martin devrait la faire !
-    console.log(target.username);
-    const event = {
-        key: keySocket,
-        type: "private_message",
-        name: playerStats.nickname,
-        target: target.id,
-        id: playerStats.id,
-        content: messageContent,
-        answer: "no",
-        server: "chat"
-    };
-    listener.send(JSON.stringify(event));
+export function sendPrivMessage(targetMsg, messageContent) {
+    getUserByName(targetMsg)
+        .then((target) => {
+            console.log(target.username);
+
+            const event = {
+                key: keySocket,
+                type: "private_message",
+                name: playerStats.nickname,
+                target: target.id,
+                id: playerStats.id,
+                content: messageContent,
+                answer: "no",
+                server: "chat"
+            };
+
+            listener.send(JSON.stringify(event));
+        })
+        .catch((error) => {
+            console.error("Failed to get user by name:", error);
+        });
 }
 
 export function sendFriendRequest(friendId)

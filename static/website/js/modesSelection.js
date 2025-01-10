@@ -339,9 +339,20 @@ document.getElementById('buttonSpectate').addEventListener('click', () => {
 export function openMatchList()
 {
     // faire la requete pour recuperer tous les matchs et appeler la fonction pour les afficher
-    for(let i = 0; i < 15; i++)
+    const matchCount = 0; // faire un compte des matchs ici
+    if (matchCount === 0)
     {
-        addMatchToList("Bonjour");
+        matchList.style.justifyContent = "center";
+        matchList.textContent = "Nope, pas de match";
+    }
+    else
+    {
+        matchList.style.justifyContent = "start";
+        matchList.textContent = "";
+        for(let i = 0; i < 15; i++)
+        {
+            addMatchToList("Bonjour");
+        }
     }
     matchListPanel.style.display = 'flex';
 }
@@ -355,7 +366,7 @@ function closeMatchList()
 
 function addMatchToList(textContent)
 {
-    const matchContainer = document.createElement('div');
+    const matchContainer = document.createElement('button');
     matchContainer.classList.add('matchInList');
 
     const textContainer = document.createElement('p');
