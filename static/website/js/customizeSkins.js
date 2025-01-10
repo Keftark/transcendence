@@ -36,12 +36,11 @@ export function closePaddleChoice()
     setTimeout(() => {
         choosePaddlePanel.style.display = "none";
     }, 100);
+    document.getElementById('mainCustomizeButton').focus();
 }
 
 export function choosePaddleSkin(nbr)
 {
-    document.getElementById(`mainCustomizeButton`).focus();
-
     if (playerStats.currentPaddleSkin != nbr)
     {
         playerStats.currentPaddleSkin = nbr;

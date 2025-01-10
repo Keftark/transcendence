@@ -5,6 +5,7 @@ import { isProfileOpen, isSettingsOpen } from "./menu.js";
 import { isRegistrationOpen } from "./registration.js";
 import { isMatchListOpen } from "./modesSelection.js";
 import { isSigninOpen } from "./signIn.js";
+import { isPaddleChoiceOpen } from "./customizeSkins.js";
 
 function mainMenuEvents(event)
 {
@@ -17,6 +18,8 @@ function mainMenuEvents(event)
         focusableElements = document.getElementById('registering').querySelectorAll('button, input, a, textarea, select');
     else if (isSigninOpen())
         focusableElements = document.getElementById('signIn').querySelectorAll('button, input, a, textarea, select');
+    else if (isPaddleChoiceOpen())
+        focusableElements = document.getElementById('choosePaddlePanel').querySelectorAll('button, input, a, textarea, select');
     else if (isProfileOpen())
         focusableElements = document.getElementById('profilePanel').querySelectorAll('button, input, a, textarea, select');
     else if (isSettingsOpen())
