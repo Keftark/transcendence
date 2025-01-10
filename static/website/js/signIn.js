@@ -2,6 +2,7 @@ import { logInPlayer } from "./apiFunctions.js";
 import { navigateTo } from "./pages.js";
 import { editPlayerStats } from "./playerManager.js";
 import { logInUserUI } from "./registration.js";
+import { connectToServerInput, connectToServerOutput } from "./sockets.js";
 import { getTranslation } from "./translate.js";
 
 const signInPanel = document.getElementById('signinpanel');
@@ -36,6 +37,11 @@ document.getElementById('askRegister').addEventListener('click', () => {
         navigateTo('registering');
     }, 300);
 });
+
+export function isSigninOpen()
+{
+    return isSignInOpen;
+}
 
 function showLogInPanel()
 {
@@ -125,12 +131,19 @@ function passwordIsValid(pass)
     return true;
 }
 
+export function connectToServer()
+{
+    connectToServerInput();
+    connectToServerOutput();
+}
+
 async function clickConfirmSignIn()
 {
     const username = inputNick.value;
     const password = inputPassword.value;
 
-    logInPlayer(username, password);
+    await logInPlayer(username, password);
+    connectToServer();
     // Prepare the data for the POST request
     
     // let errors = 0;

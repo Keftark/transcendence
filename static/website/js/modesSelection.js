@@ -325,3 +325,43 @@ export function askForDuel()
     setSelectedMode(LevelMode.DUEL);
     navigateTo('rules');
 }
+
+const matchListPanel = document.getElementById('listSpectateDivPanel');
+const matchList = document.getElementById('spectateList');
+
+document.getElementById('closeListSpectatePanel').addEventListener('click', () => {
+    closeMatchList();
+});
+
+document.getElementById('buttonSpectate').addEventListener('click', () => {
+    openMatchList();
+});
+export function openMatchList()
+{
+    // faire la requete pour recuperer tous les matchs et appeler la fonction pour les afficher
+    for(let i = 0; i < 15; i++)
+    {
+        addMatchToList("Bonjour");
+    }
+    matchListPanel.style.display = 'flex';
+}
+
+function closeMatchList()
+{
+    matchListPanel.style.display = 'none';
+    while (matchList.firstChild)
+        matchList.removeChild(matchList.firstChild);
+}
+
+function addMatchToList(textContent)
+{
+    const matchContainer = document.createElement('div');
+    matchContainer.classList.add('matchInList');
+
+    const textContainer = document.createElement('p');
+    matchContainer.classList.add('centeredText');
+    textContainer.textContent = textContent;
+    matchContainer.appendChild(textContainer);
+
+    matchList.appendChild(matchContainer);
+}

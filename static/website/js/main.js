@@ -10,8 +10,9 @@ import { closeTournamentJoinMenu, closeTournamentLobbyMenu, closeTournamentMenu 
 import { getCurrentView } from './pages.js';
 import { closeDuelPanel } from './duelPanel.js';
 import { clickBackButtonMenu } from './modesSelection.js';
-import { addSocketListener, connectToServerInput, connectToServerOutput } from './sockets.js';
+import { addSocketListener } from './sockets.js';
 import { closePaddleChoice, isPaddleChoiceOpen } from './customizeSkins.js';
+import { clickCancelSignIn, isSigninOpen } from './signIn.js';
 
 let levelMode = LevelMode.MENU;
 
@@ -44,6 +45,8 @@ export function checkEscapeKey()
     const currentView = getCurrentView();
     if (isGdprOpen)
         closeGdprPanel();
+    else if (isSigninOpen())
+        clickCancelSignIn();
     else if (isRegistrationOpen())
         clickCancelRegister();
     else if (isChatOpen())
@@ -142,17 +145,10 @@ export let chatSocket;
 
 function openSocket()
 {
-    socket = new WebSocket('ws://10.12.200.194:7777/ws/');
-    listener = new WebSocket('ws://10.12.200.194:7777/ws/');
-    // chatSocket = new WebSocket('ws://10.12.200.194:7878/ws/');
-    // socket = new WebSocket('ws://10.11.200.72:7777/ws/');
-    // listener = new WebSocket('ws://10.11.200.72:7777/ws/');
-    // socket = new WebSocket('ws://localhost:8001/ws/game');
-
-    // socket.onmessage = function(event) {
-    //     const data = JSON.parse(event.data);
-    //     console.log('Message from server:', data.message);
-    // };
+    // socket = new WebSocket('ws://10.12.200.194:7777/ws/');
+    // listener = new WebSocket('ws://10.12.200.194:7777/ws/');
+    socket = new WebSocket('ws://10.11.200.72:7777/ws/');
+    listener = new WebSocket('ws://10.11.200.72:7777/ws/');
     
     socket.onopen = function() {
         console.log("WebSocket connected");
@@ -173,10 +169,10 @@ function openSocket()
     listener.onerror = (error) => console.log("Error:", error);
     
     addSocketListener(); 
-    setTimeout(() => {
-        connectToServerInput();
-        connectToServerOutput();
-    }, 150);
+    // setTimeout(() => {
+    //     connectToServerInput();
+    //     connectToServerOutput();
+    // }, 150);
 }
 
 changeCursors();

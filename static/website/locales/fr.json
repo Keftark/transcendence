@@ -122,5 +122,6 @@
     "helpRulesText": "Les règles par défaut sont :\n\nPoints gagnants : 3\nLimite de temps : aucune\nArène : Aléatoire",
     "from": "De ",
     "to": "A ",
-    "alreadyfriend": "Vous êtes déjà ami avec "
+    "alreadyfriend": "Vous êtes déjà ami avec ",
+    "buttonSpectate": "Spectateur"
 }

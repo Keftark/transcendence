@@ -120,7 +120,6 @@ export async function logoutUser()
     }
 }
 
-
 export async function getLoggedInUser() {
     try {
         const response = await fetch('/current_user', {
@@ -178,3 +177,32 @@ export async function getUserById(userId) {
     }
 }
 
+export async function getUserByName(userName) {
+    if (!userName) {
+        console.error("User ID is required.");
+        return;
+    }
+
+    try {
+        // Make a GET request to the Django API endpoint
+        const response = await fetch(`/get-user/${userName}/`);
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);
+        }
+
+        // Parse the JSON response
+        const userData = await response.json();
+
+        if (userData.error) {
+            console.error(userData.error);
+        }
+        // else {
+        //     console.log("User Details:", userData);
+        // }
+
+        return userData;
+    } catch (error) {
+        console.error("An error occurred while fetching the user details:", error);
+    }
+}

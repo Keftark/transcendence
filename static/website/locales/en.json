@@ -122,6 +122,8 @@
     "helpRulesText": "The default rules are:\n\nPoints to win: 3\nTime limit: none\nArena: Random",
     "from": "From ",
     "to": "To ",
-    "alreadyfriend": "You are already friend with "
+    "alreadyfriend": "You are already friend with ",
+    "buttonSpectate": "Spectate"
+    
 
 }

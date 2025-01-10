@@ -129,6 +129,8 @@ export function updateHTML(translations)
 	document.getElementById('waitingMatchText').innerHTML = translations.waitingMatchText;
 	document.getElementById('helpRulesTitle').innerHTML = translations.helpRulesTitle;
 	document.getElementById('helpRulesText').innerHTML = translations.helpRulesText;
+	document.getElementById('buttonSpectate').innerHTML = translations.buttonSpectate;
+	
 	
     document.querySelector('.gdpr').addEventListener('click', function() {
         openGdprPanel();
