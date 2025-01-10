@@ -168,7 +168,7 @@
     height: calc(37vh + 5vw);
     border: 1px solid #00776d70;
     border-radius: 8px;
-    background-color: rgba(0, 255, 255, 0.1);
+    background-color: rgba(0, 30, 30, 0.9);
     overflow: hidden;
     top: 50%;
     left: 50%;

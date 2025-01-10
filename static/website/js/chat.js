@@ -424,7 +424,6 @@ function checkNewMessage()
 
 export function receiveMessage(playerName, message, isPrivate = false, toPlayer = "")
 {
-    console.log("receiving a message");
     const newMessage = createMessageElement(playerName, message, isPrivate);
     // sendRandomMessage(newMessage);
     if (playerName === playerStats.nickname)

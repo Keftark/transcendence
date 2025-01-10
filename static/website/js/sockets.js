@@ -236,7 +236,6 @@ export function quitChat()
 
 export function sendMessage(messageContent)
 {
-    // console.log("Id: " + playerStats.id);
     const event = {
         key: keySocket,
         type: "message",
@@ -252,8 +251,6 @@ export function sendMessage(messageContent)
 export function sendPrivMessage(targetMsg, messageContent) {
     getUserByName(targetMsg)
         .then((target) => {
-            console.log(target.username);
-
             const event = {
                 key: keySocket,
                 type: "private_message",
@@ -309,8 +306,8 @@ export function addSocketListener()
         switch (event.type) {
 
         case "private_message":
-            if (event.target === playerStats.id)
-                receiveMessage(event.name, event.content, true);
+            if (event.id === playerStats.id)
+                receiveMessage(event.sender_name, event.content, true, event.name);
             // console.log("Message received from " + event.name + ": " + event.content);
             break;
         case "message":

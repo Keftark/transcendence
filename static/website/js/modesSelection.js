@@ -336,10 +336,18 @@ document.getElementById('closeListSpectatePanel').addEventListener('click', () =
 document.getElementById('buttonSpectate').addEventListener('click', () => {
     openMatchList();
 });
+
+let matchListIsOpen = false;
+
+export function isMatchListOpen()
+{
+    return matchListIsOpen;
+}
+
 export function openMatchList()
 {
     // faire la requete pour recuperer tous les matchs et appeler la fonction pour les afficher
-    const matchCount = 0; // faire un compte des matchs ici
+    const matchCount = 1; // faire un compte des matchs ici
     if (matchCount === 0)
     {
         matchList.style.justifyContent = "center";
@@ -355,13 +363,18 @@ export function openMatchList()
         }
     }
     matchListPanel.style.display = 'flex';
+    matchListIsOpen = true;
+    if (matchCount > 0)
+        matchList.children[0].focus();
 }
 
-function closeMatchList()
+export function closeMatchList()
 {
     matchListPanel.style.display = 'none';
     while (matchList.firstChild)
         matchList.removeChild(matchList.firstChild);
+    matchListIsOpen = false;
+    document.getElementById('buttonSpectate').focus();
 }
 
 function addMatchToList(textContent)

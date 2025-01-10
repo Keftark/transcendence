@@ -9,7 +9,7 @@ import { clickCancelRegister, closeGdprPanel, isGdprOpen, isRegistrationOpen, is
 import { closeTournamentJoinMenu, closeTournamentLobbyMenu, closeTournamentMenu } from './tournament.js';
 import { getCurrentView } from './pages.js';
 import { closeDuelPanel } from './duelPanel.js';
-import { clickBackButtonMenu } from './modesSelection.js';
+import { clickBackButtonMenu, closeMatchList, isMatchListOpen } from './modesSelection.js';
 import { addSocketListener } from './sockets.js';
 import { closePaddleChoice, isPaddleChoiceOpen } from './customizeSkins.js';
 import { clickCancelSignIn, isSigninOpen } from './signIn.js';
@@ -45,6 +45,8 @@ export function checkEscapeKey()
     const currentView = getCurrentView();
     if (isGdprOpen)
         closeGdprPanel();
+    else if (isMatchListOpen())
+        closeMatchList();
     else if (isSigninOpen())
         clickCancelSignIn();
     else if (isRegistrationOpen())
