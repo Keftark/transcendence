@@ -212,7 +212,6 @@ export function unloadLevel()
     resetFunction(true);
     isInGame = false;
     setAccessAllDuelsInChat(true);
-    playerStats.status = PlayerStatus.ONLINE;
     playerStats.playerController = 1;
     playerProfile1 = null;
     playerProfile2 = null;
@@ -222,7 +221,7 @@ export function unloadLevel()
 
 export function gameEventsListener(event)
 {
-    if (pressSpaceFunction === null)
+    if (pressSpaceFunction === null || playerStats.playerController != -1)
         return;
 
     if (document.activeElement != myInput)
@@ -333,6 +332,13 @@ export function setUpScene()
 
 function showInGameUI()
 {
+    if (playerStats.playerController == -1) // laisser les barres visibles ?
+    {
+        controlsP1.style.display = 'none';
+        controlsP2.style.display = 'none';
+        return;
+    }
+
     let controlsSrc;
     if (currentLevelMode === LevelMode.ADVENTURE)
     {

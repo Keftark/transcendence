@@ -389,3 +389,10 @@ function addMatchToList(textContent)
 
     matchList.appendChild(matchContainer);
 }
+
+export function startSpectateMatch(matchId)
+{
+    playerStats.playerController = -1;
+    // se connecter au match avec l'id
+    // start the level
+}

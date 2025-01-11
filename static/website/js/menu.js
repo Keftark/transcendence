@@ -54,7 +54,7 @@ document.getElementById('header-title').addEventListener('click', () => {
 });
 
 document.getElementById('seeMatchesButton').addEventListener('click', () => {
-    showMatchList();
+    showMatchListProfile();
 });
 
 mainPlayButton.addEventListener('click', () => {
@@ -200,7 +200,7 @@ export function openProfile(player = playerStats)
     document.getElementById('closeProfileButton').focus();
 }
 
-function showMatchList()
+function showMatchListProfile()
 {
     if (profilePanel.classList.contains('toLeft') === false)
     {
@@ -212,11 +212,11 @@ function showMatchList()
     }
     else
     {
-        closeMatchList();
+        closeMatchListProfile();
     }
 }
 
-function closeMatchList()
+function closeMatchListProfile()
 {
     profilePanel.classList.remove('toLeft');
     matchListPanel.classList.remove('toRight');
@@ -229,7 +229,7 @@ export function closeProfile()
 {
     profileIsOpen = false;
     if (profilePanel.classList.contains('toLeft') === true) {
-        closeMatchList();
+        closeMatchListProfile();
         profilePanel.classList.remove('appear');
         setTimeout(() => {
             profilePanel.style.display = 'none';
@@ -457,6 +457,7 @@ export function onMainMenuOpen()
     addMainEvents();
     mainPlayButton.focus();
     resetAnimMainMenu();
+    playerStats.status = PlayerStatus.ONLINE;
 }
 
 export function isSettingsOpen()

@@ -146,6 +146,8 @@ export function setupPlayerMovement(player1, player2, player3, player4)
 
     function checkKeys(event, isTrue)
     {
+        if (playerStats.playerController == -1) // si le joueur est en spectateur, son controller est a -1
+            return;
         if (document.activeElement === inputChat || isMenuOpen || isSettingsOpen())
         {
             moveUp1 = false;
