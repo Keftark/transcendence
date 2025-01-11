@@ -57,6 +57,17 @@ input:focus
     border: 2px solid #33f1ff !important;
 }
 
+a
+{
+    border: 2px solid transparent;
+}
+
+a:focus
+{
+    outline: none;
+    border: 2px solid #33f1ff !important;
+}
+
 #header-title {
     position: absolute;
     top: 0;

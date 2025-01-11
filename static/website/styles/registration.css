@@ -16,9 +16,14 @@
     transition: transform 0.3s ease;
 }
 
-#registeringPanel p, #signInPanel p
+#registeringPanel p, #registeringPanel a, #signInPanel p, #signInPanel a
 {
     font-size: clamp(0.5rem, 0.5rem + 0.3vw + 0.3vh, 10vw);
+}
+
+#registeringPanel a, #signInPanel a
+{
+    align-self: center;
 }
 
 #registeringpanel.showReg, #signinpanel.showReg {

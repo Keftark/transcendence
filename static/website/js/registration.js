@@ -349,5 +349,16 @@ export function isUserLoggedIn() {
     return document.cookie.includes('sessionid=');
 }
 
+function addSelectableTexts()
+{
+    const elements = document.querySelectorAll('#askSignIn, #askRegister');
+	elements.forEach(function(element) {
+		element.addEventListener('click', function(event) {
+			event.preventDefault();
+		});
+	});
+}
+
 addDisableButtonEffect(profileButton);
 resetRegistrationInputs();
+addSelectableTexts();

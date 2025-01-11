@@ -12,9 +12,9 @@ function getFocusableElements()
     if (isGdprOpen)
         return document.getElementById('gdprPanel').querySelectorAll('button');
     else if (isRegistrationOpen())
-        return document.getElementById('registering').querySelectorAll('button, input, a, textarea, select, #askRegister');
+        return document.getElementById('registering').querySelectorAll('button, input, a, textarea, select, #askSignIn');
     else if (isSigninOpen())
-        return document.getElementById('signIn').querySelectorAll('button, input, a, textarea, select, #askSignIn');
+        return document.getElementById('signIn').querySelectorAll('button, input, a, textarea, select, #askRegister');
     else if (isPaddleChoiceOpen())
         return document.getElementById('choosePaddlePanel').querySelectorAll('button, input, a, textarea, select');
     else if (isProfileOpen())
@@ -45,7 +45,7 @@ function mainMenuEvents(event)
         return;
     }
     const currentIndex = focusable.indexOf(document.activeElement);
-    if (event.key === 'ArrowDown' || (event.key === 'Enter' && document.activeElement.classList.contains('inputfield'))) {
+    if (event.key === 'ArrowDown' || (event.key === 'Enter' && (document.activeElement.classList.contains('inputfield')))) {
         event.preventDefault();
         const nextIndex = (currentIndex + 1) % focusable.length;
         focusable[nextIndex].focus();
