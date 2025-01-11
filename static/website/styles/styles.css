@@ -67,7 +67,7 @@ input:focus
     font-size: clamp(1rem + 1vw + 1vh, 3rem + 1vw + 1vh, 6rem);
     text-align: center;
     z-index: 0;
-    width: 100%;
+    width: fit-content;
     transition: text-shadow 0.2s ease;
 }
 

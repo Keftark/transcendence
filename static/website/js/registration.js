@@ -139,7 +139,7 @@ function checkFields()
     }
     else
         registerErrorName.innerText = "";
-    // check if the name is in the database and return false if it's in
+    // checks if the name is in the database and returns false if it's in
     inputValue = inputFirstName.value;
     if (inputValue.trim() === "")
     {
@@ -171,7 +171,7 @@ function checkFields()
     }
     else
         registerErrorMail.innerText = "";
-    // check if the mail is in the database and return false if it's in
+    // checks if the mail is in the database and returns false if it's in
     inputValue = inputPassword.value;
     if (inputValue.trim() === "")
     {
@@ -331,18 +331,22 @@ function clickCheckboxGdpr()
 export function openGdprPanel()
 {
     isGdprOpen = true;
-    checkboxGdpr.checked = !checkboxGdpr.checked;
     gdprPanel.style.display = 'flex';
+    setTimeout(() => {
+        document.querySelector('#gdprPanel').focus();
+    }, 10);
 }
 
 export function closeGdprPanel()
 {
+    document.querySelector('#gdprPanel').scrollTop = 0;
     isGdprOpen = false;
     gdprPanel.style.display = 'none';
+    checkboxGdpr.focus();
 }
 
 export function isUserLoggedIn() {
-    return document.cookie.includes('sessionid=');  // Check if sessionid cookie exists
+    return document.cookie.includes('sessionid=');
 }
 
 addDisableButtonEffect(profileButton);

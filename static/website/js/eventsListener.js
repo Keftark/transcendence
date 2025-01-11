@@ -1,38 +1,49 @@
-import { checkEscapeKey } from "./main.js";
+import { checkEscapeKey, isElementVisible } from "./main.js";
 import { gameEventsListener, isInGame } from "./levelLocal.js";
 import { chatIsFocused } from "./chat.js";
 import { isProfileOpen, isSettingsOpen } from "./menu.js";
-import { isRegistrationOpen } from "./registration.js";
+import { isGdprOpen, isRegistrationOpen } from "./registration.js";
 import { isMatchListOpen } from "./modesSelection.js";
 import { isSigninOpen } from "./signIn.js";
 import { isPaddleChoiceOpen } from "./customizeSkins.js";
 
+function getFocusableElements()
+{
+    if (isGdprOpen)
+        return document.getElementById('gdprPanel').querySelectorAll('button');
+    else if (isRegistrationOpen())
+        return document.getElementById('registering').querySelectorAll('button, input, a, textarea, select, #askRegister');
+    else if (isSigninOpen())
+        return document.getElementById('signIn').querySelectorAll('button, input, a, textarea, select, #askSignIn');
+    else if (isPaddleChoiceOpen())
+        return document.getElementById('choosePaddlePanel').querySelectorAll('button, input, a, textarea, select');
+    else if (isProfileOpen())
+        return document.getElementById('profilePanel').querySelectorAll('button, input, a, textarea, select');
+    else if (isSettingsOpen())
+        return document.getElementById('settingsPanel').querySelectorAll('button, input, a, textarea, select');
+    else if (isMatchListOpen())
+        return document.getElementById('spectateList').querySelectorAll('button, input, a, textarea, select');
+    else
+        return document.querySelectorAll('button, input, a, textarea, select');
+}
+
 function mainMenuEvents(event)
 {
-    let focusableElements;
-    if (chatIsFocused)
+    if (chatIsFocused
+        || (isInGame && !document.getElementById('gameMenuPanel').classList.contains('show') && !isSettingsOpen()))
         return;
-    if (isInGame && !document.getElementById('gameMenuPanel').classList.contains('show') && !isSettingsOpen())
-        return;
-    if (isRegistrationOpen())
-        focusableElements = document.getElementById('registering').querySelectorAll('button, input, a, textarea, select');
-    else if (isSigninOpen())
-        focusableElements = document.getElementById('signIn').querySelectorAll('button, input, a, textarea, select');
-    else if (isPaddleChoiceOpen())
-        focusableElements = document.getElementById('choosePaddlePanel').querySelectorAll('button, input, a, textarea, select');
-    else if (isProfileOpen())
-        focusableElements = document.getElementById('profilePanel').querySelectorAll('button, input, a, textarea, select');
-    else if (isSettingsOpen())
-        focusableElements = document.getElementById('settingsPanel').querySelectorAll('button, input, a, textarea, select');
-    else if (isMatchListOpen())
-        focusableElements = document.getElementById('spectateList').querySelectorAll('button, input, a, textarea, select');
-    else
-        focusableElements = document.querySelectorAll('button, input, a, textarea, select');
-    
+
+    const focusableElements = getFocusableElements();
     const visibleElements = Array.from(focusableElements).filter(box => {
         return box.offsetParent !== null && !box.classList.contains('disabledButtonHover');
     });
     const focusable = Array.prototype.slice.call(visibleElements);
+    if (focusable.length == 1)
+    {
+        if (isElementVisible(focusable[0]))
+            focusable[0].focus();
+        return;
+    }
     const currentIndex = focusable.indexOf(document.activeElement);
     if (event.key === 'ArrowDown' || (event.key === 'Enter' && document.activeElement.classList.contains('inputfield'))) {
         event.preventDefault();
@@ -61,7 +72,6 @@ export function addMainEvents()
 {
     document.addEventListener('keydown', mainMenuEvents);
 }
-
 
 document.addEventListener('keydown',  gameEventsListener);
 document.addEventListener('keydown',  escapeEvent);
