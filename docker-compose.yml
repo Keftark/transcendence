@@ -1,0 +1,54 @@
+version: '3.8'
+
+name: ft_transcendence
+
+services:
+  django:
+    build: djang/
+    image: django
+    networks:
+      - network
+    container_name: django
+    restart: always
+    env_file: .env
+    volumes:
+      - type: bind
+        source: ./djang
+        target: /app
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - network
+    container_name: django-db
+    restart: always
+    env_file: .env
+    healthcheck:
+      test: "pg_isready -U $POSTGRES_USER"
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  nginx:
+    build: nginx/
+    image: nginx
+    networks:
+      - network
+    ports:
+      - '1443:443'
+    container_name: nginx
+    restart: always
+    depends_on:
+      - django
+
+volumes:
+  db:
+
+networks:
+  network:
+    driver: bridge
