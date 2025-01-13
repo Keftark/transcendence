@@ -4,7 +4,7 @@ import { receiveMessage } from "./chat.js";
 import { closeDuelPanel, matchFound, setPlayersControllers, updateReadyButtons } from "./duelPanel.js";
 import { addReadyPlayer, doUpdateBallLight, getBallPosition, getPlayerSideById, removeReadyPlayers, resetScreenFunction, spawnSparksFunction, startScreenShake } from "./levelLocal.js";
 import { getLevelState, socket, listener } from "./main.js";
-import { clickPlayGame } from "./modesSelection.js";
+import { getListMatchs } from "./modesSelection.js";
 import { playerStats } from "./playerManager.js";
 import { setPlayersPositions } from "./playerMovement.js";
 import { checkPowerUpState, setPowerBarsPlayers } from "./powerUp.js";
@@ -46,6 +46,7 @@ export function connectToDuel()
         key: keySocket,
         server: "1v1_classic",
         type: "join",
+        answer: "no",
         id: playerStats.id,
         blacklist: {}, // mettre les id au lieu des noms
         private: "none", // 
@@ -69,6 +70,7 @@ export function readyToDuel()
 {
     const event = {
         key: keySocket,
+        answer: "no",
         server: "1v1_classic",
         type: "ready",
         room: room_id,
@@ -81,6 +83,7 @@ export function notReadyToDuel()
 {
     const event = {
         key: keySocket,
+        answer: "no",
         server: "1v1_classic",
         type: "pause",
         room: room_id,
@@ -93,6 +96,7 @@ export function exitLobby()
 {
     const event = {
         key: keySocket,
+        answer: "no",
         server: "1v1_classic",
         type: "quit_lobby",
         room: playerStats.room_id,
@@ -105,6 +109,7 @@ export function exitDuel()
 {
     const event = {
         key: keySocket,
+        answer: "no",
         server: "1v1_classic",
         type: "quit_lobby",
         room: playerStats.room_id,
@@ -117,6 +122,7 @@ export function sendPlayerReady()
 {
     const event = {
         key: keySocket,
+        answer: "no",
         server: "1v1_classic",
         type: "ready",
         room: playerStats.room_id,
@@ -129,6 +135,7 @@ export function playerUp()
 {
     const event = {
         key: keySocket,
+        answer: "no",
         server: "1v1_classic",
         type: "input",
         room: playerStats.room_id,
@@ -143,6 +150,7 @@ export function playerUpNot()
 {
     const event = {
         key: keySocket,
+        answer: "no",
         server: "1v1_classic",
         type: "input",
         room: playerStats.room_id,
@@ -157,6 +165,7 @@ export function playerDown()
 {
     const event = {
         key: keySocket,
+        answer: "no",
         server: "1v1_classic",
         type: "input",
         room: playerStats.room_id,
@@ -171,6 +180,7 @@ export function playerDownNot()
 {
     const event = {
         key: keySocket,
+        answer: "no",
         server: "1v1_classic",
         type: "input",
         room: playerStats.room_id,
@@ -196,6 +206,7 @@ export function boostPaddle()
 {
     const event = {
         key: keySocket,
+        answer: "no",
         server: "1v1_classic",
         type: "input",
         room: room_id,
@@ -283,6 +294,40 @@ export function sendFriendRequest(friendId)
     listener.send(JSON.stringify(event));
 }
 
+export function askListMatchs()
+{
+    const event = {
+        key: keySocket,
+        type: "list_all",
+        answer: "no",
+        server: "1v1_classic"
+    };
+    listener.send(JSON.stringify(event));    
+}
+
+export function spectateMatch(id)
+{
+    const event = {
+        key: keySocket,
+        room_id: id,
+        type: "spectate",
+        answer: "no",
+        server: "1v1_classic"
+    };
+    listener.send(JSON.stringify(event));    
+}
+
+export function unspectateMatch()
+{
+    const event = {
+        key: keySocket,
+        type: "unspectate",
+        answer: "no",
+        server: "1v1_classic"
+    };
+    listener.send(JSON.stringify(event));    
+}
+
 export let keySocket = null;
 export function addSocketListener()
 {
@@ -349,6 +394,9 @@ export function addSocketListener()
             break;
         case "match_resume":
             removeReadyPlayers();
+            break;
+        case "list_all":
+            getListMatchs(event.data);
             break;
         case "match_start":
             setPlayersControllers();

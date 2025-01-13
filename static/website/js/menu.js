@@ -8,7 +8,7 @@ import { playerStats } from './playerManager.js';
 import { loadScores, removeAllScores } from './scoreManager.js';
 import { exitGameSocket } from './sockets.js';
 import { changeLanguage, getTranslation } from './translate.js';
-import { LevelMode } from './variables.js';
+import { LevelMode, PlayerStatus } from './variables.js';
 
 const overlayPanel = document.getElementById('overlay');
 const profilePanel = document.getElementById('profilePanel');

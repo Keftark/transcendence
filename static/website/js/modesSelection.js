@@ -4,9 +4,10 @@ import { getLevelState, setLevelState } from './main.js';
 import { LevelMode } from './variables.js';
 import { navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
-import { isInGame } from './levelLocal.js';
+import { isInGame, passInfosPlayersToLevel } from './levelLocal.js';
 import { checkAccessModes, isUserLoggedIn } from './registration.js';
-import { connectToDuel } from './sockets.js';
+import { askListMatchs, connectToDuel, spectateMatch } from './sockets.js';
+import { onPlayGame } from './menu.js';
 
 const modesLocalButton = document.getElementById('modesLocalButton');
 const modesOnlineButton = document.getElementById('modesOnlineButton');
@@ -344,10 +345,9 @@ export function isMatchListOpen()
     return matchListIsOpen;
 }
 
-export function openMatchList()
+export function getListMatchs(data)
 {
-    // faire la requete pour recuperer tous les matchs et appeler la fonction pour les afficher
-    const matchCount = 1; // faire un compte des matchs ici
+    const matchCount = data.length; // faire un compte des matchs ici
     if (matchCount === 0)
     {
         matchList.style.justifyContent = "center";
@@ -357,15 +357,25 @@ export function openMatchList()
     {
         matchList.style.justifyContent = "start";
         matchList.textContent = "";
-        for(let i = 0; i < 15; i++)
-        {
-            addMatchToList("Bonjour");
-        }
+        data.forEach(matchData => {
+            // remplacer id_p1 et id_p2 par name_p1 et name_p2
+            addMatchToList(matchData.room_id, matchData.id_p1, matchData.id_p2);
+          });
     }
-    matchListPanel.style.display = 'flex';
     matchListIsOpen = true;
     if (matchCount > 0)
         matchList.children[0].focus();
+
+    return data;
+}
+
+export function openMatchList()
+{
+    askListMatchs();
+    matchList.style.justifyContent = "center";
+    matchList.textContent = "Waiting...";
+    matchListIsOpen = true;
+    matchListPanel.style.display = 'flex';
 }
 
 export function closeMatchList()
@@ -377,22 +387,26 @@ export function closeMatchList()
     document.getElementById('buttonSpectate').focus();
 }
 
-function addMatchToList(textContent)
+function addMatchToList(room_id, idp1, idp2)
 {
     const matchContainer = document.createElement('button');
     matchContainer.classList.add('matchInList');
-
     const textContainer = document.createElement('p');
     matchContainer.classList.add('centeredText');
-    textContainer.textContent = textContent;
+    textContainer.textContent = idp1 + " vs " + idp2;
     matchContainer.appendChild(textContainer);
 
+    matchContainer.addEventListener("click", function () {
+        setSelectedMode(LevelMode.ONLINE);// a changer selon le mode du match
+        playerStats.playerController = -1;
+        passInfosPlayersToLevel(idp1, idp2)
+        .then(() => {
+            clickPlayGame();
+        })
+        .catch((error) => {
+            console.error("Failed to set up players' controllers:", error);
+        });
+        spectateMatch(room_id);
+    });
     matchList.appendChild(matchContainer);
-}
-
-export function startSpectateMatch(matchId)
-{
-    playerStats.playerController = -1;
-    // se connecter au match avec l'id
-    // start the level
 }

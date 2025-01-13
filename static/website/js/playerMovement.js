@@ -132,6 +132,8 @@ function setPlayer3Bounds(levelState)
 
 export function setupPlayerMovement(player1, player2, player3, player4)
 {
+    if (playerStats.playerController === -1)
+        return null;
     let moveUp1 = false;
     let moveDown1 = false;
     let moveUp2 = false;

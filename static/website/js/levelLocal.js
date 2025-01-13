@@ -25,7 +25,7 @@ import { sendPlayerReady } from './sockets.js';
 import { getUserById } from './apiFunctions.js';
 
 const gameMenuPanel = document.getElementById('gameMenuPanel');
-const myInput = document.getElementById('inputChat');
+const inputChat = document.getElementById('inputChat');
 export const PLAYER_RADIUS = 1;
 export const PLAYER_HEIGHT = 12;
 export let finalHeight = PLAYER_HEIGHT;
@@ -221,10 +221,10 @@ export function unloadLevel()
 
 export function gameEventsListener(event)
 {
-    if (pressSpaceFunction === null || playerStats.playerController != -1)
+    if (pressSpaceFunction === null || playerStats.playerController === -1)
         return;
 
-    if (document.activeElement != myInput)
+    if (document.activeElement != inputChat)
     {
         pressSpaceFunction(event);
         pressBoostFunction(event);
