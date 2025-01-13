@@ -1,2 +1,14 @@
 env
 accounts/migrations
+back_1v1/__pycache__
+back_1v1/__pycache__/
+back_1v1/__pycache__/*
+back_1v1/Game/__pycache__
+back_1v1/Game/__pycache__/
+back_1v1/Game/__pycache__/*
+chat/__pycache__
+chat/__pycache__/
+chat/__pycache__/*
+central/__pycache__
+central/__pycache__/
+central/__pycache__/*
