@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'daphne',
     'accounts.apps.AccountConfig',
+    'matchs.apps.MatchConfig',
     'notifications.apps.NoticeConfig',
     'django.contrib.admin',
     'django.contrib.auth',
