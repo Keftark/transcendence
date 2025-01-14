@@ -154,6 +154,16 @@ def get_user_by_id(request, user_id):
     except User.DoesNotExist:
         return JsonResponse({'error': 'User not found'}, status=404)
 
+def get_username(request, user_id):
+    try:
+        # Query the User model by username
+        user = User.objects.get(id=user_id)
+        return JsonResponse({
+            'username': user.username
+        })
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+
 def login_user(request):
     if request.method == "POST":
         username = request.POST.get('username')

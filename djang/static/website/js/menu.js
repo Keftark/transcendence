@@ -27,6 +27,7 @@ const hoverImage = document.getElementById('homeImg');
 const buttonsColors = document.querySelectorAll('.colorize-btn');
 const logInButtons = document.getElementById('loginbuttons');
 const logOutButtons = document.getElementById('logoutbuttons');
+const profileButton = document.getElementById('buttonProfile');
 const mainPanel = document.getElementById('mainPanel');
 const mainMenuPanel = document.getElementById('mainMenuPanel');
 const toggleCameraText = document.getElementById('cameraTypeHeader');
@@ -118,6 +119,10 @@ document.getElementById('orthographicButton').addEventListener('click', () => {
     toggleCameraType(1);
 });
 
+profileButton.addEventListener('click', () => {
+    openMiniProfile();
+});
+
 document.querySelectorAll('.mainMenuButton').forEach(button => {
   button.addEventListener('mouseover', () => showImage(button.id));
   button.addEventListener('mouseout', hideImage);
@@ -178,6 +183,11 @@ export function openOrCloseGameMenu()
     }
     else
         document.activeElement.blur();
+}
+
+function openMiniProfile()
+{
+
 }
 
 export function openProfile(player = playerStats)

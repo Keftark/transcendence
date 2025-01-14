@@ -33,6 +33,7 @@ urlpatterns = [
     path('current_user', user.get_logged_in_user, name='current_user'),
     path('get-user/<str:username>/', user.get_user_by_name, name='get-user-by-name'),
     path('user/<int:user_id>/', user.get_user_by_id, name='user_detail'),
+    path('username/<int:user_id>/', user.get_username, name='user_name_only'),
     path("me", MyAccountViewSet.as_view({'get': 'retrieve'}), name="my_account_page"), #My Account page
     #path("update-profile", update_profile.UpdateProfileView.as_view(), name="update-user"), # update user
     #path('update_password', update_password.UpdatePasswordView.as_view(), name='update_password'), # update user password

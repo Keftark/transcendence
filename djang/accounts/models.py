@@ -22,6 +22,7 @@ class AccountModel(models.Model):
     status = models.CharField(max_length=150, default="offline")
     description = models.CharField(max_length=150, default='')
     is42 = models.BooleanField(default=False)
+    preferredPaddle = models.IntegerField(default=0)
 
     def get_game(self) -> int:
         from ping_pong.consumers import game_manager
