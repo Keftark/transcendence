@@ -24,6 +24,8 @@ class AccountSerializer(serializers.ModelSerializer):
     username = serializers.ReadOnlyField(source='user.username')
     avatar = serializers.ImageField(required=False)
     status = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
+    is42 = serializers.ReadOnlyField()
     is_friend = serializers.SerializerMethodField()
     has_incoming_request = serializers.SerializerMethodField()
     has_outgoing_request = serializers.SerializerMethodField()
@@ -31,7 +33,7 @@ class AccountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AccountModel
-        fields = ["username", "avatar", "id", 'status', 'is_friend',
+        fields = ["username", "avatar", "id", 'status', 'description', 'is42', 'is_friend',
                   'has_outgoing_request', 'has_incoming_request', 'preferredPaddle']
 
     def get_status(self, obj: AccountModel):
@@ -80,13 +82,20 @@ class AccountSerializer(serializers.ModelSerializer):
         data['avatar'] = data['avatar'][data['avatar'].find('/static/'):]
         return data
     
+    def get_description(self, obj: AccountModel):
+        user = self.context.get('user')
+        if user is None or not user.is_authenticated:
+            return None
+
+        return user.accountmodel.description
+    
     def get_preferredPaddle(self, obj: AccountModel):
 
         user = self.context.get('user')
         if user is None or not user.is_authenticated:
             return None
 
-        if not user.accountmodel.is_friend(obj) and user.pk != obj.pk:
+        if not user.accountmodel.preferredPaddle and user.pk != obj.pk:
             return None
 
         return user.accountmodel.preferredPaddle
