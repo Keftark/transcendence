@@ -1,0 +1,122 @@
+/* cubic-bezier(0.3, 0.2, 0.2, 1.4) pour faire un rebond quand le truc arrive */
+
+@font-face {
+    font-family: 'MyCustomFont';
+    src: url('../fonts/PixelGame.otf') format('opentype');
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    overflow: hidden;
+    font-family: 'MyCustomFont', Arial, sans-serif;
+    scrollbar-color: #00505a #00000048;
+}
+
+p, button, input {
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+p, #score-left, #score-right
+{
+    font-size: clamp(0.5rem, 0.5rem + 0.5vw + 0.5vh, 10vw);
+}
+
+h1, h2, h3 {
+    color: white;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+h2
+{
+    font-size: clamp(0.5rem + 1vw + 1vh, 1rem + 1vw + 1vh, 5rem);
+}
+
+button
+{
+    font-family: 'MyCustomFont', Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+button:focus
+{
+    outline: none;
+    border: 3px solid #33f1ff !important;
+}
+
+input:focus
+{
+    border: 2px solid #33f1ff !important;
+}
+
+a
+{
+    border: 2px solid transparent;
+}
+
+a:focus
+{
+    outline: none;
+    border: 2px solid #33f1ff !important;
+}
+
+#header-title {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background: none;
+    color: white;
+    font-size: clamp(1rem + 1vw + 1vh, 3rem + 1vw + 1vh, 6rem);
+    text-align: center;
+    z-index: 0;
+    width: fit-content;
+    transition: text-shadow 0.2s ease;
+}
+
+#header-title:hover {
+    text-shadow:
+     0px 0px 8px rgb(0, 158, 150),
+     0px 0px 8px rgb(0, 158, 150);
+}
+
+#mainBackground
+{
+    position: absolute;
+    width: 80vw;
+    max-width: 56rem;
+    height: 54vh;
+    max-height: 30rem;
+    background-color: #000000;
+    border: 1px solid #002522;
+    border-radius: 15px;
+    z-index: 0;
+    transition: all 0.3s ease-in-out;
+}
+
+#mainBackground.enlightened
+{
+    border: 2px solid #008b80;
+    box-shadow: 0 0 12px rgba(0, 247, 255, 0.815);
+}
+
+.page, .subpage {
+    display: none; /* Hide all sections initially */
+}
+
+::selection {
+    background-color: #00d9ff8f; /* Custom background color */
+    color: #ffd000; /* Custom text color */
+}
+
+#consent-text a {
+    cursor: url('../icons/cursor-button.webp'), pointer;
+}

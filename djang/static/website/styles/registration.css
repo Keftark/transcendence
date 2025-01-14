@@ -1,0 +1,254 @@
+#registeringpanel, #signinpanel
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding: 0px 32px 16px 16px;
+    transform: translateX(-50%) translateY(-250%);
+    display: flex;
+    justify-content: left;
+    align-items: left;
+    background-color:rgb(0, 0, 0);
+    border: 1px solid #999999;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    z-index: 3;
+    transition: transform 0.3s ease;
+}
+
+#registeringPanel p, #registeringPanel a, #signInPanel p, #signInPanel a
+{
+    font-size: clamp(0.5rem, 0.5rem + 0.3vw + 0.3vh, 10vw);
+}
+
+#registeringPanel a, #signInPanel a
+{
+    align-self: center;
+}
+
+#registeringpanel.showReg, #signinpanel.showReg {
+    transform: translateX(-50%) translateY(-50%);
+}
+
+#regButtons, #signInButtons
+{
+    padding-top: 4vh;
+    display: flex;
+    padding-left: 16px;
+    gap: 32px;
+    align-content: center;
+    justify-content: center;
+    align-self: center;
+    align-items: center;
+}
+
+.regButton, .signInButton
+{
+    width: auto;
+    min-width: 72px;
+    height: 3vw;
+    max-height: 32px;
+    font-size: clamp(0.5rem, 0.5rem + 0.3vw + 0.3vh, 10vw);
+    border: none;
+    border: 1px solid #999999;
+    background-color:rgb(0, 0, 0);
+    font-family: Arial, sans-serif;
+    border-radius: 8px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.349);
+}
+
+.regButton:hover
+{
+    background-color: rgba(0, 255, 255, 0.267);
+    opacity: 0.8;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.815);
+}
+
+.regItem, .regButton
+{
+    display: flex;
+    flex-direction: column;
+    color: white;
+    position: relative;
+}
+
+.consent-label {
+    color: white;
+}
+
+.inputfield
+{
+    display: flex;
+    flex-grow: 1;
+    padding: 4px;
+    font-size: clamp(0.5rem, 0.5rem + 0.3vw + 0.3vh, 10vw);
+    background-color: #002e33;
+    color: white;
+    border: 2px solid #6b8692;
+    border-radius: 5px;
+    outline: none;
+    height: 2vh;
+    margin: -14px 0px 0px 0px;
+}
+
+#registerHeader, #signInHeader
+{
+    margin: 4px 0px 0px 0px;
+    text-align: center;
+    font-size: clamp(1rem, 1rem + 0.5vw + 0.5vh, 10vw);
+}
+
+#loginbuttons
+{
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    display: flex;
+    flex-direction:row;
+}
+
+#logoutbuttons
+{
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    display: none;
+    flex-direction:row;
+}
+
+#buttonSignUp, #buttonLogIn, #buttonLogOut
+{
+    display: flex;
+    margin: 5px;
+    font-size: calc(1rem + 1vw);
+    border: 3px solid transparent;
+    background-color: transparent;
+    font-family: Arial, sans-serif;
+    border-radius: 8px;
+    color: #ffffff;
+    font-family: 'MyCustomFont', Arial, sans-serif;
+    transition: text-shadow 0.2s ease;
+}
+
+#buttonSignUp:hover, #buttonLogIn:hover, #buttonLogOut:hover {
+    text-shadow:
+     0px 0px 8px rgb(0, 158, 150),
+     0px 0px 8px rgb(0, 158, 150);
+}
+
+.registerErrorMessage
+{
+    font-size: clamp(0.5rem, 0.5rem + 0.3vw + 0.3vh, 10vw);
+    bottom: 0;
+    transform: translateY(200%);
+    position: absolute;
+    color: red;
+    white-space: nowrap;
+    align-self: center;
+    font-style: italic;
+    text-shadow: 0 0 2px rgb(0, 0, 0);
+}
+
+#passwordDiv, #confirmPasswordDiv, #passwordSignInDiv
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+#showPasswordButton, #showConfirmPasswordButton, #showSignInPasswordButton
+{
+    position: absolute;
+    right: 4px;
+    width: 3vh;
+    height: 3vh;
+    min-width: 16px;
+    min-height: 16px;
+    margin: -14px 0px 0px 0px;
+}
+
+
+#askSignInDiv, #askRegisterDiv
+{
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 100%);
+    white-space: nowrap;
+    gap: 6px;
+}
+
+#askSignIn, #askRegister
+{
+    font-style: italic;
+    text-decoration: underline;
+    color: rgb(255, 150, 255);
+}
+
+#askSignIn:hover, #askRegister:hover
+{
+    color: rgb(216, 255, 255);
+}
+
+#consentText
+{
+    padding-top: 16px;
+    max-width: 256px;
+    gap: 16px;
+}
+
+#gdprPanel
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    overflow-wrap: normal;
+    white-space: pre-wrap;
+    transform: translate(-50%, -50%);
+    overflow-y: scroll;
+    background-color: #002e33;
+    padding: 8px;
+    border: 2px solid #066;
+    border-radius: 8px;
+}
+
+.gdpr
+{
+    color: cyan;
+    text-decoration: underline;
+    cursor: url('../icons/cursor-button.webp'), pointer;
+}
+
+#gdprBack
+{
+    max-width: 20%;
+    min-height: 32px;
+    align-self: center;
+    margin-bottom: 12px;
+}
+
+.titleGdpr
+{
+    text-decoration: underline;
+    font-size: clamp(0.2rem + 0.8vw + 0.8vh, 0.5rem + 0.8vw + 0.8vh, 8rem);
+}
+
+.chapterGdpr
+{
+    margin: 16px;
+    font-size: clamp(0.2rem + 0.6vw + 0.6vh, 0.5rem + 0.6vw + 0.6vh, 5rem);
+    filter: brightness(0.8);
+}
+
+#gdprText
+{
+    font-family: Arial, sans-serif;
+    font-size: clamp(0.2rem + 0.4vw + 0.4vh, 0.5rem + 0.4vw + 0.4vh, 5rem);
+}
