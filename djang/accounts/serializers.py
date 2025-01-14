@@ -51,7 +51,7 @@ class AccountSerializer(serializers.ModelSerializer):
         if user is None or not user.is_authenticated or user.pk == obj.pk:
             return False
 
-        return obj.is_friend(user.accounmodelt)
+        return obj.is_friend(user.accountmodel)
 
     def get_has_incoming_request(self, obj: AccountModel):
         user = self.context.get('user')
@@ -79,6 +79,17 @@ class AccountSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         data['avatar'] = data['avatar'][data['avatar'].find('/static/'):]
         return data
+    
+    def get_preferredPaddle(self, obj: AccountModel):
+
+        user = self.context.get('user')
+        if user is None or not user.is_authenticated:
+            return None
+
+        if not user.accountmodel.is_friend(obj) and user.pk != obj.pk:
+            return None
+
+        return user.accountmodel.preferredPaddle
 
 class UpdateUserSerializer(ModelSerializer):
     class Meta:
