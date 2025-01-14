@@ -13,6 +13,8 @@ import { setTimeFromServer } from "./timer.js";
 import { LevelMode, VictoryType } from "./variables.js";
 import { callVictoryScreen } from "./victory.js";
 
+export let keySocket = null;
+export let matchAlreadyStarted = false;
 let room_id = 0;
 
 export function connectToServerInput()
@@ -328,11 +330,10 @@ export function unspectateMatch()
     listener.send(JSON.stringify(event));    
 }
 
-export let keySocket = null;
 export function addSocketListener()
 {
     listener.addEventListener("message", ({ data }) => {
-        console.log(data);
+        // console.log(data);
         // if (data === "Message received!")
         //     return;
         let event;
@@ -399,6 +400,10 @@ export function addSocketListener()
             getListMatchs(event.data);
             break;
         case "match_start":
+            if (matchAlreadyStarted)
+                break;
+            matchAlreadyStarted = true;
+            console.log(data);
             setPlayersControllers();
             break;
         case "bounce_player":

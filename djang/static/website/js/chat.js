@@ -20,6 +20,7 @@ const overlayChat = document.getElementById('overlayChat');
 let lastSender = "";
 let chatIsOpen = false;
 export let chatIsFocused = false;
+let selectedName = "";
 
 let listDuelsInChat = [];
 let chatHistory = [];
@@ -192,7 +193,7 @@ export function restoreMessagesFromUser(userName)
 
 export function clickBlockUser(playerName = "")
 {
-    if (playerStats.blacklist.includes(playerName))
+    if (playerStats.blacklist.includes(playerName)) // plutot faire la requete back pour verifier ca
         return;
     // bloquer par id de joueur :
     // const playerId = getPlayerId(selectedName); // recuperer l'id dans la base de donnees
@@ -279,7 +280,6 @@ function showFriendButtonIfRegistered()
     }
 }
 
-let selectedName = "";
 export function openNameContextMenu(name, nameHeader)
 {
     if (contextMenuChat.style.display === 'flex')

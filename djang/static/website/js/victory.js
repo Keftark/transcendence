@@ -24,7 +24,7 @@ export function callVictoryScreen(victoryType) {
             newSrc = "static/images/victoryImg.webp";
             break;
         case VictoryType.DEFEAT:
-            str = isLocal ? getTranslation('playernameright') + getTranslation('wins') : getTranslation('defeat');
+            str = isLocal ? getTranslation('player2Name') + getTranslation('wins') : getTranslation('defeat');
             newSrc = isLocal ? "static/images/victoryImg.webp" : "static/images/defeatImg.webp";
             break;
         case VictoryType.EXAEQUO:
