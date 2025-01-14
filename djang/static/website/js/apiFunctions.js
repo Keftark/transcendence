@@ -132,7 +132,7 @@ export async function getLoggedInUser() {
         });
         if (response.ok) {
             const userData = await response.json();
-            console.log('Logged-in user:', userData);
+            console.trace('Logged-in user:', userData);
             return userData;
         } else if (response.status === 403) {
             console.log('User is not logged in.');

@@ -37,7 +37,7 @@ let isRegistOpen = false;
 let showPass = false;
 let showPassConfirm = false;
 export let isGdprOpen = false;
-
+let isFirstTime = true;
 
 document.getElementById('buttonLogOut').addEventListener('click', () => {
     clickLogOut();
@@ -78,8 +78,6 @@ checkboxGdpr.addEventListener('click', () => {
     clickCheckboxGdpr();
 });
 
-
-
 function  resetRegistrationInputs()
 {
     inputConfirmPassword.value = inputPassword.value = inputMail.value = inputLastName.value = inputFirstName.value = inputName.value = "";
@@ -118,6 +116,7 @@ export function showRegistrationPanel()
 
 export function onRegistrationOpen()
 {
+    isFirstTime = true;
     isRegistOpen = true;
     checkboxGdpr.checked = false;
     verifyCheckboxGdpr();
@@ -125,7 +124,10 @@ export function onRegistrationOpen()
     setTimeout(() => {
         registrationPanel.classList.add('showReg');
     }, 10);
-    inputName.focus();
+    setTimeout(() => {
+        openGdprPanel();
+    }, 300);
+    // inputName.focus();
 }
 
 function checkFields()
@@ -342,7 +344,11 @@ export function closeGdprPanel()
     document.querySelector('#gdprPanel').scrollTop = 0;
     isGdprOpen = false;
     gdprPanel.style.display = 'none';
-    checkboxGdpr.focus();
+    if (isFirstTime)
+        inputName.focus();
+    else
+        checkboxGdpr.focus();
+    isFirstTime = false;
 }
 
 export function isUserLoggedIn() {

@@ -4,10 +4,9 @@ import { animatePlayers, resetBoostedStatus, setPlayerController, setupPlayerMov
 import { createBall } from './ball.js';
 import { ScreenShake } from './screenShake.js';
 import { setScores, addScore, setVisibleScore } from './scoreManager.js';
-import { updatePlayerModel, createLights, createPlayers, setVisibilityRightWall, addLightPlayerReady } from './objects.js';
+import { createLights, createPlayers, setVisibilityRightWall, addLightPlayerReady } from './objects.js';
 import { getLevelState, isAnOnlineMode, setLevelState } from './main.js';
 import { unloadScene } from './unloadScene.js';
-import { removeMainEvents } from './eventsListener.js';
 import { setAccessAllDuelsInChat, tryCloseChat } from './chat.js';
 import { addMatchToHistory, getPlayerName, playerStats } from './playerManager.js';
 import { getTranslation } from './translate.js';
@@ -21,7 +20,7 @@ import { callVictoryScreen } from './victory.js';
 import { isBoostReadyLeft, isBoostReadyRight, resetBoostBar, useBoost } from './powerUp.js';
 import { createDeathSphere } from './deathSphere.js';
 import { Sparks } from './sparks.js';
-import { sendPlayerReady } from './sockets.js';
+import { matchAlreadyStarted, sendPlayerReady } from './sockets.js';
 import { getUserById } from './apiFunctions.js';
 
 const gameMenuPanel = document.getElementById('gameMenuPanel');
@@ -215,7 +214,7 @@ export function unloadLevel()
     playerStats.playerController = 1;
     playerProfile1 = null;
     playerProfile2 = null;
-
+    matchAlreadyStarted = false;
     window.removeEventListener('wheel', camZoomEvent);
 }
 
@@ -366,6 +365,7 @@ function showInGameUI()
         controlsP2.style.display = 'flex';
         controlsRightImg.src = controlsSrc;
         controlsP1.style.display = 'none';
+        document.getElementById('pressBoostTextRight').textContent = isAnOnlineMode(currentLevelMode) ? getTranslation('pressBoostTextLeft') : getTranslation('pressBoostTextRight');
     }
 }
 
@@ -374,7 +374,7 @@ export function setPlayerRightName()
     if (currentLevelMode === LevelMode.ADVENTURE)
         player2Name.innerText = getTranslation('botName');
     else
-        player2Name.innerText = getTranslation('playernameright');
+        player2Name.innerText = getTranslation('player2Name');
 }
 
 export function passInfosPlayersToLevel(idP1, idP2)
@@ -751,7 +751,7 @@ export function StartLevel(levelMode)
             useBoost(0);
             event.preventDefault();
         }
-        else if (event.code === 'ArrowLeft' && playerStats.playerController === 2 && isBoostReadyRight())
+        else if ((event.key === 'e' && playerStats.playerController === 2 && isBoostReadyRight()) || (event.code === 'ArrowLeft' && playerStats.playerController === 2 && isBoostReadyRight()))
         {
             useBoost(1);
             event.preventDefault();
