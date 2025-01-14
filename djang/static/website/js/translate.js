@@ -130,6 +130,7 @@ export function updateHTML(translations)
 	document.getElementById('helpRulesTitle').innerHTML = translations.helpRulesTitle;
 	document.getElementById('helpRulesText').innerHTML = translations.helpRulesText;
 	document.getElementById('buttonSpectate').innerHTML = translations.buttonSpectate;
+	document.getElementById('buttonProfile').innerHTML = translations.profileButton;
 	
     document.querySelector('.gdpr').addEventListener('click', function(event) {
 		event.preventDefault();

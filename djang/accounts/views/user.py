@@ -126,6 +126,15 @@ def get_logged_in_user(request):
     else:
         return JsonResponse({'error': 'User is not logged in.'}, status=403)
 
+def get_user_avatar(request, username):
+    try:
+        user = User.objects.get(username=username)
+        return JsonResponse({
+            'avatar': user.accountmodel.avatar
+        })
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+
 def get_user_by_name(request, username):
     try:
         # Query the User model by username

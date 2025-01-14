@@ -31,6 +31,7 @@ urlpatterns = [
     path('tournament-join', user.tournament_join, name='tournament-join'),  # Tournament join page
     path('check-login/', user.check_user_login, name='check_user_login'),
     path('current_user', user.get_logged_in_user, name='current_user'),
+    path('user_avatar/<str:username>/', user.get_user_avatar, name='user_avatar'),
     path('get-user/<str:username>/', user.get_user_by_name, name='get-user-by-name'),
     path('user/<int:user_id>/', user.get_user_by_id, name='user_detail'),
     path('username/<int:user_id>/', user.get_username, name='user_name_only'),

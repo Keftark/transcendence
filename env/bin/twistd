@@ -1,4 +1,4 @@
-#!/home/martin/Documents/transcend_1.0/env/bin/python3
+#!/home/cpothin/Documents/Game/env/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
