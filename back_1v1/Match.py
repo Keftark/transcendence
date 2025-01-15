@@ -8,7 +8,7 @@ WALL_OFFSET = 0.75
 
 class Match:
     #default constructor for quick matches
-    def __init__(self, id, p1, p2):
+    def __init__(self, id, p1, p2, ws):
         self._room_id = id
         self._spectators = []
         self._message_queue = []
@@ -33,6 +33,7 @@ class Match:
         self._timer = time.time()
         self._lock = threading.Lock()
         self._message_locker = threading.Lock()
+        self._ws = ws
 
     def load_parameters(self, payload):
         for data in payload:
@@ -131,8 +132,6 @@ class Match:
                         self._message_queue.append(self.dump_ragequit(self._paddle_2.id))
             if self._needs_to_wait is True:
                 self._message_queue.append(self.dump_waiting_start2())
-            elif self._player_1_ws is None or self._player_2_ws is None:
-                self.handle_closure()
             elif self._initialised is False:
                 self._initialised = True
                 self._message_queue.append(self.dump_init())
@@ -164,9 +163,9 @@ class Match:
                 self._message_queue.append(self.dump_variables())
             else:
                 self._message_queue.append(self.dump_waiting())
-        self.format()
+        await self.format()
 
-    def format(self):
+    async def format(self):
         id_list = []
         id_list.append(self._paddle_1.id)
         id_list.append(self._paddle_2.id)
@@ -179,7 +178,11 @@ class Match:
                 "ids": id_list,
                 "data": event
             }
-            self._formatted_queue.append(data)
+            try:
+                self._ws.send(json.dumps(data))
+            except Exception as e:
+                print("Prout ::", e)
+            #self._formatted_queue.append(data)
         self._message_queue.clear()
 
     def input(self, input):
@@ -279,7 +282,52 @@ class Match:
             "p1_state": self._paddle_1.ready,
             "p2_state": self._paddle_2.ready
         }
-        return event    
+        return event
+
+    def dump_init(self):
+        event = {
+            "type": "match_init",
+            "room_id": self._room_id,
+            "id_p1": self._paddle_1.id,
+            "id_p2": self._paddle_2.id
+        }
+        return event
+    
+    def dump_start(self):
+        event = {
+            "type": "match_start",
+            "room_id": self._room_id,
+            "id_p1": self._paddle_1.id,
+            "id_p2": self._paddle_2.id
+        }
+        return event
+    
+    def dump_resume(self):
+        event = {
+            "type": "match_resume",
+            "room_id": self._room_id
+        }
+        return event
+
+    def dump_variables(self):
+        event = {
+            "type": "tick",
+            "room_id": self._room_id,
+            "p1_pos": self._paddle_1.y,
+            "p2_pos": self._paddle_2.y,
+            "p1_score": self._player_1_score,
+            "p2_score": self._player_2_score,
+            "p1_boosting": self._paddle_1.is_powered_up,
+            "p2_boosting": self._paddle_2.is_powered_up,
+            "p1_juice": self._paddle_1.power,
+            "p2_juice": self._paddle_2.power,
+            "ball_x": self._ball.x,
+            "ball_y": self._ball.y,
+            "ball_speed": self._ball.speed,
+            "ball_boosting": self._ball.is_powered_up,
+            "timer": self._timer_count 
+        }
+        return event  
     
     @property
     def room_id(self):

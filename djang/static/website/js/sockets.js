@@ -333,7 +333,7 @@ export function unspectateMatch()
 export function addSocketListener()
 {
     listener.addEventListener("message", ({ data }) => {
-        // console.log(data);
+        console.log(data);
         // if (data === "Message received!")
         //     return;
         let event;

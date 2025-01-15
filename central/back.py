@@ -69,15 +69,18 @@ async def handle_answers(websocket, event, message):
     type = event["type"]
     server = event["server"]
     if server == "1v1_classic":
-        print("Got answer :", event)
+        #print("Got answer :", event)
         for id_f in event["ids"]:
             id = (int)(id_f)
             data = event["data"]
-            print("Got data : ", data)
+            #print("Got data : ", data)
             for user in userList:
                 if user.id == id:
-                    print("FOUND YOU")
-                    await user.send(json.dumps(data))
+                    #print("FOUND YOU")
+                    try:
+                        await user.send(json.dumps(data))
+                    except Exception as e:
+                        print("AAAAAAAAAAAAA :", e)
                     if data["type"] == "match_init":
                         user.room_id = (int)(data["room_id"])
                     elif data["type"] == "join_queue":
@@ -116,14 +119,17 @@ async def handle_answers(websocket, event, message):
         #else:
         #    pass #transfer to room id
     elif type == "message" or type == "sticker":
+        id = (int)(event["id"])
         for user in userList:
             if user.id != id:
                 await user.send(json.dumps(event))
     elif type == "room_message":
+        id = (int)(event["id"])
         for user in userList:
             if user.id != id and user.status == event["game"] and user.room == (int)(event["room_id"]):
                 await user.send(json.dumps(event))
     else:
+        id = (int)(event["id"])
         for user in userList:
             if user.id == id:
                 await user.send(json.dumps(event))
@@ -157,10 +163,10 @@ async def handle_transfer(websocket, event):
         except:
             chat_socket = None
     elif server == "1v1_classic":
-        print("Oh hhhh")
         try:
             await _1v1_socket.send(json.dumps(event))
-        except:
+        except Exception as e:
+            print("NYOOOO :", e)
             _1v1_socket = None
 
 #gere la connexion en interne

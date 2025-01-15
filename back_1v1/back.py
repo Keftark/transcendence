@@ -5,7 +5,6 @@ import threading
 import time
 import json
 import os
-import back_1v1.Queue2 as Queue2
 from Queue import Queue
 from websockets.asyncio.server import serve
 from websockets.asyncio.client import connect
@@ -130,26 +129,24 @@ def pong():
 
 async def send_to_central():
     global message_queue, central_socket, lock, lock_a
-    with lock and lock_a:
-        if central_socket is None:
-            return
+    if central_socket is not None:
         for message in message_queue:
+            print("MESSAGE")
             try:
                 await central_socket.send(json.dumps(message))
             except Exception as e:
                 central_socket = None
                 print("Got error", e)
+                break
         message_queue.clear()
 
 def add_to_queue(data):
     global message_queue, lock, lock_a
-    with lock and lock_a:
-        message_queue.append(data)
+    message_queue.append(data)
 
 def extend_to_queue(data):
     global message_queue, lock, lock_a
-    with lock and lock_a:
-        message_queue.extend(data)
+    message_queue.extend(data)
 
 async def loop():
     global queue, matchs, stopFlag, start, message_queue
@@ -157,7 +154,7 @@ async def loop():
     print("[", curr, "] : Ticker thread launched.")
     while stopFlag is False:
         #update queue
-        found = queue.tick()
+        found = await queue.tick()
         for found in queue.match_list:
             matchs.append(found)
         queue.match_list.clear()
@@ -165,7 +162,7 @@ async def loop():
         queue.message_queue.clear()
         #update all matches
         for m in matchs:
-            m.tick()
+            await m.tick()
             extend_to_queue(m.formatted_queue)
             m.formatted_queue.clear()
             if m.ended:
@@ -173,7 +170,7 @@ async def loop():
                 print("[", curr, "] : Match with room id", m.room_id ,"has concluded.")
                 matchs.remove(m)
         await send_to_central()
-        asyncio.sleep(UPDATE_DELAY)
+        await asyncio.sleep(UPDATE_DELAY)
 
 async def handler(websocket):
     global start, queue, central_socket
@@ -185,7 +182,7 @@ async def handler(websocket):
             elif (event["type"] == "join"):
                 curr = time.time() - start
                 print("[", curr, "] : Join request from client ID", event["id"])
-                if (not queue.add_to_queue(event)):
+                if (not queue.add_to_queue(event, websocket)):
                     add_to_queue(dump_error("already_in_queue", (int)(event["id"])))
                 else:
                     add_to_queue(dump_join_queue((int)(event["id"])))
@@ -236,7 +233,7 @@ async def main():
     stopFlag = True
 
 async def connection_handler():
-    global central_socket, stopFlag, start
+    global central_socket, stopFlag, start, queue
     while stopFlag is False:
         if central_socket is None:
             try:
@@ -246,6 +243,7 @@ async def connection_handler():
                 central_socket = await connect(connex, ping_interval=10, ping_timeout=None)
                 curr = time.time() - start
                 print("[", curr, "] : Central server connected.")
+                queue.set_ws(central_socket)
             except Exception as e:
                 print(e)
                 central_socket = None

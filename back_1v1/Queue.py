@@ -1,5 +1,6 @@
 from Match import Match
 from User import User
+from Socket import UserSocket
 import json
 import time
 
@@ -11,15 +12,19 @@ class Queue:
         self._start = start
         self._message_queue = []
         self._match_list = []
+        self._ws = None
 
-    def add_to_queue(self, message):
+    def set_ws(self, ws):
+        self._ws = ws
+
+    def add_to_queue(self, message, ws):
         try:
             id = (int)(message["id"])
             bl = message["blacklist"]
             for user in self._liste:
                 if user.id == id:
                     return False
-            user = User(id, bl)
+            user = UserSocket(ws, id, bl)
             if (message["private"] == "invite"):
                 self._room_id += 1
                 match = Match(self._room_id, id, 0)
@@ -44,7 +49,7 @@ class Queue:
             if us.id == id:
                 self._liste.remove(us) 
 
-    def notify_waiting(self):
+    async def notify_waiting(self):
         for user in self._liste:
             event = {
                 "type" :"wait",
@@ -52,9 +57,13 @@ class Queue:
                 "server": "1v1_classic",
                 "answer": "yes",
             }
-            self._message_queue.append(event)
+            #self._message_queue.append(event)
+            try:
+                await self._ws.send(json.dumps(event))
+            except Exception as e:
+                print("Caca ::", e)
 
-    def tick(self):
+    async def tick(self):
         if len(self._liste) >= 2:
             for p1 in self._liste:
                 for p2 in self._liste:
@@ -63,14 +72,14 @@ class Queue:
                         self.del_from_queue(p1.id)
                         self.del_from_queue(p2.id)
                         print("[Event] Created match room for players ", p1.id, ":", p2.id, " with Room ID :", self._room_id)
-                        self._match_list.append(Match(self._room_id, p1.id, p2.id))
+                        self._match_list.append(Match(self._room_id, p1.id, p2.id, p1.ws))
         for private in self._private:
             private.tick()
             if private.needs_to_wait is False:
                 self._private.remove(private)
                 self.match_list.append(private)
             self._message_queue.extend(private.formatted_queue)
-        self.notify_waiting()
+        await self.notify_waiting()
 
     @property
     def liste(self):
