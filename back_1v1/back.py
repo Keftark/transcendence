@@ -99,13 +99,13 @@ def search_for_player(id):
     return event
 
 def dump_everything():
-    global start
+    global logger
     event = {
         "port": SERVER_PORT,
         "tick_rate": UPDATE_DELAY,
         "server": "1v1_classic",
         "answer": "yes",
-        "execution_time": time.time() - start,
+        "execution_time": time.time() - logger.start,
         "in_queue": len(queue.liste),
         "matches": len(matchs),
         "author": "nmascrie"
@@ -137,8 +137,7 @@ async def send_to_central():
                 message_queue.remove(message)
             except Exception as e:
                 central_socket = None
-                logger.log("")
-                print("Got error", e)
+                logger.log("", 2, e)
         else:
             break
 
@@ -151,8 +150,8 @@ def extend_to_queue(data):
     message_queue.extend(data)
 
 async def loop():
-    global queue, matchs, stopFlag, start, message_queue
-    ########3looog
+    global queue, matchs, stopFlag, message_queue, logger
+    logger.log("Ticker thread launched.", 0)
     while stopFlag is False:
         #update queue
         found = await queue.tick()
@@ -167,33 +166,29 @@ async def loop():
             extend_to_queue(m.formatted_queue)
             m.formatted_queue.clear()
             if m.ended:
-                curr = time.time() - start
-                print("[", curr, "] : Match with room id", m.room_id ,"has concluded.")
+                logger.log("Match with room id " + str(m.room_id) + " has concluded.", 1)
                 matchs.remove(m)
         await send_to_central()
         await asyncio.sleep(UPDATE_DELAY)
 
 async def handler(websocket):
-    global start, queue, central_socket
+    global logger, queue, central_socket
     try:
         async for message in websocket:
             event = json.loads(message)
             if (event["type"] == "ping"):
                 await central_socket.send(json.dumps(pong()))
             elif (event["type"] == "join"):
-                curr = time.time() - start
-                print("[", curr, "] : Join request from client ID", event["id"])
+                logger.log("Join request from client ID ::" + event["id"], 1)
                 if (not queue.add_to_queue(event)):
                     add_to_queue(dump_error("already_in_queue", (int)(event["id"])))
                 else:
                     add_to_queue(dump_join_queue((int)(event["id"])))
-                    curr = time.time() - start
-                    print("[", curr, "] : client ID", event["id"], "has joined Queue")
+                    logger.log("Client ID " +  event["id"] + " has joined Queue", 1)
             elif (event["type"] == "quit"):
                 id = (int)(event["id"])
                 queue.del_from_queue(id)
-                curr = time.time() - start
-                print("[", curr, "] : client ID", id, "manually exited queue.")
+                logger.log("Client ID " + str(id) + " manually exited queue.", 1)
                 add_to_queue(dump_exit_queue(id))
             elif (event["type"] == "input" or \
                 event["type"] == "ready" or event["type"] == "pause" or \
@@ -223,37 +218,33 @@ async def handler(websocket):
             else:
                 add_to_queue(dump_error("unknown_command", (int)(event["id"])))
     except Exception as e:
-        print(e)
+        logger.log("", 2, e)
 
 async def main():
-    global stopFlag, start
-    curr = time.time() - start
-    print("[", curr, "] : Listener thread launched.")
+    global stopFlag, logger
+    logger.log("Listener thread launched.", 0)
     async with serve(handler, "", SERVER_PORT, ping_interval=10, ping_timeout=None):
         await asyncio.get_running_loop().create_future()  # run forever
     stopFlag = True
 
 async def connection_handler():
-    global central_socket, stopFlag, start, queue
+    global central_socket, stopFlag, logger, queue
     while stopFlag is False:
         if central_socket is None:
             try:
-                curr = time.time() - start
-                print("[", curr, "] : Attempting connection to central server.")
+                logger.log("Attempting connection to central server.", 1)
                 connex = "ws://localhost:" + str(CENTRAL_PORT) + "/"
                 central_socket = await connect(connex, ping_interval=10, ping_timeout=None)
-                curr = time.time() - start
-                print("[", curr, "] : Central server connected.")
+                logger.log("TCentral server connected.", 1)
             except Exception as e:
-                print(e)
                 central_socket = None
-                print("[", curr, "] : Couldn't connect to the central server.")
+                logger.log("Couldn't connect to the central server", 2, e)
         else:
             with lock:   
                 try:
                     await central_socket.send(json.dumps(pong()))
                 except Exception as e:
-                    print("Couille ::", e)
+                    logger.log("", 2, e)
         await asyncio.sleep(5)
 
 def connection_launcher():

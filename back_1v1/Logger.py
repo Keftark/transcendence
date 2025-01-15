@@ -47,7 +47,7 @@ CWHITEBG2  = '\33[107m'
 class Logger:
     def __init__(self):
         self._start = time.time()
-    
+
     def tick(self):
         t = str(round(time.time() - self._start, 2))
         return CWHITE + "[" + CBLUE + t + CWHITE + "]"
@@ -68,3 +68,11 @@ class Logger:
             print(self.tick(), self.warning_level(level), message, self.error_format(error))
         else:
             print(self.tick(), self.warning_level(level), message)
+
+    @property
+    def start(self):
+        return self._start
+
+    @start.setter
+    def start(self, value):
+        self._start = value
