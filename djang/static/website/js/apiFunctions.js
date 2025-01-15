@@ -239,10 +239,27 @@ export async function getUserByName(userName) {
             console.error(userData.error);
         }
         console.log("user data: " + JSON.stringify(userData));
-        // else {
-        //     console.log("User Details:", userData);
-        // }
+        return userData;
+    } catch (error) {
+        console.error("An error occurred while fetching the user details:", error);
+    }
+}
 
+export async function getUserPaddleSkin(userId) {
+    if (!userId) {
+        console.error("User id is required.");
+        return;
+    }
+    try {
+        const response = await fetch(`/user_paddle/${userId}/`);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);
+        }
+        const userData = await response.json();
+        if (userData.error) {
+            console.error(userData.error);
+        }
+        console.log("user data: " + JSON.stringify(userData));
         return userData;
     } catch (error) {
         console.error("An error occurred while fetching the user details:", error);

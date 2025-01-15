@@ -135,6 +135,24 @@ def get_user_avatar(request, username):
     except User.DoesNotExist:
         return JsonResponse({'error': 'User not found'}, status=404)
 
+def get_user_paddle(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+        return JsonResponse({
+            'preferredPaddle': user.accountmodel.preferredpaddle
+        })
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+
+def get_notifications(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+        return JsonResponse({
+            'notifications': user.notifications
+        })
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+
 def get_user_by_name(request, username):
     try:
         # Query the User model by username
