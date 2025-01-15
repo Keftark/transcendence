@@ -10,6 +10,7 @@ from websockets.asyncio.server import serve
 from websockets.asyncio.client import connect
 import sys
 import signal
+from Logger import Logger
 
 #Take the variables from the .env
 #Leave as comments until we are in docker !
@@ -24,6 +25,7 @@ CENTRAL_PORT = 7777
 
 central_socket = None
 
+logger = Logger()
 start = time.time()
 queue = Queue(start)
 matchs = []
@@ -130,13 +132,13 @@ def pong():
 async def send_to_central():
     global message_queue, central_socket, lock, lock_a
     for message in message_queue:
-        print("MESSAGE BE ::", message)
-        if central_socket is not None:
+        if central_socket is not None:  
             try:
                 await central_socket.send(json.dumps(message))
                 message_queue.remove(message)
             except Exception as e:
                 central_socket = None
+                logger.log("")
                 print("Got error", e)
         else:
             break
@@ -178,11 +180,8 @@ async def handler(websocket):
     try:
         async for message in websocket:
             event = json.loads(message)
-            print("OOGA BOOGADOOGAGAGA ::", event)
             if (event["type"] == "ping"):
-                print("PING")
                 await central_socket.send(json.dumps(pong()))
-                print("PONG")
             elif (event["type"] == "join"):
                 curr = time.time() - start
                 print("[", curr, "] : Join request from client ID", event["id"])
@@ -235,41 +234,6 @@ async def main():
     async with serve(handler, "", SERVER_PORT, ping_interval=10, ping_timeout=None):
         await asyncio.get_running_loop().create_future()  # run forever
     stopFlag = True
-
-async def mega_loop():
-    global central_socket, stopFlag, start, queue
-    while stopFlag is False:
-        if central_socket is None:
-            try:
-                curr = time.time() - start
-                print("[", curr, "] : Attempting connection to central server.")
-                connex = "ws://localhost:" + str(CENTRAL_PORT) + "/"
-                central_socket = await connect(connex, ping_interval=10, ping_timeout=None)
-                curr = time.time() - start
-                print("[", curr, "] : Central server connected.")
-            except Exception as e:
-                print(e)
-                central_socket = None
-                print("[", curr, "] : Couldn't connect to the central server.")
-        #update queue
-        found = await queue.tick()
-        for found in queue.match_list:
-            matchs.append(found)
-        queue.match_list.clear()
-        extend_to_queue(queue.message_queue)
-        queue.message_queue.clear()
-        #update all matches
-        for m in matchs:
-            m.tick()
-            extend_to_queue(m.formatted_queue)
-            m.formatted_queue.clear()
-            if m.ended:
-                curr = time.time() - start
-                print("[", curr, "] : Match with room id", m.room_id ,"has concluded.")
-                matchs.remove(m)
-        await send_to_central()
-        await asyncio.sleep(UPDATE_DELAY)
-    
 
 async def connection_handler():
     global central_socket, stopFlag, start, queue

@@ -8,7 +8,7 @@ WALL_OFFSET = 0.75
 
 class Match:
     #default constructor for quick matches
-    def __init__(self, id, p1, p2, ws):
+    def __init__(self, id, p1, p2):
         self._room_id = id
         self._spectators = []
         self._message_queue = []
@@ -33,7 +33,6 @@ class Match:
         self._timer = time.time()
         self._lock = threading.Lock()
         self._message_locker = threading.Lock()
-        self._ws = ws
 
     def load_parameters(self, payload):
         for data in payload:
