@@ -152,8 +152,7 @@ def extend_to_queue(data):
 
 async def loop():
     global queue, matchs, stopFlag, start, message_queue
-    curr = time.time() - start
-    print("[", curr, "] : Ticker thread launched.")
+    ########3looog
     while stopFlag is False:
         #update queue
         found = await queue.tick()
