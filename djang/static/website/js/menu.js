@@ -1,3 +1,4 @@
+import { getUserAvatar, getUserByName } from './apiFunctions.js';
 import { clickChoosePaddleButton } from './customizeSkins.js';
 import { addMainEvents } from './eventsListener.js';
 import { isInGame, reinitLevelFunction, setCameraType, StartLevel } from './levelLocal.js';
@@ -27,13 +28,17 @@ const hoverImage = document.getElementById('homeImg');
 const buttonsColors = document.querySelectorAll('.colorize-btn');
 const logInButtons = document.getElementById('loginbuttons');
 const logOutButtons = document.getElementById('logoutbuttons');
-const profileButton = document.getElementById('buttonProfile');
 const mainPanel = document.getElementById('mainPanel');
 const mainMenuPanel = document.getElementById('mainMenuPanel');
 const toggleCameraText = document.getElementById('cameraTypeHeader');
 const gameSettingsButton = document.getElementById('settingsButton');
 const profilePicture = document.getElementById('profilePicture');
 const fileInput = document.getElementById('fileInput');
+const profileButton = document.getElementById('buttonProfile');
+const miniNicknameText = document.getElementById('nameMiniProfile');
+const miniProfilePicture = document.getElementById('miniProfilePicture');
+const firstNameMiniProfile = document.getElementById('firstNameMiniProfile');
+const lastNameMiniProfile = document.getElementById('lastNameMiniProfile');
 
 const buttonsLanguage = document.querySelectorAll('.language');
 const imageSources = {
@@ -120,7 +125,7 @@ document.getElementById('orthographicButton').addEventListener('click', () => {
 });
 
 profileButton.addEventListener('click', () => {
-    openMiniProfile();
+    openMiniProfile(playerStats.nickname);
 });
 
 document.querySelectorAll('.mainMenuButton').forEach(button => {
@@ -185,9 +190,25 @@ export function openOrCloseGameMenu()
         document.activeElement.blur();
 }
 
-function openMiniProfile()
+function openMiniProfile(playerName)
 {
-
+    getUserByName(playerName)
+        .then((target) =>{
+            miniNicknameText.textContent = target.nickname;
+            firstNameMiniProfile.textContent = target.first_name;
+            lastNameMiniProfile.textContent = target.last_name;
+        })
+    .catch((error) => {
+        console.error("Failed to get user by name:", error);
+    });
+    getUserAvatar(playerName)
+        .then((target) => {
+            miniProfilePicture.src = target.avatar;
+        })
+        .catch((error) => {
+            console.error("Failed to get user by name:", error);
+    });
+    document.getElementById('miniProfilePanel').style.display = 'flex';
 }
 
 export function openProfile(player = playerStats)

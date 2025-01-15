@@ -1,26 +1,29 @@
-import Match2
-import Socket
+from Match import Match
+from User import User
+from Socket import UserSocket
 import json
 import time
 
 class Queue:
-    def __init__(self, start):
+    def __init__(self, logger):
         self._liste = []
         self._private = []
         self._room_id = -1
-        self._start = start
+        self._logger = logger
+        self._message_queue = []
+        self._match_list = []
 
-    def add_to_queue(self, ws, message):
+    def add_to_queue(self, message):
         try:
             id = (int)(message["id"])
             bl = message["blacklist"]
             for user in self._liste:
                 if user.id == id:
                     return False
-            sock = Socket.UserSocket(ws, id, bl)
+            user = User(id, bl)
             if (message["private"] == "invite"):
                 self._room_id += 1
-                match = Match2.Match2(self._room_id, id, 0, ws, None)
+                match = Match(self._room_id, id, 0)
                 match.set_private_match()
                 match.load_parameters(message["payload"])
                 self._private.append(match)
@@ -28,14 +31,14 @@ class Queue:
                 id = (int)(message["invited_by"])
                 for private in self._private:
                     if private.player_1_paddle.id == id:
-                        private.join_player(ws)
+                        private.join_player()
                         break
             else:
-                self._liste.append(sock)
+                self._liste.append(user)
             return True
-        except:
+        except Exception as e:
             curr = time.time() - self._start
-            print("[", curr, "] : Missing value found while parsing. Ignoring.")
+            print("[", curr, "] : Got error", e, ".")
     
     def del_from_queue(self, id):
         for us in self._liste:
@@ -45,33 +48,35 @@ class Queue:
     async def notify_waiting(self):
         for user in self._liste:
             event = {
-                "type" :"wait",
-                "id": user.id,
                 "server": "1v1_classic",
                 "answer": "yes",
+                "ids": [user.id],
+                "type" : "wait",
+                "data": {
+                    "type" : "wait",
+                    "id": user.id
+                }
             }
-            try:
-                await user.socket.send(json.dumps(event))
-            except:
-                self._liste.remove(user)
+            self._message_queue.append(event)
 
     async def tick(self):
         if len(self._liste) >= 2:
             for p1 in self._liste:
                 for p2 in self._liste:
-                    if (p1.id != p2.id):
+                    if (p1.id != p2.id and p1.can_play_with(p2)):
                         self._room_id += 1
                         self.del_from_queue(p1.id)
                         self.del_from_queue(p2.id)
-                        print("[Event] Created match room for players ", p1.id, ":", p2.id, " with Room ID :", self._room_id)
-                        return Match2.Match2(self._room_id, p1.id, p2.id, p1.socket, p2.socket)
+                        text = "Created match room for players " + str(p1.id) + ":" + str(p2.id) + " with Room ID :" + str(self._room_id)
+                        back.logger.log(text, 1)
+                        self._match_list.append(Match(self._room_id, p1.id, p2.id))
         for private in self._private:
             private.tick()
             if private.needs_to_wait is False:
                 self._private.remove(private)
-                return private
+                self.match_list.append(private)
+            self._message_queue.extend(private.formatted_queue)
         await self.notify_waiting()
-        return None
 
     @property
     def liste(self):
@@ -104,3 +109,19 @@ class Queue:
     @start.setter
     def start(self, value):
         self._start = value
+
+    @property
+    def message_queue(self):
+        return self._message_queue
+
+    @message_queue.setter
+    def message_queue(self, value):
+        self._message_queue = value
+
+    @property
+    def match_list(self):
+        return self._match_list
+
+    @match_list.setter
+    def match_list(self, value):
+        self._match_list = value

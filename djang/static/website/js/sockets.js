@@ -282,6 +282,27 @@ export function sendPrivMessage(targetMsg, messageContent) {
         });
 }
 
+export function sendPrivSticker(targetMsg, stickerName) {
+    getUserByName(targetMsg)
+        .then((target) => {
+            const event = {
+                key: keySocket,
+                type: "private_sticker",
+                name: playerStats.nickname,
+                target: target.id,
+                id: playerStats.id,
+                img: stickerName,
+                answer: "no",
+                server: "chat"
+            };
+
+            listener.send(JSON.stringify(event));
+        })
+        .catch((error) => {
+            console.error("Failed to get user by name:", error);
+        });
+}
+
 export function sendFriendRequest(friendId)
 {
     const event = { // c'est pas fait !
@@ -333,7 +354,7 @@ export function unspectateMatch()
 export function addSocketListener()
 {
     listener.addEventListener("message", ({ data }) => {
-        // console.log(data);
+        console.log(data);
         // if (data === "Message received!")
         //     return;
         let event;
@@ -353,11 +374,19 @@ export function addSocketListener()
 
         case "private_message":
             if (event.id === playerStats.id)
-                receiveMessage(event.sender_name, event.content, true, event.name);
+                receiveMessage(event.sender_name, event.content, false, true, event.name);
+            // console.log("Message received from " + event.name + ": " + event.content);
+            break;
+        case "private_sticker":
+            if (event.id === playerStats.id)
+            {
+                console.log("receiving sticker: " + event.img);
+                receiveMessage(event.sender_name, event.img, true, true, event.name);
+            }
             // console.log("Message received from " + event.name + ": " + event.content);
             break;
         case "message":
-            receiveMessage(event.name, event.content);
+            receiveMessage(event.name, event.content, false);
             // console.log("Message received from " + event.name + ": " + event.content);
             break;
         case "wait":
