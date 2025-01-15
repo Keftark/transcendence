@@ -338,29 +338,24 @@ button:hover {
 
 #stickers-container
 {
+    max-height: 32px;
     width: 100%;
-    max-width: 256px;
     display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
+    flex-direction: row-reverse;
+    justify-content: end;
     align-items: center;
-    overflow-x: auto;
-    white-space: nowrap;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.301);
-    white-space: nowrap;
-    box-sizing: border-box;
 }
 
 .sticker-chat
 {
-    display: inline-block;
+    /* display: inline-block; */
     height: 32px;
     width: 32px;
+    transition: all 0.2s ease;
 }
 
-/* .sticker-chat:hover
+.sticker-chat:hover
 {
-    width: 120%;
-    height: 120%;
-    transition: all 0.2s ease;
-} */
+    width: 44px;
+    height: 44px;
+}

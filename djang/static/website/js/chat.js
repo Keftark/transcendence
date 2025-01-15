@@ -592,6 +592,18 @@ inputElement.addEventListener('blur', () => {
     inputElement.removeEventListener('keydown', handleKeyDownHistory);
 });
 
+const scrollableContainer = document.getElementById('stickers-container');
+
+scrollableContainer.addEventListener('wheel', function (event) {
+  // Check if the wheel was scrolled horizontally
+  if (event.deltaY !== 0) {
+    // Prevent default scrolling behavior
+    event.preventDefault();
+
+    // Scroll horizontally based on the mouse wheel movement
+    scrollableContainer.scrollLeft += event.deltaY / 3;
+  }
+});
 // testing code
 // document.addEventListener('keydown', function(e) {
 //     if (e.key === 'Q' && e.shiftKey) {

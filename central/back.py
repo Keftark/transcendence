@@ -218,6 +218,7 @@ async def handler(websocket):
         await websocket.wait_closed()
     except Exception as e:
         logger.log("", 2, e)
+        print("GOTT ::", message)
     finally:
         #TODO : Disconnection procedure
         if websocket == chat_socket:
