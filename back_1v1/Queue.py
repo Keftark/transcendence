@@ -68,7 +68,7 @@ class Queue:
                         self.del_from_queue(p1.id)
                         self.del_from_queue(p2.id)
                         text = "Created match room for players " + str(p1.id) + ":" + str(p2.id) + " with Room ID :" + str(self._room_id)
-                        back.logger.log(text, 1)
+                        self._logger.log(text, 1)
                         self._match_list.append(Match(self._room_id, p1.id, p2.id))
         for private in self._private:
             private.tick()
