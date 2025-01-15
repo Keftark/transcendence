@@ -139,7 +139,7 @@ def get_user_paddle(request, user_id):
     try:
         user = User.objects.get(id=user_id)
         return JsonResponse({
-            'preferredPaddle': user.accountmodel.preferredpaddle
+            'preferredPaddle': user.accountmodel.preferredPaddle
         })
     except User.DoesNotExist:
         return JsonResponse({'error': 'User not found'}, status=404)
