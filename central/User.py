@@ -18,8 +18,6 @@ class User:
         return event
 
     async def send(self, data):
-        print("Socket be :", self._sock_output)
-        print("Message be :", data)
         try:
             await self._sock_output.send(data)
         except Exception as e:

@@ -76,7 +76,7 @@ class Match:
             self._message_queue.append(self.dump_connection_lost(self._paddle_2.id))
             self._message_queue.append(self.dump_victory(self._paddle_2.id, "disconnected"))
 
-    async def reset_board(self):
+    def reset_board(self):
         self._ball.reset(True)
         self._paddle_1.reset()
         self._paddle_2.reset()
