@@ -318,7 +318,8 @@ function createMessageElement(name, messageText, isPrivate, isASticker) {
     messageContainer.classList.add('message-container');
     if (isASticker)
     {
-
+        const imgContainer = document.createElement('img');
+        imgContainer.src = `static/stickers/${messageText}.webp`;
         messageContainer.classList.add('message-container-sticker');
     }
     if (!isPrivate && name != "" && name != lastSender)
