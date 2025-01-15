@@ -5,7 +5,7 @@ import threading
 import time
 import json
 import os
-import Queue
+import Queue2
 from websockets.asyncio.server import serve
 from websockets.asyncio.client import connect
 import sys
@@ -25,7 +25,7 @@ CENTRAL_PORT = 7777
 central_socket = None
 
 start = time.time()
-queue = Queue.Queue(start)
+queue = Queue2.Queue2(start)
 matchs = []
 lock = threading.Lock()
 stopFlag = False
