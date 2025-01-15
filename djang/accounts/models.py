@@ -13,7 +13,7 @@ from django.db.models.signals import post_save, pre_delete
 
 
 def upload_to(instance, filename: str):
-    return f"./profiles/static/avatars/{instance.pk}{splitext(filename)[1]}"
+    return f"./static/icons{instance.pk}{splitext(filename)[1]}"
 
 
 class AccountModel(models.Model):
@@ -81,6 +81,7 @@ def delete_profile_picture(sender, instance, **kwargs):
 def on_user_created(sender, instance, created, **kwargs):
     if created:
         accountmodel: AccountModel = AccountModel.objects.create(pk=instance.pk, user=instance)
+        accountmodel.avatar 
         accountmodel.save()
 
 
