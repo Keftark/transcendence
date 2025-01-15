@@ -117,7 +117,11 @@ def dump_join_queue(id):
         "type": "join_queue",
         "server": "1v1_classic",
         "answer": "yes",
-        "id": id
+        "ids" : [id],
+        "data": {
+            "id": id,
+            "type": "join_queue",
+        }
     }
     return event
 

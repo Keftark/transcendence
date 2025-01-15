@@ -7,6 +7,7 @@ class User:
         self._id = 0
         self._name = ""
         self._status = "here"
+        self._game = "none"
         self._room = -1
         self._key = ""
     
@@ -71,6 +72,14 @@ class User:
     @key.setter
     def key(self, value):
         self._key = value
+
+    @property
+    def game(self):
+        return self._game
+
+    @game.setter
+    def game(self, value):
+        self._game = value 
 
     @property
     def room(self):

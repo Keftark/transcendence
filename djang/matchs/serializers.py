@@ -6,7 +6,7 @@ from django.db.models import QuerySet
 from .models import Match
 from accounts.serializers import AccountSerializer
 
-class GameSerializer(serializers.ModelSerializer):
+class MatchSerializer(serializers.ModelSerializer):
 
     players = serializers.SerializerMethodField()
     winner = serializers.SerializerMethodField()
@@ -15,11 +15,11 @@ class GameSerializer(serializers.ModelSerializer):
     finished = serializers.ReadOnlyField()
     start_timestamp = serializers.ReadOnlyField()
     stop_timestamp = serializers.ReadOnlyField()
-    game_type = serializers.ReadOnlyField()
+    match_type = serializers.ReadOnlyField()
 
     class Meta:
         model = Match
-        fields = ["id", "winner", "state", "started", "finished", "players", "start_timestamp", "stop_timestamp", "game_type"]
+        fields = ["id", "winner", "state", "started", "finished", "players", "start_timestamp", "stop_timestamp", "match_type"]
 
     def get_state(self, instance: Match):
         if (instance.finished):
