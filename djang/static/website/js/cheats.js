@@ -4,7 +4,7 @@ import { removeBlockedUser } from "./friends.js";
 import { changeBallSizeInstance, changeBallSpeedInstance, changePlayersSize, getBallPosition } from "./levelLocal.js";
 import { askForDuel } from "./modesSelection.js";
 import { playerStats } from "./playerManager.js";
-import { sendPrivMessage } from "./sockets.js";
+import { sendPrivMessage, sendPrivSticker } from "./sockets.js";
 
 export const cheatCodes =
 {
@@ -48,6 +48,7 @@ function sendInvitDuel(playerInvit = "")
 function sendPrivateMessage(target = "", message = "")
 {
     // console.log("Message to: " + target + ": " + message);
+    sendPrivSticker(target, message);
     sendPrivMessage(target, message);
     receiveMessage(playerStats.nickname, message, true, target);
     // on check si le player existe dans la bdd et est connecte

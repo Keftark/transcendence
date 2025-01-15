@@ -379,7 +379,10 @@ export function addSocketListener()
             break;
         case "private_sticker":
             if (event.id === playerStats.id)
+            {
+                console.log("receiving sticker: " + event.content);
                 receiveMessage(event.sender_name, event.content, true, event.name);
+            }
             // console.log("Message received from " + event.name + ": " + event.content);
             break;
         case "message":
