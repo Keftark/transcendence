@@ -68,37 +68,53 @@ async def handle_answers(websocket, event, message):
     global start, userList, logList
     type = event["type"]
     server = event["server"]
-    #print("Got answer :", event)
     if server == "1v1_classic":
-        if type == "match_init":
-            for user in userList:
-                print("Checking user with ID :", user.id, "\tComparing with IDs", event["id_p1"], "and", event["id_p2"])
-                if user.id == event["id_p1"] or user.id == event["id_p2"]:
-                    print("Found user !")
-                    user.room_id = (int)(event["room_id"])
-        if "room_id" in event: #transmit to all user in room_id
-            print("Sending to room id")
-            for user in userList:
-                print("Checking user with ID :", user.id, "\tIn room ID :", user.room_id, "in game", user.status)
-                if user.status == "1v1_classic" and user.room_id == (int)(event["room_id"]):
-                    print("Found corresponding room !")
-                    await user.send(json.dumps(event))
-        elif type == "join_queue":
-            id = (int)(event["id"])
+        print("Got answer :", event)
+        for id_f in event["ids"]:
+            id = (int)(id_f)
+            data = event["data"]
+            print("Got data : ", data)
             for user in userList:
                 if user.id == id:
-                    user.status = "1v1_classic"
-                    user.room_id = -1
-                    break
-        elif type == "exit_queue":
-            id = (int)(event["id"])
-            for user in userList:
-                if user.id == id:
-                    user.status = "here"
-                    user.room_id = -1
-                    break
-        else:
-            pass #transfer to room id
+                    print("FOUND YOU")
+                    await user.send(json.dumps(data))
+                    if data["type"] == "match_init":
+                        user.room_id = (int)(data["room_id"])
+                    elif data["type"] == "join_queue":
+                        user.status = "1v1_classic"
+                        user.room_id = -1
+                    elif data["type"] == "exit_queue":
+                        user.status = "1v1_classic"
+                        user.room_id = -1
+        #if type == "match_init":
+        #    for user in userList:
+        #        print("Checking user with ID :", user.id, "\tComparing with IDs", event["id_p1"], "and", event["id_p2"])
+        #        if user.id == event["id_p1"] or user.id == event["id_p2"]:
+        #            print("Found user !")
+        #            user.room_id = (int)(event["room_id"])
+        #if "room_id" in event: #transmit to all user in room_id
+        #    print("Sending to room id")
+        #    for user in userList:
+        #        print("Checking user with ID :", user.id, "\tIn room ID :", user.room_id, "in game", user.status)
+        #        if user.status == "1v1_classic" and user.room_id == (int)(event["room_id"]):
+        #            print("Found corresponding room !")
+        #            await user.send(json.dumps(event))
+        #elif type == "join_queue":
+        #    id = (int)(event["id"])
+        #    for user in userList:
+        #        if user.id == id:
+        #            user.status = "1v1_classic"
+        #            user.room_id = -1
+        #            break
+        #elif type == "exit_queue":
+        #    id = (int)(event["id"])
+        #    for user in userList:
+        #        if user.id == id:
+        #            user.status = "here"
+        #            user.room_id = -1
+        #            break
+        #else:
+        #    pass #transfer to room id
     elif type == "message" or type == "sticker":
         for user in userList:
             if user.id != id:

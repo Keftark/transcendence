@@ -1,5 +1,5 @@
-import Match2
-import Socket
+from Match import Match
+from User import User
 import json
 import time
 
@@ -9,18 +9,20 @@ class Queue:
         self._private = []
         self._room_id = -1
         self._start = start
+        self._message_queue = []
+        self._match_list = []
 
-    def add_to_queue(self, ws, message):
+    def add_to_queue(self, message):
         try:
             id = (int)(message["id"])
             bl = message["blacklist"]
             for user in self._liste:
                 if user.id == id:
                     return False
-            sock = Socket.UserSocket(ws, id, bl)
+            user = User(id, bl)
             if (message["private"] == "invite"):
                 self._room_id += 1
-                match = Match2.Match2(self._room_id, id, 0, ws, None)
+                match = Match(self._room_id, id, 0)
                 match.set_private_match()
                 match.load_parameters(message["payload"])
                 self._private.append(match)
@@ -28,21 +30,21 @@ class Queue:
                 id = (int)(message["invited_by"])
                 for private in self._private:
                     if private.player_1_paddle.id == id:
-                        private.join_player(ws)
+                        private.join_player()
                         break
             else:
-                self._liste.append(sock)
+                self._liste.append(user)
             return True
-        except:
+        except Exception as e:
             curr = time.time() - self._start
-            print("[", curr, "] : Missing value found while parsing. Ignoring.")
+            print("[", curr, "] : Got error", e, ".")
     
     def del_from_queue(self, id):
         for us in self._liste:
             if us.id == id:
                 self._liste.remove(us) 
 
-    async def notify_waiting(self):
+    def notify_waiting(self):
         for user in self._liste:
             event = {
                 "type" :"wait",
@@ -50,28 +52,25 @@ class Queue:
                 "server": "1v1_classic",
                 "answer": "yes",
             }
-            try:
-                await user.socket.send(json.dumps(event))
-            except:
-                self._liste.remove(user)
+            self._message_queue.append(event)
 
-    async def tick(self):
+    def tick(self):
         if len(self._liste) >= 2:
             for p1 in self._liste:
                 for p2 in self._liste:
-                    if (p1.id != p2.id):
+                    if (p1.id != p2.id and p1.can_play_with(p2)):
                         self._room_id += 1
                         self.del_from_queue(p1.id)
                         self.del_from_queue(p2.id)
                         print("[Event] Created match room for players ", p1.id, ":", p2.id, " with Room ID :", self._room_id)
-                        return Match2.Match2(self._room_id, p1.id, p2.id, p1.socket, p2.socket)
+                        self._match_list.append(Match(self._room_id, p1.id, p2.id))
         for private in self._private:
             private.tick()
             if private.needs_to_wait is False:
                 self._private.remove(private)
-                return private
-        await self.notify_waiting()
-        return None
+                self.match_list.append(private)
+            self._message_queue.extend(private.formatted_queue)
+        self.notify_waiting()
 
     @property
     def liste(self):
@@ -104,3 +103,19 @@ class Queue:
     @start.setter
     def start(self, value):
         self._start = value
+
+    @property
+    def message_queue(self):
+        return self._message_queue
+
+    @message_queue.setter
+    def message_queue(self, value):
+        self._message_queue = value
+
+    @property
+    def match_list(self):
+        return self._match_list
+
+    @match_list.setter
+    def match_list(self, value):
+        self._match_list = value
