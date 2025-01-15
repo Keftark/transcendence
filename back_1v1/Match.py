@@ -129,7 +129,7 @@ class Match:
                         self._message_queue.append(self.dump_ragequit(self._paddle_1.id))
                     elif self._quitter == self._paddle_2.id:
                         self._message_queue.append(self.dump_ragequit(self._paddle_2.id))
-            if self._needs_to_wait is True:
+            elif self._needs_to_wait is True:
                 self._message_queue.append(self.dump_waiting_start2())
             elif self._initialised is False:
                 self._initialised = True

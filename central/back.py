@@ -40,6 +40,13 @@ def dump_health():
     }
     return event
 
+def dump_player_status(id):
+    global userList
+    for user in userList:
+        if user.id == id:
+            return user.dump_status()
+    return None
+
 def id_generator(size=36, chars=string.ascii_uppercase + string.digits):
     global userList, logList
     attempt = ''.join(random.SystemRandom().choice(chars) for _ in range(size))
@@ -177,6 +184,12 @@ async def handle_log(websocket, event):
             user.sock_output = websocket
         logList.append(user)
 
+async def handle_commands(websocket, event, message):
+    type = event["type"]
+
+    if type == "status":
+        await websocket.send(json.dumps(dump_player_status((int)(event["id"]))))
+
 async def handler(websocket):
     global start, userList, logList, logger
     global chat_socket, _1v1_socket
@@ -192,7 +205,7 @@ async def handler(websocket):
             elif (event["server"] != "main"):
                 await handle_transfer(websocket, event)
             else : #Commandes de serveur ...
-                pass
+                await handle_commands(websocket, event, message)
         await websocket.wait_closed()
     except Exception as e:
         logger.log("", 2, e)
