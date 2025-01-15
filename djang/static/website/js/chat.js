@@ -316,12 +316,6 @@ function isNotThePlayer(name)
 function createMessageElement(name, messageText, isPrivate, isASticker) {
     const messageContainer = document.createElement('div');
     messageContainer.classList.add('message-container');
-    if (isASticker)
-    {
-        const imgContainer = document.createElement('img');
-        imgContainer.src = `static/stickers/${messageText}.webp`;
-        messageContainer.classList.add('message-container-sticker');
-    }
     if (!isPrivate && name != "" && name != lastSender)
     {
         const nameHeader = document.createElement('div');
@@ -336,40 +330,54 @@ function createMessageElement(name, messageText, isPrivate, isASticker) {
               });
         }
     }
+    if (isASticker)
+    {
+        console.trace("this is a sticker");
+        const imgContainer = document.createElement('img');
+        imgContainer.src = `static/stickers/${messageText}.webp`;
+        messageContainer.appendChild(imgContainer);
+        messageContainer.classList.add('message-container-sticker');
+    }
+    else
+    {
+        console.trace("this is not a sticker");
+        const messageContent = document.createElement('div');
+        messageContent.classList.add('message');
+        messageContent.textContent = messageText;
+        if (name != '')
+            messageContent.style.color = playerStats.colors;
+        messageContainer.appendChild(messageContent);
+    }
 
-    const messageContent = document.createElement('div');
-    messageContent.classList.add('message');
-    messageContent.textContent = messageText;
-    if (name != '')
-        messageContent.style.color = playerStats.colors;
-    messageContainer.appendChild(messageContent);
     messageContainer.setAttribute('sender', name);
 
     return messageContainer;
 }
 
-function sendMessageLeft(newMessage, playerName, isPrivate = false)
+function sendMessageLeft(newMessage, playerName, isASticker, isPrivate = false)
 {
-    const messageContent = newMessage.querySelector('.message');
-    messageContent.classList.add('message-container-left');
     newMessage.classList.add('message-left');
     if (isPrivate)
-    {
         newMessage.lastElementChild.innerHTML = "<b>" + getTranslation("from") + playerName + ":</b> " + newMessage.lastElementChild.textContent;
+    if (isASticker)
+        return;
+    const messageContent = newMessage.querySelector('.message');
+    messageContent.classList.add('message-container-left');
+    if (isPrivate)
         messageContent.classList.add('private-message-left');
-    }
 }
 
 function sendMessageRight(newMessage, playerName, isPrivate = false)
 {
-    const messageContent = newMessage.querySelector('.message');
-    messageContent.classList.add('message-container-right');
     newMessage.classList.add('message-right');
     if (isPrivate)
-    {
         newMessage.lastElementChild.innerHTML = "<b>" + getTranslation("to") + playerName + ":</b> " + newMessage.lastElementChild.textContent;
+    if (isASticker)
+        return;
+    const messageContent = newMessage.querySelector('.message');
+    messageContent.classList.add('message-container-right');
+    if (isPrivate)
         messageContent.classList.add('private-message-right');
-    }
 }
 
 function sendMessageMiddle(newMessage)
@@ -435,12 +443,12 @@ export function receiveMessage(playerName, message, isASticker, isPrivate = fals
     if (playerName === playerStats.nickname)
     {
         if (toPlayer === "")
-            sendMessageRight(newMessage, playerName, isPrivate);
+            sendMessageRight(newMessage, playerName, isASticker, isPrivate);
         else
-            sendMessageRight(newMessage, toPlayer, isPrivate);
+            sendMessageRight(newMessage, toPlayer, isASticker, isPrivate);
     }
     else
-        sendMessageLeft(newMessage, playerName, isPrivate);
+        sendMessageLeft(newMessage, playerName, isASticker, isPrivate);
     messagesContainer.appendChild(newMessage);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
     lastSender = playerName;
