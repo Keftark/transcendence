@@ -48,9 +48,19 @@ function sendInvitDuel(playerInvit = "")
 function sendPrivateMessage(target = "", message = "")
 {
     // console.log("Message to: " + target + ": " + message);
-    sendPrivSticker(target, message);
     sendPrivMessage(target, message);
-    receiveMessage(playerStats.nickname, message, true, target);
+    receiveMessage(playerStats.nickname, message, false, true, target);
+    // on check si le player existe dans la bdd et est connecte
+    // si oui, on envoie un message prive et lui seul le recoit.
+    // evidemment, le joueur voit ce qu'il ecrit.
+    // mais peut-etre qu'il faudrait afficher ces messages d'une differente couleur.
+}
+
+function sendPrivateSticker(target = "", message = "")
+{
+    // console.log("Message to: " + target + ": " + message);
+    sendPrivSticker(target, message);
+    receiveMessage(playerStats.nickname, message, true, true, target);
     // on check si le player existe dans la bdd et est connecte
     // si oui, on envoie un message prive et lui seul le recoit.
     // evidemment, le joueur voit ce qu'il ecrit.

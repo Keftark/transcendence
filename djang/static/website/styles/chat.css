@@ -79,6 +79,11 @@
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
+.message-container-sticker
+{
+    background-color: transparent !important;
+}
+
 .message-container-left
 {
     background-color: #1c3558;

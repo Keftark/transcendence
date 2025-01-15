@@ -291,7 +291,7 @@ export function sendPrivSticker(targetMsg, stickerName) {
                 name: playerStats.nickname,
                 target: target.id,
                 id: playerStats.id,
-                content: stickerName,
+                img: stickerName,
                 answer: "no",
                 server: "chat"
             };
@@ -374,19 +374,19 @@ export function addSocketListener()
 
         case "private_message":
             if (event.id === playerStats.id)
-                receiveMessage(event.sender_name, event.content, true, event.name);
+                receiveMessage(event.sender_name, event.content, false, true, event.name);
             // console.log("Message received from " + event.name + ": " + event.content);
             break;
         case "private_sticker":
             if (event.id === playerStats.id)
             {
-                console.log("receiving sticker: " + event.content);
-                receiveMessage(event.sender_name, event.content, true, event.name);
+                console.log("receiving sticker: " + event.img);
+                receiveMessage(event.sender_name, event.img, true, true, event.name);
             }
             // console.log("Message received from " + event.name + ": " + event.content);
             break;
         case "message":
-            receiveMessage(event.name, event.content);
+            receiveMessage(event.name, event.content, false);
             // console.log("Message received from " + event.name + ": " + event.content);
             break;
         case "wait":
