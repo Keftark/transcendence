@@ -129,16 +129,17 @@ def pong():
 
 async def send_to_central():
     global message_queue, central_socket, lock, lock_a
-    if central_socket is not None:
-        for message in message_queue:
-            print("MESSAGE")
-            try:
-                await central_socket.send(json.dumps(message))
-            except Exception as e:
-                central_socket = None
-                print("Got error", e)
-                break
-        message_queue.clear()
+    pass
+    #if central_socket is not None:
+    #    for message in message_queue:
+    #        print("MESSAGE")
+    #        try:
+    #            await central_socket.send(json.dumps(message))
+    #        except Exception as e:
+    #            central_socket = None
+    #            print("Got error", e)
+    #            break
+    #    message_queue.clear()
 
 def add_to_queue(data):
     global message_queue, lock, lock_a
@@ -248,9 +249,12 @@ async def connection_handler():
                 print(e)
                 central_socket = None
                 print("[", curr, "] : Couldn't connect to the central server.")
-        #else:
-        #    with lock:   
-        #        await central_socket.send(json.dumps(pong()))
+        else:
+            with lock:   
+                try:
+                    await central_socket.send(json.dumps(pong()))
+                except Exception as e:
+                    print("Couille ::", e)
         await asyncio.sleep(5)
 
 def connection_launcher():
