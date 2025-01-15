@@ -367,7 +367,7 @@ function sendMessageLeft(newMessage, playerName, isASticker, isPrivate = false)
         messageContent.classList.add('private-message-left');
 }
 
-function sendMessageRight(newMessage, playerName, isPrivate = false)
+function sendMessageRight(newMessage, playerName, isASticker, isPrivate = false)
 {
     newMessage.classList.add('message-right');
     if (isPrivate)

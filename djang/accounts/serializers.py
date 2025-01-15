@@ -97,7 +97,7 @@ class AccountSerializer(serializers.ModelSerializer):
         if user is None or not user.is_authenticated:
             return None
 
-        if not user.accountmodel.preferredpaddle and user.pk != obj.pk:
+        if not user.accountmodel.preferredPaddle and user.pk != obj.pk:
             return None
 
         return user.accountmodel.preferredPaddle

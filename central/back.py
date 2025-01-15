@@ -69,18 +69,15 @@ async def handle_answers(websocket, event, message):
     type = event["type"]
     server = event["server"]
     if server == "1v1_classic":
-        #print("Got answer :", event)
         for id_f in event["ids"]:
             id = (int)(id_f)
             data = event["data"]
-            #print("Got data : ", data)
             for user in userList:
                 if user.id == id:
-                    #print("FOUND YOU")
                     try:
                         await user.send(json.dumps(data))
                     except Exception as e:
-                        print("AAAAAAAAAAAAA :", e)
+                        logger.log("", 2, e)
                     if data["type"] == "match_init":
                         user.room_id = (int)(data["room_id"])
                     elif data["type"] == "join_queue":
@@ -147,7 +144,7 @@ async def handle_transfer(websocket, event):
     for user in userList:
         if user.id == id:
             if user.key != event["key"]:
-                print("Key not matching")
+                logger.log("User with ID :: " + str(id), 3, "Key not matching")
                 return
             else:
                 break
@@ -166,7 +163,7 @@ async def handle_transfer(websocket, event):
         try:
             await _1v1_socket.send(json.dumps(event))
         except Exception as e:
-            print("NYOOOO :", e)
+            logger.log("", 2, e)
             _1v1_socket = None
 
 #gere la connexion en interne
@@ -188,7 +185,8 @@ async def handle_log(websocket, event):
                 user.key = id_generator()
                 logList.remove(user)
                 userList.append(user)
-                print("Created user with ID ::", user.id, "\tKey ::", user.key, "\t Adress::", user)
+                text = "Created user with ID ::" + str(user.id) + "\tKey ::" + str(user.key) + "\t Adress::" + str(user)
+                logger.log(text, 3)
                 await user.send(json.dumps(user.dump_key()))
             break
     if flag is False:
@@ -199,7 +197,6 @@ async def handle_log(websocket, event):
             user.sock_input = websocket
         elif event["socket"] == "output":
             user.sock_output = websocket
-        print("Added log user with ID ::", id, "\tAddress ::", user)
         logList.append(user)
 
 async def handler(websocket):
@@ -208,7 +205,6 @@ async def handler(websocket):
     try:
         async for message in websocket:
             event = json.loads(message)
-            #print("GOT :", event)
             if event["type"] == "pong":
                 pass
             elif event["type"] == "log":
@@ -222,7 +218,6 @@ async def handler(websocket):
         await websocket.wait_closed()
     except Exception as e:
         logger.log("", 2, e)
-        print(message)
     finally:
         #TODO : Disconnection procedure
         if websocket == chat_socket:
