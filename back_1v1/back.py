@@ -179,12 +179,12 @@ async def handler(websocket):
             if (event["type"] == "ping"):
                 await central_socket.send(json.dumps(pong()))
             elif (event["type"] == "join"):
-                logger.log("Join request from client ID ::" + event["id"], 1)
+                logger.log("Join request from client ID ::" + str(event["id"]), 1)
                 if (not queue.add_to_queue(event)):
                     add_to_queue(dump_error("already_in_queue", (int)(event["id"])))
                 else:
                     add_to_queue(dump_join_queue((int)(event["id"])))
-                    logger.log("Client ID " +  event["id"] + " has joined Queue", 1)
+                    logger.log("Client ID " +  str(event["id"]) + " has joined Queue", 1)
             elif (event["type"] == "quit"):
                 id = (int)(event["id"])
                 queue.del_from_queue(id)
