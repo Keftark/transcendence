@@ -6,11 +6,11 @@ import time
 import back
 
 class Queue:
-    def __init__(self, start):
+    def __init__(self, logger):
         self._liste = []
         self._private = []
         self._room_id = -1
-        self._start = start
+        self._logger = logger
         self._message_queue = []
         self._match_list = []
 
@@ -69,7 +69,7 @@ class Queue:
                         self.del_from_queue(p1.id)
                         self.del_from_queue(p2.id)
                         text = "Created match room for players " + p1.id + ":" + p2.id + " with Room ID :" + self._room_id
-                        back.logger.log(text, 1)
+                        self._logger.log(text, 1)
                         self._match_list.append(Match(self._room_id, p1.id, p2.id))
         for private in self._private:
             private.tick()
