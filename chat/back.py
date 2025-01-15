@@ -170,7 +170,7 @@ async def handler(websocket):
                 target = (int)(event["target"])
                 if is_user(id) is True and is_user(target) is True:
                     for user in Users:
-                        if user.id == target:
+                        if user.id == id:
                             for targ in Users:
                                 if targ.id == target:
                                     if event["type"] == "private_sticker":
@@ -213,7 +213,6 @@ async def connection_handler():
                 curr = time.time() - start
                 print("[", curr, "] : Attempting connection to central server.")
                 connex = "ws://localhost:" + str(CENTRAL_PORT) + "/"
-                #central_socket = create_connection(connex)
                 central_socket = await connect(connex, ping_interval=10, ping_timeout=None)
                 curr = time.time() - start
                 print("[", curr, "] : Central server connected.")

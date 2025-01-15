@@ -3,6 +3,7 @@ from User import User
 from Socket import UserSocket
 import json
 import time
+import back
 
 class Queue:
     def __init__(self, start):
@@ -67,7 +68,8 @@ class Queue:
                         self._room_id += 1
                         self.del_from_queue(p1.id)
                         self.del_from_queue(p2.id)
-                        print("[Event] Created match room for players ", p1.id, ":", p2.id, " with Room ID :", self._room_id)
+                        text = "Created match room for players " + p1.id + ":" + p2.id + " with Room ID :" + self._room_id
+                        back.logger.log(text, 1)
                         self._match_list.append(Match(self._room_id, p1.id, p2.id))
         for private in self._private:
             private.tick()
