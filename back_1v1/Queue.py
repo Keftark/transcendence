@@ -48,10 +48,14 @@ class Queue:
     async def notify_waiting(self):
         for user in self._liste:
             event = {
-                "type" :"wait",
-                "id": user.id,
                 "server": "1v1_classic",
                 "answer": "yes",
+                "ids": [user.id],
+                "type" : "wait",
+                "data": {
+                    "type" : "wait",
+                    "id": user.id
+                }
             }
             self._message_queue.append(event)
 

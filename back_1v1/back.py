@@ -129,16 +129,17 @@ def pong():
 
 async def send_to_central():
     global message_queue, central_socket, lock, lock_a
-    if central_socket is not None:
-        for message in message_queue:
-            print("MESSAGE")
+    for message in message_queue:
+        print("MESSAGE BE ::", message)
+        if central_socket is not None:
             try:
                 await central_socket.send(json.dumps(message))
+                message_queue.remove(message)
             except Exception as e:
                 central_socket = None
                 print("Got error", e)
-                break
-        message_queue.clear()
+        else:
+            break
 
 def add_to_queue(data):
     global message_queue, lock, lock_a
@@ -177,8 +178,11 @@ async def handler(websocket):
     try:
         async for message in websocket:
             event = json.loads(message)
+            print("OOGA BOOGADOOGAGAGA ::", event)
             if (event["type"] == "ping"):
+                print("PING")
                 await central_socket.send(json.dumps(pong()))
+                print("PONG")
             elif (event["type"] == "join"):
                 curr = time.time() - start
                 print("[", curr, "] : Join request from client ID", event["id"])
