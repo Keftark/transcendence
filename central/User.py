@@ -17,6 +17,16 @@ class User:
             "key": self._key
         }
         return event
+    
+    def dump_status(self):
+        event = {
+            "type": "status",
+            "id": self._id,
+            "game": self._game,
+            "status": self._status,
+            "room": self._room
+        }
+        return event
 
     async def send(self, data):
         try:

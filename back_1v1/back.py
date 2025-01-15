@@ -169,6 +169,7 @@ async def loop():
             m.tick()
             extend_to_queue(m.formatted_queue)
             m.formatted_queue.clear()
+            print("Status :", m.ended)
             if m.ended:
                 logger.log("Match with room id " + str(m.room_id) + " has concluded.", 1)
                 matchs.remove(m)
