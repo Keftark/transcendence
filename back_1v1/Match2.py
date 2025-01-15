@@ -71,17 +71,6 @@ class Match2:
 
     def remove_spectator(self, spec):
         self._spectators.remove(spec)
-
-    #ping the websocket. Set them to None if they're closed
-    async def ping(self):
-        try: 
-            await self._player_1_ws.send(json.dumps({"type":"ping"}))
-        except:
-            self._player_1_ws = None
-        try: 
-            await self._player_2_ws.send(json.dumps({"type":"ping"}))
-        except:
-            self._player_2_ws = None
         
     async def handle_closure(self):
         self._ended = True
@@ -215,22 +204,24 @@ class Match2:
     async def send_to_web(self):
         with self._message_locker:
             liste = self._message_queue + self._ball.message_queue
-            liste += self._paddle_1._message_queue + self._paddle_2._message_queue 
+            liste += self._paddle_1._message_queue + self._paddle_2._message_queue
+            id_list = []
+            id_list.append(self._paddle_1.id)
+            id_list.append(self._paddle_2.id)
+            id_list.extend(self._spectators)
             for dump in liste:
-                event = json.dumps(dump)
+                data = {
+                    "type": "match_data",
+                    "server": "1v1_classic",
+                    "answer": "yes",
+                    "ids": id_list,
+                    "data": dump
+                }
+                event = json.dumps(data)
                 try:
                     await self._player_1_ws.send(event)
                 except:
                     self._player_1_ws = None
-                try:
-                    await self._player_2_ws.send(event)
-                except:
-                    self._player_2_ws = None
-                for spectator in self._spectators:
-                    try: 
-                        await spectator.send(event)
-                    except: 
-                        self._spectators.remove(spectator)
             self._message_queue.clear()
             self._ball.message_queue.clear()
             self._paddle_1.message_queue.clear()
