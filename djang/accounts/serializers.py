@@ -29,12 +29,12 @@ class AccountSerializer(serializers.ModelSerializer):
     is_friend = serializers.SerializerMethodField()
     has_incoming_request = serializers.SerializerMethodField()
     has_outgoing_request = serializers.SerializerMethodField()
-    preferredpaddle = serializers.SerializerMethodField()
+    preferredPaddle = serializers.SerializerMethodField()
 
     class Meta:
         model = AccountModel
         fields = ["username", "avatar", "id", 'status', 'description', 'is42', 'is_friend',
-                  'has_outgoing_request', 'has_incoming_request', 'preferredpaddle']
+                  'has_outgoing_request', 'has_incoming_request', 'preferredPaddle']
 
     def get_status(self, obj: AccountModel):
         from notifications.consumers import notification_manager
@@ -89,16 +89,16 @@ class AccountSerializer(serializers.ModelSerializer):
 
         return user.accountmodel.description
     
-    def get_preferredpaddle(self, obj: AccountModel):
+    def get_preferredPaddle(self, obj: AccountModel):
 
         user = self.context.get('user')
         if user is None or not user.is_authenticated:
             return None
 
-        if not user.accountmodel.preferredpaddle and user.pk != obj.pk:
+        if not user.accountmodel.preferredPaddle and user.pk != obj.pk:
             return None
 
-        return user.accountmodel.preferredpaddle
+        return user.accountmodel.preferredPaddle
 
 class UpdateUserSerializer(ModelSerializer):
     class Meta:
