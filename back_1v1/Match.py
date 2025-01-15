@@ -116,7 +116,7 @@ class Match:
                 self._timer = time.time()
             self.check_victory()
 
-    async def tick(self):
+    def tick(self):
         with self._lock:
             self.timer_tick()
             if (self._ended is True):
@@ -163,9 +163,9 @@ class Match:
                 self._message_queue.append(self.dump_variables())
             else:
                 self._message_queue.append(self.dump_waiting())
-        await self.format()
+        self.format()
 
-    async def format(self):
+    def format(self):
         id_list = []
         id_list.append(self._paddle_1.id)
         id_list.append(self._paddle_2.id)
@@ -178,11 +178,7 @@ class Match:
                 "ids": id_list,
                 "data": event
             }
-            try:
-                self._ws.send(json.dumps(data))
-            except Exception as e:
-                print("Prout ::", e)
-            #self._formatted_queue.append(data)
+            self._formatted_queue.append(data)
         self._message_queue.clear()
 
     def input(self, input):
