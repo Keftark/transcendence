@@ -17,6 +17,7 @@ const chatBox = document.getElementById('chatBox');
 const toggleSizeButton = document.getElementById('toggleSizeButton');
 const toggleIcon = document.getElementById('toggleIcon');
 const overlayChat = document.getElementById('overlayChat');
+const stickersList = document.getElementById('stickers-container');
 let lastSender = "";
 let chatIsOpen = false;
 export let chatIsFocused = false;
@@ -49,6 +50,7 @@ function openChat()
     chatIsOpen = true;
     overlayChat.style.display = playerStats.isRegistered ? 'none' : 'flex';
     chatBox.classList.remove('hasNewMessage');
+    openStickersList();
 }
 
 function closeChat()
@@ -62,6 +64,7 @@ function closeChat()
         chatBox.classList.add('hide-elements');
         overlayChat.style.display = 'none';
     }, 400);
+    closeStickersList();
 }
 
 export function tryCloseChat()
@@ -580,6 +583,27 @@ function handleKeyDownHistory(event)
             inputElement.value = '';
         }
     }
+}
+
+export function openStickersList()
+{
+    let delay = 0;
+    Array.from(stickersList.children).forEach((child) => {
+        setTimeout(() => {
+            child.classList.add('growth');
+        }, delay);
+        delay += 50;
+    });
+}
+export function closeStickersList()
+{
+    let delay = 0;
+    Array.from(stickersList.children).forEach((child) => {
+        setTimeout(() => {
+            child.classList.remove('growth');
+        }, delay);
+        delay += 50;
+    });
 }
 
 inputElement.addEventListener('focus', () => {

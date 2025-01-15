@@ -349,13 +349,19 @@ button:hover {
 .sticker-chat
 {
     /* display: inline-block; */
-    height: 32px;
-    width: 32px;
+    height: 0px;
+    width: 0px;
     transition: all 0.2s ease;
 }
 
 .sticker-chat:hover
 {
-    width: 44px;
-    height: 44px;
+    width: 44px !important;
+    height: 44px !important;
+}
+
+.sticker-chat.growth
+{
+    height: 32px;
+    width: 32px;
 }
