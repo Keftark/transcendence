@@ -26,8 +26,7 @@ CENTRAL_PORT = 7777
 central_socket = None
 
 logger = Logger()
-start = time.time()
-queue = Queue(start)
+queue = Queue(logger)
 matchs = []
 lock = threading.Lock()
 lock_a = asyncio.Lock()
@@ -275,8 +274,7 @@ def signal_handler(signal, frame):
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
-    curr = time.time() - start
-    print("[", curr, "] : Server launched.")
+    logger.log("Server launched.", 0)
     try:
         ticker = threading.Thread(target=ticker_launcher)
         server = threading.Thread(target=server_launcher)
@@ -291,5 +289,4 @@ if __name__ == "__main__":
         server.join()
         connex.join()
     except:
-        curr = time.time() - start
-        print("[", curr, "] : Server exited with manual closure.")
+        logger.log("Server exited with manual closure.", 0)
