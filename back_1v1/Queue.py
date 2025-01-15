@@ -12,19 +12,15 @@ class Queue:
         self._start = start
         self._message_queue = []
         self._match_list = []
-        self._ws = None
 
-    def set_ws(self, ws):
-        self._ws = ws
-
-    def add_to_queue(self, message, ws):
+    def add_to_queue(self, message):
         try:
             id = (int)(message["id"])
             bl = message["blacklist"]
             for user in self._liste:
                 if user.id == id:
                     return False
-            user = UserSocket(ws, id, bl)
+            user = User(id, bl)
             if (message["private"] == "invite"):
                 self._room_id += 1
                 match = Match(self._room_id, id, 0)
@@ -57,11 +53,7 @@ class Queue:
                 "server": "1v1_classic",
                 "answer": "yes",
             }
-            #self._message_queue.append(event)
-            try:
-                await self._ws.send(json.dumps(event))
-            except Exception as e:
-                print("Caca ::", e)
+            self._message_queue.append(event)
 
     async def tick(self):
         if len(self._liste) >= 2:
@@ -72,7 +64,7 @@ class Queue:
                         self.del_from_queue(p1.id)
                         self.del_from_queue(p2.id)
                         print("[Event] Created match room for players ", p1.id, ":", p2.id, " with Room ID :", self._room_id)
-                        self._match_list.append(Match(self._room_id, p1.id, p2.id, p1.ws))
+                        self._match_list.append(Match(self._room_id, p1.id, p2.id))
         for private in self._private:
             private.tick()
             if private.needs_to_wait is False:
