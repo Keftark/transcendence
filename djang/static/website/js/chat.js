@@ -313,10 +313,14 @@ function isNotThePlayer(name)
     return (name != getPlayerName());
 }
 
-function createMessageElement(name, messageText, isPrivate = false) {
+function createMessageElement(name, messageText, isPrivate, isASticker) {
     const messageContainer = document.createElement('div');
     messageContainer.classList.add('message-container');
+    if (isASticker)
+    {
 
+        messageContainer.classList.add('message-container-sticker');
+    }
     if (!isPrivate && name != "" && name != lastSender)
     {
         const nameHeader = document.createElement('div');
@@ -423,9 +427,9 @@ function checkNewMessage()
         chatBox.classList.add('hasNewMessage');
 }
 
-export function receiveMessage(playerName, message, isPrivate = false, toPlayer = "")
+export function receiveMessage(playerName, message, isASticker, isPrivate = false, toPlayer = "")
 {
-    const newMessage = createMessageElement(playerName, message, isPrivate);
+    const newMessage = createMessageElement(playerName, message, isPrivate, isASticker);
     // sendRandomMessage(newMessage);
     if (playerName === playerStats.nickname)
     {
@@ -445,7 +449,7 @@ export function receiveMessage(playerName, message, isPrivate = false, toPlayer 
 /* 
     Les messages systemes seront envoyes avec sendSystemMessage()
 */
-function trySendMessage() {
+function trySendMessage(isASticker = false) {
     const messageText = inputElement.value.trim();
     
     if (messageText !== "") {
@@ -463,7 +467,7 @@ function trySendMessage() {
 
         // let playerName = getPlayerNameChat();
         sendMessage(truncatedMessage);
-        receiveMessage(playerStats.nickname, truncatedMessage);
+        receiveMessage(playerStats.nickname, truncatedMessage, isASticker);
     }
     inputElement.value = '';
     inputElement.focus();

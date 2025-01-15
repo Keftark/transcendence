@@ -155,22 +155,22 @@ async def loop():
     print("[", curr, "] : Ticker thread launched.")
     while stopFlag is False:
         #update queue
-        #found = await queue.tick()
-        #for found in queue.match_list:
-        #    matchs.append(found)
-        #queue.match_list.clear()
-        #extend_to_queue(queue.message_queue)
-        #queue.message_queue.clear()
+        found = await queue.tick()
+        for found in queue.match_list:
+            matchs.append(found)
+        queue.match_list.clear()
+        extend_to_queue(queue.message_queue)
+        queue.message_queue.clear()
         #update all matches
-        #for m in matchs:
-        #    m.tick()
-        #    extend_to_queue(m.formatted_queue)
-        #    m.formatted_queue.clear()
-        #    if m.ended:
-        #        curr = time.time() - start
-        #        print("[", curr, "] : Match with room id", m.room_id ,"has concluded.")
-        #        matchs.remove(m)
-        #await send_to_central()
+        for m in matchs:
+            m.tick()
+            extend_to_queue(m.formatted_queue)
+            m.formatted_queue.clear()
+            if m.ended:
+                curr = time.time() - start
+                print("[", curr, "] : Match with room id", m.room_id ,"has concluded.")
+                matchs.remove(m)
+        await send_to_central()
         await asyncio.sleep(UPDATE_DELAY)
 
 async def handler(websocket):
@@ -282,7 +282,6 @@ async def connection_handler():
                 central_socket = await connect(connex, ping_interval=10, ping_timeout=None)
                 curr = time.time() - start
                 print("[", curr, "] : Central server connected.")
-                queue.set_ws(central_socket)
             except Exception as e:
                 print(e)
                 central_socket = None
@@ -296,7 +295,7 @@ async def connection_handler():
         await asyncio.sleep(5)
 
 def connection_launcher():
-    asyncio.run(mega_loop())
+    asyncio.run(connection_handler())
 
 def server_launcher():
     asyncio.run(main())
