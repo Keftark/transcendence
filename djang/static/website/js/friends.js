@@ -19,6 +19,11 @@ friendsHeaderButton.addEventListener('click', function() {
         showBlocked();
 });
 
+export function showFriendsBox(isTrue)
+{
+    friendsBox.style.display = isTrue ? 'flex' : 'none'; 
+}
+
 function showFriends()
 {
     friendsHeaderButton.innerText = getTranslation('friendsHeader');

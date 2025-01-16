@@ -397,6 +397,16 @@
             <h2 id="nameMiniProfile"></h2>
             <p id="firstNameMiniProfile"></p>
             <p id="lastNameMiniProfile"></p>
+            <div id="scoresMiniPanel">
+                <div id="scoreTotalMiniPanel" class="scoreMiniPanel">
+                    <p id="matchsPlayedMiniProfile"></p>
+                    <p id="matchsPlayedMiniProfileValue"></p>
+                </div>
+                <div id="scoreVictoriesMiniPanel" class="scoreMiniPanel">
+                    <p id="winsMiniProfile"></p>
+                    <p id="winsMiniProfileValue"></p>
+                </div>
+            </div>
         </div>
         <button id="closeMiniProfileButton"></button>
     </div>
@@ -495,21 +505,15 @@
             </div>
         </div>
         <div id="stickers-container">
-            <img id="sticker0" class="sticker-chat" src="{% static 'stickers/sticker_angry.webp' %}" alt="">
-            <img id="sticker1" class="sticker-chat" src="{% static 'stickers/sticker_happy.webp' %}" alt="">
-            <img id="sticker1" class="sticker-chat" src="{% static 'stickers/sticker_happy.webp' %}" alt="">
-            <img id="sticker1" class="sticker-chat" src="{% static 'stickers/sticker_happy.webp' %}" alt="">
-            <img id="sticker1" class="sticker-chat" src="{% static 'stickers/sticker_happy.webp' %}" alt="">
-            <img id="sticker1" class="sticker-chat" src="{% static 'stickers/sticker_happy.webp' %}" alt="">
-            <img id="sticker1" class="sticker-chat" src="{% static 'stickers/sticker_happy.webp' %}" alt="">
-            <img id="sticker1" class="sticker-chat" src="{% static 'stickers/sticker_happy.webp' %}" alt="">
-            <img id="sticker1" class="sticker-chat" src="{% static 'stickers/sticker_happy.webp' %}" alt="">
-            <img id="sticker1" class="sticker-chat" src="{% static 'stickers/sticker_happy.webp' %}" alt="">
-            <img id="sticker1" class="sticker-chat" src="{% static 'stickers/sticker_happy.webp' %}" alt="">
-            <img id="sticker1" class="sticker-chat" src="{% static 'stickers/sticker_happy.webp' %}" alt="">
-            <img id="sticker1" class="sticker-chat" src="{% static 'stickers/sticker_happy.webp' %}" alt="">
-            <img id="sticker1" class="sticker-chat" src="{% static 'stickers/sticker_happy.webp' %}" alt="">
-            <img id="sticker1" class="sticker-chat" src="{% static 'stickers/sticker_happy.webp' %}" alt="">
+            <img id="sticker0" class="sticker-chat" src="{% static 'stickers/sticker_angry.webp' %}" data-name="sticker_angry" alt="">
+            <img id="sticker1" class="sticker-chat" src="{% static 'stickers/sticker_happy.webp' %}" data-name="sticker_happy" alt="">
+            <img id="sticker2" class="sticker-chat" src="{% static 'stickers/sticker_cool.webp' %}" data-name="sticker_cool" alt="">
+            <img id="sticker3" class="sticker-chat" src="{% static 'stickers/sticker_laugh.webp' %}" data-name="sticker_laugh" alt="">
+            <img id="sticker4" class="sticker-chat" src="{% static 'stickers/sticker_love.webp' %}" data-name="sticker_love" alt="">
+            <img id="sticker5" class="sticker-chat" src="{% static 'stickers/sticker_puke.webp' %}" data-name="sticker_puke" alt="">
+            <img id="sticker6" class="sticker-chat" src="{% static 'stickers/sticker_sad.webp' %}" data-name="sticker_sad" alt="">
+            <img id="sticker7" class="sticker-chat" src="{% static 'stickers/sticker_sleep.webp' %}" data-name="sticker_sleep" alt="">
+            <img id="sticker8" class="sticker-chat" src="{% static 'stickers/sticker_tongue_wink.webp' %}" data-name="sticker_tongue_wink" alt="">
         </div>
     
         <!------------------------------ Friends Box ------------------------------>

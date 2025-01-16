@@ -218,6 +218,27 @@ export async function getUserAvatar(userName) {
     }
 }
 
+export async function getUserScores(userName) {
+    if (!userName) {
+        console.error("User name is required.");
+        return;
+    }
+    try {
+        const response = await fetch(`/user_scores/${userName}/`);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);
+        }
+        const userData = await response.json();
+        if (userData.error) {
+            console.error(userData.error);
+        }
+        console.log("user data: " + JSON.stringify(userData));
+        return userData;
+    } catch (error) {
+        console.error("An error occurred while fetching the user details:", error);
+    }
+}
+
 export async function getUserByName(userName) {
     if (!userName) {
         console.error("User name is required.");

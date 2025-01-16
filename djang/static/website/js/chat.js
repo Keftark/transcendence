@@ -6,7 +6,7 @@ import { isInGame } from "./levelLocal.js";
 import { openProfile } from "./menu.js";
 import { getPlayerName, playerStats } from "./playerManager.js";
 import { getRules, resetInputfieldsRules } from "./rules.js";
-import { joinChat, sendMessage } from "./sockets.js";
+import { joinChat, sendMessage, sendPublicSticker } from "./sockets.js";
 import { getTranslation } from "./translate.js";
 import { ArenaType, LevelMode } from "./variables.js";
 
@@ -17,6 +17,7 @@ const chatBox = document.getElementById('chatBox');
 const toggleSizeButton = document.getElementById('toggleSizeButton');
 const toggleIcon = document.getElementById('toggleIcon');
 const overlayChat = document.getElementById('overlayChat');
+const stickersList = document.getElementById('stickers-container');
 let lastSender = "";
 let chatIsOpen = false;
 export let chatIsFocused = false;
@@ -49,6 +50,12 @@ function openChat()
     chatIsOpen = true;
     overlayChat.style.display = playerStats.isRegistered ? 'none' : 'flex';
     chatBox.classList.remove('hasNewMessage');
+    if (playerStats.isRegistered)
+    {
+        setTimeout(() => {
+            openStickersList();
+        }, 200);
+    }
 }
 
 function closeChat()
@@ -62,6 +69,7 @@ function closeChat()
         chatBox.classList.add('hide-elements');
         overlayChat.style.display = 'none';
     }, 400);
+    closeStickersList();
 }
 
 export function tryCloseChat()
@@ -582,6 +590,28 @@ function handleKeyDownHistory(event)
     }
 }
 
+function openStickersList()
+{
+    let delay = 0;
+    Array.from(stickersList.children).forEach((child) => {
+        setTimeout(() => {
+            child.classList.add('growth');
+        }, delay);
+        delay += 50;
+    });
+}
+
+function closeStickersList()
+{
+    let delay = 0;
+    Array.from(stickersList.children).forEach((child) => {
+        setTimeout(() => {
+            child.classList.remove('growth');
+        }, delay);
+        delay += 40;
+    });
+}
+
 inputElement.addEventListener('focus', () => {
     chatIsFocused = true;
     inputElement.addEventListener('keydown', handleKeyDownHistory);
@@ -592,13 +622,15 @@ inputElement.addEventListener('blur', () => {
     inputElement.removeEventListener('keydown', handleKeyDownHistory);
 });
 
-// testing code
-// document.addEventListener('keydown', function(e) {
-//     if (e.key === 'Q' && e.shiftKey) {
-//         checkNewMessage();
-//     }
-// });
+function addStickersFunctions()
+{
+    Array.from(stickersList.children).forEach((child) => {
+        child.addEventListener('click', function() {
+            console.log(child.getAttribute('data-name'));
+            receiveMessage(playerStats.nickname, child.getAttribute('data-name'), true);
+            sendPublicSticker();
+        });
+    });    
+}
 
-// setTimeout(() => {
-//     joinChat();
-// }, 150);
+addStickersFunctions();

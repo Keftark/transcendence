@@ -303,6 +303,20 @@ export function sendPrivSticker(targetMsg, stickerName) {
         });
 }
 
+export function sendPublicSticker(stickerName)
+{
+    const event = {
+        key: keySocket,
+        type: "salon_sticker",
+        name: playerStats.nickname,
+        id: playerStats.id,
+        img: stickerName,
+        answer: "no",
+        server: "chat"
+    };
+    listener.send(JSON.stringify(event));
+}
+
 export function sendFriendRequest(friendId)
 {
     const event = { // c'est pas fait !
@@ -382,6 +396,14 @@ export function addSocketListener()
             {
                 console.log("receiving sticker: " + event.img);
                 receiveMessage(event.sender_name, event.img, true, true, event.name);
+            }
+            // console.log("Message received from " + event.name + ": " + event.content);
+            break;
+        case "salon_sticker":
+            if (event.id != playerStats.id)
+            {
+                console.log("receiving salon sticker: " + event.img);
+                receiveMessage(event.name, event.img, true);
             }
             // console.log("Message received from " + event.name + ": " + event.content);
             break;

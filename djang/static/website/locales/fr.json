@@ -64,6 +64,8 @@
     "leaveDuelButton": "Quitter",
     "loading": "Chargement...",
     "rulesPointsText": "Points de victoire : ",
+    "gamesWon": "Parties gagnées",
+    "gamesPlayed": "Parties jouées",
     "rulesArenaText": "Arène : ",
     "rulesPaddleText": "Raquette",
     "choosePaddleText": "Choisissez votre raquette",

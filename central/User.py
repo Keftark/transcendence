@@ -7,6 +7,7 @@ class User:
         self._id = 0
         self._name = ""
         self._status = "here"
+        self._game = "none"
         self._room = -1
         self._key = ""
     
@@ -14,6 +15,16 @@ class User:
         event = {
             "id": self._id,
             "key": self._key
+        }
+        return event
+    
+    def dump_status(self):
+        event = {
+            "type": "status",
+            "id": self._id,
+            "game": self._game,
+            "status": self._status,
+            "room": self._room
         }
         return event
 
@@ -71,6 +82,14 @@ class User:
     @key.setter
     def key(self, value):
         self._key = value
+
+    @property
+    def game(self):
+        return self._game
+
+    @game.setter
+    def game(self, value):
+        self._game = value 
 
     @property
     def room(self):

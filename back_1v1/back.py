@@ -117,7 +117,11 @@ def dump_join_queue(id):
         "type": "join_queue",
         "server": "1v1_classic",
         "answer": "yes",
-        "id": id
+        "ids" : [id],
+        "data": {
+            "id": id,
+            "type": "join_queue",
+        }
     }
     return event
 
@@ -165,6 +169,7 @@ async def loop():
             m.tick()
             extend_to_queue(m.formatted_queue)
             m.formatted_queue.clear()
+            print("Status :", m.ended)
             if m.ended:
                 logger.log("Match with room id " + str(m.room_id) + " has concluded.", 1)
                 matchs.remove(m)
