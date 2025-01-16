@@ -64,6 +64,8 @@
     "leaveDuelButton": "Leave",
     "loading": "Loading...",
     "rulesPointsText": "Points to win: ",
+    "gamesWon": "Games won",
+    "gamesPlayed": "Games played",
     "rulesArenaText": "Arena: ",
     "rulesPaddleText": "Paddle",
     "choosePaddleText": "Choose your paddle",

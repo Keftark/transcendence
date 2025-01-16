@@ -40,7 +40,12 @@ const miniProfilePicture = document.getElementById('miniProfilePicture');
 const firstNameMiniProfile = document.getElementById('firstNameMiniProfile');
 const lastNameMiniProfile = document.getElementById('lastNameMiniProfile');
 const miniProfilePanel = document.getElementById('miniProfilePanel');
+const matchsPlayedMiniProfile = document.getElementById('matchsPlayedMiniProfile');
+const winsMiniProfile = document.getElementById('winsMiniProfile');
+const matchsPlayedMiniProfileValue = document.getElementById('matchsPlayedMiniProfileValue');
+const winsMiniProfileValue = document.getElementById('winsMiniProfileValue');
 const closeMiniProfileButton = document.getElementById('closeMiniProfileButton');
+
 
 const buttonsLanguage = document.querySelectorAll('.language');
 const imageSources = {
@@ -200,7 +205,7 @@ function openMiniProfile(playerName)
 {
     getUserByName(playerName)
         .then((target) =>{
-            miniNicknameText.textContent = target.nickname;
+            miniNicknameText.textContent = target.username;
             firstNameMiniProfile.textContent = target.first_name;
             lastNameMiniProfile.textContent = target.last_name;
         })
@@ -214,13 +219,19 @@ function openMiniProfile(playerName)
     //     .catch((error) => {
     //         console.error("Failed to get user by name:", error);
     // });
-    getUserScores(playerName)
-        .then((target) => {
-            miniProfilePicture.src = target.avatar;
-        })
-        .catch((error) => {
-            console.error("Failed to get user by name:", error);
-    });
+    // getUserScores(playerName)
+    //     .then((target) => {
+    //         miniProfilePicture.src = target.avatar;
+    //     })
+    //     .catch((error) => {
+    //         console.error("Failed to get user by name:", error);
+    // });
+
+    // ca va dans la requete des scores.
+    matchsPlayedMiniProfileValue.innerHTML = "2";
+    winsMiniProfileValue.innerHTML = "1";
+
+    
     miniProfilePanel.style.display = 'flex';
     setTimeout(() => {
         miniProfilePanel.classList.add('appear');
