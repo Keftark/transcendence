@@ -6,7 +6,7 @@ import { isInGame } from "./levelLocal.js";
 import { openProfile } from "./menu.js";
 import { getPlayerName, playerStats } from "./playerManager.js";
 import { getRules, resetInputfieldsRules } from "./rules.js";
-import { joinChat, sendMessage } from "./sockets.js";
+import { joinChat, sendMessage, sendPublicSticker } from "./sockets.js";
 import { getTranslation } from "./translate.js";
 import { ArenaType, LevelMode } from "./variables.js";
 
@@ -50,7 +50,12 @@ function openChat()
     chatIsOpen = true;
     overlayChat.style.display = playerStats.isRegistered ? 'none' : 'flex';
     chatBox.classList.remove('hasNewMessage');
-    openStickersList();
+    if (playerStats.isRegistered)
+    {
+        setTimeout(() => {
+            openStickersList();
+        }, 200);
+    }
 }
 
 function closeChat()
@@ -585,7 +590,7 @@ function handleKeyDownHistory(event)
     }
 }
 
-export function openStickersList()
+function openStickersList()
 {
     let delay = 0;
     Array.from(stickersList.children).forEach((child) => {
@@ -595,14 +600,15 @@ export function openStickersList()
         delay += 50;
     });
 }
-export function closeStickersList()
+
+function closeStickersList()
 {
     let delay = 0;
     Array.from(stickersList.children).forEach((child) => {
         setTimeout(() => {
             child.classList.remove('growth');
         }, delay);
-        delay += 50;
+        delay += 40;
     });
 }
 
@@ -616,25 +622,15 @@ inputElement.addEventListener('blur', () => {
     inputElement.removeEventListener('keydown', handleKeyDownHistory);
 });
 
-const scrollableContainer = document.getElementById('stickers-container');
+function addStickersFunctions()
+{
+    Array.from(stickersList.children).forEach((child) => {
+        child.addEventListener('click', function() {
+            console.log(child.getAttribute('data-name'));
+            receiveMessage(playerStats.nickname, child.getAttribute('data-name'), true);
+            sendPublicSticker();
+        });
+    });    
+}
 
-scrollableContainer.addEventListener('wheel', function (event) {
-  // Check if the wheel was scrolled horizontally
-  if (event.deltaY !== 0) {
-    // Prevent default scrolling behavior
-    event.preventDefault();
-
-    // Scroll horizontally based on the mouse wheel movement
-    scrollableContainer.scrollLeft += event.deltaY / 3;
-  }
-});
-// testing code
-// document.addEventListener('keydown', function(e) {
-//     if (e.key === 'Q' && e.shiftKey) {
-//         checkNewMessage();
-//     }
-// });
-
-// setTimeout(() => {
-//     joinChat();
-// }, 150);
+addStickersFunctions();

@@ -39,6 +39,8 @@ const miniNicknameText = document.getElementById('nameMiniProfile');
 const miniProfilePicture = document.getElementById('miniProfilePicture');
 const firstNameMiniProfile = document.getElementById('firstNameMiniProfile');
 const lastNameMiniProfile = document.getElementById('lastNameMiniProfile');
+const miniProfilePanel = document.getElementById('miniProfilePanel');
+const closeMiniProfileButton = document.getElementById('closeMiniProfileButton');
 
 const buttonsLanguage = document.querySelectorAll('.language');
 const imageSources = {
@@ -128,6 +130,10 @@ profileButton.addEventListener('click', () => {
     openMiniProfile(playerStats.nickname);
 });
 
+closeMiniProfileButton.addEventListener('click', () => {
+    closeMiniProfile();
+});
+
 document.querySelectorAll('.mainMenuButton').forEach(button => {
   button.addEventListener('mouseover', () => showImage(button.id));
   button.addEventListener('mouseout', hideImage);
@@ -201,14 +207,32 @@ function openMiniProfile(playerName)
     .catch((error) => {
         console.error("Failed to get user by name:", error);
     });
-    getUserAvatar(playerName)
+    // getUserAvatar(playerName)
+    //     .then((target) => {
+    //         miniProfilePicture.src = target.avatar;
+    //     })
+    //     .catch((error) => {
+    //         console.error("Failed to get user by name:", error);
+    // });
+    getUserScores(playerName)
         .then((target) => {
             miniProfilePicture.src = target.avatar;
         })
         .catch((error) => {
             console.error("Failed to get user by name:", error);
     });
-    document.getElementById('miniProfilePanel').style.display = 'flex';
+    miniProfilePanel.style.display = 'flex';
+    setTimeout(() => {
+        miniProfilePanel.classList.add('appear');
+    }, 100);
+}
+
+function closeMiniProfile()
+{
+    miniProfilePanel.classList.remove('appear');
+    setTimeout(() => {
+        miniProfilePanel.style.display = 'none';
+    }, 100);
 }
 
 export function openProfile(player = playerStats)
@@ -225,7 +249,7 @@ export function openProfile(player = playerStats)
     profilePanel.style.display = 'flex';
     setTimeout(() => {
         profilePanel.classList.add('appear');
-    }, 10);
+    }, 100);
     if (getCurrentView() === 'home')
         oldButton = mainProfileButton;
     document.getElementById('closeProfileButton').focus();
@@ -288,7 +312,7 @@ export function openSettings()
     settingsPanel.style.display = 'flex';
     setTimeout(() => {
         settingsPanel.classList.add('appear');
-    }, 10);
+    }, 100);
     if (getCurrentView() === 'home')
         oldButton = mainSettingsButton;
     document.getElementById('closeSettingsButton').focus();

@@ -131,6 +131,7 @@ export function updateHTML(translations)
 	document.getElementById('helpRulesText').innerHTML = translations.helpRulesText;
 	document.getElementById('buttonSpectate').innerHTML = translations.buttonSpectate;
 	document.getElementById('buttonProfile').innerHTML = translations.profileButton;
+	document.getElementById('closeMiniProfileButton').innerHTML = translations.close;
 	
     document.querySelector('.gdpr').addEventListener('click', function(event) {
 		event.preventDefault();
