@@ -52,9 +52,9 @@ export class Profile extends AExchangeable
 	{
 		let response;
 		if (this.username !== undefined)
-			response = await this.client._get(`/api/profiles/user/${this.username}`);
+			response = await this.client._get(`/api/accounts/user/${this.username}`);
 		else 
-			response = await this.client._get(`/api/profiles/id/${this.id}`);
+			response = await this.client._get(`/api/accounts/id/${this.id}`);
 
 		if (response.status !== 200)
 			return response.status;
@@ -79,7 +79,7 @@ export class Profile extends AExchangeable
 	 */
 	async getGameHistory()
 	{
-		const response = await this.client._get(`/api/games/history/${this.id}`);
+		const response = await this.client._get(`/api/matchs/history/${this.id}`);
 		const response_data = await response.json();
 
 		const games = [];
