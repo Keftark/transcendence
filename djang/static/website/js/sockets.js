@@ -19,6 +19,8 @@ let room_id = 0;
 
 export function connectToServerInput()
 {
+    if (!socket)
+        return;
     const event = {
         server: "main",
         type: "log",
@@ -31,6 +33,8 @@ export function connectToServerInput()
 }
 export function connectToServerOutput()
 {
+    if (!listener)
+        return;
     const event = {
         server: "main",
         type: "log",
@@ -221,6 +225,8 @@ export function boostPaddle()
 
 export function joinChat()
 {
+    if (!listener)
+        return;
     console.log("Joining the chat");
     const event = {
         key: keySocket,

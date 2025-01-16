@@ -218,6 +218,37 @@ export async function getUserAvatar(userName) {
     }
 }
 
+export async function uploadAvatar(username, url_picture)
+{
+    const data = new FormData();
+    data.append('username', username);
+    data.append('url', url_picture);
+
+    console.log(data);
+
+    try {
+        const response = await fetch(`/uploadavatar/`, {
+            method: 'POST',
+            body: data,
+            headers: {
+                'X-CSRFToken': getCSRFToken() // Ensure CSRF protection
+            }
+        });
+
+        // Check if the response is OK (status 200-299)
+        if (!response.ok) {
+            const errorResult = await response.json();  // Parse the error message in JSON
+            alert(errorResult.message);  // Display the error message to the user
+        } else {
+            const result = await response.json();  // Parse the success response in JSON
+            console.log(result);
+        }
+
+    } catch (error) {
+        console.error('Error during upload:', error);
+    }
+}
+
 export async function getUserScores(userName) {
     if (!userName) {
         console.error("User name is required.");

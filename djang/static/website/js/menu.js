@@ -1,4 +1,4 @@
-import { getUserAvatar, getUserByName } from './apiFunctions.js';
+import { getUserAvatar, getUserByName, uploadAvatar } from './apiFunctions.js';
 import { clickChoosePaddleButton } from './customizeSkins.js';
 import { addMainEvents } from './eventsListener.js';
 import { isInGame, reinitLevelFunction, setCameraType, StartLevel } from './levelLocal.js';
@@ -545,6 +545,7 @@ fileInput.addEventListener('change', (event) => {
         const reader = new FileReader();
         reader.onload = (e) => {
         profilePicture.src = e.target.result;
+        uploadAvatar(playerStats.nickname, e.target.result);
         };
         reader.readAsDataURL(file);
     }
