@@ -24,6 +24,9 @@ class AccountModel(models.Model):
     is42 = models.BooleanField(default=False)
     preferredPaddle = models.IntegerField(default=0)
 
+    def __str__(self):
+        return self.user.username
+
     def get_game(self) -> int:
         from ping_pong.consumers import game_manager
         for game in game_manager._game_list:
