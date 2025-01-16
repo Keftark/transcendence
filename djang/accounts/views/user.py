@@ -11,8 +11,6 @@ from rest_framework.generics import UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 
 
-
-
 # from django.views.decorators.csrf import csrf_exempt
 import json
 
@@ -137,11 +135,21 @@ def get_user_scores(request, username):
 
 def get_user_avatar(request, username):
     try:
+        # Get the user by username
         user = User.objects.get(username=username)
-        return JsonResponse({
-            'avatar': user.accountmodel.avatar
-        })
+        
+        # Access the related AccountModel instance
+        account = user.accountmodel
+        
+        # Check if the avatar exists
+        if account.avatar:
+            return JsonResponse({'avatar_url': account.avatar.url})
+        else:
+            # Handle case where avatar is not uploaded
+            return JsonResponse({'avatar_url': None, 'message': 'No avatar available'}, status=200)
+    
     except User.DoesNotExist:
+        # Handle case where user is not found
         return JsonResponse({'error': 'User not found'}, status=404)
 
 def get_user_paddle(request, user_id):

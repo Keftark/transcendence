@@ -19,7 +19,7 @@ from django.urls import include, path
 from django.urls import path, include, re_path
 from .views import handler_404_view
 from django.conf.urls.static import static
-import settings
+from django.conf import settings
 
 
 

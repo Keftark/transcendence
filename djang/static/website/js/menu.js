@@ -212,13 +212,13 @@ function openMiniProfile(playerName)
     .catch((error) => {
         console.error("Failed to get user by name:", error);
     });
-    // getUserAvatar(playerName)
-    //     .then((target) => {
-    //         miniProfilePicture.src = target.avatar;
-    //     })
-    //     .catch((error) => {
-    //         console.error("Failed to get user by name:", error);
-    // });
+    getUserAvatar(playerName)
+        .then((target) => {
+            miniProfilePicture.src = target.avatar_url;
+        })
+        .catch((error) => {
+            console.error("Failed to get user by name:", error);
+    });
     // getUserScores(playerName)
     //     .then((target) => {
     //         miniProfilePicture.src = target.avatar;

@@ -81,7 +81,7 @@ class AccountSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['avatar'] = data['avatar'][data['avatar'].find('/static/'):]
+        data['avatar'] = data['avatar'][data['avatar'].find('/media/'):]
         return data
     
     def get_description(self, obj: AccountModel):

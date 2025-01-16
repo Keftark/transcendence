@@ -10,15 +10,13 @@ from django.dispatch import receiver
 from django.contrib.postgres.fields import ArrayField
 from django.db.models.signals import post_save, pre_delete
 
-
-
 def upload_to(instance, filename: str):
-    return f"./static/icons{instance.pk}{splitext(filename)[1]}"
+    return f"/{instance.pk}{splitext(filename)[1]}"
 
 
 class AccountModel(models.Model):
     user = OneToOneField(User, on_delete=CASCADE, default=True)
-    avatar = ImageField(upload_to=upload_to, default=".static/website/icons/guestUser.webp")
+    avatar = ImageField(upload_to=upload_to, default='guestUser.webp')
     status = models.CharField(max_length=150, default="offline")
     description = models.CharField(max_length=150, default='')
     is42 = models.BooleanField(default=False)
@@ -76,7 +74,7 @@ class AccountModel(models.Model):
 
 @receiver(pre_delete, sender=AccountModel)
 def delete_profile_picture(sender, instance, **kwargs):
-    if instance.avatar.name != './static/website/images/userImage.webp':
+    if instance.avatar.name != './media/guestUser.webp':
         instance.avatar.storage.delete(instance.avatar.name)
 
 

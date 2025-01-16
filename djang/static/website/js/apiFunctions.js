@@ -203,7 +203,7 @@ export async function getUserAvatar(userName) {
         return;
     }
     try {
-        const response = await fetch(`/user_avatar/${userName}/`);
+        const response = await fetch(`/useravatar/${userName}/`);
         if (!response.ok) {
             throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);
         }
