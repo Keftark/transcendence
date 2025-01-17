@@ -1,4 +1,4 @@
-import { getUserAvatar, getUserByName, uploadAvatar } from './apiFunctions.js';
+import { getCSRFToken, getUserAvatar, getUserByName, uploadAvatar } from './apiFunctions.js';
 import { clickChoosePaddleButton } from './customizeSkins.js';
 import { addMainEvents } from './eventsListener.js';
 import { isInGame, reinitLevelFunction, setCameraType, StartLevel } from './levelLocal.js';
@@ -549,4 +549,26 @@ fileInput.addEventListener('change', (event) => {
         };
         reader.readAsDataURL(file);
     }
+});
+
+document.getElementById('profile-form').addEventListener("submit", function(e) {
+    e.preventDefault();  // Prevent the default form submission
+    
+    var formData = new FormData(this);  // Create a FormData object to hold the file and form data
+    
+    fetch('/uploadavatar/', {
+        method: "POST",
+        headers: {
+            'X-CSRFToken': getCSRFToken()
+        },
+        body: formData
+    })
+    .then(response => response.json())  // Assuming server responds with JSON
+    .then(data => {
+        console.log("Upload successful", data);
+        // Handle successful upload (e.g., update UI, show a success message)
+    })
+    .catch(error => {
+        console.error("Error uploading file", error);
+    });
 });

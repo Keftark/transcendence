@@ -417,11 +417,13 @@
     </div>
     <div id="profilePanel">
         <div id="profileInfos">
-            <div id="profilePictureDiv">
-                <img src="{% static 'icons/guestUser.webp' %}" id="profilePicture" alt="">
-                <input type="file" id="fileInput" accept="image/*" style="display: none;" />
-                <button id="profilePictureChangeButton" class="profilePictureChangeButton"></button>
-            </div>
+            <form id="profile-form" method="POST" enctype="multipart/form-data"></form>
+                <div id="profilePictureDiv">
+                    <img src="{% static 'icons/guestUser.webp' %}" id="profilePicture" alt="">
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;" />
+                    <button id="profilePictureChangeButton" class="profilePictureChangeButton"></button>
+                </div>
+            </form>
             <h2 id="nameProfile"></h2>
             <p id="firstNameProfile"></p>
             <p id="lastNameProfile"></p>
