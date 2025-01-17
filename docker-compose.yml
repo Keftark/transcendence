@@ -1,25 +1,7 @@
 version: '3.8'
 
-name: ft_transcendence
-
 services:
-  django:
-    build: djang/
-    image: django
-    networks:
-      - network
-    container_name: django
-    restart: always
-    env_file: .env
-    volumes:
-      - type: bind
-        source: ./djang
-        target: /app
-    depends_on:
-      db:
-        condition: service_healthy
-
-  db:
+  database:
     image: postgres
     volumes:
       - db:/var/lib/postgresql/data
@@ -33,21 +15,32 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-
-  nginx:
-    build: nginx/
-    image: nginx
-    networks:
-      - network
-    ports:
-      - '1443:443'
-    container_name: nginx
-    restart: always
-    depends_on:
-      - django
+ 
+django-web:
+  build: .
+  container_name: django-docker
+  ports:
+    - "8000:8000"
+  depends_on:
+    - database
+  networks:
+    - network
+  environment:
+    DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+    DEBUG: ${DEBUG}
+    DJANGO_LOGLEVEL: ${DJANGO_LOGLEVEL}
+    DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS}
+    DATABASE_ENGINE: ${DATABASE_ENGINE}
+    DATABASE_NAME: ${DATABASE_NAME}
+    DATABASE_USERNAME: ${DATABASE_USERNAME}
+    DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+    DATABASE_HOST: ${DATABASE_HOST}
+    DATABASE_PORT: ${DATABASE_PORT}
+  env_file:
+    - .env
 
 volumes:
-  db:
+   postgres_data:
 
 networks:
   network:
