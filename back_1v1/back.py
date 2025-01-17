@@ -169,7 +169,7 @@ async def loop():
             extend_to_queue(m.formatted_queue)
             m.formatted_queue.clear()
             print("Status :", m.ended)
-            if m.ended:
+            if m.ended is True:
                 logger.log("Match with room id " + str(m.room_id) + " has concluded.", 1)
                 matchs.remove(m)
         await send_to_central()

@@ -10,33 +10,46 @@
 #                                                                              #
 # **************************************************************************** #
 
+#launches the project in the foreground
 all:
 	docker compose up --build
 	docker ps
 
+#launches the project in the background
+silent:
+	docker compose up --build -d
+
+#Make the migrations
 migrate:
+	docker compose run django-web python manage.py makemigrations
 	docker compose run django-web python manage.py migrate
 	
+#Launch the superuser creation procedure
+superuser:
+	docker compose run django-web python manage.py createsuperuser	
+
+#Take down the project cleanly
 down:
-	@docker compose -f ./docker-compose.yml down
+	docker compose down
 	
+#Take down then restart in background
 re:
-	@docker compose -f ./docker-compose.yml down
-	@docker compose -f ./docker-compose.yml up -d --build
+	docker compose down
+	docker compose up --build -d
 
+#Print docker's statuses
 status:
-	@docker ps
-	@docker network ls
-	@docker volume ls
+	docker ps
+	docker network ls
+	docker volume ls
 
+#Nuke it all
 clean:
-	@docker stop $$(docker ps -qa);\
+	docker stop $$(docker ps -qa);\
 	docker rm $$(docker ps -qa);\
 	docker rmi -f $$(docker images -qa);\
 	docker volume rm $$(docker volume ls -q);\
 	docker network rm $$(docker network ls -q);\
-	rm -rf /home/nmascrie/data/mysql
-	rm -rf /home/nmascrie/data/wordpress 
-	@docker system prune
+	docker system prune
 
 .PHONY: all clean down re

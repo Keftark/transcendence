@@ -1,21 +1,16 @@
 services:
-  database:
+  db:
     image: postgres:17
     environment:
-     POSTGRES_DB: ${DATABASE_NAME}
-     POSTGRES_USER: ${DATABASE_USERNAME}
-     POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     ports:
-     - "5432:5432"
+      - "5432:5432"
     volumes:
-     - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     env_file:
-     - .env
-    healthcheck:
-      test: "pg_isready -U $POSTGRES_USER"
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      - .env
 
   django-web:
     build: ./djang/
@@ -23,9 +18,7 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - database
-    networks:
-      - network
+      - db
     environment:
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
       DEBUG: ${DEBUG}
@@ -34,15 +27,27 @@ services:
       DATABASE_ENGINE: ${DATABASE_ENGINE}
       DATABASE_NAME: ${DATABASE_NAME}
       DATABASE_USERNAME: ${DATABASE_USERNAME}
+ 
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
       DATABASE_HOST: ${DATABASE_HOST}
       DATABASE_PORT: ${DATABASE_PORT}
     env_file:
       - .env
 
+  nginx:
+    build: ./nginx/
+    image: nginx
+    networks:
+      - network
+    ports:
+      - '1443:443'
+    container_name: nginx
+    restart: always
+    depends_on:
+         - django-web
+
 volumes:
-   postgres_data:
+  postgres_data:
 
 networks:
   network:
-    driver: bridge
