@@ -44,7 +44,7 @@
     gap: 0.5vw;
 }
 
-#closeSettingsButton:hover, #closeProfileButton:hover, #seeMatchesButton:hover
+#closeSettingsButton:hover, #closeMiniProfileButton:hover, #closeProfileButton:hover, #seeMatchesButton:hover
 {
     background-color: rgba(0, 255, 255, 0.267);
     opacity: 0.8;

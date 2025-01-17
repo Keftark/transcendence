@@ -106,6 +106,7 @@ export function updateHTML(translations)
 	document.getElementById('rulesHeaderTournament').innerText = translations.rulesHeaderText;
 	document.getElementById('rulesArenaTextTournament').innerText = translations.rulesArenaText;
 	document.getElementById('rulesPointsTextTournament').innerText = translations.rulesPointsText;
+	document.getElementById('rulesPointsTextTournament').innerText = translations.rulesPointsText;
 	document.getElementById('rulesTimeTextTournament').innerText = translations.rulesTimerText;
 	document.getElementById('rulesPlayersTextTournament').innerText = translations.rulesMaxPlayersText;
 	document.getElementById('availableTournamentHeader').innerText = translations.availableTournamentHeader;
@@ -131,6 +132,9 @@ export function updateHTML(translations)
 	document.getElementById('helpRulesText').innerHTML = translations.helpRulesText;
 	document.getElementById('buttonSpectate').innerHTML = translations.buttonSpectate;
 	document.getElementById('buttonProfile').innerHTML = translations.profileButton;
+	document.getElementById('closeMiniProfileButton').innerHTML = translations.close;
+	document.getElementById('matchsPlayedMiniProfile').innerHTML = translations.gamesPlayed;
+	document.getElementById('winsMiniProfile').innerHTML = translations.gamesWon;
 	
     document.querySelector('.gdpr').addEventListener('click', function(event) {
 		event.preventDefault();

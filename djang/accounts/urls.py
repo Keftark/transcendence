@@ -1,7 +1,8 @@
 from django.urls import path
 from .views import user
 #from .views.user import update_profile, update_password
-
+from django.conf import settings
+from django.conf.urls.static import static
 from .viewsets.MyAccountViewSet import MyAccountViewSet
 from .serializers import AccountSerializer
 from .models import AccountModel
@@ -31,7 +32,8 @@ urlpatterns = [
     path('tournament-join', user.tournament_join, name='tournament-join'),  # Tournament join page
     path('check-login/', user.check_user_login, name='check_user_login'),
     path('current_user', user.get_logged_in_user, name='current_user'),
-    path('user_avatar/<str:username>/', user.get_user_avatar, name='user_avatar'),
+    path('useravatar/<str:username>/', user.get_user_avatar, name='user_avatar'),
+    path('uploadavatar/', user.upload_avatar, name='user_uploadavatar'),
     path('user_paddle/<str:username>/', user.get_user_paddle, name='user_paddle'),
     path('get-user/<str:username>/', user.get_user_by_name, name='get-user-by-name'),
     path('user/<int:user_id>/', user.get_user_by_id, name='user_detail'),
@@ -45,4 +47,5 @@ urlpatterns = [
     path("incoming_friend_requests", GetIncomingFriendRequestView.as_view(), name="incoming_friend_requests"), #list of incoming friends requests
     path("outgoing_friend_requests", GetOutgoingFriendRequestView.as_view(), name="outgoing_friend_requests"), #list of outgoing friends requests
 ]
-
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

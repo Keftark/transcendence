@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import include, path
 from django.urls import path, include, re_path
 from .views import handler_404_view
+from django.conf.urls.static import static
+from django.conf import settings
 
 
 
@@ -28,4 +30,4 @@ urlpatterns = [
     path('api/accounts/', include('accounts.urls')),
     path('api/matchs/', include('matchs.urls')),
     re_path(r'^api/', handler_404_view),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

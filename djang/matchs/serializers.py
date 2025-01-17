@@ -31,7 +31,7 @@ class MatchSerializer(serializers.ModelSerializer):
     def get_winner(self, instance: Match):
         if (instance.winner is None):
             return None
-        return AccountSerializer(instance.winner.profilemodel).data
+        return AccountSerializer(instance.winner.accountmodel).data
 
     def get_players(self, instance: Match):
         return AccountSerializer(instance.get_players_profiles(), many=True).data

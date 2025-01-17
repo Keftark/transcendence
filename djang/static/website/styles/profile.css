@@ -64,7 +64,7 @@
     gap: 2vh;
 }
 
-#profilePanel.appear {
+#profilePanel.appear, #miniProfilePanel.appear {
     opacity: 1;
 }
 
@@ -132,13 +132,13 @@
 
 }
 
-#closeProfileButton
+#closeProfileButton, #closeMiniProfileButton
 {
     position: absolute;
     bottom: 2vh;
 }
 
-#closeProfileButton, #closeSettingsButton {
+#closeProfileButton, #closeMiniProfileButton, #closeSettingsButton {
     width: fit-content;
     align-self: center;
     margin-top: 2vh;
@@ -217,28 +217,60 @@
 #miniProfilePanel
 {
     display: none;
-    position: fixed;
+    position: absolute;
     flex-direction: row;
     justify-content:space-evenly;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: calc(40vw + 25vh);
+    width: calc(20vw + 10vh);
     max-width: 800px;
     min-width: 200px;
-    height: 45vh;
+    /* height: 45vh; */
     min-height: 200px;
     padding: 2vh;
     z-index: 3;
     opacity: 0;
-    transition: all 0.1s ease;
+    transition: all 0.2s ease;
     background: radial-gradient(circle, rgb(1, 105, 97), rgb(0, 39, 39));
     border: 2px solid rgb(1, 105, 97);
     border-radius: 8px;
+    padding-bottom: 10vh;
+}
+
+#miniProfileInfos
+{
+    width: 90%;
 }
 
 #miniProfilePanel h1
 {
     margin: 0;
     font-size: clamp(0.5rem + 1vw + 0.5vh, 1rem + 1vw + 0.5vh, 5rem);
+}
+
+#scoresMiniPanel
+{
+    display: flex;
+    flex-direction: row;
+    height: 4rem;
+    justify-content:space-evenly;
+}
+
+.scoreMiniPanel
+{
+    width: 6rem;
+    height: 4rem;
+    background: rgba(60, 60, 100, 0.1);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-evenly;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.349);
+}
+
+.scoreMiniPanel p
+{
+    margin: 0;
+    font-size: 1rem;
 }

@@ -1,4 +1,4 @@
-import { getUserAvatar, getUserByName } from './apiFunctions.js';
+import { getUserAvatar, getUserByName, uploadAvatar } from './apiFunctions.js';
 import { clickChoosePaddleButton } from './customizeSkins.js';
 import { addMainEvents } from './eventsListener.js';
 import { isInGame, reinitLevelFunction, setCameraType, StartLevel } from './levelLocal.js';
@@ -39,6 +39,13 @@ const miniNicknameText = document.getElementById('nameMiniProfile');
 const miniProfilePicture = document.getElementById('miniProfilePicture');
 const firstNameMiniProfile = document.getElementById('firstNameMiniProfile');
 const lastNameMiniProfile = document.getElementById('lastNameMiniProfile');
+const miniProfilePanel = document.getElementById('miniProfilePanel');
+const matchsPlayedMiniProfile = document.getElementById('matchsPlayedMiniProfile');
+const winsMiniProfile = document.getElementById('winsMiniProfile');
+const matchsPlayedMiniProfileValue = document.getElementById('matchsPlayedMiniProfileValue');
+const winsMiniProfileValue = document.getElementById('winsMiniProfileValue');
+const closeMiniProfileButton = document.getElementById('closeMiniProfileButton');
+
 
 const buttonsLanguage = document.querySelectorAll('.language');
 const imageSources = {
@@ -128,6 +135,10 @@ profileButton.addEventListener('click', () => {
     openMiniProfile(playerStats.nickname);
 });
 
+closeMiniProfileButton.addEventListener('click', () => {
+    closeMiniProfile();
+});
+
 document.querySelectorAll('.mainMenuButton').forEach(button => {
   button.addEventListener('mouseover', () => showImage(button.id));
   button.addEventListener('mouseout', hideImage);
@@ -194,7 +205,7 @@ function openMiniProfile(playerName)
 {
     getUserByName(playerName)
         .then((target) =>{
-            miniNicknameText.textContent = target.nickname;
+            miniNicknameText.textContent = target.username;
             firstNameMiniProfile.textContent = target.first_name;
             lastNameMiniProfile.textContent = target.last_name;
         })
@@ -203,12 +214,36 @@ function openMiniProfile(playerName)
     });
     getUserAvatar(playerName)
         .then((target) => {
-            miniProfilePicture.src = target.avatar;
+            miniProfilePicture.src = target.avatar_url;
         })
         .catch((error) => {
             console.error("Failed to get user by name:", error);
     });
-    document.getElementById('miniProfilePanel').style.display = 'flex';
+    // getUserScores(playerName)
+    //     .then((target) => {
+    //         miniProfilePicture.src = target.avatar;
+    //     })
+    //     .catch((error) => {
+    //         console.error("Failed to get user by name:", error);
+    // });
+
+    // ca va dans la requete des scores.
+    matchsPlayedMiniProfileValue.innerHTML = "2";
+    winsMiniProfileValue.innerHTML = "1";
+
+    
+    miniProfilePanel.style.display = 'flex';
+    setTimeout(() => {
+        miniProfilePanel.classList.add('appear');
+    }, 100);
+}
+
+function closeMiniProfile()
+{
+    miniProfilePanel.classList.remove('appear');
+    setTimeout(() => {
+        miniProfilePanel.style.display = 'none';
+    }, 100);
 }
 
 export function openProfile(player = playerStats)
@@ -225,7 +260,7 @@ export function openProfile(player = playerStats)
     profilePanel.style.display = 'flex';
     setTimeout(() => {
         profilePanel.classList.add('appear');
-    }, 10);
+    }, 100);
     if (getCurrentView() === 'home')
         oldButton = mainProfileButton;
     document.getElementById('closeProfileButton').focus();
@@ -288,7 +323,7 @@ export function openSettings()
     settingsPanel.style.display = 'flex';
     setTimeout(() => {
         settingsPanel.classList.add('appear');
-    }, 10);
+    }, 100);
     if (getCurrentView() === 'home')
         oldButton = mainSettingsButton;
     document.getElementById('closeSettingsButton').focus();
@@ -510,6 +545,7 @@ fileInput.addEventListener('change', (event) => {
         const reader = new FileReader();
         reader.onload = (e) => {
         profilePicture.src = e.target.result;
+        uploadAvatar(playerStats.nickname, e.target.result);
         };
         reader.readAsDataURL(file);
     }

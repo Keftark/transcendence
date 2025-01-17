@@ -7,6 +7,7 @@ import { checkAccessToChat } from "./chat.js";
 import { getLoggedInUser, logoutUser, registerUser } from "./apiFunctions.js";
 import { joinChat, quitChat } from "./sockets.js";
 import { connectToServer } from "./signIn.js";
+import { showFriendsBox } from "./friends.js";
 
 const inputName = document.getElementById('inputName');
 const inputFirstName = document.getElementById('inputFirstName');
@@ -314,6 +315,7 @@ export function checkAccessModes()
 export function checkAccessIfRegistered()
 {
     checkAccessToChat();
+    showFriendsBox(playerStats.isRegistered);
     checkAccessModes();
 }
 
