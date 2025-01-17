@@ -4,7 +4,6 @@ import asyncio
 import threading
 import time
 import json
-import os
 from Queue import Queue
 from websockets.asyncio.server import serve
 from websockets.asyncio.client import connect
