@@ -11,8 +11,11 @@
 # **************************************************************************** #
 
 all:
-	@docker-compose -f ./docker-compose.yml up -d --build
-	@docker ps
+	docker compose up --build
+	docker ps
+
+migrate:
+	docker compose run django-web python manage.py migrate
 	
 down:
 	@docker compose -f ./docker-compose.yml down
