@@ -235,15 +235,14 @@ def login_user(request):
     return JsonResponse({"message": "Invalid request method"}, status=405)
 
 def upload_avatar(request):
-    if request.method == "POST":
-        username = request.POST.get('username')
-        url = request.POST.get('url')
-
-        request.user.upload_to(request.user, url)
+    if request.method == "POST" and request.FILES.get('profile_picture'):
+        user = request.user
+        profile_picture = request.FILES['profile_picture']
+        user.accountmodel.avatar = profile_picture
+        user.save()
         return JsonResponse({
             "message": "Uploaded successfully"
         }, status=200)
-
     return JsonResponse({"message": "Invalid request method"}, status=405)
 
 class UpdateProfileView(UpdateAPIView):

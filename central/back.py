@@ -130,10 +130,12 @@ async def handle_transfer(websocket, event):
                 break
 
     if server == "chat":
+        print("Recieved that ::\t", event)
         for user in userList:
             if user.id == id:
                 event["room_id"] = user.room
                 event["game"] = user.game
+        print("Sending that ::\t", event)
         try:
             await chat_socket.send(json.dumps(event))
         except Exception as e:

@@ -313,13 +313,14 @@ export function sendPublicSticker(stickerName)
 {
     const event = {
         key: keySocket,
-        type: "salon_sticker",
+        type: "sticker",
         name: playerStats.nickname,
         id: playerStats.id,
         img: stickerName,
         answer: "no",
         server: "chat"
     };
+    console.log(JSON.stringify(event));
     listener.send(JSON.stringify(event));
 }
 
@@ -405,7 +406,7 @@ export function addSocketListener()
             }
             // console.log("Message received from " + event.name + ": " + event.content);
             break;
-        case "salon_sticker":
+        case "sticker":
             if (event.id != playerStats.id)
             {
                 console.log("receiving salon sticker: " + event.img);

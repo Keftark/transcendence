@@ -153,7 +153,7 @@ async def handler(websocket):
                     for user in Users:
                         if user.id == id:
                             if event["type"] == "sticker":
-                                await send_server(sticker(user, (int)(event["img"])))
+                                await send_server(sticker(user, event["img"]))
                             else:
                                 await send_server(dump_message(user, event["content"]))
                             break

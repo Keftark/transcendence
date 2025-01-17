@@ -628,7 +628,7 @@ function addStickersFunctions()
         child.addEventListener('click', function() {
             console.log(child.getAttribute('data-name'));
             receiveMessage(playerStats.nickname, child.getAttribute('data-name'), true);
-            sendPublicSticker();
+            sendPublicSticker(child.getAttribute('data-name'));
         });
     });    
 }

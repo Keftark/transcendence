@@ -1,7 +1,7 @@
 import { editPlayerStats } from "./playerManager.js";
 import { clickCancelSignIn } from "./signIn.js";
 
-function getCSRFToken()
+export function getCSRFToken()
 {
     const cookies = document.cookie.split(';');
     for (let cookie of cookies) {
@@ -66,7 +66,7 @@ export async function registerUser()
                 'Content-Type': 'application/json',
                 'X-CSRFToken': getCSRFToken(),
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify(data)
         });
 
         if (!response.ok) {
@@ -229,7 +229,7 @@ export async function uploadAvatar(username, url_picture)
     try {
         const response = await fetch(`/uploadavatar/`, {
             method: 'POST',
-            body: data,
+            body: JSON.stringify(data),
             headers: {
                 'X-CSRFToken': getCSRFToken() // Ensure CSRF protection
             }
