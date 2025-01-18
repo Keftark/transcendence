@@ -2,11 +2,11 @@ import { cheatCodes } from "./cheats.js";
 import { isInTheDatabase, searchDatabase } from "./database.js";
 import { getDuelTargetPlayer, joinDuel } from "./duelPanel.js";
 import { addBlockedUser, addFriend, checkAndRemoveFriend } from "./friends.js";
-import { isInGame } from "./levelLocal.js";
+import { getPlayerPosition, id_players, isInGame } from "./levelLocal.js";
 import { openProfile } from "./menu.js";
 import { getPlayerName, playerStats } from "./playerManager.js";
 import { getRules, resetInputfieldsRules } from "./rules.js";
-import { joinChat, sendMessage, sendPublicSticker } from "./sockets.js";
+import { socketJoinChat, socketSendMessage, socketSendPrivSticker, socketSendPublicSticker, socketSendSalonSticker } from "./sockets.js";
 import { getTranslation } from "./translate.js";
 import { ArenaType, LevelMode } from "./variables.js";
 
@@ -150,6 +150,7 @@ function messageIsACode(message)
 
 const contextMenuChat = document.getElementById('chatContextMenu');
 const sendMessageButton = document.getElementById('sendMessageButton');
+const sendStickerButton = document.getElementById('sendStickerButton');
 const addFriendButton = document.getElementById('addFriendButton');
 const seeProfileButton = document.getElementById('seeProfileButton');
 const blockUserButton = document.getElementById('blockUserButton');
@@ -160,6 +161,10 @@ contextMenuChat.addEventListener('mouseleave', () => {
 
 sendMessageButton.addEventListener('click', () => {
     sendPrivateMessage();
+});
+
+sendStickerButton.addEventListener('click', () => {
+    showPrivateStickers();
 });
 
 addFriendButton.addEventListener('click', () => {
@@ -290,12 +295,11 @@ function showFriendButtonIfRegistered()
 
 export function openNameContextMenu(name, nameHeader)
 {
+    personToSendSticker = name;
     if (contextMenuChat.style.display === 'flex')
         contextMenuChat.style.display = 'none';
     else
     {
-        if (isInTheDatabase(name) === false)
-            return;
         selectedName = name;
         showFriendButtonIfRegistered();
         contextMenuChat.style.display = 'flex';
@@ -309,11 +313,6 @@ function closeNameContextMenu()
 {
     selectedName = "";
     contextMenuChat.style.display = 'none';
-}
-
-function isNotAGuest(name)
-{
-    return (name != getTranslation('guest'));
 }
 
 function isNotThePlayer(name)
@@ -331,61 +330,92 @@ function createMessageElement(name, messageText, isPrivate, isASticker) {
         nameHeader.textContent = name.length > 0 ? name + getTranslation(':') : name;
         nameHeader.style.color = playerStats.colors;
         messageContainer.appendChild(nameHeader);
-        if (isNotThePlayer(name) && isNotAGuest(name) && isInTheDatabase(name))
+        if (isNotThePlayer(name) && playerStats.isRegistered)
         {
             nameHeader.addEventListener("click", function() {
                 openNameContextMenu(name, nameHeader);
               });
         }
     }
+    const messageContent = document.createElement('div');
+    messageContent.classList.add('message');
     if (isASticker)
     {
-        console.trace("this is a sticker");
+        messageContainer.classList.add('message-container-sticker');
+    }
+    if (isASticker && !isPrivate)
+    {
+        // console.trace("this is a sticker");
         const imgContainer = document.createElement('img');
         imgContainer.src = `static/stickers/${messageText}.webp`;
         messageContainer.appendChild(imgContainer);
-        messageContainer.classList.add('message-container-sticker');
     }
-    else
+    else if (!isASticker)
     {
-        console.trace("this is not a sticker");
-        const messageContent = document.createElement('div');
-        messageContent.classList.add('message');
+        // console.trace("this is not a sticker");
         messageContent.textContent = messageText;
         if (name != '')
             messageContent.style.color = playerStats.colors;
-        messageContainer.appendChild(messageContent);
     }
+    messageContainer.appendChild(messageContent);
 
     messageContainer.setAttribute('sender', name);
 
     return messageContainer;
 }
 
-function sendMessageLeft(newMessage, playerName, isASticker, isPrivate = false)
+function sendMessageLeft(newMessage, playerName, isASticker, stickerName = "", isPrivate = false)
 {
     newMessage.classList.add('message-left');
     if (isPrivate)
-        newMessage.lastElementChild.innerHTML = "<b>" + getTranslation("from") + playerName + ":</b> " + newMessage.lastElementChild.textContent;
-    if (isASticker)
-        return;
-    const messageContent = newMessage.querySelector('.message');
-    messageContent.classList.add('message-container-left');
+        {
+            if (isASticker)
+            {
+                newMessage.lastElementChild.innerHTML = "<b>" + getTranslation("from") + playerName + ":</b> " + newMessage.lastElementChild.textContent;
+                const imgContainer = document.createElement('img');
+                imgContainer.src = `static/stickers/${stickerName}.webp`;
+                newMessage.lastElementChild.appendChild(imgContainer);
+            }
+            else
+            {
+                newMessage.lastElementChild.innerHTML = "<b>" + getTranslation("from") + playerName + ":</b> " + newMessage.lastElementChild.textContent;
+            }
+        }
+    let messageContent = newMessage.querySelector('.message');
+    if (messageContent === null)
+        messageContent = newMessage;
     if (isPrivate)
         messageContent.classList.add('private-message-left');
+    if (isASticker)
+        return;
+    messageContent.classList.add('message-container-left');
 }
 
-function sendMessageRight(newMessage, playerName, isASticker, isPrivate = false)
+function sendMessageRight(newMessage, playerName, isASticker, stickerName = "", isPrivate = false)
 {
     newMessage.classList.add('message-right');
     if (isPrivate)
-        newMessage.lastElementChild.innerHTML = "<b>" + getTranslation("to") + playerName + ":</b> " + newMessage.lastElementChild.textContent;
-    if (isASticker)
-        return;
-    const messageContent = newMessage.querySelector('.message');
-    messageContent.classList.add('message-container-right');
+    {
+        if (isASticker)
+        {
+            newMessage.lastElementChild.innerHTML = "<b>" + getTranslation("to") + playerName + ":</b> " + newMessage.lastElementChild.textContent;
+            const imgContainer = document.createElement('img');
+            imgContainer.src = `static/stickers/${stickerName}.webp`;
+            newMessage.lastElementChild.appendChild(imgContainer);
+        }
+        else
+        {
+            newMessage.lastElementChild.innerHTML = "<b>" + getTranslation("to") + playerName + ":</b> " + newMessage.lastElementChild.textContent;
+        }
+    }
+    let messageContent = newMessage.querySelector('.message');
+    if (messageContent === null)
+        messageContent = newMessage;
     if (isPrivate)
         messageContent.classList.add('private-message-right');
+    if (isASticker)
+        return;
+    messageContent.classList.add('message-container-right');
 }
 
 function sendMessageMiddle(newMessage)
@@ -446,17 +476,17 @@ function checkNewMessage()
 
 export function receiveMessage(playerName, message, isASticker, isPrivate = false, toPlayer = "")
 {
+    console.log("Receiving message from: " + playerName + ": " + message + ". Sticker: " + isASticker + ". Private: " + isPrivate + ". To player: " + toPlayer);
     const newMessage = createMessageElement(playerName, message, isPrivate, isASticker);
-    // sendRandomMessage(newMessage);
     if (playerName === playerStats.nickname)
     {
         if (toPlayer === "")
-            sendMessageRight(newMessage, playerName, isASticker, isPrivate);
+            sendMessageRight(newMessage, playerName, isASticker, message, isPrivate);
         else
-            sendMessageRight(newMessage, toPlayer, isASticker, isPrivate);
+            sendMessageRight(newMessage, toPlayer, isASticker, message, isPrivate);
     }
     else
-        sendMessageLeft(newMessage, playerName, isASticker, isPrivate);
+        sendMessageLeft(newMessage, playerName, isASticker, message, isPrivate);
     messagesContainer.appendChild(newMessage);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
     lastSender = playerName;
@@ -483,7 +513,7 @@ function trySendMessage(isASticker = false) {
         }).join(' ');
 
         // let playerName = getPlayerNameChat();
-        sendMessage(truncatedMessage);
+        socketSendMessage(truncatedMessage);
         receiveMessage(playerStats.nickname, truncatedMessage, isASticker);
     }
     inputElement.value = '';
@@ -563,8 +593,13 @@ export function deleteDuelInChat()
 
 export function checkAccessToChat()
 {
-    inputElement.disabled = !playerStats.isRegistered;
-    overlayChat.style.display = playerStats.isRegistered || !chatIsOpen ? 'none' : 'flex';
+    const regis = playerStats.isRegistered;
+    inputElement.disabled = !regis;
+    overlayChat.style.display = regis || !chatIsOpen ? 'none' : 'flex';
+    if (regis && chatIsOpen)
+        openStickersList();
+    else
+        closeStickersList();
 }
 
 function handleKeyDownHistory(event)
@@ -622,15 +657,116 @@ inputElement.addEventListener('blur', () => {
     inputElement.removeEventListener('keydown', handleKeyDownHistory);
 });
 
+export function sendPubSticker(stickerName)
+{
+    receiveMessage(playerStats.nickname, stickerName, true);
+    socketSendPublicSticker(stickerName);
+}
+
+export function sendPrivateSticker(stickerName)
+{
+    receiveMessage(playerStats.nickname, stickerName, true, true, personToSendSticker);
+    socketSendPrivSticker(personToSendSticker, stickerName);
+    stickersList.classList.remove('centerClass');
+    personToSendSticker = null;
+}
+
+let personToSendSticker = null;
 function addStickersFunctions()
 {
     Array.from(stickersList.children).forEach((child) => {
         child.addEventListener('click', function() {
-            console.log(child.getAttribute('data-name'));
-            receiveMessage(playerStats.nickname, child.getAttribute('data-name'), true);
-            sendPublicSticker(child.getAttribute('data-name'));
+            if (stickersList.classList.contains('centerClass'))
+                sendPrivateSticker(child.getAttribute('data-name'));
+            else
+                sendPubSticker(child.getAttribute('data-name'));
         });
     });    
+}
+
+let gameStickers = null;
+export function addGameStickers()
+{
+    if (gameStickers != null)
+        return;
+    gameStickers = stickersList.cloneNode(true);
+    stickersList.parentElement.appendChild(gameStickers);
+    gameStickers.classList.remove('centerClass');
+    gameStickers.classList.add('centerGameClass');
+    gameStickers.style.display = "flex";
+    Array.from(gameStickers.children).forEach((child) => {
+        child.classList.add('growth');
+        child.addEventListener('click', function() {
+            sendGameSticker(child.getAttribute('data-name'));
+        });
+    });     
+}
+
+function sendGameSticker(stickerName)
+{
+    socketSendSalonSticker(stickerName);
+}
+
+function convert3DTo2DScreenSpace(threejsPosition, camera, renderer) {
+    // Ensure the position is a THREE.Vector3 object (or convert it)
+    if (!(threejsPosition instanceof THREE.Vector3)) {
+        throw new Error('The position must be an instance of THREE.Vector3');
+    }
+
+    // Project the 3D world position to normalized device coordinates (NDC)
+    const vector = threejsPosition.clone().project(camera);
+
+    // Get the screen width and height
+    const width = renderer.domElement.width;
+    const height = renderer.domElement.height;
+
+    // Convert from NDC to screen space coordinates (in pixels)
+    const x = (vector.x * 0.5 + 0.5) * width;  // Convert to 0 to 1 range, then scale to pixel width
+    const y = -(vector.y * 0.5 + 0.5) * height; // Invert Y, then scale to pixel height
+
+    return { x, y };
+}
+
+
+export function receiveGameSticker(playerId, stickerName)
+{
+    console.log("receiving: " + stickerName + " from: " + playerId);
+    let stickerPosition;
+    if (id_players.p1 === playerStats.id) // le joueur est a gauche
+        stickerPosition = convert3DTo2DScreenSpace(getPlayerPosition(1));
+    else if (id_players.p2 === playerStats.id) // le joueur est a droite
+        stickerPosition = convert3DTo2DScreenSpace(getPlayerPosition(2));
+    const imgDiv = document.createElement('img');
+    imgDiv.src = `static/stickers/${stickerName}.webp`;
+    imgDiv.style.position = 'absolute';
+    imgDiv.style.pointerEvents = 'none';
+    imgDiv.style.width = '32px';
+    imgDiv.style.height = '32px';
+    imgDiv.style.left = `${stickerPosition.x - imgDiv.offsetWidth / 2}px`;
+    imgDiv.style.top = `${stickerPosition.y - imgDiv.offsetHeight / 2}px`;
+    document.body.appendChild(imgDiv);
+}
+
+export function removeGameStickers()
+{
+    gameStickers.remove();
+    gameStickers = null;
+}
+
+function showPrivateStickers()
+{
+    stickersList.classList.add('centerClass');
+}
+
+export function addStickersGame()
+{
+    stickersList.classList.remove('centerClass');
+    stickersList.classList.add('centerGameClass');
+}
+
+export function removeStickersGame()
+{
+
 }
 
 addStickersFunctions();

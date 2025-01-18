@@ -7,7 +7,7 @@ import { setScores, addScore, setVisibleScore } from './scoreManager.js';
 import { createLights, createPlayers, setVisibilityRightWall, addLightPlayerReady } from './objects.js';
 import { getLevelState, isAnOnlineMode, setLevelState } from './main.js';
 import { unloadScene } from './unloadScene.js';
-import { setAccessAllDuelsInChat, tryCloseChat } from './chat.js';
+import { addGameStickers, removeGameStickers, setAccessAllDuelsInChat, tryCloseChat } from './chat.js';
 import { addMatchToHistory, getPlayerName, playerStats } from './playerManager.js';
 import { getTranslation } from './translate.js';
 import { createSpaceLevel } from './levelSpace.js';
@@ -20,7 +20,7 @@ import { callVictoryScreen } from './victory.js';
 import { isBoostReadyLeft, isBoostReadyRight, resetBoostBar, useBoost } from './powerUp.js';
 import { createDeathSphere } from './deathSphere.js';
 import { Sparks } from './sparks.js';
-import { matchAlreadyStarted, sendPlayerReady } from './sockets.js';
+import { socketSendPlayerReady, setMatchAlreadyStarted } from './sockets.js';
 import { getUserById } from './apiFunctions.js';
 
 const gameMenuPanel = document.getElementById('gameMenuPanel');
@@ -38,6 +38,13 @@ export const BOUNDARY =
   X_MAX: 40
 }
 
+export let id_players =
+{
+    p1: -1,
+    p2: -1,
+    p3: -1,
+    p4: -1
+}
 
 let rightCtrlPressed = false;
 
@@ -111,6 +118,18 @@ export function setPlayersIds(player1Id, player2Id)
     playersId[1] = player2Id;
     playersId[2] = 0;
     playersId[3] = 0;
+}
+
+export function getPlayerPosition(playerNbr)
+{
+    if (playerNbr === 1)
+        return player1.position;
+    else if (playerNbr === 2)
+        return player2.position;
+    else if (playerNbr === 3)
+        return player3.position;
+    else if (playerNbr === 4)
+        return player4.position;
 }
 
 export function animateBoostPlayers()
@@ -198,10 +217,18 @@ function hideInGameUI()
     controlsP2.style.display = 'none';
 }
 
+function resetIdPlayers()
+{
+    id_players.p4 = id_players.p3 = id_players.p2 = id_players.p1 = -1;
+}
+
 export function unloadLevel()
 {
     if (!scene)
         return;
+    resetIdPlayers();
+    if (isAnOnlineMode(currentLevelMode))
+        removeGameStickers();
     sparks = null;
     currentLevelMode = LevelMode.MENU;
     hideInGameUI();
@@ -214,7 +241,7 @@ export function unloadLevel()
     playerStats.playerController = 1;
     playerProfile1 = null;
     playerProfile2 = null;
-    matchAlreadyStarted = false;
+    setMatchAlreadyStarted(false);
     window.removeEventListener('wheel', camZoomEvent);
 }
 
@@ -314,7 +341,7 @@ export function setUpCamera()
     return newCamera;
 }
 
-export function setUpScene()
+function setUpScene()
 {
     currentLevelMode = parseInt(localStorage.getItem('levelMode'));
     scene = new THREE.Scene();
@@ -325,8 +352,16 @@ export function setUpScene()
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     document.body.appendChild(renderer.domElement);
+}
+
+function setupInterface()
+{
     document.getElementById('reinitLevelButton').style.display = isAnOnlineMode(currentLevelMode) ? 'none' : 'block';
     document.getElementById('profileButton').style.display = playerStats.isRegistered ? 'block' : 'none';
+    gameMenuPanel.style.display = 'block';
+    showInGameUI();
+    if (isAnOnlineMode(currentLevelMode))
+        addGameStickers();
 }
 
 function showInGameUI()
@@ -406,12 +441,10 @@ function setPlayerNames()
     }
 }
 
-export function setUpLevel(scene)
+function setUpLevel(scene)
 {
     const arenaType = getRules().arena;
     const textureLoader = new THREE.TextureLoader();
-    gameMenuPanel.style.display = 'block';
-    showInGameUI();
     [player1, player2, player3, player4] = createPlayers(scene, textureLoader);
     // updatePlayerModel(player1);
     createLights(scene, arenaType);
@@ -606,6 +639,7 @@ export function StartLevel(levelMode)
     // removeMainEvents();
     setUpScene();
     setUpLevel(scene);
+    setupInterface();
     sparks = new Sparks(scene);
     let isBallMoving = false;
     let toggleReset = false;
@@ -734,7 +768,7 @@ export function StartLevel(levelMode)
             if (currentLevelMode === LevelMode.ONLINE)
             {
                 isBallMoving = true;
-                sendPlayerReady();
+                socketSendPlayerReady();
             }
             else
             {

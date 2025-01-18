@@ -53,6 +53,7 @@
     ":": " : ",
     "addFriendButton": "Ajouter ami",
     "sendMessageButton": "Envoyer un message",
+    "sendStickerButton": "Autocollant",
     "removeFriendButton": "Retirer ami",
     "you": "Vous",
     "guest": "Invité",

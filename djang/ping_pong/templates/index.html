@@ -417,13 +417,13 @@
     </div>
     <div id="profilePanel">
         <div id="profileInfos">
-            <form id="profile-form" method="POST" enctype="multipart/form-data"></form>
                 <div id="profilePictureDiv">
                     <img src="{% static 'icons/guestUser.webp' %}" id="profilePicture" alt="">
-                    <input type="file" id="fileInput" accept="image/*" style="display: none;" />
-                    <button id="profilePictureChangeButton" class="profilePictureChangeButton"></button>
+                    <form action="" id="profile-form" method="POST" enctype="multipart/form-data">
+                        <input type="file" name="fileInput" id="fileInput" accept="image/*" style="display: none;" />
+                        <button type="submit" id="profilePictureChangeButton" class="profilePictureChangeButton"></button>
+                    </form>
                 </div>
-            </form>
             <h2 id="nameProfile"></h2>
             <p id="firstNameProfile"></p>
             <p id="lastNameProfile"></p>
@@ -516,6 +516,7 @@
             <img id="sticker6" class="sticker-chat" src="{% static 'stickers/sticker_sad.webp' %}" data-name="sticker_sad" alt="">
             <img id="sticker7" class="sticker-chat" src="{% static 'stickers/sticker_sleep.webp' %}" data-name="sticker_sleep" alt="">
             <img id="sticker8" class="sticker-chat" src="{% static 'stickers/sticker_tongue_wink.webp' %}" data-name="sticker_tongue_wink" alt="">
+            <img id="sticker9" class="sticker-chat" src="{% static 'stickers/sticker_trash.webp' %}" data-name="sticker_trash" alt="">
         </div>
     
         <!------------------------------ Friends Box ------------------------------>
@@ -542,6 +543,7 @@
     <div id="chatContextMenu">
         <div id="spaceContextMenu">
             <button class="contextMenuButton" id="sendMessageButton"></button>
+            <button class="contextMenuButton" id="sendStickerButton"></button>
             <button class="contextMenuButton" id="addFriendButton"></button>
             <button class="contextMenuButton" id="inviteGameButton"></button>
             <button class="contextMenuButton" id="seeProfileButton"></button>

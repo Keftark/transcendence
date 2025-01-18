@@ -1,6 +1,6 @@
 import { getUserByName } from "./apiFunctions.js";
 import { setBallPosition } from "./ball.js";
-import { receiveMessage } from "./chat.js";
+import { receiveGameSticker, receiveMessage } from "./chat.js";
 import { closeDuelPanel, matchFound, setPlayersControllers, updateReadyButtons } from "./duelPanel.js";
 import { addReadyPlayer, doUpdateBallLight, getBallPosition, getPlayerSideById, removeReadyPlayers, resetScreenFunction, spawnSparksFunction, startScreenShake } from "./levelLocal.js";
 import { getLevelState, socket, listener } from "./main.js";
@@ -14,8 +14,18 @@ import { LevelMode, VictoryType } from "./variables.js";
 import { callVictoryScreen } from "./victory.js";
 
 export let keySocket = null;
-export let matchAlreadyStarted = false;
+let matchAlreadyStarted = false;
 let room_id = 0;
+
+export function setMatchAlreadyStarted(isTrue)
+{
+    matchAlreadyStarted = isTrue;
+}
+
+export function getMatchAlreadyStarted()
+{
+    return matchAlreadyStarted;
+}
 
 export function connectToServerInput()
 {
@@ -31,6 +41,7 @@ export function connectToServerInput()
     };
     socket.send(JSON.stringify(event));   
 }
+
 export function connectToServerOutput()
 {
     if (!listener)
@@ -46,7 +57,7 @@ export function connectToServerOutput()
     listener.send(JSON.stringify(event));   
 }
 
-export function connectToDuel()
+export function socketConnectToDuel()
 {
     const event = {
         key: keySocket,
@@ -72,7 +83,7 @@ export function connectToDuel()
     listener.send(JSON.stringify(event));
 }
 
-export function readyToDuel()
+export function socketReadyToDuel()
 {
     const event = {
         key: keySocket,
@@ -85,7 +96,7 @@ export function readyToDuel()
     socket.send(JSON.stringify(event));
 }
 
-export function notReadyToDuel()
+export function socketNotReadyToDuel()
 {
     const event = {
         key: keySocket,
@@ -98,7 +109,7 @@ export function notReadyToDuel()
     socket.send(JSON.stringify(event));
 }
 
-export function exitLobby()
+export function socketExitLobby()
 {
     const event = {
         key: keySocket,
@@ -111,7 +122,7 @@ export function exitLobby()
     socket.send(JSON.stringify(event));
 }
 
-export function exitDuel()
+export function socketExitDuel()
 {
     const event = {
         key: keySocket,
@@ -124,7 +135,7 @@ export function exitDuel()
     socket.send(JSON.stringify(event));    
 }
 
-export function sendPlayerReady()
+export function socketSendPlayerReady()
 {
     const event = {
         key: keySocket,
@@ -137,7 +148,7 @@ export function sendPlayerReady()
     socket.send(JSON.stringify(event));
 }
 
-export function playerUp()
+export function socketPlayerUp()
 {
     const event = {
         key: keySocket,
@@ -152,7 +163,7 @@ export function playerUp()
     socket.send(JSON.stringify(event));
 }
 
-export function playerUpNot()
+export function socketPlayerUpNot()
 {
     const event = {
         key: keySocket,
@@ -167,7 +178,7 @@ export function playerUpNot()
     socket.send(JSON.stringify(event));
 }
 
-export function playerDown()
+export function socketPlayerDown()
 {
     const event = {
         key: keySocket,
@@ -182,7 +193,7 @@ export function playerDown()
     socket.send(JSON.stringify(event));
 }
 
-export function playerDownNot()
+export function socketPlayerDownNot()
 {
     const event = {
         key: keySocket,
@@ -203,12 +214,12 @@ export function exitGameSocket()
     switch (currentMode)
     {
         case LevelMode.ONLINE:
-            exitDuel();
+            socketExitDuel();
         break;
     }
 }
 
-export function boostPaddle()
+export function socketBoostPaddle()
 {
     const event = {
         key: keySocket,
@@ -223,7 +234,7 @@ export function boostPaddle()
     socket.send(JSON.stringify(event));
 }
 
-export function joinChat()
+export function socketJoinChat()
 {
     if (!listener)
         return;
@@ -240,8 +251,10 @@ export function joinChat()
     listener.send(JSON.stringify(event));
 }
 
-export function quitChat()
+export function socketQuitChat()
 {
+    if (!listener)
+        return;
     console.log("Quitting the chat");
     const event = {
         key: keySocket,
@@ -253,8 +266,10 @@ export function quitChat()
     listener.send(JSON.stringify(event));
 }
 
-export function sendMessage(messageContent)
+export function socketSendMessage(messageContent)
 {
+    if (!listener)
+        return;
     const event = {
         key: keySocket,
         type: "message",
@@ -267,7 +282,9 @@ export function sendMessage(messageContent)
     listener.send(JSON.stringify(event));
 }
 
-export function sendPrivMessage(targetMsg, messageContent) {
+export function socketSendPrivMessage(targetMsg, messageContent) {
+    if (!listener)
+        return;
     getUserByName(targetMsg)
         .then((target) => {
             const event = {
@@ -288,7 +305,9 @@ export function sendPrivMessage(targetMsg, messageContent) {
         });
 }
 
-export function sendPrivSticker(targetMsg, stickerName) {
+export function socketSendPrivSticker(targetMsg, stickerName) {
+    if (!listener)
+        return;
     getUserByName(targetMsg)
         .then((target) => {
             const event = {
@@ -309,8 +328,10 @@ export function sendPrivSticker(targetMsg, stickerName) {
         });
 }
 
-export function sendPublicSticker(stickerName)
+export function socketSendPublicSticker(stickerName)
 {
+    if (!listener)
+        return;
     const event = {
         key: keySocket,
         type: "sticker",
@@ -320,12 +341,31 @@ export function sendPublicSticker(stickerName)
         answer: "no",
         server: "chat"
     };
-    console.log(JSON.stringify(event));
     listener.send(JSON.stringify(event));
 }
 
-export function sendFriendRequest(friendId)
+export function socketSendSalonSticker(stickerName)
 {
+    if (!listener)
+        return;
+    console.log("Trying to send a salon sticker");
+    const event = {
+        key: keySocket,
+        type: "salon_sticker",
+        name: playerStats.nickname,
+        id: playerStats.id,
+        img: stickerName,
+        answer: "no",
+        server: "chat"
+    };
+    listener.send(JSON.stringify(event));
+}
+
+
+export function socketSendFriendRequest(friendId)
+{
+    if (!listener)
+        return;
     const event = { // c'est pas fait !
         key: keySocket,
         type: "message",
@@ -338,8 +378,10 @@ export function sendFriendRequest(friendId)
     listener.send(JSON.stringify(event));
 }
 
-export function askListMatchs()
+export function socketAskListMatchs()
 {
+    if (!listener)
+        return;
     const event = {
         key: keySocket,
         type: "list_all",
@@ -349,8 +391,10 @@ export function askListMatchs()
     listener.send(JSON.stringify(event));    
 }
 
-export function spectateMatch(id)
+export function socketSpectateMatch(id)
 {
+    if (!listener)
+        return;
     const event = {
         key: keySocket,
         room_id: id,
@@ -361,8 +405,10 @@ export function spectateMatch(id)
     listener.send(JSON.stringify(event));    
 }
 
-export function unspectateMatch()
+export function socketUnspectateMatch()
 {
+    if (!listener)
+        return;
     const event = {
         key: keySocket,
         type: "unspectate",
@@ -375,9 +421,7 @@ export function unspectateMatch()
 export function addSocketListener()
 {
     listener.addEventListener("message", ({ data }) => {
-        console.log(data);
-        // if (data === "Message received!")
-        //     return;
+        // console.log(data);
         let event;
         try {
             event = JSON.parse(data);
@@ -390,21 +434,23 @@ export function addSocketListener()
         {
             keySocket = event.key;
         }
-        // console.log(event);
         switch (event.type) {
 
         case "private_message":
             if (event.id === playerStats.id)
                 receiveMessage(event.sender_name, event.content, false, true, event.name);
-            // console.log("Message received from " + event.name + ": " + event.content);
             break;
         case "private_sticker":
             if (event.id === playerStats.id)
             {
-                console.log("receiving sticker: " + event.img);
                 receiveMessage(event.sender_name, event.img, true, true, event.name);
             }
-            // console.log("Message received from " + event.name + ": " + event.content);
+            break;
+        case "salon_sticker":
+            if (event.room_id === playerStats.room_id)
+            {
+                receiveGameSticker(event.id, event.img);
+            }
             break;
         case "sticker":
             if (event.id != playerStats.id)
@@ -412,11 +458,9 @@ export function addSocketListener()
                 console.log("receiving salon sticker: " + event.img);
                 receiveMessage(event.name, event.img, true);
             }
-            // console.log("Message received from " + event.name + ": " + event.content);
             break;
         case "message":
             receiveMessage(event.name, event.content, false);
-            // console.log("Message received from " + event.name + ": " + event.content);
             break;
         case "wait":
             console.log("Waiting in queue");
@@ -429,9 +473,7 @@ export function addSocketListener()
             console.log("Exit queue");
             break;
         case "wait_start":
-            // console.log(event.p1_state + ", " + event.p2_state);
             updateReadyButtons(event.p1_state, event.p2_state);
-            // document.getElementById("waitA").innerHTML = "Awaiting start : <br/>P1 :" + event.p1 + "</br>P2 :" + event.p2;
             break;
         case "wait_ready":
             if (event.p1_state)
@@ -461,7 +503,7 @@ export function addSocketListener()
             if (matchAlreadyStarted)
                 break;
             matchAlreadyStarted = true;
-            console.log(data);
+            // console.log(data);
             setPlayersControllers();
             break;
         case "bounce_player":

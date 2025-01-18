@@ -1,9 +1,9 @@
 import { getLoggedInUser, getUserById } from "./apiFunctions.js";
 import { deleteDuelInChat } from "./chat.js";
-import { passInfosPlayersToLevel } from "./levelLocal.js";
+import { id_players, passInfosPlayersToLevel } from "./levelLocal.js";
 import { addDisableButtonEffect, hasDisabledButtonEffect, removeDisableButtonEffect } from "./main.js";
 import { showModeChoice } from "./modesSelection.js";
-import { exitLobby, notReadyToDuel, readyToDuel } from "./sockets.js";
+import { socketExitLobby, socketNotReadyToDuel, socketReadyToDuel } from "./sockets.js";
 import { getTranslation } from "./translate.js";
 import { clickPlayGame } from "./modesSelection.js";
 
@@ -100,7 +100,7 @@ export function closeDuelPanel()
     // double chargement de la page de retour pour le joueur qui quitte
     // mettre un message indiquant que l'autre joueur a quitte
     document.getElementById('waitingMatch').style.display = "none";
-    exitLobby();
+    socketExitLobby();
     showModeChoice();
 }
 
@@ -176,9 +176,9 @@ export function clickReadyDuel(playerNbr)
         player1ReadyButton.classList.toggle('active');
         player1IsReady = !player1IsReady;
         if (player1IsReady)
-            readyToDuel();
+            socketReadyToDuel();
         else
-            notReadyToDuel();
+            socketNotReadyToDuel();
     }
     else
     {
@@ -187,9 +187,9 @@ export function clickReadyDuel(playerNbr)
         player2ReadyButton.classList.toggle('active');
         player2IsReady = !player2IsReady;
         if (player2IsReady)
-            readyToDuel();
+            socketReadyToDuel();
         else
-            notReadyToDuel();
+            socketNotReadyToDuel();
     }
     // if (player1ReadyButton.classList.contains('active') && player2ReadyButton.classList.contains('active'))
     //     removeDisableButtonEffect(startButtonDuel);
@@ -253,6 +253,8 @@ export function matchFound(player1, player2)
     // console.log("Player2: " + player2);
     idP1 = player1;
     idP2 = player2;
+    id_players.idP1 = player1;
+    id_players.idP2 = player2;
     displayUIPlayer(player1, player2);
     Promise.all([
         fillInfosPlayer(1, player1),

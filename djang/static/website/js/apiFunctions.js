@@ -223,16 +223,17 @@ export async function uploadAvatar(username, url_picture)
     const data = new FormData();
     data.append('username', username);
     data.append('url', url_picture);
-
-    console.log(data);
+    console.log("Token: ", getCSRFToken());
+    // console.log(data);
 
     try {
         const response = await fetch(`/uploadavatar/`, {
             method: 'POST',
-            body: JSON.stringify(data),
             headers: {
+                'Content-Type': 'application/json',
                 'X-CSRFToken': getCSRFToken() // Ensure CSRF protection
-            }
+            },
+            body: data
         });
 
         // Check if the response is OK (status 200-299)
@@ -290,7 +291,7 @@ export async function getUserByName(userName) {
         if (userData.error) {
             console.error(userData.error);
         }
-        console.log("user data: " + JSON.stringify(userData));
+        // console.log("user data: " + JSON.stringify(userData));
         return userData;
     } catch (error) {
         console.error("An error occurred while fetching the user details:", error);

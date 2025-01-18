@@ -182,7 +182,6 @@
 
 #controlsP1LocalImg, #controlsP2LocalImg {
     bottom: 16px;
-    z-index: 1;
     width: 20vw;
     max-width: 12rem;
 }

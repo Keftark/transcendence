@@ -545,7 +545,7 @@ fileInput.addEventListener('change', (event) => {
         const reader = new FileReader();
         reader.onload = (e) => {
         profilePicture.src = e.target.result;
-        uploadAvatar(playerStats.nickname, e.target.result);
+        // uploadAvatar(playerStats.nickname, e.target.result);
         };
         reader.readAsDataURL(file);
     }
@@ -555,9 +555,11 @@ document.getElementById('profile-form').addEventListener("submit", function(e) {
     e.preventDefault();  // Prevent the default form submission
     
     var formData = new FormData(this);  // Create a FormData object to hold the file and form data
-    
+    for (var pair of formData.entries()) {
+        console.log("Pairs: " + pair[0]+ ', ' + pair[1]);
+    }
     fetch('/uploadavatar/', {
-        method: "POST",
+        method: 'POST',
         headers: {
             'X-CSRFToken': getCSRFToken()
         },

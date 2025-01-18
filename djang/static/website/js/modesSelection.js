@@ -6,7 +6,7 @@ import { navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
 import { isInGame, passInfosPlayersToLevel } from './levelLocal.js';
 import { checkAccessModes, isUserLoggedIn } from './registration.js';
-import { askListMatchs, connectToDuel, spectateMatch } from './sockets.js';
+import { socketAskListMatchs, socketConnectToDuel, socketSpectateMatch } from './sockets.js';
 import { onPlayGame } from './menu.js';
 
 const modesLocalButton = document.getElementById('modesLocalButton');
@@ -43,7 +43,7 @@ modeComputerButton.addEventListener('click', () => {
 });
 
 modeDuelButton.addEventListener('click', () => {
-    connectToDuel();
+    socketConnectToDuel();
     closeOnlineModes();
     isInsideModes = false;
     setTimeout(() => {
@@ -371,7 +371,7 @@ export function getListMatchs(data)
 
 export function openMatchList()
 {
-    askListMatchs();
+    socketAskListMatchs();
     matchList.style.justifyContent = "center";
     matchList.textContent = "Waiting...";
     matchListIsOpen = true;
@@ -406,7 +406,7 @@ function addMatchToList(room_id, idp1, idp2)
         .catch((error) => {
             console.error("Failed to set up players' controllers:", error);
         });
-        spectateMatch(room_id);
+        socketSpectateMatch(room_id);
     });
     matchList.appendChild(matchContainer);
 }
