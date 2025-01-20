@@ -199,7 +199,7 @@ async def connection_handler():
         if central_socket is None:
             try:
                 logger.log("Attempting connection to central server.", 1)
-                connex = "ws://localhost:" + str(CENTRAL_PORT) + "/"
+                connex = "ws://172.17.0.1:" + str(CENTRAL_PORT) + "/"
                 central_socket = await connect(connex, ping_interval=10, ping_timeout=None)
                 logger.log("Central server connected.", 0)
             except Exception as e:
