@@ -118,6 +118,9 @@ DATABASES = {
      }
 }
 
+WEBSOCKET_URL = os.getenv("HOST_ADDRESS", "0")
+print("Coucou ", WEBSOCKET_URL)
+
 #DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.postgresql_psycopg2',

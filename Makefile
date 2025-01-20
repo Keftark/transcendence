@@ -12,17 +12,18 @@
 
 #launches the project in the foreground
 all:
-	export COMPOSE_PROJECT_NAME=""
+	$(shell ./generate_env.sh)
 	docker compose up --build
 
 #launches the project in the background
 silent:
-	export COMPOSE_PROJECT_NAME=""
+	$(shell ./generate_env.sh)
 	docker compose up --build -d
 	docker ps
 
 #Make the migrations
 migrate:
+	docker compose run django python manage.py makemigrations accounts
 	docker compose run django python manage.py makemigrations
 	docker compose run django python manage.py migrate
 	
