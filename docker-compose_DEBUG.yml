@@ -1,9 +1,6 @@
-version: '3'
-
 services:
   db:
     image: postgres:17
-    container_name: db
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
       POSTGRES_USER: ${DATABASE_USERNAME}
@@ -15,15 +12,16 @@ services:
     env_file:
       - .env
     networks:
-      - app-network
+      - network
 
-  django:
+  django-web:
     build: ./djang/
-    container_name: django
+    container_name: django-docker
     ports:
       - "8000:8000"
     depends_on:
       - db
+      - central
     environment:
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
       DEBUG: ${DEBUG}
@@ -38,54 +36,43 @@ services:
     env_file:
       - .env
     networks:
-      - app-network
+      - network
 
   nginx:
     build: ./nginx/
     image: nginx
-    container_name: nginx
+    networks:
+      - network
     ports:
       - '443:443'
+    container_name: nginx
     restart: always
     depends_on:
-         - django
-    networks:
-      - app-network
+         - django-web
   
   central:
     build: ./central/
+    networks:
+      - network
     container_name: central
     restart: always
     ports:
       - "7777:7777"
-    networks:
-      - app-network
 
   chat:
     build: ./chat/
+    networks:
+      - network
     container_name: chat
     restart: always
     depends_on:
       - central
     ports:
       - "7878:7878"
-    networks:
-      - app-network
-
-  1v1_classic:
-    container_name: 1v1_classic
-    build: ./back_1v1/
-    restart: always
-    depends_on:
-      - central
-    ports:
-      - "8001:8001"
-    networks:
-      - app-network
 
 volumes:
   postgres_data:
 
 networks:
-  app-network:
+  network:
     driver: bridge

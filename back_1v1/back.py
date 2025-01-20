@@ -38,6 +38,7 @@ def dump_error(error, id):
         "server": "1v1_classic",
         "answer": "yes",
         "content": error,
+        "ids": [id],
         "id": id
     }
     return event
@@ -47,6 +48,7 @@ def dump_exit_queue(id):
         "type": "exit_queue",
         "server": "1v1_classic",
         "answer": "yes",
+        "ids": [id],
         "id": id
     }
     return event
@@ -65,6 +67,7 @@ def dump_all_matchs(id):
         "server": "1v1_classic",
         "answer": "yes",
         "id": id,
+        "ids": [id],
         "data": event
     }
     return data
@@ -77,6 +80,7 @@ def search_for_player(id):
                 "result": "found_in_match",
                 "server": "1v1_classic",
                 "answer": "yes",
+                "ids": [id],
                 "room_id": m.room_id
             }
             return event
@@ -86,6 +90,7 @@ def search_for_player(id):
                 "type": "search_request",
                 "server": "1v1_classic",
                 "answer": "yes",
+                "ids": [id],
                 "result": "found_in_queue"
             }
             return event
@@ -93,6 +98,7 @@ def search_for_player(id):
         "type": "search_request",
         "server": "1v1_classic",
         "answer": "yes",
+        "ids": [id],
         "result": "not_found"
     }
     return event
@@ -107,6 +113,7 @@ def dump_everything():
         "execution_time": time.time() - logger.start,
         "in_queue": len(queue.liste),
         "matches": len(matchs),
+        "ids": [id],
         "author": "nmascrie"
     }
     return event
@@ -213,7 +220,8 @@ async def handler(websocket):
                 for m in matchs:
                     m.remove_spectator(websocket)
             elif (event["type"] == "list_all"):
-                add_to_queue(dump_all_matchs())
+                id = (int)(event["id"])
+                add_to_queue(dump_all_matchs(id))
             elif (event["type"] == "find_one"):
                 id = (int)(event["id"])
                 add_to_queue(search_for_player(id))
@@ -237,7 +245,7 @@ async def connection_handler():
         if central_socket is None:
             try:
                 logger.log("Attempting connection to central server.", 1)
-                connex = "ws://localhost:" + str(CENTRAL_PORT) + "/"
+                connex = "ws://172.17.0.1:" + str(CENTRAL_PORT) + "/"
                 central_socket = await connect(connex, ping_interval=10, ping_timeout=None)
                 logger.log("TCentral server connected.", 1)
             except Exception as e:

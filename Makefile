@@ -12,12 +12,14 @@
 
 #launches the project in the foreground
 all:
+	export COMPOSE_PROJECT_NAME=""
 	docker compose up --build
-	docker ps
 
 #launches the project in the background
 silent:
+	export COMPOSE_PROJECT_NAME=""
 	docker compose up --build -d
+	docker ps
 
 #Make the migrations
 migrate:

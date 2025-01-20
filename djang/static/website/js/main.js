@@ -157,8 +157,8 @@ export let chatSocket;
 
 function openSocket()
 {
-    socket = new WebSocket('ws://10.12.200.194:7777/ws/');
-    listener = new WebSocket('ws://10.12.200.194:7777/ws/');
+    socket = new WebSocket('ws://central:7777/ws/');
+    listener = new WebSocket('ws://central:7777/ws/');
     // socket = new WebSocket('ws://10.11.200.72:7777/ws/');
     // listener = new WebSocket('ws://10.11.200.72:7777/ws/');
     
