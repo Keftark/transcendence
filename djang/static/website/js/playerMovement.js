@@ -132,8 +132,8 @@ function setPlayer3Bounds(levelState)
 
 export function setupPlayerMovement(player1, player2, player3, player4)
 {
-    if (playerStats.playerController === -1)
-        return null;
+    // if (playerStats.playerController === -1)
+    //     return null;
     let moveUp1 = false;
     let moveDown1 = false;
     let moveUp2 = false;
@@ -317,6 +317,8 @@ export function setupPlayerMovement(player1, player2, player3, player4)
     function updatePlayers(deltaTime)
     {
         animatePlayers(player1, player2);
+        if (playerStats.playerController == -1)
+            return;
         const adjustedSpeed = moveSpeed * (deltaTime / 1000);
         checkPlayer1Movements(adjustedSpeed);
         if (levelState === LevelMode.ADVENTURE)

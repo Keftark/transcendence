@@ -384,6 +384,7 @@ export function socketAskListMatchs()
         return;
     const event = {
         key: keySocket,
+        id: playerStats.id,
         type: "list_all",
         answer: "no",
         server: "1v1_classic"
@@ -399,6 +400,7 @@ export function socketSpectateMatch(id)
         key: keySocket,
         room_id: id,
         type: "spectate",
+        id: playerStats.id,
         answer: "no",
         server: "1v1_classic"
     };

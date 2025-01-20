@@ -247,7 +247,7 @@ export function unloadLevel()
 
 export function gameEventsListener(event)
 {
-    if (pressSpaceFunction === null || playerStats.playerController === -1)
+    if (pressSpaceFunction === null || isSpectator())
         return;
 
     if (document.activeElement != inputChat)
@@ -360,13 +360,13 @@ function setupInterface()
     document.getElementById('profileButton').style.display = playerStats.isRegistered ? 'block' : 'none';
     gameMenuPanel.style.display = 'block';
     showInGameUI();
-    if (isAnOnlineMode(currentLevelMode))
+    if (isAnOnlineMode(currentLevelMode) && !isSpectator())
         addGameStickers();
 }
 
 function showInGameUI()
 {
-    if (playerStats.playerController == -1) // laisser les barres visibles ?
+    if (playerStats.playerController === -1) // laisser les barres visibles ?
     {
         controlsP1.style.display = 'none';
         controlsP2.style.display = 'none';
@@ -622,6 +622,13 @@ function camZoomEvent(event)
     event.preventDefault();
 }
 
+export function isSpectator()
+{
+    if (playerStats.playerController === -1)
+        return true;
+    return false;
+}
+
 export let resetScreenFunction = null;
 
 export function StartLevel(levelMode)
@@ -641,16 +648,28 @@ export function StartLevel(levelMode)
     setUpLevel(scene);
     setupInterface();
     sparks = new Sparks(scene);
-    let isBallMoving = false;
+    let isBallMoving = isSpectator() ? true : false;
     let toggleReset = false;
-    let canPressSpace = true;
+    let canPressSpace = isSpectator() ? false: true;
     let lastTimestamp = 0;
+
+    if (isSpectator())
+    {
+        isCameraAnimationComplete = true;
+        camera.position.set(0, 0, 50);
+        camera.lookAt(0, 0, 0);
+        setVisibleScore(true);
+    }
 
     const { updatePlayers } = setupPlayerMovement(player1, player2, player3, player4);
 
-
     resetScreenFunction = function resetScreen(playerNbr, fromScoredPoint = false)
     {
+        if (isSpectator()) // n'ajoute pas le score ?
+        {
+            addScore(playerNbr);
+            return;
+        }
         if (playerNbr != 0)
         {
             screenShake.start(0.7, 400);
@@ -676,6 +695,8 @@ export function StartLevel(levelMode)
     
     resetFunction = function resetGame(resetCam, fromScoredPoint = false, time)
     {
+        if (isSpectator())
+            return;
         canPressSpace = false;
         isBallMoving = false;
         closeGameMenu();
@@ -863,8 +884,8 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
     else
         victoryType = VictoryType.EXAEQUO;
 
-
-    addMatchToHistory(victoryType, scorePlayer, scoreOpponent, opponentName, getMatchTime());
+    if (!isSpectator())
+        addMatchToHistory(victoryType, scorePlayer, scoreOpponent, opponentName, getMatchTime());
     pressPlayDiv.style.display = 'none';
     stopStopwatch();
     deathSphereGrew = false;
@@ -877,6 +898,11 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
             winner = player1NameText;
         else if (scoreP1 < scoreP2)
             winner = player2NameText;
+        if (isSpectator())
+        {
+            callVictoryScreen(VictoryType.VICTORY, winner);
+            return;
+        }
         if (forcedVictory)
             callVictoryScreen(VictoryType.VICTORY);
         else if (winner != '')
