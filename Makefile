@@ -23,8 +23,7 @@ silent:
 
 #Make the migrations
 migrate:
-	docker compose run django python manage.py makemigrations accounts
-	docker compose run django python manage.py makemigrations
+	docker compose run django python manage.py makemigrations -v 3
 	docker compose run django python manage.py migrate
 	
 #Launch the superuser creation procedure
