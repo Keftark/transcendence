@@ -19,7 +19,7 @@
 
 #victoryPanel
 {
-    position: relative;
+    position: absolute;
     display: flex;
     flex-direction: column; 
     justify-content:space-evenly;
@@ -34,12 +34,13 @@
 
 #victoryPanel h2
 {
-    position: absolute;
+    position: relative;
+    margin-top: 0;
 }
 
 #victoryImg
 {
-    position: absolute;
+    position: relative;
     width: calc(15vw + 10vh);
     height: calc(15vw + 10vh);
     top: 0;
@@ -47,7 +48,7 @@
 
 #closeVictoryButton
 {
-    position: absolute;
+    position: relative;
     bottom: 1rem;
     width: 20vw;
     max-width: 12rem;
