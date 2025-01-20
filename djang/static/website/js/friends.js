@@ -1,3 +1,4 @@
+import { getBlockedList, getFriendsList } from "./apiFunctions.js";
 import { openNameContextMenu, removeFriendFunction, restoreMessagesFromUser, sendSystemMessage } from "./chat.js";
 import { playerStats } from "./playerManager.js";
 import { getTranslation } from "./translate.js";
@@ -167,5 +168,53 @@ export function addFriend(userName)
     friendsList.appendChild(newDiv);
 }
 
+export function addBlocked(userName)
+{
+    const newDiv = document.createElement('div');
+    newDiv.addEventListener('click', function() {
+        openNameContextMenu(userName, newDiv);
+    });
+    newDiv.setAttribute('name', userName);
+    newDiv.classList.add('friendDiv');
+    const nameHeader = document.createElement('h3');
+    nameHeader.textContent = userName;
+    nameHeader.style.color = playerStats.colors;
+    newDiv.appendChild(nameHeader);
+    blockedList.appendChild(newDiv);
+}
+
+export function loadFriends()
+{
+    return new Promise((resolve, reject) => {
+        getFriendsList()
+            .then(list => {
+                list.forEach(element => {
+                    addFriend(element.username);
+                });
+                resolve(); // Resolve when done
+            })
+            .catch(error => {
+                console.error("Error fetching friends list:", error);
+                reject(error); // Reject if an error occurs
+            });
+    });
+}
+
+export function loadBlocks()
+{
+    return new Promise((resolve, reject) => {
+        getBlockedList()
+            .then(list => {
+                list.forEach(element => {
+                    addBlocked(element.username);
+                });
+                resolve(); // Resolve when done
+            })
+            .catch(error => {
+                console.error("Error fetching friends list:", error);
+                reject(error); // Reject if an error occurs
+            });
+    });
+}
 
 closeFriends();

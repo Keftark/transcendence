@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 from .viewsets.MyAccountViewSet import MyAccountViewSet
 from .serializers import AccountSerializer
 from .models import AccountModel
+from .views.blocks import (GetBlocksView)
 from .views.friends import (GetFriendsView,
                             EditFriendView,
                             GetIncomingFriendRequestView,
@@ -43,6 +44,7 @@ urlpatterns = [
     #path('update_password', update_password.UpdatePasswordView.as_view(), name='update_password'), # update user password
     path("settings", MyAccountViewSet.as_view({'patch': 'partial_update', 'delete': 'delete_avatar'}), name="my_profile_page"), #Update account page
     path("friends", GetFriendsView.as_view(), name="friends_list_page"), # Friends list page
+    path("blocked", GetBlocksView.as_view(), name="blocks_list_page"), # Friends list page
     path("friends/<int:pk>", EditFriendView.as_view(), name="friends_edit_page"), # Edit friend (remove friend)
     path("incoming_friend_requests", GetIncomingFriendRequestView.as_view(), name="incoming_friend_requests"), #list of incoming friends requests
     path("outgoing_friend_requests", GetOutgoingFriendRequestView.as_view(), name="outgoing_friend_requests"), #list of outgoing friends requests

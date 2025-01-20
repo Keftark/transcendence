@@ -245,7 +245,7 @@ async def connection_loop():
         if chat_socket is None:
             try:
                 logger.log("Attempting connection to Chat server.", 1)
-                chat_socket = await connect("ws://172.17.0.1:7878/", ping_interval=10, ping_timeout=None)
+                chat_socket = await connect("ws://localhost:7878/", ping_interval=10, ping_timeout=None)
                 logger.log("Chat server connected.", 0)
             except Exception as e:
                 chat_socket = None
@@ -259,7 +259,7 @@ async def connection_loop():
         if _1v1_socket is None:
             try:
                 logger.log("Attempting connection to Game (1v1 Classical) server.", 1)
-                _1v1_socket = await connect("ws://172.17.0.1:8001/", ping_interval=10, ping_timeout=None)
+                _1v1_socket = await connect("ws://localhost:8001/", ping_interval=10, ping_timeout=None)
                 logger.log("Game (1v1 Classical) server connected.", 0)
             except Exception as e:
                 _1v1_socket = None

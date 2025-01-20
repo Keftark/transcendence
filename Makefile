@@ -12,23 +12,21 @@
 
 #launches the project in the foreground
 all:
-	export COMPOSE_PROJECT_NAME=""
 	docker compose up --build
+	docker ps
 
 #launches the project in the background
 silent:
-	export COMPOSE_PROJECT_NAME=""
 	docker compose up --build -d
-	docker ps
 
 #Make the migrations
 migrate:
-	docker compose run django python manage.py makemigrations
-	docker compose run django python manage.py migrate
+	docker compose run django-web python manage.py makemigrations
+	docker compose run django-web python manage.py migrate
 	
 #Launch the superuser creation procedure
 superuser:
-	docker compose run django python manage.py createsuperuser	
+	docker compose run django-web python manage.py createsuperuser	
 
 #Take down the project cleanly
 down:

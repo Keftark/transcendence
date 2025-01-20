@@ -151,9 +151,8 @@ export function isElementVisible(element) {
 //     }
 // }
 
-export let socket;
-export let listener;
-export let chatSocket;
+export let socket = null;
+export let listener = null;
 
 function openSocket()
 {

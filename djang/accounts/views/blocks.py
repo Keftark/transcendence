@@ -16,7 +16,7 @@ class GetBlocksView(APIView):
     authentication_classes = (SessionAuthentication,)
 
     def get(self, request: Request):
-        blocks = BlockModel.objects.filter(blocker=request.user.profilemodel)
+        blocks = BlockModel.objects.filter(blocker=request.user.accountmodel)
         bloked_profiles = [block.blocked for block in blocks]
 
         return Response(AccountSerializer(bloked_profiles, many=True).data)
@@ -27,7 +27,7 @@ class EditBlocksView(APIView):
     authentication_classes = (SessionAuthentication,)
 
     def get_object(self):
-        return self.request.user.profilemodel
+        return self.request.user.accountmodel
 
     def post(self, request, pk=None):
         user_profile = self.get_object()

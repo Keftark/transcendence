@@ -50,6 +50,11 @@ function openChat()
     chatIsOpen = true;
     overlayChat.style.display = playerStats.isRegistered ? 'none' : 'flex';
     chatBox.classList.remove('hasNewMessage');
+    checkOpenStickersList();
+}
+
+function checkOpenStickersList()
+{
     if (playerStats.isRegistered)
     {
         setTimeout(() => {
@@ -164,6 +169,7 @@ sendMessageButton.addEventListener('click', () => {
 });
 
 sendStickerButton.addEventListener('click', () => {
+    checkOpenStickersList();
     showPrivateStickers();
 });
 
@@ -747,6 +753,10 @@ export function receiveGameSticker(playerId, stickerName)
     document.body.appendChild(imgDiv);
 }
 
+document.getElementById('stickers-container').addEventListener('click', function() {
+    document.getElementById('stickers-container').style.display = 'none';
+});
+
 export function removeGameStickers()
 {
     if (gameStickers === null)
@@ -760,15 +770,10 @@ function showPrivateStickers()
     stickersList.classList.add('centerClass');
 }
 
-export function addStickersGame()
-{
-    stickersList.classList.remove('centerClass');
-    stickersList.classList.add('centerGameClass');
-}
-
-export function removeStickersGame()
-{
-
-}
+// export function addStickersGame()
+// {
+//     stickersList.classList.remove('centerClass');
+//     stickersList.classList.add('centerGameClass');
+// }
 
 addStickersFunctions();

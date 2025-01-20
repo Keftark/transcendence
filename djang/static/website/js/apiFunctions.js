@@ -23,7 +23,7 @@ export async function logInPlayer(username, password)
             method: 'POST',
             body: data,
             headers: {
-                'X-CSRFToken': getCSRFToken() // Ensure CSRF protection
+                'X-CSRFToken': getCSRFToken()
             }
         });
 
@@ -314,6 +314,48 @@ export async function getUserPaddleSkin(userId) {
             console.error(userData.error);
         }
         console.log("user data: " + JSON.stringify(userData));
+        return userData;
+    } catch (error) {
+        console.error("An error occurred while fetching the user details:", error);
+    }
+}
+
+export async function getFriendsList() {
+    try {
+        const response = await fetch(`/friends`, {
+            method: 'GET',
+            headers: {
+                'X-CSRFToken': getCSRFToken()
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);
+        }
+        const userData = await response.json();
+        if (userData.error) {
+            console.error(userData.error);
+        }
+        return userData;
+    } catch (error) {
+        console.error("An error occurred while fetching the user details:", error);
+    }
+}
+
+export async function getBlockedList() {
+    try {
+        const response = await fetch(`/blocked`, {
+            method: 'GET',
+            headers: {
+                'X-CSRFToken': getCSRFToken()
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);
+        }
+        const userData = await response.json();
+        if (userData.error) {
+            console.error(userData.error);
+        }
         return userData;
     } catch (error) {
         console.error("An error occurred while fetching the user details:", error);

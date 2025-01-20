@@ -29,7 +29,7 @@ export function getMatchAlreadyStarted()
 
 export function connectToServerInput()
 {
-    if (!socket)
+    if (!socket || socket.readyState !== WebSocket.OPEN)
         return;
     const event = {
         server: "main",
@@ -44,7 +44,7 @@ export function connectToServerInput()
 
 export function connectToServerOutput()
 {
-    if (!listener)
+    if (!listener || listener.readyState !== WebSocket.OPEN)
         return;
     const event = {
         server: "main",
@@ -236,7 +236,7 @@ export function socketBoostPaddle()
 
 export function socketJoinChat()
 {
-    if (!listener)
+    if (!listener || listener.readyState !== WebSocket.OPEN)
         return;
     console.log("Joining the chat");
     const event = {
@@ -253,7 +253,7 @@ export function socketJoinChat()
 
 export function socketQuitChat()
 {
-    if (!listener)
+    if (!listener || listener.readyState !== WebSocket.OPEN)
         return;
     console.log("Quitting the chat");
     const event = {
@@ -268,7 +268,7 @@ export function socketQuitChat()
 
 export function socketSendMessage(messageContent)
 {
-    if (!listener)
+    if (!listener || listener.readyState !== WebSocket.OPEN)
         return;
     const event = {
         key: keySocket,
@@ -283,7 +283,7 @@ export function socketSendMessage(messageContent)
 }
 
 export function socketSendPrivMessage(targetMsg, messageContent) {
-    if (!listener)
+    if (!listener || listener.readyState !== WebSocket.OPEN)
         return;
     getUserByName(targetMsg)
         .then((target) => {
@@ -306,7 +306,7 @@ export function socketSendPrivMessage(targetMsg, messageContent) {
 }
 
 export function socketSendPrivSticker(targetMsg, stickerName) {
-    if (!listener)
+    if (!listener || listener.readyState !== WebSocket.OPEN)
         return;
     getUserByName(targetMsg)
         .then((target) => {
@@ -330,7 +330,7 @@ export function socketSendPrivSticker(targetMsg, stickerName) {
 
 export function socketSendPublicSticker(stickerName)
 {
-    if (!listener)
+    if (!listener || listener.readyState !== WebSocket.OPEN)
         return;
     const event = {
         key: keySocket,
@@ -346,7 +346,7 @@ export function socketSendPublicSticker(stickerName)
 
 export function socketSendSalonSticker(stickerName)
 {
-    if (!listener)
+    if (!listener || listener.readyState !== WebSocket.OPEN)
         return;
     console.log("Trying to send a salon sticker");
     const event = {
@@ -364,7 +364,7 @@ export function socketSendSalonSticker(stickerName)
 
 export function socketSendFriendRequest(friendId)
 {
-    if (!listener)
+    if (!listener || listener.readyState !== WebSocket.OPEN)
         return;
     const event = { // c'est pas fait !
         key: keySocket,
@@ -380,7 +380,7 @@ export function socketSendFriendRequest(friendId)
 
 export function socketAskListMatchs()
 {
-    if (!listener)
+    if (!listener || listener.readyState !== WebSocket.OPEN)
         return;
     const event = {
         key: keySocket,
@@ -394,7 +394,7 @@ export function socketAskListMatchs()
 
 export function socketSpectateMatch(id)
 {
-    if (!listener)
+    if (!listener || listener.readyState !== WebSocket.OPEN)
         return;
     const event = {
         key: keySocket,
@@ -409,7 +409,7 @@ export function socketSpectateMatch(id)
 
 export function socketUnspectateMatch()
 {
-    if (!listener)
+    if (!listener || listener.readyState !== WebSocket.OPEN)
         return;
     const event = {
         key: keySocket,

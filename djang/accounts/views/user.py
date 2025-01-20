@@ -256,7 +256,6 @@ def upload_avatar(request):
 
     return JsonResponse({"message": "Invalid request method"}, status=405)
 
-
 class UpdateProfileView(UpdateAPIView):
 
     queryset = User.objects.all()
