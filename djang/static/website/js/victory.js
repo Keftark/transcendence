@@ -1,3 +1,4 @@
+import { isSpectator } from "./levelLocal.js";
 import { getLevelState, isAnOnlineMode } from "./main.js";
 import { clickBackButtonMenu } from "./modesSelection.js";
 import { getPlayerName } from "./playerManager.js";
@@ -13,14 +14,15 @@ closeVictoryButton.addEventListener('click', () => {
     closeVictoryScreen();
 });
 
-export function callVictoryScreen(victoryType) {
+export function callVictoryScreen(victoryType, playerWon = "") {
     let str;
     let newSrc;
     const isLocal = getLevelState() === LevelMode.LOCAL;
+    const playerName = isSpectator() ? playerWon : getPlayerName();
 
     switch (victoryType) {
         case VictoryType.VICTORY:
-            str = isLocal ? getPlayerName() + getTranslation('wins') : getTranslation('victory');
+            str = isLocal || isSpectator() ? playerName + getTranslation('wins') : getTranslation('victory');
             newSrc = "static/images/victoryImg.webp";
             break;
         case VictoryType.DEFEAT:

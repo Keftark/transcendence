@@ -183,6 +183,7 @@ export async function getUserName(userId) {
         return;
     }
     try {
+        console.log("Trying to get the user name");
         const response = await fetch(`/username/${userId}/`);
         if (!response.ok) {
             throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);

@@ -38,6 +38,7 @@ def dump_error(error, id):
         "server": "1v1_classic",
         "answer": "yes",
         "content": error,
+        "ids": [id],
         "id": id
     }
     return event
@@ -47,6 +48,7 @@ def dump_exit_queue(id):
         "type": "exit_queue",
         "server": "1v1_classic",
         "answer": "yes",
+        "ids": [id],
         "id": id
     }
     return event
@@ -56,14 +58,15 @@ def dump_all_matchs(id):
     for m in matchs:
         details = {
             "room_id": m.room_id,
-            "id_p1": m.player_1_paddle.id,
-            "id_p2": m.player_2_paddle.id
+            "id_p1": m._paddle_1.id,
+            "id_p2": m._paddle_2.id
         }
         event.append(details)
     data = {
         "type": "list_all",
         "server": "1v1_classic",
         "answer": "yes",
+        "ids": [id],
         "id": id,
         "data": event
     }
@@ -71,7 +74,7 @@ def dump_all_matchs(id):
 
 def search_for_player(id):
     for m in matchs:
-        if m.player_1_paddle.id == id or m._player_2_paddle.id == id:
+        if m._paddle_1.id == id or m.__paddle_2.id == id:
             event = {
                 "type": "search_request",
                 "result": "found_in_match",
@@ -107,6 +110,7 @@ def dump_everything():
         "execution_time": time.time() - logger.start,
         "in_queue": len(queue.liste),
         "matches": len(matchs),
+        "ids": [id],
         "author": "nmascrie"
     }
     return event
@@ -168,7 +172,6 @@ async def loop():
             m.tick()
             extend_to_queue(m.formatted_queue)
             m.formatted_queue.clear()
-            print("Status :", m.ended)
             if m.ended is True:
                 logger.log("Match with room id " + str(m.room_id) + " has concluded.", 1)
                 matchs.remove(m)
@@ -204,16 +207,18 @@ async def handler(websocket):
                         break
             elif (event["type"] == "spectate"):
                 room = (int)(event["room_id"])
+                id = (int)(event["id"])
                 for m in matchs:
                     if (m.room_id == room):
-                        m.add_spectator(websocket)
+                        m.add_spectator(id)
                     else:
-                        m.remove_spectator(websocket)
+                        m.remove_spectator(id)
             elif (event["type"] == "unspectate"):
                 for m in matchs:
                     m.remove_spectator(websocket)
             elif (event["type"] == "list_all"):
-                add_to_queue(dump_all_matchs())
+                id = (int)(event["id"])
+                add_to_queue(dump_all_matchs(id))
             elif (event["type"] == "find_one"):
                 id = (int)(event["id"])
                 add_to_queue(search_for_player(id))

@@ -749,6 +749,8 @@ export function receiveGameSticker(playerId, stickerName)
 
 export function removeGameStickers()
 {
+    if (gameStickers === null)
+        return;
     gameStickers.remove();
     gameStickers = null;
 }

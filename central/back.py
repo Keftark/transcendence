@@ -68,6 +68,7 @@ def key_check(id, key):
 # Transfere la reponse du serveur au client
 async def handle_answers(websocket, event, message):
     global start, userList, logList
+    # print("Got answer ::", event)
     type = event["type"]
     server = event["server"]
     if server == "1v1_classic":
@@ -76,6 +77,12 @@ async def handle_answers(websocket, event, message):
             data = event["data"]
             for user in userList:
                 if user.id == id:
+                    if event["type"] == "list_all":
+                        try:
+                            await user.send(json.dumps(event))
+                        except Exception as e:
+                            logger.log("", 2, e)
+                        continue 
                     try:
                         await user.send(json.dumps(data))
                     except Exception as e:
