@@ -12,17 +12,30 @@
 
 #launches the project in the foreground
 all:
+<<<<<<< HEAD
+=======
+	$(shell ./generate_env.sh)
+>>>>>>> 534b6f482d8c418ce526fee416a441746fe077b8
 	docker compose up --build
 	docker ps
 
 #launches the project in the background
 silent:
+<<<<<<< HEAD
+=======
+	$(shell ./generate_env.sh)
+>>>>>>> 534b6f482d8c418ce526fee416a441746fe077b8
 	docker compose up --build -d
 
 #Make the migrations
 migrate:
+<<<<<<< HEAD
 	docker compose run django-web python manage.py makemigrations
 	docker compose run django-web python manage.py migrate
+=======
+	docker compose run django python manage.py makemigrations -v 3
+	docker compose run django python manage.py migrate
+>>>>>>> 534b6f482d8c418ce526fee416a441746fe077b8
 	
 #Launch the superuser creation procedure
 superuser:

@@ -1,3 +1,5 @@
+version: '3'
+
 services:
   db:
     image: postgres:17
@@ -31,6 +33,7 @@ services:
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
       DATABASE_HOST: ${DATABASE_HOST}
       DATABASE_PORT: ${DATABASE_PORT}
+      HOST_ADDRESS: ${HOST_ADDRESS}
     env_file:
       - .env
 
@@ -42,6 +45,12 @@ services:
     ports:
       - '1443:443'
     container_name: nginx
+<<<<<<< HEAD
+=======
+    ports:
+      - '443:443'
+      - '80:80'  # Expose port 80 for HTTP
+>>>>>>> 534b6f482d8c418ce526fee416a441746fe077b8
     restart: always
     depends_on:
          - django-web
