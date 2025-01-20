@@ -13,7 +13,6 @@ from django.db.models.signals import post_save, pre_delete
 def upload_to(instance, filename: str):
     return f"/{instance.pk}{splitext(filename)[1]}"
 
-
 class AccountModel(models.Model):
     user = OneToOneField(User, on_delete=CASCADE, default=True)
     avatar = ImageField(upload_to=upload_to, default='guestUser.webp')

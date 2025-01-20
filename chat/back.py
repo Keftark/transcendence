@@ -3,14 +3,12 @@
 import asyncio
 import Socket
 import sys
-import time
 import json
-import os
 from websockets.asyncio.server import serve
 from websockets.asyncio.client import connect
-from websocket import create_connection
 import signal
 import threading
+import Logger
 from signal import SIGPIPE, SIG_DFL
 
 signal.signal(SIGPIPE, 0)
@@ -20,8 +18,9 @@ CENTRAL_PORT = 7777
 
 Users = []
 
+logger = Logger.Logger()
+
 stopFlag = False
-start = time.time()
 
 central_socket = None
 
@@ -125,20 +124,17 @@ async def send_server(data):
     try:
         await central_socket.send(json.dumps(data))
     except Exception as e:
-        print(e)
+        logger.log("", 2, e)
         central_socket = None
 
 async def handler(websocket):
-    global Users, central_socket
+    global Users, central_socket, logger
     try:
         async for message in websocket:
             event = json.loads(message)
             print(event)
             if event["type"] == "ping":
                 await send_server(pong())
-            elif event["type"] == "quit":
-                central_socket.close()
-                central_socket = None
             elif event["type"] == "join_chat":
                 id = (int)(event["id"])
                 if is_user(id) is False:
@@ -151,19 +147,15 @@ async def handler(websocket):
                         if user.id == id:
                             Users.remove(user)
                             break
-            elif event["type"] == "message":
+            elif event["type"] == "message" or event["type"] == "sticker":
                 id = (int)(event["id"])
                 if is_user(id) is True:
                     for user in Users:
                         if user.id == id:
-                            await send_server(dump_message(user, event["content"]))
-                            break
-            elif event["type"] == "sticker":
-                id = (int)(event["id"])
-                if is_user(id) is True:
-                    for user in Users:
-                        if user.id == id:
-                            await send_server(sticker(user, (int)(event["img"])))
+                            if event["type"] == "sticker":
+                                await send_server(sticker(user, event["img"]))
+                            else:
+                                await send_server(dump_message(user, event["content"]))
                             break
             elif event["type"] == "private_message" or event["type"] == "private_sticker":
                 id = (int)(event["id"])
@@ -178,7 +170,7 @@ async def handler(websocket):
                                     else:
                                         await send_server(msg_private(targ, user, event["content"]))
                                     break
-            elif event["type"] == "salon_message" or event["sticker"] == "salon_message":
+            elif event["type"] == "salon_message" or event["type"] == "salon_sticker":
                 id = (int)(event["id"])
                 if is_user(id) is True:
                     for user in Users:
@@ -190,35 +182,29 @@ async def handler(websocket):
                             break
         await websocket.wait_closed()
     except Exception as e:
-        print(e)
+        logger.log("", 2, e)
     finally:
         central_socket = None
-        for user in Users:
-            if user.socket == websocket:
-                Users.remove(user)
 
 async def main():
-    global start, stopFlag, central_socket
-    curr = time.time() - start
-    print("[", curr, "] : Chat listener launched.")
+    global logger, stopFlag, central_socket
+    logger.log("Chat listener launched.", 0)
     async with serve(handler, "", SERVER_PORT, ping_interval=10, ping_timeout=None):
         await asyncio.get_running_loop().create_future()  # run forever
     stopFlag = True
 
 async def connection_handler():
-    global central_socket, stopFlag, start
+    global central_socket, stopFlag, logger
     while stopFlag is False:
         if central_socket is None:
             try:
-                curr = time.time() - start
-                print("[", curr, "] : Attempting connection to central server.")
+                logger.log("Attempting connection to central server.", 1)
                 connex = "ws://localhost:" + str(CENTRAL_PORT) + "/"
                 central_socket = await connect(connex, ping_interval=10, ping_timeout=None)
-                curr = time.time() - start
-                print("[", curr, "] : Central server connected.")
+                logger.log("Central server connected.", 0)
             except Exception as e:
                 central_socket = None
-                print("[", curr, "] : Couldn't connect to the central server.")
+                logger.log("Couldn't connect to the central server.", 2, e)
         else:
             await send_server(pong())
         await asyncio.sleep(5)
@@ -237,19 +223,13 @@ def signal_handler(signal, frame):
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
-    start = time.time()
-    curr = time.time() - start
-    print("[", curr, "] : Server launched.")
+    logger.log("Server launched.", 0)
     try:
-        ticker = threading.Thread(target=connection_launcher)
-        server = threading.Thread(target=server_launcher)
-        ticker.daemon = True
-        server.daemon = True
+        ticker = threading.Thread(target=connection_launcher, daemon=True)
+        server = threading.Thread(target=server_launcher, daemon=True)
         ticker.start()
         server.start()
         ticker.join()
         server.join()
     except Exception as e:
-        print(e)
-        curr = time.time() - start
-        print("[", curr, "] : Server exited with manual closure.")
+        logger.log("Server exited with manual closure.", 0, e)

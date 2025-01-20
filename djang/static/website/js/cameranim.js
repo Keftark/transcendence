@@ -45,7 +45,7 @@ export function animateCamera(time, camera, callBack)
         camera.position.y = -yPos;
         camera.lookAt(0, 0, 0);
     }
-
+    // console.log("Camera position: " + camera.position.x + ", " + camera.position.y + ", " + camera.position.z);
     // End the animation after the duration
     if (t >= 1)
     {

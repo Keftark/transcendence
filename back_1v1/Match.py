@@ -30,6 +30,7 @@ class Match:
         self._abandonned = False
         self._ragequitted = False
         self._timer_pause = True
+        self._concluded = False
         self._timer = time.time()
         self._lock = threading.Lock()
         self._message_locker = threading.Lock()
@@ -118,7 +119,10 @@ class Match:
     def tick(self):
         with self._lock:
             self.timer_tick()
-            if (self._ended is True):
+            if self._concluded is True:
+                return
+            elif self._ended is True:
+                self._concluded = True
                 if self._abandonned is True :
                     if self._quitter == self._paddle_1.id:
                         self._message_queue.append(self.dump_abandon(self._paddle_1.id))

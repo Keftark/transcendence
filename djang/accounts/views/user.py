@@ -9,6 +9,7 @@ from accounts.models import *
 from ..serializers import UpdateUserSerializer, UpdatePasswordSerializer
 from rest_framework.generics import UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.decorators import login_required
 
 
 # from django.views.decorators.csrf import csrf_exempt
@@ -233,6 +234,28 @@ def login_user(request):
             return JsonResponse({"message": "Invalid credentials"}, status=400)
 
     return JsonResponse({"message": "Invalid request method"}, status=405)
+
+@login_required
+def upload_avatar(request):
+    print(f"Request method: {request.method}")
+    print(f"Request FIELDS: {request.FILES}")
+
+    if request.method == "POST":
+        if 'fileInput' in request.FILES:
+            profile_picture = request.FILES['fileInput']
+            print(f"Received file: {profile_picture.name} (size: {profile_picture.size} bytes)")
+
+            # Save the file to the user’s avatar field
+            user = request.user
+            user.accountmodel.avatar = profile_picture
+            user.save()
+            return JsonResponse({"message": "Uploaded successfully"}, status=200)
+        else:
+            print("No file found in request.FILES")
+            return JsonResponse({"message": "No file uploaded"}, status=400)
+
+    return JsonResponse({"message": "Invalid request method"}, status=405)
+
 
 class UpdateProfileView(UpdateAPIView):
 

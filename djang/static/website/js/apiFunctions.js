@@ -1,7 +1,7 @@
 import { editPlayerStats } from "./playerManager.js";
 import { clickCancelSignIn } from "./signIn.js";
 
-function getCSRFToken()
+export function getCSRFToken()
 {
     const cookies = document.cookie.split(';');
     for (let cookie of cookies) {
@@ -66,7 +66,7 @@ export async function registerUser()
                 'Content-Type': 'application/json',
                 'X-CSRFToken': getCSRFToken(),
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify(data)
         });
 
         if (!response.ok) {
@@ -183,6 +183,7 @@ export async function getUserName(userId) {
         return;
     }
     try {
+        console.log("Trying to get the user name");
         const response = await fetch(`/username/${userId}/`);
         if (!response.ok) {
             throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);
@@ -215,6 +216,38 @@ export async function getUserAvatar(userName) {
         return userData;
     } catch (error) {
         console.error("An error occurred while fetching the user details:", error);
+    }
+}
+
+export async function uploadAvatar(username, url_picture)
+{
+    const data = new FormData();
+    data.append('username', username);
+    data.append('url', url_picture);
+    console.log("Token: ", getCSRFToken());
+    // console.log(data);
+
+    try {
+        const response = await fetch(`/uploadavatar/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken() // Ensure CSRF protection
+            },
+            body: data
+        });
+
+        // Check if the response is OK (status 200-299)
+        if (!response.ok) {
+            const errorResult = await response.json();  // Parse the error message in JSON
+            alert(errorResult.message);  // Display the error message to the user
+        } else {
+            const result = await response.json();  // Parse the success response in JSON
+            console.log(result);
+        }
+
+    } catch (error) {
+        console.error('Error during upload:', error);
     }
 }
 
@@ -259,7 +292,7 @@ export async function getUserByName(userName) {
         if (userData.error) {
             console.error(userData.error);
         }
-        console.log("user data: " + JSON.stringify(userData));
+        // console.log("user data: " + JSON.stringify(userData));
         return userData;
     } catch (error) {
         console.error("An error occurred while fetching the user details:", error);

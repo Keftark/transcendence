@@ -1,10 +1,10 @@
-import { addFriendFunction, clickBlockUser, receiveMessage, removeFriendFunction, sendSystemMessage } from "./chat.js";
+import { addFriendFunction, clickBlockUser, receiveMessage, removeFriendFunction, sendPubSticker, sendSystemMessage } from "./chat.js";
 import { setDuelTargetPlayer } from "./duelPanel.js";
 import { removeBlockedUser } from "./friends.js";
 import { changeBallSizeInstance, changeBallSpeedInstance, changePlayersSize, getBallPosition } from "./levelLocal.js";
 import { askForDuel } from "./modesSelection.js";
 import { playerStats } from "./playerManager.js";
-import { sendPrivMessage, sendPrivSticker } from "./sockets.js";
+import { socketSendPrivMessage, socketSendPrivSticker } from "./sockets.js";
 
 export const cheatCodes =
 {
@@ -17,7 +17,17 @@ export const cheatCodes =
     "/UNBLOCK" : unblockPlayer,
     "/ADDFRIEND" : addFriend,
     "/REMOVEFRIEND" : deleteFriend,
-    "/GBP" : getBallPos
+    "/GBP" : getBallPos,
+    "/SAD" : () => sendSticker("sticker_sad"),
+    "/HAPPY" : () => sendSticker("sticker_happy"),
+    "/ANGRY" : () => sendSticker("sticker_angry"),
+    "/COOL" : () => sendSticker("sticker_cool"),
+    "/LAUGH" : () => sendSticker("sticker_laugh"),
+    "/LOVE" : () => sendSticker("sticker_love"),
+    "/PUKE" : () => sendSticker("sticker_puke"),
+    "/SLEEP" : () => sendSticker("sticker_sleep"),
+    "/WINK" : () => sendSticker("sticker_tongue_wink"),
+    "/TRASH" : () => sendSticker("sticker_trash")
 }
 
 function changeBallSize(newSize)
@@ -48,23 +58,15 @@ function sendInvitDuel(playerInvit = "")
 function sendPrivateMessage(target = "", message = "")
 {
     // console.log("Message to: " + target + ": " + message);
-    sendPrivMessage(target, message);
+    socketSendPrivMessage(target, message);
     receiveMessage(playerStats.nickname, message, false, true, target);
-    // on check si le player existe dans la bdd et est connecte
-    // si oui, on envoie un message prive et lui seul le recoit.
-    // evidemment, le joueur voit ce qu'il ecrit.
-    // mais peut-etre qu'il faudrait afficher ces messages d'une differente couleur.
 }
 
 function sendPrivateSticker(target = "", message = "")
 {
     // console.log("Message to: " + target + ": " + message);
-    sendPrivSticker(target, message);
+    socketSendPrivSticker(target, message);
     receiveMessage(playerStats.nickname, message, true, true, target);
-    // on check si le player existe dans la bdd et est connecte
-    // si oui, on envoie un message prive et lui seul le recoit.
-    // evidemment, le joueur voit ce qu'il ecrit.
-    // mais peut-etre qu'il faudrait afficher ces messages d'une differente couleur.
 }
 
 function blockPlayer(playerName = "")
@@ -94,4 +96,9 @@ function deleteFriend(playerName = "")
 function getBallPos()
 {
     getBallPosition();
+}
+
+function sendSticker(stickerName = "")
+{
+    sendPubSticker(stickerName);
 }

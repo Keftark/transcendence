@@ -1,4 +1,4 @@
-import { openRules, setCustomRules } from './rules.js';
+import { openRules, setCustomRules, setDefaultRules } from './rules.js';
 import { sendInvitationDuel } from './chat.js';
 import { getLevelState, setLevelState } from './main.js';
 import { LevelMode } from './variables.js';
@@ -6,8 +6,9 @@ import { navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
 import { isInGame, passInfosPlayersToLevel } from './levelLocal.js';
 import { checkAccessModes, isUserLoggedIn } from './registration.js';
-import { askListMatchs, connectToDuel, spectateMatch } from './sockets.js';
+import { socketAskListMatchs, socketConnectToDuel, socketSpectateMatch } from './sockets.js';
 import { onPlayGame } from './menu.js';
+import { getUserName } from './apiFunctions.js';
 
 const modesLocalButton = document.getElementById('modesLocalButton');
 const modesOnlineButton = document.getElementById('modesOnlineButton');
@@ -43,7 +44,7 @@ modeComputerButton.addEventListener('click', () => {
 });
 
 modeDuelButton.addEventListener('click', () => {
-    connectToDuel();
+    socketConnectToDuel();
     closeOnlineModes();
     isInsideModes = false;
     setTimeout(() => {
@@ -266,6 +267,7 @@ export function onModesOpen()
 
 export function clickBackButtonMenu()
 {
+    console.log("Inside modes ?" + isInsideModes);
     if (isInsideModes)
     {
         if (isLocalModes)
@@ -357,10 +359,28 @@ export function getListMatchs(data)
     {
         matchList.style.justifyContent = "start";
         matchList.textContent = "";
-        data.forEach(matchData => {
-            // remplacer id_p1 et id_p2 par name_p1 et name_p2
-            addMatchToList(matchData.room_id, matchData.id_p1, matchData.id_p2);
-          });
+        const matchPromises = data.map(async (matchData) => {
+            try {
+                const [user1, user2] = await Promise.all([
+                    getUserName(matchData.id_p1),
+                    getUserName(matchData.id_p2)
+                ]);
+
+                const nameP1 = user1.username;
+                const nameP2 = user2.username;
+
+                addMatchToList(matchData.room_id, nameP1, nameP2);
+            } catch (error) {
+                console.error("Failed to get user names for match:", matchData, error);
+            }
+        });
+
+        // Wait for all matches to be processed
+        Promise.all(matchPromises).then(() => {
+            if (matchList.children[0]) {
+                matchList.children[0].focus();
+            }
+        });
     }
     matchListIsOpen = true;
     if (matchCount > 0)
@@ -371,7 +391,7 @@ export function getListMatchs(data)
 
 export function openMatchList()
 {
-    askListMatchs();
+    socketAskListMatchs();
     matchList.style.justifyContent = "center";
     matchList.textContent = "Waiting...";
     matchListIsOpen = true;
@@ -406,7 +426,10 @@ function addMatchToList(room_id, idp1, idp2)
         .catch((error) => {
             console.error("Failed to set up players' controllers:", error);
         });
-        spectateMatch(room_id);
+        isInsideModes = false;
+        socketSpectateMatch(room_id);
+        playerStats.room_id = room_id;
+        setDefaultRules();
     });
     matchList.appendChild(matchContainer);
 }

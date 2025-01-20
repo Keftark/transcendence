@@ -7,7 +7,7 @@ import { setScores, addScore, setVisibleScore } from './scoreManager.js';
 import { createLights, createPlayers, setVisibilityRightWall, addLightPlayerReady } from './objects.js';
 import { getLevelState, isAnOnlineMode, setLevelState } from './main.js';
 import { unloadScene } from './unloadScene.js';
-import { setAccessAllDuelsInChat, tryCloseChat } from './chat.js';
+import { addGameStickers, removeGameStickers, setAccessAllDuelsInChat, tryCloseChat } from './chat.js';
 import { addMatchToHistory, getPlayerName, playerStats } from './playerManager.js';
 import { getTranslation } from './translate.js';
 import { createSpaceLevel } from './levelSpace.js';
@@ -20,7 +20,7 @@ import { callVictoryScreen } from './victory.js';
 import { isBoostReadyLeft, isBoostReadyRight, resetBoostBar, useBoost } from './powerUp.js';
 import { createDeathSphere } from './deathSphere.js';
 import { Sparks } from './sparks.js';
-import { matchAlreadyStarted, sendPlayerReady } from './sockets.js';
+import { socketSendPlayerReady, setMatchAlreadyStarted } from './sockets.js';
 import { getUserById } from './apiFunctions.js';
 
 const gameMenuPanel = document.getElementById('gameMenuPanel');
@@ -38,6 +38,13 @@ export const BOUNDARY =
   X_MAX: 40
 }
 
+export let id_players =
+{
+    p1: -1,
+    p2: -1,
+    p3: -1,
+    p4: -1
+}
 
 let rightCtrlPressed = false;
 
@@ -111,6 +118,18 @@ export function setPlayersIds(player1Id, player2Id)
     playersId[1] = player2Id;
     playersId[2] = 0;
     playersId[3] = 0;
+}
+
+export function getPlayerPosition(playerNbr)
+{
+    if (playerNbr === 1)
+        return player1.position;
+    else if (playerNbr === 2)
+        return player2.position;
+    else if (playerNbr === 3)
+        return player3.position;
+    else if (playerNbr === 4)
+        return player4.position;
 }
 
 export function animateBoostPlayers()
@@ -198,10 +217,18 @@ function hideInGameUI()
     controlsP2.style.display = 'none';
 }
 
+function resetIdPlayers()
+{
+    id_players.p4 = id_players.p3 = id_players.p2 = id_players.p1 = -1;
+}
+
 export function unloadLevel()
 {
     if (!scene)
         return;
+    resetIdPlayers();
+    if (isAnOnlineMode(currentLevelMode))
+        removeGameStickers();
     sparks = null;
     currentLevelMode = LevelMode.MENU;
     hideInGameUI();
@@ -214,13 +241,13 @@ export function unloadLevel()
     playerStats.playerController = 1;
     playerProfile1 = null;
     playerProfile2 = null;
-    matchAlreadyStarted = false;
+    setMatchAlreadyStarted(false);
     window.removeEventListener('wheel', camZoomEvent);
 }
 
 export function gameEventsListener(event)
 {
-    if (pressSpaceFunction === null || playerStats.playerController === -1)
+    if (pressSpaceFunction === null || isSpectator())
         return;
 
     if (document.activeElement != inputChat)
@@ -314,7 +341,7 @@ export function setUpCamera()
     return newCamera;
 }
 
-export function setUpScene()
+function setUpScene()
 {
     currentLevelMode = parseInt(localStorage.getItem('levelMode'));
     scene = new THREE.Scene();
@@ -325,13 +352,21 @@ export function setUpScene()
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     document.body.appendChild(renderer.domElement);
+}
+
+function setupInterface()
+{
     document.getElementById('reinitLevelButton').style.display = isAnOnlineMode(currentLevelMode) ? 'none' : 'block';
     document.getElementById('profileButton').style.display = playerStats.isRegistered ? 'block' : 'none';
+    gameMenuPanel.style.display = 'block';
+    showInGameUI();
+    if (isAnOnlineMode(currentLevelMode) && !isSpectator())
+        addGameStickers();
 }
 
 function showInGameUI()
 {
-    if (playerStats.playerController == -1) // laisser les barres visibles ?
+    if (playerStats.playerController === -1) // laisser les barres visibles ?
     {
         controlsP1.style.display = 'none';
         controlsP2.style.display = 'none';
@@ -406,12 +441,10 @@ function setPlayerNames()
     }
 }
 
-export function setUpLevel(scene)
+function setUpLevel(scene)
 {
     const arenaType = getRules().arena;
     const textureLoader = new THREE.TextureLoader();
-    gameMenuPanel.style.display = 'block';
-    showInGameUI();
     [player1, player2, player3, player4] = createPlayers(scene, textureLoader);
     // updatePlayerModel(player1);
     createLights(scene, arenaType);
@@ -589,6 +622,13 @@ function camZoomEvent(event)
     event.preventDefault();
 }
 
+export function isSpectator()
+{
+    if (playerStats.playerController === -1)
+        return true;
+    return false;
+}
+
 export let resetScreenFunction = null;
 
 export function StartLevel(levelMode)
@@ -606,17 +646,30 @@ export function StartLevel(levelMode)
     // removeMainEvents();
     setUpScene();
     setUpLevel(scene);
+    setupInterface();
     sparks = new Sparks(scene);
-    let isBallMoving = false;
+    let isBallMoving = isSpectator() ? true : false;
     let toggleReset = false;
-    let canPressSpace = true;
+    let canPressSpace = isSpectator() ? false: true;
     let lastTimestamp = 0;
+
+    if (isSpectator())
+    {
+        isCameraAnimationComplete = true;
+        camera.position.set(0, 0, 50);
+        camera.lookAt(0, 0, 0);
+        setVisibleScore(true);
+    }
 
     const { updatePlayers } = setupPlayerMovement(player1, player2, player3, player4);
 
-
     resetScreenFunction = function resetScreen(playerNbr, fromScoredPoint = false)
     {
+        if (isSpectator()) // n'ajoute pas le score ?
+        {
+            addScore(playerNbr);
+            return;
+        }
         if (playerNbr != 0)
         {
             screenShake.start(0.7, 400);
@@ -642,6 +695,8 @@ export function StartLevel(levelMode)
     
     resetFunction = function resetGame(resetCam, fromScoredPoint = false, time)
     {
+        if (isSpectator())
+            return;
         canPressSpace = false;
         isBallMoving = false;
         closeGameMenu();
@@ -734,7 +789,7 @@ export function StartLevel(levelMode)
             if (currentLevelMode === LevelMode.ONLINE)
             {
                 isBallMoving = true;
-                sendPlayerReady();
+                socketSendPlayerReady();
             }
             else
             {
@@ -829,8 +884,8 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
     else
         victoryType = VictoryType.EXAEQUO;
 
-
-    addMatchToHistory(victoryType, scorePlayer, scoreOpponent, opponentName, getMatchTime());
+    if (!isSpectator())
+        addMatchToHistory(victoryType, scorePlayer, scoreOpponent, opponentName, getMatchTime());
     pressPlayDiv.style.display = 'none';
     stopStopwatch();
     deathSphereGrew = false;
@@ -843,6 +898,11 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
             winner = player1NameText;
         else if (scoreP1 < scoreP2)
             winner = player2NameText;
+        if (isSpectator())
+        {
+            callVictoryScreen(VictoryType.VICTORY, winner);
+            return;
+        }
         if (forcedVictory)
             callVictoryScreen(VictoryType.VICTORY);
         else if (winner != '')

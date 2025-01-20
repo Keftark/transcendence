@@ -53,6 +53,7 @@
     ":": ": ",
     "addFriendButton": "Add friend",
     "sendMessageButton": "Send message",
+    "sendStickerButton": "Sticker",
     "removeFriendButton": "Remove friend",
     "you": "You",
     "guest": "Guest",

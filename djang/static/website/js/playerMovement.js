@@ -3,7 +3,7 @@ import { getLevelState, isAnOnlineMode } from "./main.js";
 import { isMenuOpen, isSettingsOpen } from "./menu.js";
 import { playerStats } from "./playerManager.js";
 import { resetBoostBar } from "./powerUp.js";
-import { boostPaddle, playerDown, playerDownNot, playerUp, playerUpNot } from "./sockets.js";
+import { socketBoostPaddle, socketPlayerDown, socketPlayerDownNot, socketPlayerUp, socketPlayerUpNot } from "./sockets.js";
 import { LevelMode } from "./variables.js";
 
 const inputChat = document.getElementById('inputChat');
@@ -57,11 +57,11 @@ export function boostPlayer(playerNbr)
 {
     if (playerNbr === 0)
     {
-        boostPaddle();
+        socketBoostPaddle();
     }
     else
     {
-        boostPaddle();
+        socketBoostPaddle();
     }
     showBoostPlayer(playerNbr, true);
 }
@@ -132,8 +132,8 @@ function setPlayer3Bounds(levelState)
 
 export function setupPlayerMovement(player1, player2, player3, player4)
 {
-    if (playerStats.playerController === -1)
-        return null;
+    // if (playerStats.playerController === -1)
+    //     return null;
     let moveUp1 = false;
     let moveDown1 = false;
     let moveUp2 = false;
@@ -220,10 +220,10 @@ export function setupPlayerMovement(player1, player2, player3, player4)
                 if (isDown)
                 {
                     isDown = false;
-                    playerDownNot();
+                    socketPlayerDownNot();
                 }
                 isUp = true;
-                playerUp();
+                socketPlayerUp();
             }
             else
             {
@@ -238,10 +238,10 @@ export function setupPlayerMovement(player1, player2, player3, player4)
                 if (isUp)
                 {
                     isUp = false;
-                    playerUpNot();
+                    socketPlayerUpNot();
                 }
                 isDown = true;
-                playerDown();
+                socketPlayerDown();
             }
             else
             {
@@ -254,12 +254,12 @@ export function setupPlayerMovement(player1, player2, player3, player4)
             if (isUp)
             {
                 isUp = false;
-                playerUpNot();
+                socketPlayerUpNot();
             }
             if (isDown)
             {
                 isDown = false;
-                playerDownNot();
+                socketPlayerDownNot();
             }
         }
 
@@ -317,6 +317,8 @@ export function setupPlayerMovement(player1, player2, player3, player4)
     function updatePlayers(deltaTime)
     {
         animatePlayers(player1, player2);
+        if (playerStats.playerController == -1)
+            return;
         const adjustedSpeed = moveSpeed * (deltaTime / 1000);
         checkPlayer1Movements(adjustedSpeed);
         if (levelState === LevelMode.ADVENTURE)

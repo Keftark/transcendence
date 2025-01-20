@@ -58,6 +58,7 @@ export function updateHTML(translations)
 	document.getElementById('seeMatchesButton').innerText = translations.seeMatchesButton;
 	document.getElementById('addFriendButton').innerText = translations.addFriendButton;
 	document.getElementById('sendMessageButton').innerText = translations.sendMessageButton;
+	document.getElementById('sendStickerButton').innerText = translations.sendStickerButton;
 	document.getElementById('seeProfileButton').innerText = translations.profileButton;
 	document.getElementById('inviteGameButton').innerText = translations.headerDuel;
 	document.getElementById('player1NameDuel').innerText = translations.player1Name;

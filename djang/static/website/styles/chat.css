@@ -346,6 +346,34 @@ button:hover {
     align-items: center;
 }
 
+#stickers-container.centerClass
+{
+    position: fixed !important;
+    max-height: 100%;
+    height: 100% !important;
+    width: 100%;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: center;
+    z-index: 5;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+#stickers-container.centerGameClass
+{
+    position: fixed !important;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: center;
+    z-index: 5;
+    bottom: 4px;
+}
+
 .sticker-chat
 {
     /* display: inline-block; */

@@ -5,7 +5,7 @@ import { navigateTo } from "./pages.js";
 import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
 import { checkAccessToChat } from "./chat.js";
 import { getLoggedInUser, logoutUser, registerUser } from "./apiFunctions.js";
-import { joinChat, quitChat } from "./sockets.js";
+import { socketJoinChat, socketQuitChat } from "./sockets.js";
 import { connectToServer } from "./signIn.js";
 import { showFriendsBox } from "./friends.js";
 
@@ -215,7 +215,7 @@ export async function welcomeBackUser()
 
 export function logInUserUI()
 {
-    joinChat();
+    socketJoinChat();
     replaceLogInButtons();
     removeDisableButtonEffect(profileButton);
     checkAccessIfRegistered();
@@ -252,7 +252,7 @@ function replaceLogOutButtons()
 
 export function clickLogOut()
 {
-    quitChat();
+    socketQuitChat();
     logoutUser();
     replaceLogOutButtons();
     resetPlayerStats();

@@ -4,16 +4,11 @@ import asyncio
 import threading
 import time
 import json
-import sys
-import os
 import random
 import string
-import websockets
 from websockets.asyncio.server import serve
 from websockets.asyncio.client import connect
-from websocket import create_connection
 import signal
-import sys
 import User
 from Logger import Logger
 from signal import SIGPIPE, SIG_DFL
@@ -73,6 +68,7 @@ def key_check(id, key):
 # Transfere la reponse du serveur au client
 async def handle_answers(websocket, event, message):
     global start, userList, logList
+    # print("Got answer ::", event)
     type = event["type"]
     server = event["server"]
     if server == "1v1_classic":
@@ -81,6 +77,12 @@ async def handle_answers(websocket, event, message):
             data = event["data"]
             for user in userList:
                 if user.id == id:
+                    if event["type"] == "list_all":
+                        try:
+                            await user.send(json.dumps(event))
+                        except Exception as e:
+                            logger.log("", 2, e)
+                        continue 
                     try:
                         await user.send(json.dumps(data))
                     except Exception as e:
@@ -105,7 +107,7 @@ async def handle_answers(websocket, event, message):
         for user in userList:
             if user.id != id:
                 await user.send(json.dumps(event))
-    elif type == "room_message":
+    elif type == "room_message" or type == "room_sticker":
         id = (int)(event["id"])
         for user in userList:
             if user.id != id and user.status == event["game"] and user.room == (int)(event["room_id"]):
@@ -135,14 +137,16 @@ async def handle_transfer(websocket, event):
                 break
 
     if server == "chat":
-        if type == "salon_message":
-            for user in userList:
-                if user.id == id:
-                    event["room_id"] = user.room
-                    event["game"] = user.game
+        print("Recieved that ::\t", event)
+        for user in userList:
+            if user.id == id:
+                event["room_id"] = user.room
+                event["game"] = user.game
+        print("Sending that ::\t", event)
         try:
             await chat_socket.send(json.dumps(event))
-        except:
+        except Exception as e:
+            logger.log("", 2, e)
             chat_socket = None
     elif server == "1v1_classic":
         try:
@@ -282,11 +286,6 @@ async def main():
     global stopFlag, start, logger
     global chat_socket, _1v1_socket
     logger.log("Listener thread launched.", 1)
-    #loop = asyncio.get_running_loop()
-    #stop = loop.create_future()
-    #loop.add_signal_handler(signal.SIGINT, stop.set_result, None)
-    #async with serve(handler, "", SERVER_PORT, ping_interval=10, ping_timeout=None):
-    #    await stop  # run forever
     async with serve(handler, "", SERVER_PORT, ping_interval=10, ping_timeout=None):
         await asyncio.get_running_loop().create_future()  # run forever
     stopFlag = True
@@ -303,7 +302,6 @@ if __name__ == "__main__":
         ticker.start()
         connections.start()
         server.start()
-        #asyncio.run(main())
         server.join()
         ticker.join()
         connections.join()
