@@ -9,6 +9,7 @@ from django.utils.translation import gettext as _
 from accounts.models import *
 from ..serializers import UpdateUserSerializer, UpdatePasswordSerializer
 from rest_framework.generics import UpdateAPIView
+from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.decorators import login_required
 from dotenv import load_dotenv

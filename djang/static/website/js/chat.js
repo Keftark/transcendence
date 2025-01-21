@@ -1,6 +1,7 @@
+import { askAddFriend, deleteFriend, getAccountUser } from "./apiFunctions.js";
 import { cheatCodes } from "./cheats.js";
 import { getDuelTargetPlayer, joinDuel } from "./duelPanel.js";
-import { addBlockedUser, addFriend, checkAndRemoveFriend } from "./friends.js";
+import { addBlockedUser, addFriend, addFriendRequest, checkAndRemoveFriend } from "./friends.js";
 import { getPlayerPosition, id_players, isInGame } from "./levelLocal.js";
 import { openMiniProfile } from "./menu.js";
 import { getPlayerName, playerStats } from "./playerManager.js";
@@ -242,42 +243,60 @@ function clickOpenProfile()
 
 export function removeFriendFunction(playerName)
 {
-    const index = playerStats.friends.indexOf(playerName);
-    if (index === -1)
-        return;
+    deleteFriend(playerName);
     sendSystemMessage("youDeletedPlayer", playerName, true);
-    playerStats.friends.splice(index, 1);
     checkAndRemoveFriend(playerName);
+}
+
+export function askAddFriendFunction(playerName)
+{
+    askAddFriend(playerName)
+    .then((response) => {
+        console.log(response);
+        sendSystemMessage("youSendRequest", playerName, true);
+        addFriendRequest(playerName);
+    })
+    .catch((error) => {
+        console.error("Failed to get the friendship relation:", error);
+    });
 }
 
 export function addFriendFunction(playerName)
 {
-    if (playerStats.friends.includes(playerName)) // remplacer ca par la requete serveur, pour plus de securite
-    {
-        sendSystemMessage("alreadyfriend", playerName, true);
-        return;
-    }
     sendSystemMessage("youAddedPlayer", playerName, true);
-    // faire la requete serveur pour ajouter l'id de la personne aux amis
-    playerStats.friends.push(playerName);
     addFriend(playerName);
 }
 
 function clickAddRemoveFriend()
 {
-    if (playerStats.friends.includes(selectedName))
+
+    if (isAFriend)
         removeFriendFunction(selectedName);
     else
-        addFriendFunction(selectedName);
+        askAddFriendFunction(selectedName);
     closeNameContextMenu();
 }
 
+let isAFriend = false;
 function setFriendButtonText()
 {
-    if (playerStats.friends.includes(selectedName))
-        addFriendButton.innerText = getTranslation('removeFriendButton');
-    else
-        addFriendButton.innerText = getTranslation('addFriendButton');
+    getAccountUser("a")
+    .then((response) => {
+        if (response.is_friend === true)
+        {
+            isAFriend = true;
+            addFriendButton.innerText = getTranslation('removeFriendButton');
+        }
+        else
+        {
+            isAFriend = false;
+            addFriendButton.innerText = getTranslation('addFriendButton');
+        }
+        console.log(response);
+    })
+    .catch((error) => {
+        console.error("Failed to get the friendship relation:", error);
+    });
 }
 
 function showFriendButtonIfRegistered()

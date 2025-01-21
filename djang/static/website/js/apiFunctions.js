@@ -1,4 +1,4 @@
-import { editPlayerStats } from "./playerManager.js";
+import { editPlayerStats, playerStats } from "./playerManager.js";
 import { clickCancelSignIn } from "./signIn.js";
 
 export function getCSRFToken()
@@ -27,18 +27,15 @@ export async function logInPlayer(username, password)
             }
         });
 
-        // Check if the response is OK (status 200-299)
         if (!response.ok) {
-            const errorResult = await response.json();  // Parse the error message in JSON
+            const errorResult = await response.json();
             console.error('Login failed:', errorResult.message);
-            alert(errorResult.message);  // Display the error message to the user
+            alert(errorResult.message);
         } else {
-            const result = await response.json();  // Parse the success response in JSON
+            const result = await response.json();
             console.log(result.message);
-            // console.log('User Data:', result.user);
             editPlayerStats(result.user);
             clickCancelSignIn(true);
-            // Handle login success (redirect, show success message, etc.)
         }
 
     } catch (error) {
@@ -362,25 +359,58 @@ export async function getBlockedList() {
     }
 }
 
-export async function isFriendWith(userName) {
+export async function getAccountUser(userName) {
     try {
-        const response = await fetch(`/isfriend/${userName}`, {
-            method: 'GET',
+      // Make a GET request to the retrieve_account view
+      const response = await fetch(`/retrieve_account/${userName}`);
+      
+      // Check if the response is ok (status code 200-299)
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      
+      // Parse the JSON data from the response
+      const data = await response.json();
+      
+      // Return the data
+      return data;
+    } catch (error) {
+      console.error('Error:', error);
+      return null;  // You can return an error object or null if needed
+    }
+  }
+
+export async function askAddFriend(userName) {
+    try {
+        const response = await fetch(`/send_friend_request/${userName}`, {
+            method: 'POST',
             headers: {
+                'Content-Type': 'application/json',
                 'X-CSRFToken': getCSRFToken()
-            },
-            body: userName
+            }
         });
         if (!response.ok) {
-            throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);
+        throw new Error('Network response was not ok');
         }
-        const userData = await response.json();
-        if (userData.error) {
-            console.error(userData.error);
-        }
-        return userData;
     } catch (error) {
-        console.error("An error occurred while fetching the user details:", error);
+        console.error('Error:', error);
+    }
+}
+
+export async function deleteFriend(userName) {
+    try {
+        const response = await fetch(`/delete_friend/${userName}`, {
+            method: 'DELETE', // Specify DELETE method
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            }
+        });
+        if (!response.ok) {
+        throw new Error('Network response was not ok');
+        }
+    } catch (error) {
+        console.error('Error:', error);
     }
 }
 
@@ -407,3 +437,4 @@ export async function getAddress() {
         console.error("An error occurred while fetching the address:", error);
     }
 }
+

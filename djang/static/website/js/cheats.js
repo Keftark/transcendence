@@ -1,4 +1,4 @@
-import { addFriendFunction, clickBlockUser, receiveMessage, removeFriendFunction, sendPubSticker, sendSystemMessage } from "./chat.js";
+import { askAddFriendFunction, clickBlockUser, receiveMessage, removeFriendFunction, sendPubSticker, sendSystemMessage } from "./chat.js";
 import { setDuelTargetPlayer } from "./duelPanel.js";
 import { removeBlockedUser } from "./friends.js";
 import { changeBallSizeInstance, changeBallSpeedInstance, changePlayersSize, getBallPosition } from "./levelLocal.js";
@@ -84,7 +84,7 @@ function unblockPlayer(playerName = "")
 function addFriend(playerName = "")
 {
     if (playerName != "")
-        addFriendFunction(playerName);
+        askAddFriendFunction(playerName);
 }
 
 function deleteFriend(playerName = "")

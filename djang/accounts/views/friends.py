@@ -23,11 +23,11 @@ class EditFriendView(APIView):
     def get_object(self):
         return self.request.user.accountmodel
 
-    def post(self, request, pk=None):
+    def post(self, request, username=None):
         user_profile: AccountModel = self.get_object()
-        friend_profile = get_object_or_404(AccountModel, pk=pk)
+        friend_profile = get_object_or_404(AccountModel, user__username=username)
 
-        if user_profile.pk == pk:
+        if user_profile.user.username == username:
             return Response(_('You can\'t be friend with yourself.'), status.HTTP_400_BAD_REQUEST)
 
         if user_profile.is_friend(friend_profile):
@@ -46,9 +46,9 @@ class EditFriendView(APIView):
         notification_manager.notify_friend_request(friend_profile.user, user_profile)
         return Response(_('Friend request sent.'), status.HTTP_200_OK)
 
-    def delete(self, request, pk=None):
+    def delete(self, request, username=None):
         user_profile = self.get_object()
-        friend_profile = get_object_or_404(AccountModel, pk=pk)
+        friend_profile = get_object_or_404(AccountModel, user__username=username)
 
         outgoing_request = user_profile.get_outgoing_friend_request_to(friend_profile)
         if outgoing_request:

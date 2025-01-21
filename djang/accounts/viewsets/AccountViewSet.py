@@ -16,11 +16,11 @@ class AccountViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request, username=None):
         user = get_object_or_404(User, username=username)
-        return Response(self.serializer_class(user.account, context={'user': request.user}).data)
+        return Response(self.serializer_class(user.accountmodel, context={'user': request.user}).data)
 
     def retrieve_id(self, request, pk=None):
         user = get_object_or_404(User, pk=pk)
-        return Response(self.serializer_class(user.account, context={'user': request.user}).data)
+        return Response(self.serializer_class(user.accountmodel, context={'user': request.user}).data)
 
     def list(self, request):
         serializer = AccountSerializer(self.get_queryset(), many=True, context={'user': request.user})
