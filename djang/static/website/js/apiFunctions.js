@@ -361,3 +361,49 @@ export async function getBlockedList() {
         console.error("An error occurred while fetching the user details:", error);
     }
 }
+
+export async function isFriendWith(userName) {
+    try {
+        const response = await fetch(`/isfriend/${userName}`, {
+            method: 'GET',
+            headers: {
+                'X-CSRFToken': getCSRFToken()
+            },
+            body: userName
+        });
+        if (!response.ok) {
+            throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);
+        }
+        const userData = await response.json();
+        if (userData.error) {
+            console.error(userData.error);
+        }
+        return userData;
+    } catch (error) {
+        console.error("An error occurred while fetching the user details:", error);
+    }
+}
+
+export async function getAddress() {
+    try {
+        // Send a GET request to /get_address/ endpoint
+        const response = await fetch(`/get_address/`);
+
+        // Check if the response is OK (status 200)
+        if (!response.ok) {
+            throw new Error(`Failed to fetch address: ${response.status} ${response.statusText}`);
+        }
+
+        // Parse the response as JSON
+        const data = await response.json();
+
+        // Check if the data contains HOST_ADDRESS
+        if (data.HOST_ADDRESS) {
+            return data.HOST_ADDRESS;  // Return the value
+        } else {
+            console.error("HOST_ADDRESS is missing in the response");
+        }
+    } catch (error) {
+        console.error("An error occurred while fetching the address:", error);
+    }
+}

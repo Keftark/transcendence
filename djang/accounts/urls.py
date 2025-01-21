@@ -15,6 +15,7 @@ from .views.friends import (GetFriendsView,
 
 
 urlpatterns = [
+    path('get_address/', user.get_address, name='get_address'),
     path("", user.index, name="home"),
     path('home', user.index, name='home'),
     path('register', user.register_user, name='register_user'),
@@ -45,6 +46,7 @@ urlpatterns = [
     path("settings", MyAccountViewSet.as_view({'patch': 'partial_update', 'delete': 'delete_avatar'}), name="my_profile_page"), #Update account page
     path("friends", GetFriendsView.as_view(), name="friends_list_page"), # Friends list page
     path("blocked", GetBlocksView.as_view(), name="blocks_list_page"), # Friends list page
+    # path("isfriend/<str:username>/", user.AccountModel.is_friend(user.AccountModel), name="is_friend"), # is friend with
     path("friends/<int:pk>", EditFriendView.as_view(), name="friends_edit_page"), # Edit friend (remove friend)
     path("incoming_friend_requests", GetIncomingFriendRequestView.as_view(), name="incoming_friend_requests"), #list of incoming friends requests
     path("outgoing_friend_requests", GetOutgoingFriendRequestView.as_view(), name="outgoing_friend_requests"), #list of outgoing friends requests

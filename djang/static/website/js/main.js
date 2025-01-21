@@ -13,6 +13,7 @@ import { clickBackButtonMenu, closeMatchList, isMatchListOpen } from './modesSel
 import { addSocketListener } from './sockets.js';
 import { closePaddleChoice, isPaddleChoiceOpen } from './customizeSkins.js';
 import { clickCancelSignIn, isSigninOpen } from './signIn.js';
+import { getAddress } from './apiFunctions.js';
 
 let levelMode = LevelMode.MENU;
 
@@ -154,12 +155,20 @@ export function isElementVisible(element) {
 export let socket = null;
 export let listener = null;
 
-function openSocket()
+function openSocket(ip)
 {
-    socket = new WebSocket('ws://10.11.200.161:7777/ws/');
-    listener = new WebSocket('ws://10.11.200.161:7777/ws/');
-    // socket = new WebSocket('ws://10.11.200.72:7777/ws/');
-    // listener = new WebSocket('ws://10.11.200.72:7777/ws/');
+    // pour le docker
+    console.log(ip);
+    socket = new WebSocket(`ws://${ip}:7777/ws/`);
+    listener = new WebSocket(`ws://${ip}:7777/ws/`);
+
+    // cluster lumineux
+    // socket = new WebSocket('ws://10.11.200.161:7777/ws/');
+    // listener = new WebSocket('ws://10.11.200.161:7777/ws/');
+
+    // cluster sombre
+    // socket = new WebSocket(`ws://10.12.200.194:7777/ws/`);
+    // listener = new WebSocket(`ws://10.12.200.194:7777/ws/`);
     
     socket.onopen = function() {
         console.log("WebSocket connected");
@@ -196,7 +205,15 @@ setLanguageButtons();
 
 focusOldButton();
 
-openSocket();
+document.addEventListener("DOMContentLoaded", function() {
+    getAddress()
+        .then(data => {
+            openSocket(data);
+        })
+        .catch(error => {
+            console.error('Error getting address:', error);
+        });
+});
 
 // IsLoggedIn();
 

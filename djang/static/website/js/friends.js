@@ -168,6 +168,55 @@ export function addFriend(userName)
     friendsList.appendChild(newDiv);
 }
 
+function acceptFriend(friendDiv)
+{
+    // on enleve la demande dans la bdd
+    // on ajoute l'ami dans la bdd
+    friendDiv.remove();
+}
+
+function refuseFriend(friendDiv)
+{
+    // on enleve la demande dans la bdd
+    friendDiv.remove();
+}
+
+export function addFriendRequest(userName)
+{
+    const newDiv = document.createElement('div');
+    newDiv.setAttribute('name', userName);
+    newDiv.classList.add('friendDiv');
+    newDiv.classList.add('askFriendDiv');
+    const nameHeader = document.createElement('h3');
+    nameHeader.textContent = userName + getTranslation('wantsfriend');
+    nameHeader.style.color = playerStats.colors;
+    newDiv.appendChild(nameHeader);
+    const buttonsDiv = document.createElement('div');
+    buttonsDiv.classList.add('friendRequestButtonsDiv');
+    const buttonAccept = document.createElement('button');
+    buttonAccept.classList.add('friendRequestButton');
+    const acceptImg = document.createElement('img');
+    acceptImg.src = '../static/icons/accept.webp';
+    acceptImg.classList.add('redCrossButtonImg');
+    buttonAccept.appendChild(acceptImg);
+    buttonAccept.addEventListener('click', function() {
+        acceptFriend(newDiv);
+    });
+    buttonsDiv.appendChild(buttonAccept);
+    const buttonRefuse = document.createElement('button');
+    buttonRefuse.classList.add('friendRequestButton');
+    const redCrossImg = document.createElement('img');
+    redCrossImg.src = '../static/icons/realRedCross.webp';
+    redCrossImg.classList.add('redCrossButtonImg');
+    buttonRefuse.appendChild(redCrossImg);
+    buttonRefuse.addEventListener('click', function() {
+        refuseFriend(newDiv);
+    });
+    buttonsDiv.appendChild(buttonRefuse);
+    newDiv.appendChild(buttonsDiv);
+    friendsList.insertBefore(newDiv, friendsList.firstChild);
+}
+
 export function addBlocked(userName)
 {
     const newDiv = document.createElement('div');
@@ -189,7 +238,7 @@ export function loadFriends()
         getFriendsList()
             .then(list => {
                 list.forEach(element => {
-                    addFriend(element.username);
+                    addFriendRequest(element.username);
                 });
                 resolve(); // Resolve when done
             })

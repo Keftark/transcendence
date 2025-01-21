@@ -1,14 +1,13 @@
 import { cheatCodes } from "./cheats.js";
-import { isInTheDatabase, searchDatabase } from "./database.js";
 import { getDuelTargetPlayer, joinDuel } from "./duelPanel.js";
 import { addBlockedUser, addFriend, checkAndRemoveFriend } from "./friends.js";
 import { getPlayerPosition, id_players, isInGame } from "./levelLocal.js";
-import { openProfile } from "./menu.js";
+import { openMiniProfile } from "./menu.js";
 import { getPlayerName, playerStats } from "./playerManager.js";
 import { getRules, resetInputfieldsRules } from "./rules.js";
-import { socketJoinChat, socketSendMessage, socketSendPrivSticker, socketSendPublicSticker, socketSendSalonSticker } from "./sockets.js";
+import { socketSendMessage, socketSendPrivSticker, socketSendPublicSticker, socketSendSalonSticker } from "./sockets.js";
 import { getTranslation } from "./translate.js";
-import { ArenaType, LevelMode } from "./variables.js";
+import { ArenaType } from "./variables.js";
 
 const messagesContainer = document.getElementById('messages');
 const inputElement = document.getElementById('inputChat');
@@ -237,13 +236,8 @@ function clickPlayWith()
 
 function clickOpenProfile()
 {
-    const player = searchDatabase(selectedName);
-    if (player === null)
-    {
-        console.error("error: the player " + selectedName + " doesn't exist");
-        return;
-    }
-    openProfile(player);
+    console.log("Trying to open the " + selectedName + " profile");
+    openMiniProfile(selectedName);
 }
 
 export function removeFriendFunction(playerName)
@@ -482,7 +476,7 @@ function checkNewMessage()
 
 export function receiveMessage(playerName, message, isASticker, isPrivate = false, toPlayer = "")
 {
-    console.log("Receiving message from: " + playerName + ": " + message + ". Sticker: " + isASticker + ". Private: " + isPrivate + ". To player: " + toPlayer);
+    // console.log("Receiving message from: " + playerName + ": " + message + ". Sticker: " + isASticker + ". Private: " + isPrivate + ". To player: " + toPlayer);
     const newMessage = createMessageElement(playerName, message, isPrivate, isASticker);
     if (playerName === playerStats.nickname)
     {

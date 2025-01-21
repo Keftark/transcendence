@@ -112,6 +112,16 @@
     padding: 6px;
 }
 
+.askFriendDiv
+{
+    border: 3px solid #675e4c;
+}
+
+.askFriendDiv:hover
+{
+    border: 3px solid #bf984c !important;
+}
+
 .friendDiv:hover
 {
     background-color: #3d4053;
@@ -147,4 +157,27 @@
 .removeBlockedButton:hover
 {
     filter: hue-rotate(240deg) brightness(200%);
+}
+
+.friendRequestButtonsDiv
+{
+    height: 70%;
+    width: 4rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.friendRequestButton
+{
+    width: 1.5rem;
+    padding: 0;
+    background: none;
+    border: none;
+}
+
+.friendRequestButton:hover
+{
+    filter: brightness(200%);
+    background: none;
 }

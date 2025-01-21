@@ -1,4 +1,5 @@
 from django.shortcuts import render
+import os
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.http import JsonResponse
@@ -10,7 +11,10 @@ from ..serializers import UpdateUserSerializer, UpdatePasswordSerializer
 from rest_framework.generics import UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.decorators import login_required
+from dotenv import load_dotenv
 
+# Load environment variables from .env file
+load_dotenv()
 
 # from django.views.decorators.csrf import csrf_exempt
 import json
@@ -54,6 +58,11 @@ def tournament_join(request):
 def index(request):
     return render(request, 'index.html', {})
 
+def get_address(request):
+    HOST_ADDRESS = os.getenv('HOST_ADDRESS', 'default_value')
+    if not HOST_ADDRESS:
+        return JsonResponse({'error': 'HOST_ADDRESS not found in .env'}, status=500)
+    return JsonResponse({'HOST_ADDRESS': HOST_ADDRESS})
 
 def register_user(request):
     if request.method == 'POST':

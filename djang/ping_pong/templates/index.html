@@ -23,6 +23,12 @@
     <link rel="stylesheet" href="{% static './styles/friends.css' %}">
     <link rel="stylesheet" href="{% static './styles/choosePaddle.css' %}">
     <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
+    <script>
+        window.env = {
+            HOST_ADDRESS: "{{ HOST_ADDRESS }}"
+        };
+    </script>
+
 </head>
 <body>
     <script type="module" src="{% static 'js/rules.js' %}"></script>
