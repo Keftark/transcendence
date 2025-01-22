@@ -149,12 +149,20 @@ def pong():
     }
     return event
 
+async def send_server(data):
+    global central_socket
+    try:
+        await central_socket.send(json.dumps(data))
+    except Exception as e:
+        logger.log("", 2, e)
+        central_socket = None
+
 async def send_to_central():
     global message_queue, central_socket, lock, lock_a
     for message in message_queue:
         if central_socket is not None:  
             try:
-                await central_socket.send(json.dumps(message))
+                await send_server(message)
                 message_queue.remove(message)
             except Exception as e:
                 central_socket = None
@@ -197,8 +205,8 @@ async def handler(websocket):
     try:
         async for message in websocket:
             event = json.loads(message)
-            if (event["type"] == "ping"):
-                await central_socket.send(json.dumps(pong()))
+            if event["type"] == "ping":
+                await send_server(pong())
             elif (event["type"] == "join"):
                 logger.log("Join request from client ID ::" + str(event["id"]), 1)
                 if (not queue.add_to_queue(event)):
