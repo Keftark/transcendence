@@ -29,11 +29,11 @@ class EditBlocksView(APIView):
     def get_object(self):
         return self.request.user.accountmodel
 
-    def post(self, request, pk=None):
+    def post(self, request, username=None):
         user_profile = self.get_object()
-        blocked_profile = get_object_or_404(AccountModel, pk=pk)
+        blocked_profile = get_object_or_404(AccountModel, user__username=username)
 
-        if user_profile.pk == pk:
+        if user_profile.user.username == username:
             return Response(_('You can\'t block yourself.'), status.HTTP_400_BAD_REQUEST)
 
         if BlockModel.objects.filter(blocker=user_profile, blocked=blocked_profile):
@@ -42,11 +42,11 @@ class EditBlocksView(APIView):
         BlockModel(blocker=user_profile, blocked=blocked_profile).save()
         return Response(_('User successfully blocked.'), status.HTTP_201_CREATED)
 
-    def delete(self, request, pk=None):
+    def delete(self, request, username=None):
         user_profile = self.get_object()
-        blocked_profile = get_object_or_404(AccountModel, pk=pk)
+        blocked_profile = get_object_or_404(AccountModel, user__username=username)
 
-        if user_profile.pk == pk:
+        if user_profile.username == username:
             return Response(_('You can\'t unblock yourself.'), status.HTTP_400_BAD_REQUEST)
 
         block_record = BlockModel.objects.filter(blocker=user_profile, blocked=blocked_profile).first()

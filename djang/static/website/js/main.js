@@ -78,8 +78,7 @@ export function checkEscapeKey()
 
 function changeCursors()
 {
-    
-    const buttons = document.querySelectorAll('button, input[type="checkbox"], .arena, #showPasswordButton, #showConfirmPasswordButton, #header-title, #profilePictureChangeButton, a, #askSignIn, #askRegister');
+    const buttons = document.querySelectorAll('button, input[type="checkbox"], .arena, #showPasswordButton, #showConfirmPasswordButton, #header-title, #profilePictureChangeButton, a, #askSignIn, #askRegister, #friendsHeader');
     buttons.forEach(button => {
         button.style.cursor = "url('./static/icons/cursor-button.webp'), pointer";
     });
@@ -158,13 +157,13 @@ export let listener = null;
 function openSocket(ip)
 {
     // pour le docker
-    console.log(ip);
-    socket = new WebSocket(`wss://${ip}:7777/`);
-    listener = new WebSocket(`wss://${ip}:7777/`);
+    // console.log(ip);
+    // socket = new WebSocket(`ws://${ip}:7777/ws/`);
+    // listener = new WebSocket(`ws://${ip}:7777/ws/`);
 
     // cluster lumineux
-    // socket = new WebSocket('ws://10.11.200.161:7777/ws/');
-    // listener = new WebSocket('ws://10.11.200.161:7777/ws/');
+    socket = new WebSocket('ws://10.11.200.72:7777/ws/');
+    listener = new WebSocket('ws://10.11.200.72:7777/ws/');
 
     // cluster sombre
     // socket = new WebSocket(`ws://10.12.200.194:7777/ws/`);

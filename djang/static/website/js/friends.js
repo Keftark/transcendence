@@ -1,5 +1,5 @@
-import { getBlockedList, getFriendsList } from "./apiFunctions.js";
-import { openNameContextMenu, removeFriendFunction, restoreMessagesFromUser, sendSystemMessage } from "./chat.js";
+import { blockUserRequest, getBlockedList, getFriendsList } from "./apiFunctions.js";
+import { askAddFriendFunction, hideMessagesFrom, openNameContextMenu, removeFriendFunction, restoreMessagesFromUser, sendSystemMessage } from "./chat.js";
 import { playerStats } from "./playerManager.js";
 import { getTranslation } from "./translate.js";
 
@@ -108,9 +108,8 @@ export function removeBlockedUser(userName)
     }
 }
 
-export function addBlockedUser(userName)
+export function addBlockedUserDiv(userName)
 {
-    console.log(userName);
     const newDiv = document.createElement('div');
     newDiv.setAttribute('name', userName);
     newDiv.classList.add('friendDiv');
@@ -127,7 +126,6 @@ export function addBlockedUser(userName)
     newDiv.appendChild(removeButton);
 
     blockedList.appendChild(newDiv);
-    removeFriendFunction(userName);
 }
 
 function getPlayerStatus(userName)
@@ -147,11 +145,11 @@ function setPlayerStatusImg(statusNbr, divStatus)
 }
 
 // check avant si le joueur existe dans la bdd. si non, on n'ajoute rien
-export function addFriend(userName)
+export function addFriendDiv(userName)
 {
     const newDiv = document.createElement('div');
-    newDiv.addEventListener('click', function() {
-        openNameContextMenu(userName, newDiv);
+    newDiv.addEventListener('click', function(event) {
+        openNameContextMenu(userName, event.pageX, event.pageY);
     });
     newDiv.setAttribute('name', userName);
     newDiv.classList.add('friendDiv');
@@ -168,10 +166,11 @@ export function addFriend(userName)
     friendsList.appendChild(newDiv);
 }
 
-function acceptFriend(friendDiv)
+function acceptFriend(friendDiv, playerName)
 {
     // on enleve la demande dans la bdd
     // on ajoute l'ami dans la bdd
+    askAddFriendFunction(playerName);
     friendDiv.remove();
 }
 
@@ -179,6 +178,19 @@ function refuseFriend(friendDiv)
 {
     // on enleve la demande dans la bdd
     friendDiv.remove();
+}
+
+export function addOutgoingFriendRequest(userName)
+{
+    const newDiv = document.createElement('div');
+    newDiv.setAttribute('name', userName);
+    newDiv.classList.add('friendDiv');
+    newDiv.classList.add('outgoingFriendDiv');
+    const nameHeader = document.createElement('h3');
+    nameHeader.textContent = getTranslation('requestSent') + userName;
+    nameHeader.style.color = playerStats.colors;
+    newDiv.appendChild(nameHeader);
+    friendsList.insertBefore(newDiv, friendsList.firstChild);
 }
 
 export function addFriendRequest(userName)
@@ -200,7 +212,7 @@ export function addFriendRequest(userName)
     acceptImg.classList.add('redCrossButtonImg');
     buttonAccept.appendChild(acceptImg);
     buttonAccept.addEventListener('click', function() {
-        acceptFriend(newDiv);
+        acceptFriend(newDiv, userName);
     });
     buttonsDiv.appendChild(buttonAccept);
     const buttonRefuse = document.createElement('button');
@@ -217,20 +229,20 @@ export function addFriendRequest(userName)
     friendsList.insertBefore(newDiv, friendsList.firstChild);
 }
 
-export function addBlocked(userName)
-{
-    const newDiv = document.createElement('div');
-    newDiv.addEventListener('click', function() {
-        openNameContextMenu(userName, newDiv);
-    });
-    newDiv.setAttribute('name', userName);
-    newDiv.classList.add('friendDiv');
-    const nameHeader = document.createElement('h3');
-    nameHeader.textContent = userName;
-    nameHeader.style.color = playerStats.colors;
-    newDiv.appendChild(nameHeader);
-    blockedList.appendChild(newDiv);
-}
+// export function addBlocked(userName)
+// {
+//     const newDiv = document.createElement('div');
+//     newDiv.addEventListener('click', function(event) {
+//         openNameContextMenu(userName, event.pageX, event.pageY);
+//     });
+//     newDiv.setAttribute('name', userName);
+//     newDiv.classList.add('friendDiv');
+//     const nameHeader = document.createElement('h3');
+//     nameHeader.textContent = userName;
+//     nameHeader.style.color = playerStats.colors;
+//     newDiv.appendChild(nameHeader);
+//     blockedList.appendChild(newDiv);
+// }
 
 export function loadFriends()
 {
@@ -238,13 +250,13 @@ export function loadFriends()
         getFriendsList()
             .then(list => {
                 list.forEach(element => {
-                    addFriendRequest(element.username);
+                    addFriendDiv(element.username);
                 });
-                resolve(); // Resolve when done
+                resolve();
             })
             .catch(error => {
                 console.error("Error fetching friends list:", error);
-                reject(error); // Reject if an error occurs
+                reject(error);
             });
     });
 }
@@ -255,14 +267,49 @@ export function loadBlocks()
         getBlockedList()
             .then(list => {
                 list.forEach(element => {
-                    addBlocked(element.username);
+                    addBlockedUserDiv(element.username);
                 });
-                resolve(); // Resolve when done
+                resolve();
             })
             .catch(error => {
                 console.error("Error fetching friends list:", error);
-                reject(error); // Reject if an error occurs
+                reject(error);
             });
+    });
+}
+
+export function deleteAllFriendRequests()
+{
+    while (friendsList.firstChild)
+        friendsList.removeChild(friendsList.firstChild);
+    while (blockedList.firstChild)
+        blockedList.removeChild(blockedList.firstChild);
+}
+
+export function addFriend(playerName)
+{
+    addFriendDiv(playerName);
+    sendSystemMessage("youAddedPlayer", playerName, true);
+}
+
+export function blockUser(playerName)
+{
+    blockUserRequest(playerName)
+    .then((response) => {
+        if (response.status === 201) // ajout blocked
+        {
+            sendSystemMessage("youBlockedPlayer", playerName, true);
+            hideMessagesFrom(playerName);
+            addBlockedUserDiv(playerName);
+            removeFriendFunction(playerName); // seulement s'ils sont amis ??
+            // envoyer un signal a l'autre joueur pour lui dire qu'il a un nouvel ami
+            // ensuite on cree le div avec addFriend()
+        }
+        else if (response.status == 409)
+            sendSystemMessage("youAlreadyBlocked", playerName, true);
+    })
+    .catch((error) => {
+        console.error("Failed to get the friendship relation:", error);
     });
 }
 
