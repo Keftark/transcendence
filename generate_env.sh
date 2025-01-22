@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-echo "HOST_ADDRESS=$(hostname -I | cut -d ' ' -f 1)" > .env
+echo "HOST_ADDRESS=$(ip addr | awk '/enp0s3/{f=1} f && /inet/{print $2; exit}' | cut -d'/' -f1)" > .env
 
 echo "UPDATE_DELAY=0.16" >> .env
 echo "PORT_DJANGO=8000" >> .env

@@ -68,6 +68,7 @@ def dump_all_matchs(id):
         "answer": "yes",
         "ids": [id],
         "id": id,
+        "ids": [id],
         "data": event
     }
     return data
@@ -80,6 +81,7 @@ def search_for_player(id):
                 "result": "found_in_match",
                 "server": "1v1_classic",
                 "answer": "yes",
+                "ids": [id],
                 "room_id": m.room_id
             }
             return event
@@ -89,6 +91,7 @@ def search_for_player(id):
                 "type": "search_request",
                 "server": "1v1_classic",
                 "answer": "yes",
+                "ids": [id],
                 "result": "found_in_queue"
             }
             return event
@@ -96,6 +99,7 @@ def search_for_player(id):
         "type": "search_request",
         "server": "1v1_classic",
         "answer": "yes",
+        "ids": [id],
         "result": "not_found"
     }
     return event
@@ -242,7 +246,7 @@ async def connection_handler():
         if central_socket is None:
             try:
                 logger.log("Attempting connection to central server.", 1)
-                connex = "ws://localhost:" + str(CENTRAL_PORT) + "/"
+                connex = "ws://172.17.0.1:" + str(CENTRAL_PORT) + "/"
                 central_socket = await connect(connex, ping_interval=10, ping_timeout=None)
                 logger.log("TCentral server connected.", 1)
             except Exception as e:
