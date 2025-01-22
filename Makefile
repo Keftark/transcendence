@@ -39,6 +39,27 @@ re:
 	docker compose down
 	docker compose up --build -d
 
+#recreates the SSL keys (might need sudo)
+key:
+	openssl req -x509 -newkey rsa:4096 -days 365 -nodes \
+		-keyout cponmamju2.fr_key.pem -out cponmamju2.fr_key.pem -sha256 \
+		-subj "/C=FR/ST=76RPZ/L=LeHavre/O=42 Le Havre/CN=cponmamju.fr" \
+		--addext 'subjectAltName=IP:172.17.0.1'
+	openssl req -x509 -newkey rsa:4096 -days 365 -nodes \
+		-keyout cponmamju.fr_key.pem -out cponmamju.fr_cert.pem \
+		-sha256 -subj "/C=FR/ST=76RPZ/L=LeHavre/O=42 Le Havre/CN=cponmamju.fr"
+
+#Redistribute keys and Logger.py to all subprojects
+update:
+	cp Logger.py central/
+	cp cponmamju2.fr_key.pem central/
+	cp Logger.py back_1v1/
+	cp cponmamju2.fr_key.pem back_1v1/
+	cp Logger.py chat/
+	cp cponmamju2.fr_key.pem chat/
+	cp cponmamju.fr_cert.pem nginx/
+	cp cponmamju.fr_key.pem nginx/
+
 #Print docker's statuses
 status:
 	docker ps
