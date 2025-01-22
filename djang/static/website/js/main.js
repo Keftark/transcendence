@@ -159,8 +159,8 @@ function openSocket(ip)
 {
     // pour le docker
     console.log(ip);
-    socket = new WebSocket(`ws://${ip}:7777/ws/`);
-    listener = new WebSocket(`ws://${ip}:7777/ws/`);
+    socket = new WebSocket(`wss://${ip}:7777/`);
+    listener = new WebSocket(`wss://${ip}:7777/`);
 
     // cluster lumineux
     // socket = new WebSocket('ws://10.11.200.161:7777/ws/');
