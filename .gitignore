@@ -5,3 +5,5 @@
 db.sqlite3
 **/migrations/**
 account.js
+djang/static/website/images/*.png
+djang/static/website/icons/*.png
