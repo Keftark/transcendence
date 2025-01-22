@@ -16,8 +16,8 @@ from dataclasses import dataclass
 from websockets.asyncio.server import serve
 from websockets.asyncio.client import connect
 from websockets.exception import InvalidURI, OSError, InvalidHandshake, TimeoutError
-import User
-from Logger import Logger
+import central.user as user
+from logger import Logger
 signal.signal(SIGPIPE,SIG_DFL)
 
 start = time.time()
@@ -231,7 +231,7 @@ async def handle_log(websocket, event):
                 await user.send(json.dumps(user.dump_key()))
             break
     if flag is False:
-        user = User.User()
+        user = user.User()
         user.id = id
         user.name = event["name"]
         if event["socket"] == "input":
@@ -282,7 +282,7 @@ async def handler(websocket):
                 await handle_log(websocket, event)
             elif event["answer"] == "yes":
                 await handle_answers(event)
-            elif (event["server"] != "main"):
+            elif event["server"] != "main":
                 await handle_transfer(event)
             else : #Commandes de serveur ...
                 await handle_commands(websocket, event)

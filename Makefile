@@ -51,15 +51,15 @@ key:
 
 #Redistribute keys and Logger.py to all subprojects
 update:
-	cp Logger.py central/
+	cp logger.py central/
 	cp cponmamju2.fr_key.pem central/
-	cp Logger.py back_1v1/
+	cp logger.py back_1v1/
 	cp cponmamju2.fr_key.pem back_1v1/
-	cp Logger.py chat/
+	cp logger.py chat/
 	cp cponmamju2.fr_key.pem chat/
 	cp cponmamju.fr_cert.pem nginx/
 	cp cponmamju.fr_key.pem nginx/
-	
+
 	cp cponmamju.fr_cert.pem djang/
 	cp cponmamju.fr_key.pem djang/
 	cp cponmamju2.fr_key.pem djang/

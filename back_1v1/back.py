@@ -9,7 +9,7 @@ from websockets.asyncio.server import serve
 from websockets.asyncio.client import connect
 import sys
 import signal
-from Logger import Logger
+from logger import Logger
 import ssl 
 import pathlib
 

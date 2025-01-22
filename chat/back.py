@@ -1,17 +1,18 @@
+"""Main file for chat server."""
 #!/usr/bin/env python
 
 import asyncio
-import Socket
 import sys
 import json
-from websockets.asyncio.server import serve
-from websockets.asyncio.client import connect
 import signal
 import threading
-import Logger
-import ssl 
+import ssl
 import pathlib
-from signal import SIGPIPE, SIG_DFL
+from signal import SIGPIPE
+import Socket
+import logger
+from websockets.asyncio.server import serve
+from websockets.asyncio.client import connect
 
 signal.signal(SIGPIPE, 0)
 
@@ -20,7 +21,7 @@ CENTRAL_PORT = 7777
 
 Users = []
 
-logger = Logger.Logger()
+logger = logger.Logger()
 
 stopFlag = False
 
