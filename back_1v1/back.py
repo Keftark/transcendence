@@ -79,7 +79,6 @@ def dump_all_matchs(id):
         "answer": "yes",
         "ids": [id],
         "id": id,
-        "ids": [id],
         "data": event
     }
     return data
