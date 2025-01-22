@@ -12,6 +12,8 @@ import signal
 import User
 from Logger import Logger
 from signal import SIGPIPE, SIG_DFL
+import pathlib 
+import ssl
 signal.signal(SIGPIPE,SIG_DFL)
 
 start = time.time()
@@ -26,6 +28,14 @@ chat_socket = None
 _1v1_socket = None
 
 logger = Logger()
+
+localhost_pem = pathlib.Path(__file__).with_name("cponmamju2.fr_key.pem")
+#loads up ssl crap
+ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+ssl_context.load_cert_chain(localhost_pem)
+#loads up ssl crap but for clients
+ssl_client = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+ssl_client.load_verify_locations(localhost_pem)
 
 def dump_health():
     global chat_socket, _1v1_socket
@@ -239,13 +249,13 @@ def ping():
     return event
 
 async def connection_loop():
-    global start, stopFlag, logger
+    global start, stopFlag, logger, ssl_client
     global chat_socket, _1v1_socket
     while stopFlag is False:
         if chat_socket is None:
             try:
                 logger.log("Attempting connection to Chat server.", 1)
-                chat_socket = await connect("ws://172.17.0.1:7878/", ping_interval=10, ping_timeout=None)
+                chat_socket = await connect("wss://172.17.0.1:7878/", ping_interval=10, ping_timeout=None, ssl=ssl_client)
                 logger.log("Chat server connected.", 0)
             except Exception as e:
                 chat_socket = None
@@ -259,7 +269,7 @@ async def connection_loop():
         if _1v1_socket is None:
             try:
                 logger.log("Attempting connection to Game (1v1 Classical) server.", 1)
-                _1v1_socket = await connect("ws://172.17.0.1:8001/", ping_interval=10, ping_timeout=None)
+                _1v1_socket = await connect("wss://172.17.0.1:8001/", ping_interval=10, ping_timeout=None, ssl=ssl_client)
                 logger.log("Game (1v1 Classical) server connected.", 0)
             except Exception as e:
                 _1v1_socket = None
@@ -283,10 +293,11 @@ def server_thread():
     asyncio.run(main())
 
 async def main():
-    global stopFlag, start, logger
+    global stopFlag, start, logger, ssl_context
     global chat_socket, _1v1_socket
+
     logger.log("Listener thread launched.", 1)
-    async with serve(handler, "", SERVER_PORT, ping_interval=10, ping_timeout=None):
+    async with serve(handler, "", SERVER_PORT, ping_interval=10, ping_timeout=None, ssl=ssl_context):
         await asyncio.get_running_loop().create_future()  # run forever
     stopFlag = True
 
