@@ -7,7 +7,7 @@ from .viewsets.AccountViewSet import AccountViewSet
 from .viewsets.MyAccountViewSet import MyAccountViewSet
 from .serializers import AccountSerializer
 from .models import AccountModel
-from .views.blocks import (GetBlocksView)
+from .views.blocks import (GetBlocksView, EditBlocksView)
 from .views.friends import (GetFriendsView,
                             EditFriendView,
                             GetIncomingFriendRequestView,
@@ -16,7 +16,7 @@ from .views.friends import (GetFriendsView,
 
 
 urlpatterns = [
-    path('get_address/', user.get_address, name='get_address'),
+    path('get_address', user.get_address, name='get_address'),
     path("", user.index, name="home"),
     path('home', user.index, name='home'),
     path('register', user.register_user, name='register_user'),
@@ -47,7 +47,8 @@ urlpatterns = [
     path("settings", MyAccountViewSet.as_view({'patch': 'partial_update', 'delete': 'delete_avatar'}), name="my_profile_page"), #Update account page
     path("friends", GetFriendsView.as_view(), name="friends_list_page"), # Friends list page
     path("blocked", GetBlocksView.as_view(), name="blocks_list_page"), # Friends list page
-    # path("isfriend/<str:username>/", AccountSerializer.get_is_friend(user, user), name="is_friend"), # is friend with
+    path("block_user/<str:username>", EditBlocksView.as_view(), name="blocks_user"), # Block user
+
     path("retrieve_account/<str:username>", AccountViewSet.as_view({'get': 'retrieve'}), name='retrieve_account'),
     path("delete_friend/<str:username>", EditFriendView.as_view(), name='delete_friend'),
     path("send_friend_request/<str:username>", EditFriendView.as_view(), name='send_friend_request'),

@@ -118,7 +118,9 @@
     "alreadyfriend": "You are already friend with ",
     "wantsfriend": " wants to be your friend.",
     "youSendRequest": "You send a friend request to ",
+    "youAlreadySentRequest": "You already sent a friend request to ",
+    "youAlreadyBlocked": "You already blocked ",
+    "requestSent": "A friend request has been sent to ",
     "buttonSpectate": "Spectate"
     
-
 }

@@ -118,5 +118,8 @@
     "alreadyfriend": "Vous êtes déjà ami avec ",
     "wantsfriend": " veut devenir votre ami.",
     "youSendRequest": "Vous avez envoyé une demande d'ami à ",
+    "youAlreadySentRequest": "Vous avez déjà envoyé une demande d'ami à ",
+    "youAlreadyBlocked": "Vous avez déjà bloqué ",
+    "requestSent": "Une demande d'ami a été envoyée à ",
     "buttonSpectate": "Spectateur"
 }
