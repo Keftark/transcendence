@@ -1,17 +1,18 @@
+"""What is a god, omnipotence given form"""
 #!/usr/bin/env python
 
 import asyncio
 import threading
 import time
 import json
-from Queue import Queue
-from websockets.asyncio.server import serve
-from websockets.asyncio.client import connect
 import sys
 import signal
-from logger import Logger
-import ssl 
+import ssl
 import pathlib
+from back_1v1.queue import Queue
+from websockets.asyncio.server import serve
+from websockets.asyncio.client import connect
+from logger import Logger
 
 #Take the variables from the .env
 #Leave as comments until we are in docker !

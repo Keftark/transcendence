@@ -15,8 +15,6 @@ from signal import SIGPIPE, SIG_DFL
 from dataclasses import dataclass
 from websockets.asyncio.server import serve
 from websockets.asyncio.client import connect
-from websockets.exception import InvalidURI, OSError, InvalidHandshake, TimeoutError
-import central.user as user
 from logger import Logger
 signal.signal(SIGPIPE,SIG_DFL)
 
