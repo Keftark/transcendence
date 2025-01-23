@@ -56,6 +56,13 @@ class AccountSerializer(serializers.ModelSerializer):
             return False
 
         return obj.is_friend(user.accountmodel)
+    
+    def get_is_blocked(self, obj: AccountModel):
+        user = self.context.get('user')
+        if user is None or not user.is_authenticated or user.pk == obj.pk:
+            return False
+
+        return obj.is_blocked(user.accountmodel)
 
     def get_has_incoming_request(self, obj: AccountModel):
         user = self.context.get('user')
