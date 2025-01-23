@@ -1,4 +1,5 @@
 import { logInPlayer } from "./apiFunctions.js";
+import { loadBlocks, loadFriends } from "./friends.js";
 import { navigateTo } from "./pages.js";
 import { editPlayerStats } from "./playerManager.js";
 import { logInUserUI } from "./registration.js";
@@ -135,6 +136,8 @@ export function connectToServer()
 {
     connectToServerInput();
     connectToServerOutput();
+    loadFriends();
+    loadBlocks();
 }
 
 async function clickConfirmSignIn()

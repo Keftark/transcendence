@@ -13,6 +13,7 @@ import { clickBackButtonMenu, closeMatchList, isMatchListOpen } from './modesSel
 import { addSocketListener } from './sockets.js';
 import { closePaddleChoice, isPaddleChoiceOpen } from './customizeSkins.js';
 import { clickCancelSignIn, isSigninOpen } from './signIn.js';
+import { getAddress } from './apiFunctions.js';
 
 let levelMode = LevelMode.MENU;
 
@@ -77,8 +78,7 @@ export function checkEscapeKey()
 
 function changeCursors()
 {
-    
-    const buttons = document.querySelectorAll('button, input[type="checkbox"], .arena, #showPasswordButton, #showConfirmPasswordButton, #header-title, #profilePictureChangeButton, a, #askSignIn, #askRegister');
+    const buttons = document.querySelectorAll('button, input[type="checkbox"], .arena, #showPasswordButton, #showConfirmPasswordButton, #header-title, #profilePictureChangeButton, a, #askSignIn, #askRegister, #friendsHeader');
     buttons.forEach(button => {
         button.style.cursor = "url('./static/icons/cursor-button.webp'), pointer";
     });
@@ -151,16 +151,23 @@ export function isElementVisible(element) {
 //     }
 // }
 
-export let socket;
-export let listener;
-export let chatSocket;
+export let socket = null;
+export let listener = null;
 
-function openSocket()
+function openSocket(ip)
 {
-    // socket = new WebSocket('ws://10.12.200.194:7777/ws/');
-    // listener = new WebSocket('ws://10.12.200.194:7777/ws/');
-    socket = new WebSocket('ws://10.11.200.72:7777/ws/');
-    listener = new WebSocket('ws://10.11.200.72:7777/ws/');
+    // pour le docker
+    // console.log(ip);
+    socket = new WebSocket(`wss://${ip}:7777/`);
+    listener = new WebSocket(`wss://${ip}:7777/`);
+
+    // cluster lumineux
+    //socket = new WebSocket('ws://10.11.200.72:7777/ws/');
+    //listener = new WebSocket('ws://10.11.200.72:7777/ws/');
+
+    // cluster sombre
+    // socket = new WebSocket(`ws://10.12.200.194:7777/ws/`);
+    // listener = new WebSocket(`ws://10.12.200.194:7777/ws/`);
     
     socket.onopen = function() {
         console.log("WebSocket connected");
@@ -197,7 +204,15 @@ setLanguageButtons();
 
 focusOldButton();
 
-openSocket();
+document.addEventListener("DOMContentLoaded", function() {
+    getAddress()
+        .then(data => {
+            openSocket(data);
+        })
+        .catch(error => {
+            console.error('Error getting address:', error);
+        });
+});
 
 // IsLoggedIn();
 

@@ -1,15 +1,18 @@
+"""What is a god, omnipotence given form"""
 #!/usr/bin/env python
 
 import asyncio
 import threading
 import time
 import json
-from Queue import Queue
-from websockets.asyncio.server import serve
-from websockets.asyncio.client import connect
 import sys
 import signal
-from Logger import Logger
+import ssl
+import pathlib
+from back_1v1.queue import Queue
+from websockets.asyncio.server import serve
+from websockets.asyncio.client import connect
+from logger import Logger
 
 #Take the variables from the .env
 #Leave as comments until we are in docker !
@@ -31,6 +34,14 @@ lock = threading.Lock()
 lock_a = asyncio.Lock()
 stopFlag = False
 message_queue = []
+
+localhost_pem = pathlib.Path(__file__).with_name("cponmamju2.fr_key.pem")
+#loads up ssl crap
+ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+ssl_context.load_cert_chain(localhost_pem)
+#loads up ssl crap but for clients
+ssl_client = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+ssl_client.load_verify_locations(localhost_pem)
 
 def dump_error(error, id):
     event = {
@@ -68,7 +79,6 @@ def dump_all_matchs(id):
         "answer": "yes",
         "ids": [id],
         "id": id,
-        "ids": [id],
         "data": event
     }
     return data
@@ -139,12 +149,20 @@ def pong():
     }
     return event
 
+async def send_server(data):
+    global central_socket
+    try:
+        await central_socket.send(json.dumps(data))
+    except Exception as e:
+        logger.log("", 2, e)
+        central_socket = None
+
 async def send_to_central():
     global message_queue, central_socket, lock, lock_a
     for message in message_queue:
         if central_socket is not None:  
             try:
-                await central_socket.send(json.dumps(message))
+                await send_server(message)
                 message_queue.remove(message)
             except Exception as e:
                 central_socket = None
@@ -187,8 +205,8 @@ async def handler(websocket):
     try:
         async for message in websocket:
             event = json.loads(message)
-            if (event["type"] == "ping"):
-                await central_socket.send(json.dumps(pong()))
+            if event["type"] == "ping":
+                await send_server(pong())
             elif (event["type"] == "join"):
                 logger.log("Join request from client ID ::" + str(event["id"]), 1)
                 if (not queue.add_to_queue(event)):
@@ -234,20 +252,20 @@ async def handler(websocket):
         logger.log("", 2, e)
 
 async def main():
-    global stopFlag, logger
+    global stopFlag, logger, ssl_context
     logger.log("Listener thread launched.", 0)
-    async with serve(handler, "", SERVER_PORT, ping_interval=10, ping_timeout=None):
+    async with serve(handler, "", SERVER_PORT, ping_interval=10, ping_timeout=None, ssl=ssl_context):
         await asyncio.get_running_loop().create_future()  # run forever
     stopFlag = True
 
 async def connection_handler():
-    global central_socket, stopFlag, logger, queue
+    global central_socket, stopFlag, logger, queue, ssl_client
     while stopFlag is False:
         if central_socket is None:
             try:
                 logger.log("Attempting connection to central server.", 1)
-                connex = "ws://172.17.0.1:" + str(CENTRAL_PORT) + "/"
-                central_socket = await connect(connex, ping_interval=10, ping_timeout=None)
+                connex = "wss://172.17.0.1:" + str(CENTRAL_PORT) + "/"
+                central_socket = await connect(connex, ping_interval=10, ping_timeout=None, ssl=ssl_client)
                 logger.log("TCentral server connected.", 1)
             except Exception as e:
                 central_socket = None

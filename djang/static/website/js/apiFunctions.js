@@ -1,15 +1,15 @@
-import { editPlayerStats } from "./playerManager.js";
+import { sendSystemMessage } from "./chat.js";
+import { editPlayerStats, playerStats } from "./playerManager.js";
 import { clickCancelSignIn } from "./signIn.js";
 
 export function getCSRFToken()
 {
     const cookies = document.cookie.split(';');
     for (let cookie of cookies) {
-        if (cookie.trim().startsWith('csrftoken=')) {
-            return cookie.trim().split('=')[1];  // Return the token part of the cookie
-        }
+        if (cookie.trim().startsWith('csrftoken='))
+            return cookie.trim().split('=')[1];
     }
-    return '';  // Return empty string if no token found
+    return '';
 }
 
 export async function logInPlayer(username, password)
@@ -17,28 +17,23 @@ export async function logInPlayer(username, password)
     const data = new FormData();
     data.append('username', username);
     data.append('password', password);
-
     try {
         const response = await fetch('/login', {
             method: 'POST',
             body: data,
             headers: {
-                'X-CSRFToken': getCSRFToken() // Ensure CSRF protection
+                'X-CSRFToken': getCSRFToken()
             }
         });
-
-        // Check if the response is OK (status 200-299)
         if (!response.ok) {
-            const errorResult = await response.json();  // Parse the error message in JSON
+            const errorResult = await response.json();
             console.error('Login failed:', errorResult.message);
-            alert(errorResult.message);  // Display the error message to the user
+            alert(errorResult.message);
         } else {
-            const result = await response.json();  // Parse the success response in JSON
+            const result = await response.json();
             console.log(result.message);
-            // console.log('User Data:', result.user);
             editPlayerStats(result.user);
             clickCancelSignIn(true);
-            // Handle login success (redirect, show success message, etc.)
         }
 
     } catch (error) {
@@ -69,15 +64,13 @@ export async function registerUser()
             body: JSON.stringify(data)
         });
 
-        if (!response.ok) {
+        if (!response.ok)
             throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
         const responseData = await response.json();
 
-        if (responseData.success) {
+        if (responseData.success)
             return true;
-        } else {
+        else {
             console.error('Registration error:', responseData.error);
             return false;
         }
@@ -94,7 +87,6 @@ export async function logoutUser()
         console.error('CSRF token not found');
         return;
     }
-
     try {
         const response = await fetch('/logout', {
             method: 'POST',
@@ -103,18 +95,14 @@ export async function logoutUser()
                 'X-CSRFToken': csrfToken,
             },
         });
-
-        if (!response.ok) {
+        if (!response.ok)
             throw new Error('Failed to log out');
-        }
-
         const data = await response.json();
 
-        if (data.success) {
+        if (data.success)
             console.log(data.message);
-        } else {
+        else
             console.error(data.error);
-        }
     } catch (error) {
         console.error('Error:', error);
     }
@@ -154,23 +142,12 @@ export async function getUserById(userId) {
     }
 
     try {
-        // Make a GET request to the Django API endpoint
         const response = await fetch(`/user/${userId}/`);
-
-        if (!response.ok) {
+        if (!response.ok)
             throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);
-        }
-
-        // Parse the JSON response
         const userData = await response.json();
-
-        if (userData.error) {
+        if (userData.error)
             console.error(userData.error);
-        }
-        // else {
-        //     console.log("User Details:", userData);
-        // }
-
         return userData;
     } catch (error) {
         console.error("An error occurred while fetching the user details:", error);
@@ -185,13 +162,11 @@ export async function getUserName(userId) {
     try {
         console.log("Trying to get the user name");
         const response = await fetch(`/username/${userId}/`);
-        if (!response.ok) {
+        if (!response.ok)
             throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);
-        }
         const userData = await response.json();
-        if (userData.error) {
+        if (userData.error)
             console.error(userData.error);
-        }
         return userData;
     } catch (error) {
         console.error("An error occurred while fetching the user details:", error);
@@ -205,13 +180,11 @@ export async function getUserAvatar(userName) {
     }
     try {
         const response = await fetch(`/useravatar/${userName}/`);
-        if (!response.ok) {
+        if (!response.ok)
             throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);
-        }
         const userData = await response.json();
-        if (userData.error) {
+        if (userData.error)
             console.error(userData.error);
-        }
         console.log("user data: " + JSON.stringify(userData));
         return userData;
     } catch (error) {
@@ -261,13 +234,11 @@ export async function getUserScores(userName) {
     }
     try {
         const response = await fetch(`/user_scores/${userName}/`);
-        if (!response.ok) {
+        if (!response.ok)
             throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);
-        }
         const userData = await response.json();
-        if (userData.error) {
+        if (userData.error)
             console.error(userData.error);
-        }
         console.log("user data: " + JSON.stringify(userData));
         return userData;
     } catch (error) {
@@ -282,20 +253,12 @@ export async function getUserByName(userName) {
     }
 
     try {
-        // Make a GET request to the Django API endpoint
         const response = await fetch(`/get-user/${userName}/`);
-
-        if (!response.ok) {
+        if (!response.ok)
             throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);
-        }
-
-        // Parse the JSON response
         const userData = await response.json();
-
-        if (userData.error) {
+        if (userData.error)
             console.error(userData.error);
-        }
-        // console.log("user data: " + JSON.stringify(userData));
         return userData;
     } catch (error) {
         console.error("An error occurred while fetching the user details:", error);
@@ -309,16 +272,178 @@ export async function getUserPaddleSkin(userId) {
     }
     try {
         const response = await fetch(`/user_paddle/${userId}/`);
-        if (!response.ok) {
+        if (!response.ok)
             throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);
-        }
         const userData = await response.json();
-        if (userData.error) {
+        if (userData.error)
             console.error(userData.error);
-        }
         console.log("user data: " + JSON.stringify(userData));
         return userData;
     } catch (error) {
         console.error("An error occurred while fetching the user details:", error);
+    }
+}
+
+export async function getFriendsList() {
+    try {
+        const response = await fetch(`/friends`, {
+            method: 'GET',
+            headers: {
+                'X-CSRFToken': getCSRFToken()
+            }
+        });
+        if (!response.ok)
+            throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);
+        const userData = await response.json();
+        if (userData.error)
+            console.error(userData.error);
+        return userData;
+    } catch (error) {
+        console.error("An error occurred while fetching the user details:", error);
+    }
+}
+
+export async function getBlockedList() {
+    try {
+        const response = await fetch(`/blocked`, {
+            method: 'GET',
+            headers: {
+                'X-CSRFToken': getCSRFToken()
+            }
+        });
+        if (!response.ok)
+            throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);
+        const userData = await response.json();
+        if (userData.error)
+            console.error(userData.error);
+        return userData;
+    } catch (error) {
+        console.error("An error occurred while fetching the user details:", error);
+    }
+}
+
+export async function getAccountUser(userName) {
+    try {
+      // Make a GET request to the retrieve_account view
+      const response = await fetch(`/retrieve_account/${userName}`);
+      
+      // Check if the response is ok (status code 200-299)
+      if (!response.ok)
+        throw new Error('Network response was not ok');
+      
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error:', error);
+      return null;  // You can return an error object or null if needed
+    }
+  }
+
+export async function askAddFriend(userName) {
+    try {
+        const response = await fetch(`/send_friend_request/${userName}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            }
+        });
+        if (!response.ok)
+        {
+            if (response.status === 400) {
+                sendSystemMessage("youAlreadySentRequest", userName, true);
+                // throw new Error('Bad Request (400): The request was invalid or missing parameters.');
+                return response;
+            } else
+                throw new Error(`Network response was not ok. Status: ${response.status}`);
+        }
+        return response;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+export async function deleteFriend(userName) {
+    try {
+        const response = await fetch(`/delete_friend/${userName}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            }
+        });
+        if (!response.ok)
+            throw new Error('Network response was not ok');
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+export async function getAddress() {
+    try {
+        const response = await fetch(`/get_address`);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch address: ${response.status} ${response.statusText}`);
+        }
+        const data = await response.json();
+        if (data.HOST_ADDRESS) {
+            return data.HOST_ADDRESS;
+        } else
+            console.error("HOST_ADDRESS is missing in the response");
+    } catch (error) {
+        console.error("An error occurred while fetching the address:", error);
+    }
+}
+
+export async function getIncomingFriendRequests() {
+    try {
+        const response = await fetch(`/incoming_friend_requests`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            }
+        });
+        if (!response.ok)
+            throw new Error('Network response was not ok');
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+export async function getOutgoingFriendRequests() {
+    try {
+        const response = await fetch(`/outgoing_friend_requests`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            }
+        });
+        if (!response.ok)
+            throw new Error('Network response was not ok');
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+export async function blockUserRequest(userName) {
+    try {
+        const response = await fetch(`/block_user/${userName}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            }
+        });
+        if (!response.ok)
+            throw new Error('Network response was not ok');
+        return response;
+    } catch (error) {
+        console.error('Error:', error);
     }
 }

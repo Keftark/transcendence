@@ -1,3 +1,4 @@
+
 services:
   db:
     image: postgres:17
@@ -33,6 +34,7 @@ services:
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
       DATABASE_HOST: ${DATABASE_HOST}
       DATABASE_PORT: ${DATABASE_PORT}
+      HOST_ADDRESS: ${HOST_ADDRESS}
     env_file:
       - .env
     networks:

@@ -106,10 +106,34 @@
     flex-direction: row;
     align-items: center;
     width: 95%;
-    height: 32px;
+    height: 2rem;
     justify-content: space-between;
     border: 2px solid #4c4f67;
     padding: 6px;
+}
+
+.askFriendDiv
+{
+    border: 3px solid #675e4c;
+}
+
+.askFriendDiv:hover
+{
+    border: 3px solid #bf984c;
+}
+
+.outgoingFriendDiv
+{
+    background-color: #3d5053;
+    border: 3px solid #6ea5ae;
+    height: 1.5rem !important;
+    justify-content: center !important;
+}
+
+.outgoingFriendDiv:hover
+{
+    background-color: #587475 !important;
+    border: 3px solid #c5fcff !important;
 }
 
 .friendDiv:hover
@@ -147,4 +171,27 @@
 .removeBlockedButton:hover
 {
     filter: hue-rotate(240deg) brightness(200%);
+}
+
+.friendRequestButtonsDiv
+{
+    height: 70%;
+    width: 4rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.friendRequestButton
+{
+    width: 1.5rem;
+    padding: 0;
+    background: none;
+    border: none;
+}
+
+.friendRequestButton:hover
+{
+    filter: brightness(200%);
+    background: none;
 }

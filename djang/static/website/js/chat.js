@@ -1,14 +1,14 @@
+import { askAddFriend, blockUserRequest, deleteFriend, getAccountUser, getIncomingFriendRequests, getOutgoingFriendRequests } from "./apiFunctions.js";
 import { cheatCodes } from "./cheats.js";
-import { isInTheDatabase, searchDatabase } from "./database.js";
 import { getDuelTargetPlayer, joinDuel } from "./duelPanel.js";
-import { addBlockedUser, addFriend, checkAndRemoveFriend } from "./friends.js";
+import { addBlockedUserDiv, addFriend, addFriendDiv, addFriendRequest, addOutgoingFriendRequest, blockUser, checkAndRemoveFriend } from "./friends.js";
 import { getPlayerPosition, id_players, isInGame } from "./levelLocal.js";
-import { openProfile } from "./menu.js";
+import { openMiniProfile } from "./menu.js";
 import { getPlayerName, playerStats } from "./playerManager.js";
 import { getRules, resetInputfieldsRules } from "./rules.js";
-import { socketJoinChat, socketSendMessage, socketSendPrivSticker, socketSendPublicSticker, socketSendSalonSticker } from "./sockets.js";
+import { socketSendMessage, socketSendPrivSticker, socketSendPublicSticker, socketSendSalonSticker } from "./sockets.js";
 import { getTranslation } from "./translate.js";
-import { ArenaType, LevelMode } from "./variables.js";
+import { ArenaType } from "./variables.js";
 
 const messagesContainer = document.getElementById('messages');
 const inputElement = document.getElementById('inputChat');
@@ -50,6 +50,11 @@ function openChat()
     chatIsOpen = true;
     overlayChat.style.display = playerStats.isRegistered ? 'none' : 'flex';
     chatBox.classList.remove('hasNewMessage');
+    checkOpenStickersList();
+}
+
+function checkOpenStickersList()
+{
     if (playerStats.isRegistered)
     {
         setTimeout(() => {
@@ -164,6 +169,7 @@ sendMessageButton.addEventListener('click', () => {
 });
 
 sendStickerButton.addEventListener('click', () => {
+    checkOpenStickersList();
     showPrivateStickers();
 });
 
@@ -188,7 +194,7 @@ function sendPrivateMessage()
     closeNameContextMenu();
 }
 
-function hideMessagesFrom(userName)
+export function hideMessagesFrom(userName)
 {
     Array.from(messagesContainer.children).forEach((child) => {
         if (child.hasAttribute('sender') && child.getAttribute('sender') === userName)
@@ -206,17 +212,10 @@ export function restoreMessagesFromUser(userName)
 
 export function clickBlockUser(playerName = "")
 {
-    if (playerStats.blacklist.includes(playerName)) // plutot faire la requete back pour verifier ca
-        return;
-    // bloquer par id de joueur :
-    // const playerId = getPlayerId(selectedName); // recuperer l'id dans la base de donnees
-    // playerStats.blacklist.push(playerId);
     if (playerName != "")
         selectedName = playerName;
-    sendSystemMessage("youBlockedPlayer", selectedName, true);
-    playerStats.blacklist.push(selectedName);
-    hideMessagesFrom(selectedName);
-    addBlockedUser(selectedName);
+
+    blockUser(selectedName);
     closeNameContextMenu();
 }
 
@@ -231,53 +230,78 @@ function clickPlayWith()
 
 function clickOpenProfile()
 {
-    const player = searchDatabase(selectedName);
-    if (player === null)
-    {
-        console.error("error: the player " + selectedName + " doesn't exist");
-        return;
-    }
-    openProfile(player);
+    console.log("Trying to open the " + selectedName + " profile");
+    openMiniProfile(selectedName);
 }
 
 export function removeFriendFunction(playerName)
 {
-    const index = playerStats.friends.indexOf(playerName);
-    if (index === -1)
-        return;
+    deleteFriend(playerName);
     sendSystemMessage("youDeletedPlayer", playerName, true);
-    playerStats.friends.splice(index, 1);
     checkAndRemoveFriend(playerName);
+}
+
+export function askAddFriendFunction(playerName)
+{
+    askAddFriend(playerName)
+    .then((response) => {
+        console.log("Response: " + response);
+        console.log("Status: " + response.status);
+        if (response.status == 200) // requete ami
+        {
+            sendSystemMessage("youSendRequest", playerName, true);
+            addOutgoingFriendRequest(playerName);
+        }
+        else if (response.status == 201) // ajout ami
+        {
+            addFriend(playerName);
+            // envoyer un signal a l'autre joueur pour lui dire qu'il a un nouvel ami
+            // ensuite on cree le div avec addFriend()
+        }
+        else if (response.status == 400 && response.has_outgoing_request === true)
+            sendSystemMessage("youAlreadySentRequest", playerName, true);
+    })
+    .catch((error) => {
+        console.error("Failed to get the friendship relation:", error);
+    });
 }
 
 export function addFriendFunction(playerName)
 {
-    if (playerStats.friends.includes(playerName)) // remplacer ca par la requete serveur, pour plus de securite
-    {
-        sendSystemMessage("alreadyfriend", playerName, true);
-        return;
-    }
     sendSystemMessage("youAddedPlayer", playerName, true);
-    // faire la requete serveur pour ajouter l'id de la personne aux amis
-    playerStats.friends.push(playerName);
-    addFriend(playerName);
+    addFriendDiv(playerName);
 }
 
 function clickAddRemoveFriend()
 {
-    if (playerStats.friends.includes(selectedName))
+
+    if (isAFriend)
         removeFriendFunction(selectedName);
     else
-        addFriendFunction(selectedName);
+        askAddFriendFunction(selectedName);
     closeNameContextMenu();
 }
 
+let isAFriend = false;
 function setFriendButtonText()
 {
-    if (playerStats.friends.includes(selectedName))
-        addFriendButton.innerText = getTranslation('removeFriendButton');
-    else
-        addFriendButton.innerText = getTranslation('addFriendButton');
+    getAccountUser(selectedName)
+    .then((response) => {
+        // console.log(response);
+        if (response.is_friend === true)
+        {
+            isAFriend = true;
+            addFriendButton.innerText = getTranslation('removeFriendButton');
+        }
+        else
+        {
+            isAFriend = false;
+            addFriendButton.innerText = getTranslation('addFriendButton');
+        }
+    })
+    .catch((error) => {
+        console.error("Failed to get the friendship relation:", error);
+    });
 }
 
 function showFriendButtonIfRegistered()
@@ -293,7 +317,7 @@ function showFriendButtonIfRegistered()
     }
 }
 
-export function openNameContextMenu(name, nameHeader)
+export function openNameContextMenu(name, posX, posY)
 {
     personToSendSticker = name;
     if (contextMenuChat.style.display === 'flex')
@@ -303,9 +327,8 @@ export function openNameContextMenu(name, nameHeader)
         selectedName = name;
         showFriendButtonIfRegistered();
         contextMenuChat.style.display = 'flex';
-        const rect = nameHeader.getBoundingClientRect();
-        contextMenuChat.style.top = parseInt(rect.bottom) + 'px';
-        contextMenuChat.style.left = parseInt(rect.left) + 'px';
+        contextMenuChat.style.top = parseInt(posY + 10) + 'px';
+        contextMenuChat.style.left = parseInt(posX - 30) + 'px';
     }
 }
 
@@ -332,8 +355,8 @@ function createMessageElement(name, messageText, isPrivate, isASticker) {
         messageContainer.appendChild(nameHeader);
         if (isNotThePlayer(name) && playerStats.isRegistered)
         {
-            nameHeader.addEventListener("click", function() {
-                openNameContextMenu(name, nameHeader);
+            nameHeader.addEventListener("click", function(event) {
+                openNameContextMenu(name, event.pageX, event.pageY);
               });
         }
     }
@@ -476,7 +499,7 @@ function checkNewMessage()
 
 export function receiveMessage(playerName, message, isASticker, isPrivate = false, toPlayer = "")
 {
-    console.log("Receiving message from: " + playerName + ": " + message + ". Sticker: " + isASticker + ". Private: " + isPrivate + ". To player: " + toPlayer);
+    // console.log("Receiving message from: " + playerName + ": " + message + ". Sticker: " + isASticker + ". Private: " + isPrivate + ". To player: " + toPlayer);
     const newMessage = createMessageElement(playerName, message, isPrivate, isASticker);
     if (playerName === playerStats.nickname)
     {
@@ -596,6 +619,29 @@ export function checkAccessToChat()
     const regis = playerStats.isRegistered;
     inputElement.disabled = !regis;
     overlayChat.style.display = regis || !chatIsOpen ? 'none' : 'flex';
+    if (regis)
+    {
+        getIncomingFriendRequests()
+        .then((response) => {
+            for (let i = 0; i < response.length; i++) {
+                const username = response[i].username; // Get the username of each object
+                addFriendRequest(username);
+              }
+        })
+        .catch((error) => {
+            console.error("Failed to get the friendship relation:", error);
+        });
+        getOutgoingFriendRequests()
+        .then((response) => {
+            for (let i = 0; i < response.length; i++) {
+                const username = response[i].username; // Get the username of each object
+                addOutgoingFriendRequest(username);
+              }
+        })
+        .catch((error) => {
+            console.error("Failed to get the friendship relation:", error);
+        });
+    }
     if (regis && chatIsOpen)
         openStickersList();
     else
@@ -747,6 +793,10 @@ export function receiveGameSticker(playerId, stickerName)
     document.body.appendChild(imgDiv);
 }
 
+document.getElementById('stickers-container').addEventListener('click', function() {
+    document.getElementById('stickers-container').style.display = 'none';
+});
+
 export function removeGameStickers()
 {
     if (gameStickers === null)
@@ -760,15 +810,10 @@ function showPrivateStickers()
     stickersList.classList.add('centerClass');
 }
 
-export function addStickersGame()
-{
-    stickersList.classList.remove('centerClass');
-    stickersList.classList.add('centerGameClass');
-}
-
-export function removeStickersGame()
-{
-
-}
+// export function addStickersGame()
+// {
+//     stickersList.classList.remove('centerClass');
+//     stickersList.classList.add('centerGameClass');
+// }
 
 addStickersFunctions();

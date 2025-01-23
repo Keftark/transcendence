@@ -7,7 +7,7 @@ import { checkAccessToChat } from "./chat.js";
 import { getLoggedInUser, logoutUser, registerUser } from "./apiFunctions.js";
 import { socketJoinChat, socketQuitChat } from "./sockets.js";
 import { connectToServer } from "./signIn.js";
-import { showFriendsBox } from "./friends.js";
+import { deleteAllFriendRequests, showFriendsBox } from "./friends.js";
 
 const inputName = document.getElementById('inputName');
 const inputFirstName = document.getElementById('inputFirstName');
@@ -259,6 +259,7 @@ export function clickLogOut()
     addDisableButtonEffect(profileButton);
     removeAllScores();
     checkAccessIfRegistered();
+    deleteAllFriendRequests();
 }
 
 export function isRegistrationOpen()

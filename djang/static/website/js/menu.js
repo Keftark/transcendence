@@ -201,14 +201,14 @@ export function openOrCloseGameMenu()
         document.activeElement.blur();
 }
 
-function openMiniProfile(playerName)
+export function openMiniProfile(playerName)
 {
     getUserByName(playerName)
-        .then((target) =>{
-            miniNicknameText.textContent = target.username;
-            firstNameMiniProfile.textContent = target.first_name;
-            lastNameMiniProfile.textContent = target.last_name;
-        })
+    .then((target) =>{
+        miniNicknameText.textContent = target.username;
+        firstNameMiniProfile.textContent = target.first_name;
+        lastNameMiniProfile.textContent = target.last_name;
+    })
     .catch((error) => {
         console.error("Failed to get user by name:", error);
     });

@@ -1,15 +1,18 @@
+"""Main file for chat server."""
 #!/usr/bin/env python
 
 import asyncio
-import Socket
 import sys
 import json
-from websockets.asyncio.server import serve
-from websockets.asyncio.client import connect
 import signal
 import threading
-import Logger
-from signal import SIGPIPE, SIG_DFL
+import ssl
+import pathlib
+from signal import SIGPIPE
+import Socket
+import logger
+from websockets.asyncio.server import serve
+from websockets.asyncio.client import connect
 
 signal.signal(SIGPIPE, 0)
 
@@ -18,11 +21,19 @@ CENTRAL_PORT = 7777
 
 Users = []
 
-logger = Logger.Logger()
+logger = logger.Logger()
 
 stopFlag = False
 
 central_socket = None
+
+localhost_pem = pathlib.Path(__file__).with_name("cponmamju2.fr_key.pem")
+#loads up ssl crap
+ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+ssl_context.load_cert_chain(localhost_pem)
+#loads up ssl crap but for clients
+ssl_client = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+ssl_client.load_verify_locations(localhost_pem)
 
 def dump_message(user, message):
     event = {
@@ -187,20 +198,21 @@ async def handler(websocket):
         central_socket = None
 
 async def main():
-    global logger, stopFlag, central_socket
+    global logger, stopFlag, central_socket, ssl_context
     logger.log("Chat listener launched.", 0)
-    async with serve(handler, "", SERVER_PORT, ping_interval=10, ping_timeout=None):
+    async with serve(handler, "", SERVER_PORT, ping_interval=10, ping_timeout=None, ssl=ssl_context):
         await asyncio.get_running_loop().create_future()  # run forever
     stopFlag = True
 
+
 async def connection_handler():
-    global central_socket, stopFlag, logger
+    global central_socket, stopFlag, logger, ssl_context
     while stopFlag is False:
         if central_socket is None:
             try:
                 logger.log("Attempting connection to central server.", 1)
-                connex = "ws://172.17.0.1:" + str(CENTRAL_PORT) + "/"
-                central_socket = await connect(connex, ping_interval=10, ping_timeout=None)
+                connex = "wss://172.17.0.1:" + str(CENTRAL_PORT) + "/"
+                central_socket = await connect(connex, ping_interval=10, ping_timeout=None, ssl=ssl_client)
                 logger.log("Central server connected.", 0)
             except Exception as e:
                 central_socket = None
