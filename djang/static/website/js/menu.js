@@ -146,9 +146,9 @@ document.querySelectorAll('.mainMenuButton').forEach(button => {
   button.addEventListener('blur', hideImage);
 });
 
-document.getElementById('profilePictureChangeButton').addEventListener('click', function() {
-    document.getElementById('fileInput').click();
-});
+//document.getElementById('profilePictureChangeButton').addEventListener('click', function() {
+//    document.getElementById('fileInput').click();
+//});
 
 // document.getElementById('fileInput').addEventListener('change', function(event) {
 //     const file = event.target.files[0];
@@ -538,7 +538,7 @@ export function isProfileOpen()
 
 // add a way to save the image to the DB and check if the format is ok + no sql injection?
 // injec sql -> verifier metadata
-fileInput.addEventListener('change', (event) => {
+/*fileInput.addEventListener('change', (event) => {
     const file = event.target.files[0];
     if (file)
     {
@@ -549,9 +549,9 @@ fileInput.addEventListener('change', (event) => {
         };
         reader.readAsDataURL(file);
     }
-});
+});*/
 
-document.getElementById('profile-form').addEventListener("submit", function(e) {
+/*document.getElementById('profile-form').addEventListener("submit", function(e) {
     e.preventDefault();  // Prevent the default form submission
     
     var formData = new FormData(this);  // Create a FormData object to hold the file and form data
@@ -573,4 +573,4 @@ document.getElementById('profile-form').addEventListener("submit", function(e) {
     .catch(error => {
         console.error("Error uploading file", error);
     });
-});
+});*/

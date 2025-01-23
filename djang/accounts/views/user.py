@@ -7,6 +7,8 @@ from django.contrib.auth import logout
 from django.utils.translation import gettext as _
 from accounts.models import *
 from ..serializers import UpdateUserSerializer, UpdatePasswordSerializer
+from django.shortcuts import render, redirect
+from ping_pong.forms import AvatarForm
 from rest_framework.generics import UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.decorators import login_required
@@ -237,24 +239,17 @@ def login_user(request):
 
 @login_required
 def upload_avatar(request):
-    print(f"Request method: {request.method}")
-    print(f"Request FIELDS: {request.FILES}")
-
-    if request.method == "POST":
-        if 'fileInput' in request.FILES:
-            profile_picture = request.FILES['fileInput']
-            print(f"Received file: {profile_picture.name} (size: {profile_picture.size} bytes)")
-
-            # Save the file to the user’s avatar field
-            user = request.user
-            user.accountmodel.avatar = profile_picture
-            user.save()
-            return JsonResponse({"message": "Uploaded successfully"}, status=200)
-        else:
-            print("No file found in request.FILES")
-            return JsonResponse({"message": "No file uploaded"}, status=400)
-
-    return JsonResponse({"message": "Invalid request method"}, status=405)
+    """Process images uploaded by users"""
+    if request.method == 'POST':
+        form = AvatarForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            # Get the current instance object to display in the template
+            img_obj = form.instance
+            return render(request, 'index.html', {'form': form, 'img_obj': img_obj})
+    else:
+        form = AvatarForm()
+        return render(request, 'index.html', {'form': form})
 
 
 class UpdateProfileView(UpdateAPIView):

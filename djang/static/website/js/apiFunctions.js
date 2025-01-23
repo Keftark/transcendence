@@ -241,9 +241,12 @@ export async function uploadAvatar(username, url_picture)
         if (!response.ok) {
             const errorResult = await response.json();  // Parse the error message in JSON
             alert(errorResult.message);  // Display the error message to the user
+            return response;
         } else {
             const result = await response.json();  // Parse the success response in JSON
+            self.accountprofile.avatar = result.avatar;
             console.log(result);
+            return null;
         }
 
     } catch (error) {

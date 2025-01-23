@@ -420,9 +420,13 @@
                 <div id="profilePictureDiv">
                     <img src="{% static 'icons/guestUser.webp' %}" id="profilePicture" alt="">
                     <form action="" id="profile-form" method="POST" enctype="multipart/form-data">
-                        <input type="file" name="fileInput" id="fileInput" accept="image/*" style="display: none;" />
+                        {% csrf_token %}
+                        {{ form.as_p }}
                         <button type="submit" id="profilePictureChangeButton" class="profilePictureChangeButton"></button>
                     </form>
+                    {% if img_obj %}  <h3>Succesfully uploaded : {{img_obj.title}}</h3> 
+                    <img src="{{ img_obj.image.url}}" alt="connect" style="max-height:300px">
+                    {% endif %}
                 </div>
             <h2 id="nameProfile"></h2>
             <p id="firstNameProfile"></p>
