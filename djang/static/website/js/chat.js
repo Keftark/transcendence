@@ -493,13 +493,13 @@ export function sendSystemMessage(message, otherVar, forceUseOtherVar = false)
 
 function checkNewMessage()
 {
+    console.log("Checking");
     if (!chatIsOpen && playerStats.isRegistered)
         chatBox.classList.add('hasNewMessage');
 }
 
 export function receiveMessage(playerName, message, isASticker, isPrivate = false, toPlayer = "")
 {
-    // console.log("Receiving message from: " + playerName + ": " + message + ". Sticker: " + isASticker + ". Private: " + isPrivate + ". To player: " + toPlayer);
     const newMessage = createMessageElement(playerName, message, isPrivate, isASticker);
     if (playerName === playerStats.nickname)
     {
@@ -510,10 +510,22 @@ export function receiveMessage(playerName, message, isASticker, isPrivate = fals
     }
     else
         sendMessageLeft(newMessage, playerName, isASticker, message, isPrivate);
-    messagesContainer.appendChild(newMessage);
+    
+    // ne pas afficher le message si l'utilisateur est bloque
+
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
     lastSender = playerName;
-    checkNewMessage();
+    getAccountUser(playerName)
+    .then((response) => {
+        if (response.is_blocked)
+            newMessage.style.display = 'none';
+        else
+            checkNewMessage();
+        messagesContainer.appendChild(newMessage);
+    })
+    .catch((error) => {
+        console.error("Failed to get the friendship relation:", error);
+    });
 }
 
 /* 
@@ -793,8 +805,9 @@ export function receiveGameSticker(playerId, stickerName)
     document.body.appendChild(imgDiv);
 }
 
-document.getElementById('stickers-container').addEventListener('click', function() {
-    document.getElementById('stickers-container').style.display = 'none';
+stickersList.addEventListener('click', function() {
+    if (stickersList.classList.contains('centerClass'))
+        stickersList.style.display = 'none';
 });
 
 export function removeGameStickers()

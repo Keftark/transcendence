@@ -29,13 +29,14 @@ class AccountSerializer(serializers.ModelSerializer):
     description = serializers.SerializerMethodField()
     is42 = serializers.ReadOnlyField()
     is_friend = serializers.SerializerMethodField()
+    is_blocked = serializers.SerializerMethodField()
     has_incoming_request = serializers.SerializerMethodField()
     has_outgoing_request = serializers.SerializerMethodField()
     preferredPaddle = serializers.SerializerMethodField()
 
     class Meta:
         model = AccountModel
-        fields = ["username", "avatar", "id", 'status', 'description', 'is42', 'is_friend',
+        fields = ["username", "avatar", "id", 'status', 'description', 'is42', 'is_friend', 'is_blocked',
                   'has_outgoing_request', 'has_incoming_request', 'preferredPaddle']
 
     def get_status(self, obj: AccountModel):
@@ -56,6 +57,13 @@ class AccountSerializer(serializers.ModelSerializer):
             return False
 
         return obj.is_friend(user.accountmodel)
+
+    def get_is_blocked(self, obj: AccountModel):
+        user = self.context.get('user')
+        if user is None or not user.is_authenticated or user.pk == obj.pk:
+            return False
+
+        return obj.is_blocked(user.accountmodel)
 
     def get_has_incoming_request(self, obj: AccountModel):
         user = self.context.get('user')

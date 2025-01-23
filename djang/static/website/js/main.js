@@ -5,8 +5,7 @@ import { LevelMode } from './variables.js';
 import { isChatOpen, tryCloseChat } from './chat.js';
 import { clickCancelRules } from './rules.js';
 import { gameEnded, isInGame } from './levelLocal.js';
-import { clickCancelRegister, closeGdprPanel, isGdprOpen, isRegistrationOpen, isUserLoggedIn } from './registration.js';
-import { closeTournamentJoinMenu, closeTournamentLobbyMenu, closeTournamentMenu } from './tournament.js';
+import { clickCancelRegister, closeGdprPanel, isGdprOpen, isRegistrationOpen } from './registration.js';
 import { getCurrentView } from './pages.js';
 import { closeDuelPanel } from './duelPanel.js';
 import { clickBackButtonMenu, closeMatchList, isMatchListOpen } from './modesSelection.js';
@@ -14,6 +13,7 @@ import { addSocketListener } from './sockets.js';
 import { closePaddleChoice, isPaddleChoiceOpen } from './customizeSkins.js';
 import { clickCancelSignIn, isSigninOpen } from './signIn.js';
 import { getAddress } from './apiFunctions.js';
+import { cancelAddPlayerTournament, isAddPlayerTournamentIsOpen, quitTournamentLobby } from './tournament.js';
 
 let levelMode = LevelMode.MENU;
 
@@ -60,16 +60,14 @@ export function checkEscapeKey()
         closeProfile();
     else if (isPaddleChoiceOpen())
         closePaddleChoice();
+    else if (isAddPlayerTournamentIsOpen())
+        cancelAddPlayerTournament();
     else if (currentView === 'rules')
         clickCancelRules();
     else if (currentView === 'modes')
         clickBackButtonMenu();
     else if (currentView === 'tournament-lobby')
-        closeTournamentLobbyMenu();
-    else if (currentView === 'tournament-menu')
-        closeTournamentMenu();
-    else if (currentView === 'tournament-join')
-        closeTournamentJoinMenu();
+        quitTournamentLobby();
     else if (currentView === 'duel')
         closeDuelPanel();
     else if (isInGame && !gameEnded)
@@ -158,16 +156,16 @@ function openSocket(ip)
 {
     // pour le docker
     // console.log(ip);
-    socket = new WebSocket(`wss://${ip}:7777/`);
-    listener = new WebSocket(`wss://${ip}:7777/`);
+    // socket = new WebSocket(`wss://${ip}:7777/`);
+    // listener = new WebSocket(`wss://${ip}:7777/`);
 
     // cluster lumineux
-    //socket = new WebSocket('ws://10.11.200.72:7777/ws/');
-    //listener = new WebSocket('ws://10.11.200.72:7777/ws/');
+    // socket = new WebSocket('ws://10.11.200.72:7777/ws/');
+    // listener = new WebSocket('ws://10.11.200.72:7777/ws/');
 
     // cluster sombre
-    // socket = new WebSocket(`ws://10.12.200.194:7777/ws/`);
-    // listener = new WebSocket(`ws://10.12.200.194:7777/ws/`);
+    socket = new WebSocket(`ws://10.12.200.194:7777/ws/`);
+    listener = new WebSocket(`ws://10.12.200.194:7777/ws/`);
     
     socket.onopen = function() {
         console.log("WebSocket connected");

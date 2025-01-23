@@ -128,6 +128,12 @@
                     </button>
                     <p id="modeComputer"></p>
                 </div>
+                <div class="modeClass" id="modeTournamentDiv">
+                    <button class="modeSelectionButton" id="modeTournamentButton">
+                        <img id="tournamentImg" src="{% static 'images/tournamentImage.webp' %}">
+                    </button>
+                    <p id="tournamentText"></p>
+                </div>
             </div>
             <div id="modesOnline">
                 <h1 id="modesOnlineHeader"></h1>
@@ -142,12 +148,6 @@
                         <img id="2v2Img" src="{% static 'images/2v2Image.webp' %}">
                     </button>
                     <p id="2v2Text"></p>
-                </div>
-                <div class="modeClass" id="modeTournamentDiv">
-                    <button class="modeSelectionButton" id="modeTournamentButton">
-                        <img id="tournamentImg" src="{% static 'images/tournamentImage.webp' %}">
-                    </button>
-                    <p id="tournamentText"></p>
                 </div>
                 <div id="spectateButtonDiv">
                     <button class="buttonSpectate" id="buttonSpectate"></button>
@@ -238,91 +238,27 @@
         </div>
     </div>
 
-    <!------------------------------ Tournament Menu Panel ------------------------------>
-    <div id="tournament-menu" class="page">
-        <h2 class="headerText" id="tournamentHeaderText"></h2>
-        <div id="tournamentMenuPanel">
-            <div id="createTournament">
-                <p id="createTournamentText"></p>
-                <button class="modeSelectionButton" id="createTournamentButton">
-                    <img src="{% static 'images/tournamentCreate.webp' %}">
-                </button>
-            </div>
-            <div id="joinTournament">
-                <p id="joinTournamentText"></p>
-                <button class="modeSelectionButton" id="joinTournamentButton">
-                    <img src="{% static 'images/tournamentJoin.webp' %}">
-                </button>
-            </div>
-            <button class="buttonCancel" id="cancelTournamentButton"></button>
-        </div>
-    </div>
-
     <!------------------------------ Tournament Lobby Panel ------------------------------>
     <div id="tournament-lobby" class="page">
         <h2 class="headerText" id="tournamentLobbyHeaderText"></h2>
         <div id="tournamentLobbyPanel">
-            <div id="rulesTournamentDiv">
-                <h2 id="rulesHeaderTournament"></h2>
-                <div class="ruleTournament" id="arenaTypeRules">
-                    <h3 id="rulesArenaTextTournament"></h3>
-                    <h3 id="rulesArenaValueTournament"></h3>
-                </div>
-                <div class="ruleTournament" id="pointsTypeRules">
-                    <h3 id="rulesPointsTextTournament"></h3>
-                    <h3 id="rulesPointsValueTournament"></h3>
-                </div>
-                <div class="ruleTournament" id="timeTypeRules">
-                    <h3 id="rulesTimeTextTournament"></h3>
-                    <h3 id="rulesTimeValueTournament"></h3>
-                </div>
-                <div class="ruleTournament" id="playersTypeRules">
-                    <h3 id="rulesPlayersTextTournament"></h3>
-                    <h3 id="rulesPlayersValueTournament"></h3>
-                </div>
-            </div>
             <div id="listPlayers">
                 <div class="listPlayersTournament" id="listPlayersTournament"></div>
-                <p id="nbrPlayersTournament">test 0/20</p>
-                <button id="sendTournamentInvitToChat"></button>
+                <p id="nbrPlayersTournament"></p>
+                <button id="addPlayerTournament"></button>
             </div>
             <button class="buttonAccept" id="startTournamentButton"></button>
             <button class="buttonCancel" id="cancelTournamentLobbyButton"></button>
-        </div>
-    </div>
-
-    <!------------------------------ Tournament Join Panel ------------------------------>
-    <div id="tournament-join" class="page">
-        <h2 class="headerText" id="tournamentListHeaderText"></h2>
-        <div id="tournamentJoinPanel">
-            <div id="listTournamentDiv">
-                <div id="listTournaments"></div>
-                <h2 id="availableTournamentHeader"></h2>
-            </div>
-            <div id="rulesJoinTournamentContainer">
-                <div id="rulesJoinTournamentDiv">
-                    <h2 id="rulesJoinHeaderTournament"></h2>
-                    <div class="ruleTournament" id="arenaTypeRules">
-                        <h3 id="rulesJoinArenaTextTournament"></h3>
-                        <h3 id="rulesJoinArenaValueTournament"></h3>
-                    </div>
-                    <div class="ruleTournament" id="pointsTypeRules">
-                        <h3 id="rulesJoinPointsTextTournament"></h3>
-                        <h3 id="rulesJoinPointsValueTournament"></h3>
-                    </div>
-                    <div class="ruleTournament" id="timeTypeRules">
-                        <h3 id="rulesJoinTimeTextTournament"></h3>
-                        <h3 id="rulesJoinTimeValueTournament"></h3>
-                    </div>
-                    <div class="ruleTournament" id="playersTypeRules">
-                        <h3 id="rulesJoinPlayersTextTournament"></h3>
-                        <h3 id="rulesJoinPlayersValueTournament"></h3>
-                    </div>
+            <div id="addPlayerTournamentPanel">
+                <input type="text" class="inputfield" id="inputAddPlayer" maxlength="20" placeholder="Player name...">
+                <div id="buttonsAddPlayerTournament">
+                    <button class="buttonAccept" id="confirmAddPlayerButton"></button>
+                    <button class="buttonCancel" id="cancelAddPlayerButton"></button>
                 </div>
             </div>
-            <button class="buttonAccept" id="joinTournamentLobbyButton"></button>
-            <button class="buttonCancel" id="cancelJoinTournamentLobbyButton"></button>
         </div>
+    </div>
+    <div id="tournamentMatchsCanvas">
     </div>
 
     <!------------------------------ ChoosePaddle ------------------------------>

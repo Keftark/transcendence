@@ -444,3 +444,20 @@ export async function blockUserRequest(userName) {
         console.error('Error:', error);
     }
 }
+
+export async function unblockUserRequest(userName) {
+    try {
+        const response = await fetch(`/block_user/${userName}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            }
+        });
+        if (!response.ok)
+            throw new Error('Network response was not ok');
+        return response;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}

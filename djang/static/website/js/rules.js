@@ -1,10 +1,9 @@
 import { endMatch } from "./levelLocal.js";
 import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
 import { clickPlayGame, showModeChoice } from "./modesSelection.js";
-import { getCurrentView, navigateTo } from "./pages.js";
+import { navigateTo } from "./pages.js";
 import { playerStats } from "./playerManager.js";
 import { endOfMatch } from "./scoreManager.js";
-import { goTournamentMenu } from "./tournament.js";
 import { ArenaType } from "./variables.js";
 
 document.getElementById('buttonCancelRules').addEventListener('click', clickCancelRules);
@@ -160,10 +159,7 @@ export function onOpenRules(fromTournament)
 
 export function clickCancelRules()
 {
-    if (isTournament)
-        goTournamentMenu();
-    else
-        showModeChoice();
+    showModeChoice();
 }
 
 export function onCloseRules()

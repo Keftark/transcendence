@@ -4,12 +4,12 @@ import asyncio
 import threading
 import time
 import json
-from Queue import Queue
+import os
+import Queue2
 from websockets.asyncio.server import serve
 from websockets.asyncio.client import connect
 import sys
 import signal
-from Logger import Logger
 
 #Take the variables from the .env
 #Leave as comments until we are in docker !
@@ -24,22 +24,18 @@ CENTRAL_PORT = 7777
 
 central_socket = None
 
-logger = Logger()
-queue = Queue(logger)
+start = time.time()
+queue = Queue2.Queue2(start)
 matchs = []
 lock = threading.Lock()
-lock_a = asyncio.Lock()
 stopFlag = False
-message_queue = []
 
 def dump_error(error, id):
     event = {
         "type": "error",
         "server": "1v1_classic",
         "answer": "yes",
-        "content": error,
-        "ids": [id],
-        "id": id
+        "content": error
     }
     return event
 
@@ -48,33 +44,30 @@ def dump_exit_queue(id):
         "type": "exit_queue",
         "server": "1v1_classic",
         "answer": "yes",
-        "ids": [id],
         "id": id
     }
     return event
 
-def dump_all_matchs(id):
+def dump_all_matchs():
     event = []
     for m in matchs:
         details = {
             "room_id": m.room_id,
-            "id_p1": m._paddle_1.id,
-            "id_p2": m._paddle_2.id
+            "id_p1": m.player_1_paddle.id,
+            "id_p2": m.player_2_paddle.id
         }
         event.append(details)
     data = {
         "type": "list_all",
         "server": "1v1_classic",
         "answer": "yes",
-        "ids": [id],
-        "id": id,
         "data": event
     }
     return data
 
 def search_for_player(id):
     for m in matchs:
-        if m._paddle_1.id == id or m.__paddle_2.id == id:
+        if m.player_1_paddle.id == id or m._player_2_paddle.id == id:
             event = {
                 "type": "search_request",
                 "result": "found_in_match",
@@ -101,16 +94,15 @@ def search_for_player(id):
     return event
 
 def dump_everything():
-    global logger
+    global start
     event = {
         "port": SERVER_PORT,
         "tick_rate": UPDATE_DELAY,
         "server": "1v1_classic",
         "answer": "yes",
-        "execution_time": time.time() - logger.start,
+        "execution_time": time.time() - start,
         "in_queue": len(queue.liste),
         "matches": len(matchs),
-        "ids": [id],
         "author": "nmascrie"
     }
     return event
@@ -120,11 +112,7 @@ def dump_join_queue(id):
         "type": "join_queue",
         "server": "1v1_classic",
         "answer": "yes",
-        "ids" : [id],
-        "data": {
-            "id": id,
-            "type": "join_queue",
-        }
+        "id": id
     }
     return event
 
@@ -135,68 +123,46 @@ def pong():
     }
     return event
 
-async def send_to_central():
-    global message_queue, central_socket, lock, lock_a
-    for message in message_queue:
-        if central_socket is not None:  
-            try:
-                await central_socket.send(json.dumps(message))
-                message_queue.remove(message)
-            except Exception as e:
-                central_socket = None
-                logger.log("", 2, e)
-        else:
-            break
-
-def add_to_queue(data):
-    global message_queue, lock, lock_a
-    message_queue.append(data)
-
-def extend_to_queue(data):
-    global message_queue, lock, lock_a
-    message_queue.extend(data)
-
 async def loop():
-    global queue, matchs, stopFlag, message_queue, logger
-    logger.log("Ticker thread launched.", 0)
+    global queue, matchs, stopFlag, start
+    curr = time.time() - start
+    print("[", curr, "] : Ticker thread launched.")
     while stopFlag is False:
-        #update queue
-        found = await queue.tick()
-        for found in queue.match_list:
-            matchs.append(found)
-        queue.match_list.clear()
-        extend_to_queue(queue.message_queue)
-        queue.message_queue.clear()
         #update all matches
         for m in matchs:
-            m.tick()
-            extend_to_queue(m.formatted_queue)
-            m.formatted_queue.clear()
-            if m.ended is True:
-                logger.log("Match with room id " + str(m.room_id) + " has concluded.", 1)
-                matchs.remove(m)
-        await send_to_central()
-        await asyncio.sleep(UPDATE_DELAY)
+            with lock:
+                await m.tick()
+                if m.ended:
+                    curr = time.time() - start
+                    print("[", curr, "] : Match with room id", m.room_id ,"has concluded.")
+                    matchs.remove(m)
+        found = await queue.tick()
+        if found is not None:
+            matchs.append(found)
+        time.sleep(UPDATE_DELAY)
 
 async def handler(websocket):
-    global logger, queue, central_socket
+    global start, queue, central_socket
     try:
         async for message in websocket:
             event = json.loads(message)
             if (event["type"] == "ping"):
                 await central_socket.send(json.dumps(pong()))
             elif (event["type"] == "join"):
-                logger.log("Join request from client ID ::" + str(event["id"]), 1)
-                if (not queue.add_to_queue(event)):
-                    add_to_queue(dump_error("already_in_queue", (int)(event["id"])))
+                curr = time.time() - start
+                print("[", curr, "] : Join request from client ID", event["id"])
+                if (not queue.add_to_queue(central_socket, event)):
+                    await central_socket.send(json.dumps(dump_error("already_in_queue", (int)(event["id"]))))
                 else:
-                    add_to_queue(dump_join_queue((int)(event["id"])))
-                    logger.log("Client ID " +  str(event["id"]) + " has joined Queue", 1)
+                    await central_socket.send(json.dumps(dump_join_queue((int)(event["id"]))))
+                    curr = time.time() - start
+                    print("[", curr, "] : client ID", event["id"], "has joined Queue")
             elif (event["type"] == "quit"):
                 id = (int)(event["id"])
                 queue.del_from_queue(id)
-                logger.log("Client ID " + str(id) + " manually exited queue.", 1)
-                add_to_queue(dump_exit_queue(id))
+                curr = time.time() - start
+                print("[", curr, "] : client ID", id, "manually exited queue.")
+                await central_socket.send(json.dumps(dump_exit_queue(id)))
             elif (event["type"] == "input" or \
                 event["type"] == "ready" or event["type"] == "pause" or \
                 event["type"] == "quit_lobby"):
@@ -207,53 +173,54 @@ async def handler(websocket):
                         break
             elif (event["type"] == "spectate"):
                 room = (int)(event["room_id"])
-                id = (int)(event["id"])
                 for m in matchs:
                     if (m.room_id == room):
-                        m.add_spectator(id)
+                        m.add_spectator(websocket)
                     else:
-                        m.remove_spectator(id)
+                        m.remove_spectator(websocket)
             elif (event["type"] == "unspectate"):
                 for m in matchs:
                     m.remove_spectator(websocket)
             elif (event["type"] == "list_all"):
-                id = (int)(event["id"])
-                add_to_queue(dump_all_matchs(id))
+                await central_socket.send(json.dumps(dump_all_matchs()))
             elif (event["type"] == "find_one"):
                 id = (int)(event["id"])
-                add_to_queue(search_for_player(id))
+                await central_socket.send(json.dumps(search_for_player(id)))
             elif (event["type"] == "dump_it_all_baby"):
-                add_to_queue(dump_everything())
+                await central_socket.send(json.dumps(dump_everything()))
             else:
-                add_to_queue(dump_error("unknown_command", (int)(event["id"])))
+                await central_socket.send(json.dumps(dump_error("unknown_command", (int)(event["id"]))))
     except Exception as e:
-        logger.log("", 2, e)
+        print(e)
 
 async def main():
-    global stopFlag, logger
-    logger.log("Listener thread launched.", 0)
+    global stopFlag, start
+    curr = time.time() - start
+    print("[", curr, "] : Listener thread launched.")
     async with serve(handler, "", SERVER_PORT, ping_interval=10, ping_timeout=None):
         await asyncio.get_running_loop().create_future()  # run forever
     stopFlag = True
 
 async def connection_handler():
-    global central_socket, stopFlag, logger, queue
+    global central_socket, stopFlag, start
     while stopFlag is False:
         if central_socket is None:
             try:
-                logger.log("Attempting connection to central server.", 1)
+                curr = time.time() - start
+                print("[", curr, "] : Attempting connection to central server.")
                 connex = "ws://localhost:" + str(CENTRAL_PORT) + "/"
                 central_socket = await connect(connex, ping_interval=10, ping_timeout=None)
-                logger.log("TCentral server connected.", 1)
+                curr = time.time() - start
+                print("[", curr, "] : Central server connected.")
             except Exception as e:
+                print(e)
                 central_socket = None
-                logger.log("Couldn't connect to the central server", 2, e)
+                print("[", curr, "] : Couldn't connect to the central server.")
         else:
-            with lock:   
-                try:
-                    await central_socket.send(json.dumps(pong()))
-                except Exception as e:
-                    logger.log("", 2, e)
+            try:
+                await central_socket.send(json.dumps(pong()))
+            except Exception as e:
+                print("wololo ::", e)
         await asyncio.sleep(5)
 
 def connection_launcher():
@@ -273,7 +240,8 @@ def signal_handler(signal, frame):
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
-    logger.log("Server launched.", 0)
+    curr = time.time() - start
+    print("[", curr, "] : Server launched.")
     try:
         ticker = threading.Thread(target=ticker_launcher)
         server = threading.Thread(target=server_launcher)
@@ -288,4 +256,5 @@ if __name__ == "__main__":
         server.join()
         connex.join()
     except:
-        logger.log("Server exited with manual closure.", 0)
+        curr = time.time() - start
+        print("[", curr, "] : Server exited with manual closure.")

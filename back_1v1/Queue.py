@@ -1,12 +1,10 @@
-"""A class to handle queues."""
-
+from Match import Match
+from User import User
+from Socket import UserSocket
+import json
 import time
-from back_1v1.match import Match
-from user import User
 
 class Queue:
-    """A class to handle queues for matchmaking.
-    """
     def __init__(self, logger):
         self._liste = []
         self._private = []
@@ -16,52 +14,38 @@ class Queue:
         self._match_list = []
 
     def add_to_queue(self, message):
-        """Adds a user to queue.
-
-        Args:
-            message (dict): data of the query.
-
-        Returns:
-            bool: True if the user was added to the queue, False otherwise.
-        """
         try:
-            _id = (int)(message["id"])
+            id = (int)(message["id"])
             bl = message["blacklist"]
             for user in self._liste:
-                if user.id == _id:
+                if user.id == id:
                     return False
-            user = User(_id, bl)
-            if message["private"] == "invite":
+            user = User(id, bl)
+            if (message["private"] == "invite"):
                 self._room_id += 1
-                match = Match(self._room_id, _id, 0)
+                match = Match(self._room_id, id, 0)
                 match.set_private_match()
                 match.load_parameters(message["payload"])
                 self._private.append(match)
-            elif message["private"] == "join":
-                _id = (int)(message["invited_by"])
+            elif (message["private"] == "join"):
+                id = (int)(message["invited_by"])
                 for private in self._private:
-                    if private.player_1_paddle.id == _id:
+                    if private.player_1_paddle.id == id:
                         private.join_player()
                         break
             else:
                 self._liste.append(user)
             return True
         except Exception as e:
-            self._logger.log("", 2, e)
-
-    def del_from_queue(self, _id):
-        """Removes a player from the queue by his ID.
-
-        Args:
-            _id (int): ID of the player to remove.
-        """
+            curr = time.time() - self._start
+            print("[", curr, "] : Got error", e, ".")
+    
+    def del_from_queue(self, id):
         for us in self._liste:
-            if us.id == _id:
-                self._liste.remove(us)
+            if us.id == id:
+                self._liste.remove(us) 
 
     async def notify_waiting(self):
-        """Generates the message queue.
-        """
         for user in self._liste:
             event = {
                 "server": "1v1_classic",
@@ -76,9 +60,6 @@ class Queue:
             self._message_queue.append(event)
 
     async def tick(self):
-        """Ticks the queue, creating matches if two compatible
-        players are waiting.
-        """
         if len(self._liste) >= 2:
             for p1 in self._liste:
                 for p2 in self._liste:
@@ -86,8 +67,7 @@ class Queue:
                         self._room_id += 1
                         self.del_from_queue(p1.id)
                         self.del_from_queue(p2.id)
-                        text = "Created match room for players " + str(p1.id) + ":" \
-                            + str(p2.id) + " with Room ID :" + str(self._room_id)
+                        text = "Created match room for players " + str(p1.id) + ":" + str(p2.id) + " with Room ID :" + str(self._room_id)
                         self._logger.log(text, 1)
                         self._match_list.append(Match(self._room_id, p1.id, p2.id))
         for private in self._private:
@@ -100,11 +80,6 @@ class Queue:
 
     @property
     def liste(self):
-        """returns the list of waiting players.
-
-        Returns:
-            dict: list of waiting players.
-        """
         return self._liste
 
     @liste.setter
@@ -113,11 +88,6 @@ class Queue:
 
     @property
     def private(self):
-        """Returns the private waiting queue.
-
-        Returns:
-            dict: list of private waiting matches.
-        """
         return self._private
 
     @private.setter
@@ -126,11 +96,6 @@ class Queue:
 
     @property
     def room_id(self):
-        """Returns the highest room ID.
-
-        Returns:
-            int: Highest room ID.
-        """
         return self._room_id
 
     @room_id.setter
@@ -138,12 +103,15 @@ class Queue:
         self._room_id = value
 
     @property
-    def message_queue(self):
-        """Returns the message queue.
+    def start(self):
+        return self._start
 
-        Returns:
-            dict: the message queue.
-        """
+    @start.setter
+    def start(self, value):
+        self._start = value
+
+    @property
+    def message_queue(self):
         return self._message_queue
 
     @message_queue.setter
@@ -152,11 +120,6 @@ class Queue:
 
     @property
     def match_list(self):
-        """Returns the newly created matches list.
-
-        Returns:
-            dict: list of matches.
-        """
         return self._match_list
 
     @match_list.setter

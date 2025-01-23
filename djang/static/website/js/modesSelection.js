@@ -5,10 +5,10 @@ import { LevelMode } from './variables.js';
 import { navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
 import { isInGame, passInfosPlayersToLevel } from './levelLocal.js';
-import { checkAccessModes, isUserLoggedIn } from './registration.js';
+import { checkAccessModes } from './registration.js';
 import { socketAskListMatchs, socketConnectToDuel, socketSpectateMatch } from './sockets.js';
-import { onPlayGame } from './menu.js';
 import { getUserName } from './apiFunctions.js';
+import { openTournamentLobby } from './tournament.js';
 
 const modesLocalButton = document.getElementById('modesLocalButton');
 const modesOnlineButton = document.getElementById('modesOnlineButton');
@@ -24,6 +24,11 @@ const modeComputer = document.getElementById('modeComputerDiv');
 const modeDuel = document.getElementById('modeDuelDiv');
 const mode2v2 = document.getElementById('mode2v2Div');
 const modeTournament = document.getElementById('modeTournamentDiv');
+
+let isInsideModes = false;
+let animReverse = false;
+let isLocalModes = false;
+let isOnlineModes = false;
 
 modeLocalButton.addEventListener('click', () => {
     setSelectedMode(LevelMode.LOCAL);
@@ -62,20 +67,11 @@ mode2v2Button.addEventListener('click', () => {
 });
 
 modeTournamentButton.addEventListener('click', () => {
-    closeOnlineModes();
+    closeLocalModes();
     isInsideModes = false;
     setTimeout(() => {
-        openTournamentMenu();
+        openTournamentLobby();
     }, 300);
-});
-
-document.getElementById('createTournamentButton').addEventListener('click', () => {
-    setSelectedMode(LevelMode.TOURNAMENTLOBBY);
-    openRules("t");
-});
-
-document.getElementById('joinTournamentButton').addEventListener('click', () => {
-    joinTournament();
 });
 
 document.getElementById('modeBackButton').addEventListener('click', () => {
@@ -89,11 +85,6 @@ modesLocalButton.addEventListener('click', () => {
 modesOnlineButton.addEventListener('click', () => {
     clickModesOnline();
 });
-
-let isInsideModes = false;
-let animReverse = false;
-let isLocalModes = false;
-let isOnlineModes = false;
 
 function setSelectedMode(newSelectedMode)
 {
@@ -163,6 +154,7 @@ function clickModesLocal()
         modeLocalButton.focus();
         modeLocal.style.animationDirection = 'normal';
         modeComputer.style.animationDirection = 'normal';
+        modeTournament.style.animationDirection = 'normal';
         animLocalModes();
     }, 300);
 }
@@ -180,7 +172,6 @@ function clickModesOnline()
         modeDuelButton.focus();
         modeDuel.style.animationDirection = 'normal';
         mode2v2.style.animationDirection = 'normal';
-        modeTournament.style.animationDirection = 'normal';
         animOnlineModes();
     }, 300);
 }
@@ -189,14 +180,17 @@ function animLocalModes()
 {
     modeLocal.classList.add('littleAppearAnim');
     modeComputer.classList.add('littleAppearAnim');
+    modeTournament.classList.add('littleAppearAnim');
 }
 
 function resetLocalAnim()
 {
     modeLocal.classList.remove('littleAppearAnim');
     modeComputer.classList.remove('littleAppearAnim');
+    modeTournament.classList.remove('littleAppearAnim');
     void modeLocal.offsetWidth;
     void modeComputer.offsetWidth;
+    void modeTournament.offsetWidth;
     animLocalModes();
 }
 
@@ -205,6 +199,7 @@ function closeLocalModes()
     modeLocal.style.animationDirection = 'reverse';
     mode2v2.style.animationDirection = 'reverse';
     modeComputer.style.animationDirection = 'reverse';
+    modeTournament.style.animationDirection = 'reverse';
     resetLocalAnim();
     isLocalModes = false;
 }
@@ -213,17 +208,14 @@ function animOnlineModes()
 {
     modeDuel.classList.add('littleAppearAnim');
     mode2v2.classList.add('littleAppearAnim');
-    modeTournament.classList.add('littleAppearAnim');
 }
 
 function resetOnlineAnim()
 {
     modeDuel.classList.remove('littleAppearAnim');
     mode2v2.classList.remove('littleAppearAnim');
-    modeTournament.classList.remove('littleAppearAnim');
     void modeDuel.offsetWidth;
     void mode2v2.offsetWidth;
-    void modeTournament.offsetWidth;
     animOnlineModes();
     isOnlineModes = false;
 }
@@ -232,7 +224,6 @@ function closeOnlineModes()
 {
     modeDuel.style.animationDirection = 'reverse';
     mode2v2.style.animationDirection = 'reverse';
-    modeTournament.style.animationDirection = 'reverse';
     resetOnlineAnim();
 }
 
@@ -267,7 +258,6 @@ export function onModesOpen()
 
 export function clickBackButtonMenu()
 {
-    console.log("Inside modes ?" + isInsideModes);
     if (isInsideModes)
     {
         if (isLocalModes)

@@ -46,6 +46,11 @@ class AccountModel(models.Model):
             (Q(friend2=self) & Q(friend1=friend))
         ).exists()
 
+    def is_blocked(self, block):
+        return BlockModel.objects.filter(
+            (Q(blocked=self) & Q(blocker=block))
+        ).exists()
+
     def delete_friend(self, friend):
         FriendModel.objects.get(
             (Q(friend1=self) & Q(friend2=friend)) |
