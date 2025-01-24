@@ -38,6 +38,7 @@
     "seeMatchesButton": "Match history",
     "noMatchHistory": "No match history",
     "victories": "Victories",
+    "isVictorious": " won the tournament!",
     "matchesPlayed": "Matches played",
     "errEmptyName": "Error: empty nickname.",
     "errEmptyFirstName": "Error: empty first name.",

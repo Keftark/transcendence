@@ -97,6 +97,7 @@ export function updateHTML(translations)
 	document.getElementById('askSignInText').innerText = translations.askSignInText;
 	document.getElementById('askRegisterText').innerText = translations.askRegisterText;
 	document.getElementById('startTournamentButton').innerText = translations.start;
+	document.getElementById('startMatchTournamentButton').innerText = translations.start;
 	document.getElementById('cancelTournamentLobbyButton').innerText = translations.cancel;
 	document.getElementById('addPlayerTournament').innerText = translations.addPlayerTournament;
 	document.getElementById('tournamentLobbyHeaderText').innerText = translations.tournamentLobbyHeaderText;
@@ -120,7 +121,8 @@ export function updateHTML(translations)
 	document.getElementById('winsMiniProfile').innerHTML = translations.gamesWon;
 	document.getElementById('confirmAddPlayerButton').innerHTML = translations.addPlayerTournament;
 	document.getElementById('cancelAddPlayerButton').innerHTML = translations.cancel;
-	
+	document.getElementById('closeTournamentVictoryButton').innerHTML = translations.close;
+
 	
     document.querySelector('.gdpr').addEventListener('click', function(event) {
 		event.preventDefault();

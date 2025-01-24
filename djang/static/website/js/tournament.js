@@ -11,6 +11,9 @@ const addPlayerButton = document.getElementById('addPlayerTournament');
 const inputAddPlayer = document.getElementById('inputAddPlayer');
 const addPlayerTournamentPanel = document.getElementById('addPlayerTournamentPanel');
 const confirmAddPlayerButton = document.getElementById('confirmAddPlayerButton');
+const tournamentWinVictory = document.getElementById('tournamentWinVictory');
+const tournamentWinVictoryText = document.getElementById('tournamentWinVictoryText');
+const closeTournamentVictoryButton = document.getElementById('closeTournamentVictoryButton');
 
 
 let countPlayers = 0;
@@ -18,8 +21,11 @@ let tournamentLeader = "";
 
 let players = [];
 
+closeTournamentVictoryButton.addEventListener('click', () => {
+    closeTournamentView();
+});
+
 startTournamentButton.addEventListener('click', () => {
-    
     startTournament();
 });
 
@@ -41,18 +47,16 @@ document.getElementById('cancelAddPlayerButton').addEventListener('click', () =>
 
 inputAddPlayer.addEventListener('input', () => {
 
-    if (inputAddPlayer.value === "" || players.includes(inputAddPlayer.value))
+    if (inputAddPlayer.value === "" || players.map(item => item.toUpperCase()).includes(inputAddPlayer.value.toUpperCase()))
         addDisableButtonEffect(confirmAddPlayerButton);
     else
         removeDisableButtonEffect(confirmAddPlayerButton);
-    // check all the players
 });
 
 let addPlayerIsOpen = false;
 
 export function quitTournamentLobby()
 {
-    // clickBackButtonMenu(true);
     showModeChoice();
     deleteEveryone();
 }
@@ -102,7 +106,8 @@ export function startTournament()
 {
     if (startTournamentButton.classList.contains('disabledButtonHover'))
         return;
-
+    createTournamentView();
+    displayNextMatch();
 }
 
 function deleteEveryone()
@@ -166,18 +171,28 @@ function createCanvas()
 
 }
 
+let currentMatch = 
+{
+    player1: 0,
+    player2: 1
+};
+let currentTier = 0;
+
 let iteration = 0;
 let playersInTier = 0;
 const tournamentMatchsCanvas = document.getElementById('tournamentMatchsCanvas');
 
+let tiersList = []
 function createPlayersTier()
 {
     const tierDiv = document.createElement('div');
+    tiersList.push(tierDiv);
     tierDiv.classList.add('itemListTournament');
     tournamentMatchsCanvas.appendChild(tierDiv);
     return tierDiv;
 }
 
+let lastPlayer;
 function createPlayerInTier(parentDiv, isFirst, playerNbr)
 {
     const childDiv = document.createElement('div');
@@ -190,6 +205,7 @@ function createPlayerInTier(parentDiv, isFirst, playerNbr)
     else
     {
         childDiv.innerText = "?";
+        lastPlayer = childDiv;
     }
     childDiv.classList.add('itemTournament');
     parentDiv.appendChild(childDiv);
@@ -205,65 +221,52 @@ function createCanvasDiv()
 }
 
 function drawOnCanvases() {
-    const canvasList = document.querySelectorAll('canvas');
-    
     for (let i = 0; i < canvasList.length; i++) {
         const canvas = canvasList[i];
         const prev = canvas.previousElementSibling;
         const next = canvas.nextElementSibling;
-
         if (!prev || !next) {
             console.warn(`Canvas at index ${i} is missing a previous or next sibling.`);
             continue;
         }
-
         const prevElementsCount = prev.childElementCount;
         const nextElementsCount = next.childElementCount;
-
         if (prevElementsCount === 0 || nextElementsCount === 0) {
             console.warn(`Canvas at index ${i} has siblings with no children.`);
             continue;
         }
-
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
         ctx.strokeStyle = '#006b6b';
         ctx.lineWidth = 2;
-
         let nextIndex = 0;
-
         for (let j = 0; j < prevElementsCount; j++) {
             const nextElement = next.children[nextIndex];
             const rect1 = prev.children[j].getBoundingClientRect();
             const rect2 = nextElement.getBoundingClientRect();
-
             const y1 = rect1.top + rect1.height / 2;
             const y2 = rect2.top + rect2.height / 2;
-
             const x1 = rect1.right;
             const x2 = rect2.left;
-
-            const controlX1 = x1 + 30;
-            const controlX2 = x2 - 30;
-            
+            const distance = Math.abs(x2 - x1);
+            const controlDistance = distance * 0.4;
+            const controlX1 = x1 + controlDistance;
+            const midpointX = (x1 + x2) / 2;
+            const controlX2 = midpointX;
             let controlY1, controlY2;
-            if (x2 > x1) {
-                controlY1 = y1 - 15;
-                controlY2 = y2 + 15;
+            if (j % 2 === 0) {
+                controlY1 = y1 - 5;
+                controlY2 = y2 - 5;
             } else {
-                controlY1 = y1 + 15;
-                controlY2 = y2 - 15;
+                controlY1 = y1 + 5;
+                controlY2 = y2 + 5;
             }
-
             ctx.beginPath();
             ctx.moveTo(x1, y1);
-            ctx.bezierCurveTo(controlX1, controlY1, controlX2, controlY2, x2, y2);  // Draw a cubic Bezier curve
+            ctx.bezierCurveTo(controlX1, controlY1, controlX2, controlY2, x2, y2);
             ctx.stroke();
-
             if ((j + 1) % 2 === 0) {
                 nextIndex++;
                 if (nextIndex >= nextElementsCount) {
@@ -274,16 +277,14 @@ function drawOnCanvases() {
     }
 }
 
-// Call the function to draw the curved lines
-drawOnCanvases();
-
-
 let last = false;
 let first = true;
 function createTournamentView()
 {
-    // playersInTier = countPlayers;
-    playersInTier = 8;
+    last = false;
+    first = true;
+    playersInTier = countPlayers;
+    // playersInTier = 8;
     while (playersInTier > 0)
     {
         let curTierDiv = createPlayersTier();
@@ -293,6 +294,7 @@ function createTournamentView()
         }
         if (last === true)
         {
+            tournamentMatchsCanvas.style.display = 'flex';
             drawOnCanvases();
             return;
         }
@@ -306,15 +308,90 @@ function createTournamentView()
     }
 }
 
-function displayLostPlayer(playerName, tier)
+function closeTournamentView()
 {
-    const children = canvasList[tier].children;
-    for (let i = 0; i < children.length; i++) {
-        if (children[i].getAttribute('data-name') === playerName)
-        {
+    deleteEveryone();
+    while (canvasList.firstChild)
+        canvasList.removeChild(canvasList.firstChild);
 
-        }
-    }
+    tournamentMatchsCanvas.style.display = 'none';
+    tournamentWinVictory.style.display = 'none';
 }
 
-createTournamentView();
+// function displayLostPlayer(playerName, tier)
+// {
+//     const children = canvasList[tier].children;
+//     for (let i = 0; i < children.length; i++) {
+//         if (children[i].getAttribute('data-name') === playerName)
+//         {
+//             children[i].classList.add('lost');
+//         }
+//     }
+// }
+
+function displayNextMatch()
+{
+    const child = tiersList[currentTier].children;
+    child[currentMatch.player1].classList.add('nextMatch');
+    child[currentMatch.player2].classList.add('nextMatch');
+}
+
+function goToNextTier()
+{
+    currentTier += 1;
+    currentMatch.player1 = 0;
+    currentMatch.player2 = 1;
+}
+
+function callVictory()
+{
+    tournamentWinVictoryText.innerText = lastPlayer.getAttribute('data-name') + getTranslation("isVictorious");
+    tournamentWinVictory.style.display = 'flex';
+}
+
+function prepareNextMatch()
+{
+    if (currentMatch.player2 >= tiersList[currentTier].children.length - 1)
+    {
+        goToNextTier();
+        if (currentTier === tiersList.length - 1)
+        {
+            callVictory();
+            console.log("End of tournament!");
+        }
+    }
+    else
+    {
+        currentMatch.player1+=2;
+        currentMatch.player2+=2;
+    }
+    displayNextMatch();
+}
+
+// call this function when a match ends
+export function endOfTournamentMatch(victoriousPlayerNbr)
+{
+    const item = tiersList[currentTier].children;
+    item[currentMatch.player1].classList.remove('nextMatch');
+    item[currentMatch.player2].classList.remove('nextMatch');
+    if (victoriousPlayerNbr === 1)
+    {
+        item[currentMatch.player2].classList.add('lost');
+        if (currentTier + 1 < tiersList.length)
+        {
+            const child = tiersList[currentTier + 1].children[Math.floor(currentMatch.player2 / 2)];
+            const attribute = item[currentMatch.player1].getAttribute('data-name');
+            child.setAttribute('data-name', attribute)
+            child.textContent = attribute;
+        }
+    }
+    else
+    {
+        item[currentMatch.player1].classList.add('lost');
+    }
+
+    prepareNextMatch();
+}
+
+// createTournamentView();
+// setInterval(() => endOfTournamentMatch(1), 500);
