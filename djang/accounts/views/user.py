@@ -47,6 +47,9 @@ def game_online(request):
 def game_ai(request):
     return render(request, 'index.html', {'current_page': 'game-ai'})
 
+def game_tournament(request):
+    return render(request, 'index.html', {'current_page': 'game-tournament'})
+
 def tournament_menu(request):
     return render(request, 'index.html', {'current_page': 'tournament-menu'})
 

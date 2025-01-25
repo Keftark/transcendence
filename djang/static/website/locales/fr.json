@@ -97,7 +97,7 @@
     "joinTournamentText": "Rejoindre un tournoi",
     "addPlayerTournament": "Ajouter",
     "tournamentLobbyHeaderText": "Tournoi - Accueil",
-    "availableTournamentHeader": "Tournois disponibles",
+    "tournamentAskBackText": "Voulez-vous abandonner le tournoi ?",
     "coopText": "2 contre 2",
     "rulesIsPrivateInput": "Match privé : ",
     "profilePictureChangeButton": "Changer la photo",

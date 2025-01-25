@@ -144,12 +144,6 @@
     gap: 4px;
 }
 
-.leaderTournament
-{
-    background-color: rgba(253, 255, 127, 0.048);
-    border: 1px solid #ffd0005e;
-}
-
 .playerNameTournament
 {
     margin: 4px;
@@ -180,70 +174,6 @@
 {
     box-shadow: 0 0 4px rgb(255, 0, 0);
     background-color: rgb(255, 0, 0);
-}
-
-#rulesTournamentDiv
-{
-    height: 50%;
-    width: 22vw;
-    max-width: 256px;
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: start;
-    gap: 4px;
-    pointer-events: none;
-}
-
-#rulesJoinTournamentDiv
-{
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: start;
-    gap: 4px;
-    pointer-events: none;
-}
-
-#rulesJoinTournamentContainer
-{
-    height: 50%;
-    width: 22vw;
-    max-width: 256px;
-}
-
-
-#rulesHeaderTournament, #rulesJoinHeaderTournament
-{
-    align-self: center;
-    margin: 0;
-}
-
-/* #rulesTextTournament
-{
-    color: white;
-    white-space: pre-line;
-    text-align:justify;
-    width: 100%;
-    margin: 0;
-} */
-
-.ruleTournament
-{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 95%;
-    height: 28px;
-    background-color: rgba(255, 255, 255, 0.03);
-}
-
-#availableTournamentHeader
-{
-    text-align: center;
 }
 
 .tournamentDiv
@@ -287,6 +217,7 @@
     height: 100%;
     /* width: 5rem; */
     z-index: 2;
+    pointer-events: none;
 }
 
 .itemListTournament
@@ -310,6 +241,7 @@
     background-color: #00d9cb54;
     align-items: center;
     justify-content: center;
+    overflow-x: scroll;
 }
 
 .itemTournament.lost
@@ -322,7 +254,7 @@
     background-color: #76640054;
 }
 
-#tournamentWinVictory
+#tournamentWinVictory, #askBackTournamentViewPanel
 {
     position: absolute;
     display: none;
@@ -332,7 +264,16 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
-    z-index: 2;
+    z-index: 3;
+}
+
+#askBackTournamentViewPanel
+{
+    z-index: 4;
+}
+#askBackTournamentViewPanel button
+{
+    top: 60%;
 }
 
 #tournamentWinVictory h1
@@ -346,10 +287,13 @@
     position: relative;
     transform: translate(0,0);
 }
-#startMatchTournamentButton
+
+#tournamentViewButtons
 {
     position: absolute;
-    transform: translate(0,0);
+    display: flex;
+    /* transform: translate(0,0); */
     z-index: 3;
-    bottom: 2rem;
+    bottom: -8%;
+    justify-content: center;
 }

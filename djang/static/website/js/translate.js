@@ -99,8 +99,12 @@ export function updateHTML(translations)
 	document.getElementById('startTournamentButton').innerText = translations.start;
 	document.getElementById('startMatchTournamentButton').innerText = translations.start;
 	document.getElementById('cancelTournamentLobbyButton').innerText = translations.cancel;
+	document.getElementById('cancelMatchTournamentButton').innerText = translations.cancel;
+	document.getElementById('confirmBackTournamentButton').innerText = translations.confirm;
+	document.getElementById('cancelBackTournamentButton').innerText = translations.cancel;
 	document.getElementById('addPlayerTournament').innerText = translations.addPlayerTournament;
 	document.getElementById('tournamentLobbyHeaderText').innerText = translations.tournamentLobbyHeaderText;
+	document.getElementById('tournamentAskBackText').innerText = translations.tournamentAskBackText;
 	document.getElementById('modesLocalText').innerText = translations.modesLocalHeader;
 	document.getElementById('modesOnlineText').innerText = translations.modesOnlineHeader;
 	document.getElementById('2v2Text').innerText = translations.coopText;

@@ -17,8 +17,8 @@ closeVictoryButton.addEventListener('click', () => {
 export function callVictoryScreen(victoryType, playerWon = "") {
     let str;
     let newSrc;
-    const isLocal = getLevelState() === LevelMode.LOCAL;
-    const playerName = isSpectator() ? playerWon : getPlayerName();
+    const isLocal = getLevelState() === LevelMode.LOCAL || LevelMode.TOURNAMENT;
+    const playerName = isSpectator() || LevelMode.TOURNAMENT ? playerWon : getPlayerName();
 
     switch (victoryType) {
         case VictoryType.VICTORY:

@@ -4,10 +4,9 @@ export const LevelMode = {
 	ADVENTURE: 2,
 	DUEL: 3,
 	LOCAL: 4,
-	TOURNAMENTLOBBY: 5,
-	TOURNAMENT: 6,
-	MULTI: 7,
-	ONLINE: 8,
+	TOURNAMENT: 5,
+	MULTI: 6,
+	ONLINE: 7,
 };
 
 export const ArenaType = 

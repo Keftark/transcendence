@@ -12,6 +12,7 @@ let ballRadiusMult = 1.0;
 let ballSpeedMult = 1.0;
 let isBallBoosted = false;
 let boostedBallModel;
+let currentLevelMode;
 
 let ballPosition =
 {
@@ -73,6 +74,7 @@ function getRandomVelocityComponent() {return Math.random() < 0.5 ? ballBaseStat
 
 export function createBall(scene, callBack)
 {
+    currentLevelMode = getLevelState();
     ballRadiusMult = 1;
     isBallBoosted = false;
     ballSpeedMult = 1;
@@ -229,7 +231,7 @@ export function createBall(scene, callBack)
         if (!isLeft)
         {
             ballVelocity.x = -ballVelocity.x;
-            if (getLevelState() === LevelMode.LOCAL)
+            if (currentLevelMode === LevelMode.LOCAL || currentLevelMode === LevelMode.TOURNAMENT)
                 fillPowerBarRight(absVeloX * 25);
         }
         else
@@ -324,9 +326,9 @@ export function createBall(scene, callBack)
 
     function updateBall(player1, player2)
     {
-        if (getLevelState() === LevelMode.LOCAL || getLevelState() === LevelMode.ADVENTURE)
+        if (currentLevelMode === LevelMode.LOCAL || currentLevelMode === LevelMode.ADVENTURE || currentLevelMode === LevelMode.TOURNAMENT)
             moveBall(player1, player2);
-        else if (getLevelState() === LevelMode.ONLINE)
+        else if (currentLevelMode === LevelMode.ONLINE)
             setBallPosition(ballPosition.x, ballPosition.y);
         pointLight.position.copy(ball.position);
         rotateBall();

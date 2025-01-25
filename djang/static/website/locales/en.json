@@ -97,7 +97,7 @@
     "joinTournamentText": "Join a tournament",
     "addPlayerTournament": "Add",
     "tournamentLobbyHeaderText": "Tournament - Lobby",
-    "availableTournamentHeader": "Available tournaments",
+    "tournamentAskBackText": "Do you want to exit the tournament?",
     "coopText": "2 vs 2",
     "rulesIsPrivateInput": "Private match: ",
     "profilePictureChangeButton": "Change picture",

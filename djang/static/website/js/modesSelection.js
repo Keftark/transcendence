@@ -2,13 +2,13 @@ import { openRules, setCustomRules, setDefaultRules } from './rules.js';
 import { sendInvitationDuel } from './chat.js';
 import { getLevelState, setLevelState } from './main.js';
 import { LevelMode } from './variables.js';
-import { navigateTo } from './pages.js';
+import { getCurrentView, navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
 import { isInGame, passInfosPlayersToLevel } from './levelLocal.js';
 import { checkAccessModes } from './registration.js';
 import { socketAskListMatchs, socketConnectToDuel, socketSpectateMatch } from './sockets.js';
 import { getUserName } from './apiFunctions.js';
-import { openTournamentLobby } from './tournament.js';
+import { closeTournamentView, openTournamentLobby } from './tournament.js';
 
 const modesLocalButton = document.getElementById('modesLocalButton');
 const modesOnlineButton = document.getElementById('modesOnlineButton');
@@ -67,6 +67,7 @@ mode2v2Button.addEventListener('click', () => {
 });
 
 modeTournamentButton.addEventListener('click', () => {
+    setSelectedMode(LevelMode.TOURNAMENT);
     closeLocalModes();
     isInsideModes = false;
     setTimeout(() => {
@@ -108,13 +109,13 @@ export function clickPlayGame()
         navigateTo('game-multi', selecMode);
     else if (selecMode === LevelMode.ONLINE)
         navigateTo('game-online', selecMode);
+    else if (selecMode === LevelMode.TOURNAMENT)
+        navigateTo('game-tournament', selecMode);
     else if (selecMode === LevelMode.DUEL)
     {
         sendInvitationDuel(playerStats.nickname);
         navigateTo('duel');
     }
-    else if (selecMode === LevelMode.TOURNAMENTLOBBY)
-        navigateTo('tournament-lobby', selecMode);
 }
 
 function resetBigModesAnim()
@@ -270,6 +271,10 @@ export function clickBackButtonMenu()
     }
     else
     {
+        if (getCurrentView() === LevelMode.TOURNAMENT)
+        {
+            closeTournamentView();
+        }
         closeBigModes();
         setTimeout(() => {
             navigateTo('home', getLevelState());

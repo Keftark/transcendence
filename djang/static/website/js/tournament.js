@@ -1,5 +1,5 @@
 import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
-import { showModeChoice } from "./modesSelection.js";
+import { clickPlayGame, showModeChoice } from "./modesSelection.js";
 import { navigateTo } from "./pages.js";
 import { playerStats } from "./playerManager.js";
 import { getTranslation } from "./translate.js";
@@ -14,19 +14,48 @@ const confirmAddPlayerButton = document.getElementById('confirmAddPlayerButton')
 const tournamentWinVictory = document.getElementById('tournamentWinVictory');
 const tournamentWinVictoryText = document.getElementById('tournamentWinVictoryText');
 const closeTournamentVictoryButton = document.getElementById('closeTournamentVictoryButton');
+const startMatchTournamentButton = document.getElementById('startMatchTournamentButton');
+const cancelMatchTournamentButton = document.getElementById('cancelMatchTournamentButton');
+const confirmBackTournamentButton = document.getElementById('confirmBackTournamentButton');
+const cancelBackTournamentButton = document.getElementById('cancelBackTournamentButton');
+const askBackTournamentViewPanel = document.getElementById('askBackTournamentViewPanel');
 
 
 let countPlayers = 0;
-let tournamentLeader = "";
 
 let players = [];
+
+let player1Name = "";
+let player2Name = "";
+
+export function getTournamentPlayers()
+{
+    return [player1Name, player2Name];
+}
 
 closeTournamentVictoryButton.addEventListener('click', () => {
     closeTournamentView();
 });
 
+cancelMatchTournamentButton.addEventListener('click', () => {
+    askBackTournamentView();
+});
+
+confirmBackTournamentButton.addEventListener('click', () => {
+    cancelBackTournamentView();
+    backTournamentView();
+});
+
+cancelBackTournamentButton.addEventListener('click', () => {
+    cancelBackTournamentView();
+});
+
 startTournamentButton.addEventListener('click', () => {
     startTournament();
+});
+
+startMatchTournamentButton.addEventListener('click', () => {
+    startMatchTournament();
 });
 
 document.getElementById('cancelTournamentLobbyButton').addEventListener('click', () => {
@@ -54,6 +83,13 @@ inputAddPlayer.addEventListener('input', () => {
 });
 
 let addPlayerIsOpen = false;
+
+function startMatchTournament()
+{
+    tournamentMatchsCanvas.style.display = 'none';
+    tournamentViewIsOpen = false;
+    clickPlayGame();
+}
 
 export function quitTournamentLobby()
 {
@@ -108,12 +144,14 @@ export function startTournament()
         return;
     createTournamentView();
     displayNextMatch();
+    startMatchTournamentButton.focus();
 }
 
 function deleteEveryone()
 {
     while (listplayersDiv.firstChild)
         listplayersDiv.removeChild(listplayersDiv.firstChild);
+    players.length = 0;
     countPlayers = 0;
 }
 
@@ -139,8 +177,6 @@ export function addPlayerToTournament(playerName)
     const newPlayer = document.createElement('p');
     newPlayer.setAttribute('playerName', playerName);
     newPlayer.classList.add('playerTournament');
-    if (playerName === tournamentLeader)
-        newPlayer.classList.add('leaderTournament');
     const newPlayerName = document.createElement('div');
     newPlayerName.classList.add('playerNameTournament');
     newPlayerName.textContent = playerName;
@@ -164,11 +200,6 @@ function redCrossButtonClick(div, name)
     players = players.filter(str => str !== name);
     modPlayerCount(-1);
     div.remove();
-}
-
-function createCanvas()
-{
-
 }
 
 let currentMatch = 
@@ -295,6 +326,7 @@ function createTournamentView()
         if (last === true)
         {
             tournamentMatchsCanvas.style.display = 'flex';
+            tournamentViewIsOpen = true;
             drawOnCanvases();
             return;
         }
@@ -308,13 +340,50 @@ function createTournamentView()
     }
 }
 
-function closeTournamentView()
+let inAskCancelBack = false;
+
+export function isInAskBackTournamentView()
 {
-    deleteEveryone();
+    return inAskCancelBack;
+}
+
+export function askBackTournamentView()
+{
+    inAskCancelBack = true;
+    askBackTournamentViewPanel.style.display = 'flex';
+    confirmBackTournamentButton.focus();
+}
+
+export function cancelBackTournamentView()
+{
+    inAskCancelBack = false;
+    askBackTournamentViewPanel.style.display = 'none';
+    startMatchTournamentButton.focus();
+}
+
+export function backTournamentView()
+{
+    currentTier = 0;
+    playersInTier = 0
+    currentMatch.player1 = 0;
+    currentMatch.player2 = 1;
     while (canvasList.firstChild)
         canvasList.removeChild(canvasList.firstChild);
-
+    canvasList.length = 0;
+    while (tiersList.firstChild)
+        tiersList.removeChild(tiersList.firstChild);
+    tiersList.length = 0;
+    while (tournamentMatchsCanvas.children.length > 1)
+        tournamentMatchsCanvas.removeChild(tournamentMatchsCanvas.lastChild);
+    tournamentViewIsOpen = false;
     tournamentMatchsCanvas.style.display = 'none';
+    addPlayerButton.focus();
+}
+
+export function closeTournamentView()
+{
+    deleteEveryone();
+    backTournamentView();
     tournamentWinVictory.style.display = 'none';
 }
 
@@ -334,6 +403,8 @@ function displayNextMatch()
     const child = tiersList[currentTier].children;
     child[currentMatch.player1].classList.add('nextMatch');
     child[currentMatch.player2].classList.add('nextMatch');
+    player1Name = child[currentMatch.player1].getAttribute('data-name');
+    player2Name = child[currentMatch.player2].getAttribute('data-name');
 }
 
 function goToNextTier()
@@ -368,13 +439,41 @@ function prepareNextMatch()
     displayNextMatch();
 }
 
-// call this function when a match ends
-export function endOfTournamentMatch(victoriousPlayerNbr)
+let winnerNbr;
+let tournamentViewIsOpen = false;
+
+export function isTournamentViewOpen()
 {
+    return tournamentViewIsOpen;
+}
+
+export function setWinnerNbr(nbr)
+{
+    winnerNbr = nbr;
+}
+
+let cancelledInMatch = false;
+
+export function setCancelledInMatch(isTrue)
+{
+    cancelledInMatch = isTrue;
+}
+
+export function endOfTournamentMatch()
+{
+    if (cancelledInMatch)
+    {
+        cancelledInMatch = false;
+        closeTournamentView();
+        return;
+    }
+    cancelledInMatch = false;
+    tournamentMatchsCanvas.style.display = 'flex';
+    tournamentViewIsOpen = true;
     const item = tiersList[currentTier].children;
     item[currentMatch.player1].classList.remove('nextMatch');
     item[currentMatch.player2].classList.remove('nextMatch');
-    if (victoriousPlayerNbr === 1)
+    if (winnerNbr === 1)
     {
         item[currentMatch.player2].classList.add('lost');
         if (currentTier + 1 < tiersList.length)
@@ -388,9 +487,19 @@ export function endOfTournamentMatch(victoriousPlayerNbr)
     else
     {
         item[currentMatch.player1].classList.add('lost');
+        if (currentTier + 1 < tiersList.length)
+        {
+            const child = tiersList[currentTier + 1].children[Math.floor(currentMatch.player2 / 2)];
+            const attribute = item[currentMatch.player2].getAttribute('data-name');
+            child.setAttribute('data-name', attribute)
+            child.textContent = attribute;
+        }
     }
 
     prepareNextMatch();
+    setTimeout(() => {
+        startMatchTournamentButton.focus();
+    }, 10);
 }
 
 // createTournamentView();

@@ -57,7 +57,7 @@ export function boostPlayer(playerNbr)
 {
     if (playerNbr === 0)
     {
-        socketBoostPaddle();
+        socketBoostPaddle(); // WTF!!! it's the same thing
     }
     else
     {
@@ -323,7 +323,7 @@ export function setupPlayerMovement(player1, player2, player3, player4)
         checkPlayer1Movements(adjustedSpeed);
         if (levelState === LevelMode.ADVENTURE)
             checkBotMovements(adjustedSpeed);
-        else if (levelState === LevelMode.LOCAL)
+        else if (levelState === LevelMode.LOCAL || levelState === LevelMode.TOURNAMENT)
             checkPlayer2Movements(adjustedSpeed);
         else
         {

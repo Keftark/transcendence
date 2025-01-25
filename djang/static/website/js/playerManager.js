@@ -40,6 +40,8 @@ export function createPlayerStats() {
 
 export function addMatchToHistory(victoryType, playerScore, opponentScore, opponentName, matchTime = '0')
 {
+    if (!playerStats.isRegistered)
+        return;
     console.log("Adding match to history:\nplayer score: " + playerScore + "\nOpponent score: " + opponentScore + "\nOpponent name: " + opponentName);
     setTimeout(() => {
         playerStats.matches.push(new MatchResult(victoryType, playerScore, opponentScore, opponentName, matchTime));

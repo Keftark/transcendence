@@ -221,6 +221,8 @@ export function exitGameSocket()
 
 export function socketBoostPaddle()
 {
+    if (!socket || socket.readyState !== WebSocket.OPEN)
+        return;
     const event = {
         key: keySocket,
         answer: "no",

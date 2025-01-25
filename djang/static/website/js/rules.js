@@ -53,13 +53,9 @@ nbrOfPlayersInput.addEventListener("focus", function() {
 });
 
 let selectedArena = 0;
-let playerDuelId = "";
-let isTournament = false;
 let isPrivate = false;
 
 buttonStart.addEventListener('click', () => {
-    if (isTournament && !isNbrPlayersEven())
-        return;
     clickPlayGame();
 });
 
@@ -70,12 +66,6 @@ let rules =
     maxTime: 0,
     nbrPlayers: 0,
     isPrivate: false,
-}
-
-function isNbrPlayersEven()
-{
-    const nbr = Number(nbrOfPlayersInput.value);
-    return !isNaN(nbr) && Number.isInteger(nbr) && nbr != 0 && nbr % 2 === 0;
 }
 
 export function setDefaultRules()
@@ -149,10 +139,8 @@ export function openRules(fromTournament = null)
  // if from 2v2, the parameter should be "2v2"
 export function onOpenRules(fromTournament)
 {
-    isTournament = fromTournament === null ? false : true;
     nbrOfPlayersField.style.display = fromTournament === "t" ? 'flex' : 'none';
     togglePrivateDiv.style.display = fromTournament === null ? 'none' : 'flex';
-    playerDuelId = playerStats.id;
     nbrPointsInput.select();
     endEditInputFieldRules();
 }
@@ -164,15 +152,13 @@ export function clickCancelRules()
 
 export function onCloseRules()
 {
-    playerDuelId = "";
     resetInputfieldsRules();
 }
 
 export function endEditInputFieldRules()
 {
     // mettre un message de warning disant qu'on ne peut pas tout mettre a zero ?
-    if (((timerInput.value === '0' || timerInput.value === '') && nbrPointsInput.value === '0')
-        || (isTournament && !isNbrPlayersEven()))
+    if ((timerInput.value === '0' || timerInput.value === '') && nbrPointsInput.value === '0')
         addDisableButtonEffect(buttonStart);
     else
         removeDisableButtonEffect(buttonStart);

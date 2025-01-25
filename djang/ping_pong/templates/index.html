@@ -61,6 +61,7 @@
     <div id="game-multi" class="page"></div>
     <div id="game-ai" class="page"></div>
     <div id="game-online" class="page"></div>
+    <div id="game-tournament" class="page"></div>
     <!------------------------------ Header Title ------------------------------>
     <div id="header-title">ft_transcendence</div>
     <div id="mainBackground"></div>
@@ -259,11 +260,19 @@
         </div>
     </div>
     <div id="tournamentMatchsCanvas">
-        <button class="buttonAccept" id="startMatchTournamentButton"></button>
+        <div id="tournamentViewButtons">
+            <button class="buttonAccept" id="startMatchTournamentButton"></button>
+            <button class="buttonCancel" id="cancelMatchTournamentButton"></button>
+        </div>
     </div>
     <div id="tournamentWinVictory">
         <h1 id="tournamentWinVictoryText"></h1>
         <button class="buttonAccept" id="closeTournamentVictoryButton"></button>
+    </div>
+    <div id="askBackTournamentViewPanel">
+        <h1 id="tournamentAskBackText"></h1>
+            <button class="buttonAccept" id="confirmBackTournamentButton"></button>
+            <button class="buttonCancel" id="cancelBackTournamentButton"></button>
     </div>
 
     <!------------------------------ ChoosePaddle ------------------------------>

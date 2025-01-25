@@ -6,7 +6,7 @@ import { onModesClose, onModesOpen } from "./modesSelection.js";
 import { onRegistrationClose, onRegistrationOpen, welcomeBackUser } from "./registration.js";
 import { onCloseRules, onOpenRules } from "./rules.js";
 import { onSignInClose, onSignInOpen } from "./signIn.js";
-import { onTournamentLobbyOpen } from "./tournament.js";
+import { endOfTournamentMatch, onTournamentLobbyOpen } from "./tournament.js";
 
 let currentPath = localStorage.getItem('currentPath') || 'home';;
 let lastMode = null;
@@ -37,6 +37,9 @@ function onOpenPage(path, otherVar = null) {
         case 'game-online':
             onPlayGame(otherVar);
             break;
+        case 'game-tournament':
+            onPlayGame(otherVar);
+            break;
         case 'game-ai':
             onPlayGame(otherVar);
             break;
@@ -65,6 +68,10 @@ function onClosePage(path) {
             break;
         case 'duel':
             onCloseDuel();
+            break;
+        case 'game-tournament':
+            unloadLevel();
+            endOfTournamentMatch();
             break;
         case 'game-local':
             unloadLevel();

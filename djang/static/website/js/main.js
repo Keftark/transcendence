@@ -13,7 +13,7 @@ import { addSocketListener } from './sockets.js';
 import { closePaddleChoice, isPaddleChoiceOpen } from './customizeSkins.js';
 import { clickCancelSignIn, isSigninOpen } from './signIn.js';
 import { getAddress } from './apiFunctions.js';
-import { cancelAddPlayerTournament, isAddPlayerTournamentIsOpen, quitTournamentLobby } from './tournament.js';
+import { askBackTournamentView, cancelAddPlayerTournament, cancelBackTournamentView, isAddPlayerTournamentIsOpen, isInAskBackTournamentView, isTournamentViewOpen, quitTournamentLobby } from './tournament.js';
 
 let levelMode = LevelMode.MENU;
 
@@ -32,8 +32,7 @@ export function setLevelState(newLevelMode)
 export function isAnOnlineMode(currentMode)
 {
     return currentMode === LevelMode.ONLINE ||
-           currentMode === LevelMode.MULTI ||
-           currentMode === LevelMode.TOURNAMENT;
+           currentMode === LevelMode.MULTI;
 }
 
 export function getLevelState()
@@ -60,6 +59,10 @@ export function checkEscapeKey()
         closeProfile();
     else if (isPaddleChoiceOpen())
         closePaddleChoice();
+    else if (isInAskBackTournamentView())
+        cancelBackTournamentView();
+    else if (isTournamentViewOpen())
+        askBackTournamentView();
     else if (isAddPlayerTournamentIsOpen())
         cancelAddPlayerTournament();
     else if (currentView === 'rules')

@@ -29,6 +29,7 @@ urlpatterns = [
     path('duel', user.duel, name='duel'),  # Duel page
     path('game-local', user.game_local, name='game-local'),  # Game local page
     path('game-ai', user.game_ai, name='game-ai'),  # Game AI page
+    path('game-tournament', user.game_tournament, name='game-tournament'),  # Game AI page
     path('game-online', user.game_online, name='game-online'),  # Game online duel page
     path('tournament-menu', user.tournament_menu, name='tournament-menu'),  # Tournament menu page
     path('tournament-lobby', user.tournament_lobby, name='tournament-lobby'),  # Tournament lobby page

@@ -22,6 +22,7 @@ import { createDeathSphere } from './deathSphere.js';
 import { Sparks } from './sparks.js';
 import { socketSendPlayerReady, setMatchAlreadyStarted } from './sockets.js';
 import { getUserById } from './apiFunctions.js';
+import { getTournamentPlayers, setWinnerNbr } from './tournament.js';
 
 const gameMenuPanel = document.getElementById('gameMenuPanel');
 const inputChat = document.getElementById('inputChat');
@@ -45,27 +46,6 @@ export let id_players =
     p3: -1,
     p4: -1
 }
-
-let rightCtrlPressed = false;
-
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Control' && event.location === KeyboardEvent.DOM_KEY_LOCATION_RIGHT) {
-        console.log("right control pressed");
-        rightCtrlPressed = true;
-        event.preventDefault();
-    }
-    if (rightCtrlPressed && event.key !== 'Control') {
-        alert("preventing default");
-        console.log("preventing default");
-        event.preventDefault();
-    }
-});
-document.addEventListener('keyup', function(event) {
-    if (event.key === 'Control' && event.location === KeyboardEvent.DOM_KEY_LOCATION_RIGHT) {
-        console.log("right control released");
-        rightCtrlPressed = false;
-    }
-});
 
 export function CreateMatchScore(newScorePlayer, newScoreOpponent)
 {
@@ -382,7 +362,7 @@ function showInGameUI()
     {
         controlsSrc = 'static/images/controlsP1Local.webp';
     }
-    if (currentLevelMode === LevelMode.LOCAL)
+    if (currentLevelMode === LevelMode.LOCAL || currentLevelMode === LevelMode.TOURNAMENT)
     {
         controlsP1.style.display = 'flex';
         controlsLeftImg.src = 'static/images/controlsP1Local.webp';
@@ -429,7 +409,13 @@ export function passInfosPlayersToLevel(idP1, idP2)
 
 function setPlayerNames()
 {
-    if (isAnOnlineMode(currentLevelMode))
+    if (currentLevelMode === LevelMode.TOURNAMENT)
+    {
+        const [player1Tournament, player2Tournament] = getTournamentPlayers();
+        player1Name.innerText = player1Tournament;
+        player2Name.innerText = player2Tournament;
+    }
+    else if (isAnOnlineMode(currentLevelMode))
     {
         player1Name.innerText = playerProfile1.username;
         player2Name.innerText = playerProfile2.username;
@@ -465,7 +451,7 @@ export function changeBallSpeedInstance(newSpeed)
     changeBallSpeedFunction(newSpeed);
 }
 
-function setUpConsts()
+function setUpScreenShake()
 {
     if (screenShake != null)
         return;
@@ -682,7 +668,7 @@ export function StartLevel(levelMode)
 
     const { ball, updateBall, resetBall, changeBallSize, changeBallSpeed, updateBallLight } = createBall(scene, resetScreenFunction);
     balle = ball;
-    setUpConsts();
+    setUpScreenShake();
     setScores(0, 0);
     setAccessAllDuelsInChat(false);
     tryCloseChat();
@@ -806,7 +792,7 @@ export function StartLevel(levelMode)
             useBoost(0);
             event.preventDefault();
         }
-        else if ((event.key === 'e' && playerStats.playerController === 2 && isBoostReadyRight()) || (event.code === 'ArrowLeft' && playerStats.playerController === 2 && isBoostReadyRight()))
+        else if ((event.key === 'e' && playerStats.playerController === 2 && isBoostReadyRight()) || (event.code === 'ArrowLeft' && (playerStats.playerController === 2 || currentLevelMode === LevelMode.TOURNAMENT) && isBoostReadyRight()))
         {
             useBoost(1);
             event.preventDefault();
@@ -868,10 +854,17 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
 
     let victoryType;
     let winner = '';
+    let winnerNbr = 0;
     if (scoreP1 > scoreP2)
+    {
+        winnerNbr = 1;
         winner = player1NameText;
+    }
     else if (scoreP1 < scoreP2)
+    {
+        winnerNbr = 2;
         winner = player2NameText;
+    }
     if (forcedVictory)
         victoryType = VictoryType.VICTORY;
     else if (winner != '')
@@ -883,7 +876,9 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
     }
     else
         victoryType = VictoryType.EXAEQUO;
-
+    
+    if (currentLevelMode === LevelMode.TOURNAMENT)
+        setWinnerNbr(winnerNbr);
     if (!isSpectator())
         addMatchToHistory(victoryType, scorePlayer, scoreOpponent, opponentName, getMatchTime());
     pressPlayDiv.style.display = 'none';
@@ -905,6 +900,10 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
         }
         if (forcedVictory)
             callVictoryScreen(VictoryType.VICTORY);
+        else if (currentLevelMode === LevelMode.TOURNAMENT)
+        {
+            callVictoryScreen(VictoryType.VICTORY, winner);
+        }
         else if (winner != '')
         {
             if (winner === getPlayerName())

@@ -8,6 +8,7 @@ import { getCurrentView, navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
 import { loadScores, removeAllScores } from './scoreManager.js';
 import { exitGameSocket } from './sockets.js';
+import { setCancelledInMatch } from './tournament.js';
 import { changeLanguage, getTranslation } from './translate.js';
 import { LevelMode, PlayerStatus } from './variables.js';
 
@@ -118,6 +119,7 @@ document.getElementById('closeSettingsButton').addEventListener('click', () => {
 
 document.getElementById('mainButton').addEventListener('click', () => {
     exitGameSocket();
+    setCancelledInMatch(true);
     clickBackButtonMenu();
 });
 
