@@ -5,6 +5,10 @@
     src: url('../fonts/PixelGame.otf') format('opentype');
 }
 
+.message li {
+    margin-bottom: -13px;
+}
+
 body {
     margin: 0;
     height: 100vh;

@@ -35,6 +35,13 @@ export function isAnOnlineMode(currentMode)
            currentMode === LevelMode.MULTI;
 }
 
+export function isAnOfflineMode(currentMode)
+{
+    return currentMode === LevelMode.LOCAL ||
+           currentMode === LevelMode.TOURNAMENT ||
+           currentMode === LevelMode.ADVENTURE;
+}
+
 export function getLevelState()
 {
     return parseInt(localStorage.getItem('levelMode'));
@@ -178,7 +185,7 @@ function openSocket(ip)
         socket = null;
         console.log('WebSocket closed');
     };
-    socket.onerror = (error) => console.log("Error:", error);
+    socket.onerror = (error) => console.log("Websocket Error:", error);
 
     listener.onopen = function() {
         console.log("WebSocket connected");
@@ -188,7 +195,7 @@ function openSocket(ip)
         listener = null;
         console.log('WebSocket closed');
     };
-    listener.onerror = (error) => console.log("Error:", error);
+    listener.onerror = (error) => console.log("Websocket Listener Error:", error);
     
     addSocketListener(); 
     // setTimeout(() => {
@@ -214,32 +221,3 @@ document.addEventListener("DOMContentLoaded", function() {
             console.error('Error getting address:', error);
         });
 });
-
-// IsLoggedIn();
-
-// const websocket = new WebSocket("ws://localhost:8001/");
-// websocket.onopen = () => console.log("Connected");
-// websocket.onmessage = (event) => console.log("Message:", event.data);
-// websocket.onerror = (error) => console.log("Error:", error);
-
-// function sendMoves(board, socket) {
-//     // When clicking a column, send a "play" event for a move in that column.
-//     board.addEventListener("click", ({ target }) => {
-//       const event = {
-//         type: "color",
-//         action: "get"
-//       };
-//       socket.send(JSON.stringify(event));
-//     });
-//   }
-
-// websocket.addEventListener("message", ({ data }) => {
-//     const event = JSON.parse(data);
-//     switch (event.type) {
-//         case "color":
-//             console.log("Event action: " + event.target);
-//         break;
-//     }
-// });
-
-// sendMoves(document.getElementById("header-title"), websocket);

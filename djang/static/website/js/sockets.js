@@ -240,7 +240,7 @@ export function socketJoinChat()
 {
     if (!listener || listener.readyState !== WebSocket.OPEN)
         return;
-    console.log("Joining the chat");
+    // console.log("Joining the chat");
     const event = {
         key: keySocket,
         type: "join_chat",
@@ -257,7 +257,7 @@ export function socketQuitChat()
 {
     if (!listener || listener.readyState !== WebSocket.OPEN)
         return;
-    console.log("Quitting the chat");
+    // console.log("Quitting the chat");
     const event = {
         key: keySocket,
         type: "quit_chat",
@@ -350,7 +350,6 @@ export function socketSendSalonSticker(stickerName)
 {
     if (!listener || listener.readyState !== WebSocket.OPEN)
         return;
-    console.log("Trying to send a salon sticker");
     const event = {
         key: keySocket,
         type: "salon_sticker",
@@ -430,7 +429,7 @@ export function addSocketListener()
         try {
             event = JSON.parse(data);
         } catch (error) {
-            console.log(data);
+            // console.log(data);
             console.error("Failed to parse JSON:", error);
             return;
         }
@@ -459,7 +458,7 @@ export function addSocketListener()
         case "sticker":
             if (event.id != playerStats.id)
             {
-                console.log("receiving salon sticker: " + event.img);
+                // console.log("receiving salon sticker: " + event.img);
                 receiveMessage(event.name, event.img, true);
             }
             break;
@@ -467,14 +466,14 @@ export function addSocketListener()
             receiveMessage(event.name, event.content, false);
             break;
         case "wait":
-            console.log("Waiting in queue");
+            // console.log("Waiting in queue");
             break;
         case "exit_queue":
             playerStats.room_id = -1;
             // le joueur quitte la file d'attente du match ( l'ecran de duel)
             // il faut verifier s'il y a un autre joueur de connecte 
             // (2 joueurs connectes = une room creee, on est plus dans la queue)
-            console.log("Exit queue");
+            // console.log("Exit queue");
             break;
         case "wait_start":
             updateReadyButtons(event.p1_state, event.p2_state);
@@ -492,7 +491,7 @@ export function addSocketListener()
         case "match_init":
             room_id = event.room_id;
             playerStats.room_id = room_id;
-            console.log("Found a match against player " + event.id_p2);
+            // console.log("Found a match against player " + event.id_p2);
             setTimeout(() => {
                 matchFound(event.id_p1, event.id_p2);
             }, 1000);

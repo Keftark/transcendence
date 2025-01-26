@@ -99,6 +99,7 @@
     text-align: left;
     align-self: flex-start;
     align-items: start;
+    padding-left: 0.5rem;
 }
 
 .message-middle {

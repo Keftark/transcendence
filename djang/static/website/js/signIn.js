@@ -1,7 +1,7 @@
 import { logInPlayer } from "./apiFunctions.js";
+import { displayWelcomeMessage } from "./chat.js";
 import { loadBlocks, loadFriends } from "./friends.js";
 import { navigateTo } from "./pages.js";
-import { editPlayerStats } from "./playerManager.js";
 import { logInUserUI } from "./registration.js";
 import { connectToServerInput, connectToServerOutput } from "./sockets.js";
 import { getTranslation } from "./translate.js";
@@ -138,6 +138,7 @@ export function connectToServer()
     connectToServerOutput();
     loadFriends();
     loadBlocks();
+    displayWelcomeMessage();
 }
 
 async function clickConfirmSignIn()

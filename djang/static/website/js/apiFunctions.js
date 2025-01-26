@@ -31,7 +31,7 @@ export async function logInPlayer(username, password)
             alert(errorResult.message);
         } else {
             const result = await response.json();
-            console.log(result.message);
+            // console.log(result.message);
             editPlayerStats(result.user);
             clickCancelSignIn(true);
         }
@@ -123,7 +123,7 @@ export async function getLoggedInUser() {
             console.trace('Logged-in user:', userData);
             return userData;
         } else if (response.status === 403) {
-            console.log('User is not logged in.');
+            // console.log('User is not logged in.');
             return null;
         } else {
             console.error('Error retrieving user:', response.status);
@@ -160,7 +160,7 @@ export async function getUserName(userId) {
         return;
     }
     try {
-        console.log("Trying to get the user name");
+        // console.log("Trying to get the user name");
         const response = await fetch(`/username/${userId}/`);
         if (!response.ok)
             throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);
@@ -185,7 +185,7 @@ export async function getUserAvatar(userName) {
         const userData = await response.json();
         if (userData.error)
             console.error(userData.error);
-        console.log("user data: " + JSON.stringify(userData));
+        // console.log("user data: " + JSON.stringify(userData));
         return userData;
     } catch (error) {
         console.error("An error occurred while fetching the user details:", error);
@@ -197,7 +197,7 @@ export async function uploadAvatar(username, url_picture)
     const data = new FormData();
     data.append('username', username);
     data.append('url', url_picture);
-    console.log("Token: ", getCSRFToken());
+    // console.log("Token: ", getCSRFToken());
     // console.log(data);
 
     try {
@@ -216,7 +216,7 @@ export async function uploadAvatar(username, url_picture)
             alert(errorResult.message);  // Display the error message to the user
         } else {
             const result = await response.json();  // Parse the success response in JSON
-            console.log(result);
+            // console.log(result);
         }
 
     } catch (error) {
@@ -236,7 +236,7 @@ export async function getUserScores(userName) {
         const userData = await response.json();
         if (userData.error)
             console.error(userData.error);
-        console.log("user data: " + JSON.stringify(userData));
+        // console.log("user data: " + JSON.stringify(userData));
         return userData;
     } catch (error) {
         console.error("An error occurred while fetching the user details:", error);
@@ -274,7 +274,7 @@ export async function getUserPaddleSkin(userId) {
         const userData = await response.json();
         if (userData.error)
             console.error(userData.error);
-        console.log("user data: " + JSON.stringify(userData));
+        // console.log("user data: " + JSON.stringify(userData));
         return userData;
     } catch (error) {
         console.error("An error occurred while fetching the user details:", error);

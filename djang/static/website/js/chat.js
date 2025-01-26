@@ -185,6 +185,19 @@ blockUserButton.addEventListener('click', () => {
     clickBlockUser();
 });
 
+export function displayWelcomeMessage()
+{
+    sendSystemMessage("welcomeMessage", "");
+    sendSystemMessage("typeHelp", "");
+}
+
+export function helpFunctionDisplay()
+{
+    receiveMessage("Help bot", getTranslation('helpBasicCommands'), false);
+    // sendSystemMessage("helpBasicCommands", "");
+    // sendSystemMessage("helpInGameCommands", "");
+}
+
 function sendPrivateMessage()
 {
     if (!chatIsOpen)
@@ -376,7 +389,7 @@ function createMessageElement(name, messageText, isPrivate, isASticker) {
     else if (!isASticker)
     {
         // console.trace("this is not a sticker");
-        messageContent.textContent = messageText;
+        messageContent.innerHTML = messageText;
         if (name != '')
             messageContent.style.color = playerStats.colors;
     }
@@ -493,7 +506,6 @@ export function sendSystemMessage(message, otherVar, forceUseOtherVar = false)
 
 function checkNewMessage()
 {
-    console.log("Checking");
     if (!chatIsOpen && playerStats.isRegistered)
         chatBox.classList.add('hasNewMessage');
 }
@@ -515,6 +527,11 @@ export function receiveMessage(playerName, message, isASticker, isPrivate = fals
 
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
     lastSender = playerName;
+    if (playerName === "Help bot")
+    {
+        messagesContainer.appendChild(newMessage);
+        return;
+    }
     getAccountUser(playerName)
     .then((response) => {
         if (response.is_blocked)
