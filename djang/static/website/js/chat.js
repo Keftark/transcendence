@@ -194,6 +194,7 @@ export function displayWelcomeMessage()
 export function helpFunctionDisplay()
 {
     receiveMessage("Help bot", getTranslation('helpBasicCommands'), false);
+    receiveMessage("Help bot", getTranslation('helpInGameCommands'), false);
     // sendSystemMessage("helpBasicCommands", "");
     // sendSystemMessage("helpInGameCommands", "");
 }
