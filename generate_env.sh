@@ -21,5 +21,5 @@ echo "DATABASE_NAME=postgres" >> .env
 echo "DATABASE_USERNAME=postgres" >> .env
 echo "DATABASE_PASSWORD=1234" >> .env
 echo "DATABASE_HOST=db" >> .env
-echo "DATABASE_PORT=5432" >> .env
+echo "DATABASE_PORT=5431" >> .env
 echo "DJANGO_SECRET_KEY=\"django-insecure-@uut+0=vr4zv$i5p_h$1he&g$+^1k3*o0+*yhv71u#@7i#p&e3\"" >> .env

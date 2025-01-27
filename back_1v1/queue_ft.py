@@ -1,7 +1,6 @@
 """A class to handle queues."""
 
-import time
-from back_1v1.match import Match
+from match import Match
 from user import User
 
 class Queue:
@@ -34,7 +33,7 @@ class Queue:
             if message["private"] == "invite":
                 self._room_id += 1
                 match = Match(self._room_id, _id, 0)
-                match.set_private_match()
+                match.needs_to_wait = True
                 match.load_parameters(message["payload"])
                 self._private.append(match)
             elif message["private"] == "join":

@@ -8,26 +8,37 @@ import signal
 import threading
 import ssl
 import pathlib
+import os
+from dataclasses import dataclass
 from signal import SIGPIPE
-import Socket
-import logger
 from websockets.asyncio.server import serve
 from websockets.asyncio.client import connect
+from socket_ft import UserSocket
+import logger
 
 signal.signal(SIGPIPE, 0)
 
-SERVER_PORT = 7878
-CENTRAL_PORT = 7777
+UPDATE_DELAY        = (float)(os.environ.get("UPDATE_DELAY", 0.16))
+SERVER_PORT         = os.environ.get("PORT_CHAT", 7878)
+CENTRAL_PORT        = os.environ.get("PORT_CENTRAL", 7777)
 
 Users = []
 
 logger = logger.Logger()
 
-stopFlag = False
+STOP_FLAG = False
 
-central_socket = None
 
-localhost_pem = pathlib.Path(__file__).with_name("cponmamju2.fr_key.pem")
+@dataclass
+class SocketData:
+    """Dataclass for sockets.
+    """
+    CENTRAL_SOCKET = None
+    STOP_FLAG = False
+
+Sockets = SocketData
+
+localhost_pem = pathlib.Path("/etc/certs/cponmamju2.fr_key.pem")
 #loads up ssl crap
 ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
 ssl_context.load_cert_chain(localhost_pem)
@@ -36,6 +47,15 @@ ssl_client = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
 ssl_client.load_verify_locations(localhost_pem)
 
 def dump_message(user, message):
+    """Dumps a message. Contains user data and message content.
+
+    Args:
+        user (UserSocket): user data.
+        message (string): message data.
+
+    Returns:
+        dict: dumped data.
+    """
     event = {
         "answer": "yes",
         "type": "message",
@@ -47,6 +67,15 @@ def dump_message(user, message):
     return event
 
 def sticker(user, img):
+    """Dumps a sticker. Contains user data and image content.
+
+    Args:
+        user (UserSocket): user data.
+        img (string): image data.
+
+    Returns:
+        dict: dumped data.
+    """
     event = {
         "answer": "yes",
         "type": "sticker",
@@ -58,6 +87,17 @@ def sticker(user, img):
     return event
 
 def msg_private(user, sender, message):
+    """Dumps a private message from sender to user.
+    Contains both users data and message content.
+
+    Args:
+        user (UserSocket): user data.
+        sender (UserSocket) : sender data.
+        message (string): message data.
+
+    Returns:
+        dict: dumped data.
+    """
     event = {
         "answer": "yes",
         "type": "private_message",
@@ -71,6 +111,17 @@ def msg_private(user, sender, message):
     return event
 
 def msg_private_sticker(user, sender, img):
+    """Dumps a private sticker from sender to user.
+    Contains both users data and image content.
+
+    Args:
+        user (UserSocket): user data.
+        sender (UserSocket) : sender data.
+        img (string): image data.
+
+    Returns:
+        dict: dumped data.
+    """
     event = {
         "answer": "yes",
         "type": "private_sticker",
@@ -84,6 +135,18 @@ def msg_private_sticker(user, sender, img):
     return event
 
 def msg_room(user, room, game, message):
+    """Dumps a message to a game room.
+    Contains user data and message content.
+
+    Args:
+        user (UserSocket): user data.
+        room (int) : ID of the room.
+        game (string) : game type of the room.
+        message (string): message data.
+
+    Returns:
+        dict: dumped data.
+    """
     event = {
         "answer": "yes",
         "type": "salon_message",
@@ -97,6 +160,18 @@ def msg_room(user, room, game, message):
     return event
 
 def msg_room_sticker(user, room, game, img):
+    """Dumps a message to a game room.
+    Contains user data and image content.
+
+    Args:
+        user (UserSocket): user data.
+        room (int) : ID of the room.
+        game (string) : game type of the room.
+        img (string): image data.
+
+    Returns:
+        dict: dumped data.
+    """
     event = {
         "answer": "yes",
         "type": "salon_sticker",
@@ -110,36 +185,49 @@ def msg_room_sticker(user, room, game, img):
     return event
 
 def pong():
+    """PING PONG
+
+    Returns:
+        PONG: PING
+    """
     event = {
         "type": "pong",
         "id": 0
     }
     return event
 
-def bye():
-    event = {
-        "type": "bye",
-        "server": "chat"
-    }
-    return event
+def is_user(_id):
+    """Returns wether the client is in the chat or not.
 
-def is_user(id):
-    global Users
+    Args:
+        _id (int): ID of the user.
+
+    Returns:
+        bool: `True` if the user is logged to the chat, `False` otherwise.
+    """
     for user in Users:
-        if user.id == id:
+        if user.id == _id:
             return True
     return False
 
 async def send_server(data):
-    global central_socket
+    """Sends data to the central server.
+
+    Args:
+        data (dict): data to send.
+    """
     try:
-        await central_socket.send(json.dumps(data))
+        await Sockets.CENTRAL_SOCKET.send(json.dumps(data))
     except Exception as e:
         logger.log("", 2, e)
-        central_socket = None
+        Sockets.CENTRAL_SOCKET = None
 
 async def handler(websocket):
-    global Users, central_socket, logger
+    """Receives and handle incomming messages from websocket.
+
+    Args:
+        websocket (WebSocket): The WS to read from.
+    """
     try:
         async for message in websocket:
             event = json.loads(message)
@@ -147,89 +235,108 @@ async def handler(websocket):
             if event["type"] == "ping":
                 await send_server(pong())
             elif event["type"] == "join_chat":
-                id = (int)(event["id"])
+                _id = (int)(event["id"])
                 if is_user(id) is False:
-                    bl = event["blacklist"]
-                    sock = Socket.UserSocket(websocket, id, bl, event["name"])
+                    sock = UserSocket(_id, event["name"])
                     Users.append(sock)
             elif event["type"] == "quit_chat":
-                    id = (int)(event["id"])
-                    for user in Users:
-                        if user.id == id:
-                            Users.remove(user)
-                            break
+                _id = (int)(event["id"])
+                for user in Users.copy():
+                    if user.id == _id:
+                        Users.remove(user)
+                        break
             elif event["type"] == "message" or event["type"] == "sticker":
-                id = (int)(event["id"])
+                _id = (int)(event["id"])
                 if is_user(id) is True:
                     for user in Users:
-                        if user.id == id:
+                        if user.id == _id:
                             if event["type"] == "sticker":
                                 await send_server(sticker(user, event["img"]))
                             else:
                                 await send_server(dump_message(user, event["content"]))
                             break
             elif event["type"] == "private_message" or event["type"] == "private_sticker":
-                id = (int)(event["id"])
+                _id = (int)(event["id"])
                 target = (int)(event["target"])
                 if is_user(id) is True and is_user(target) is True:
                     for user in Users:
-                        if user.id == id:
+                        if user.id == _id:
                             for targ in Users:
                                 if targ.id == target:
                                     if event["type"] == "private_sticker":
-                                        await send_server(msg_private_sticker(targ, user, event["img"]))
+                                        await send_server(msg_private_sticker
+                                                          (targ, user, event["img"]))
                                     else:
-                                        await send_server(msg_private(targ, user, event["content"]))
+                                        await send_server(msg_private
+                                                          (targ, user, event["content"]))
                                     break
             elif event["type"] == "salon_message" or event["type"] == "salon_sticker":
-                id = (int)(event["id"])
+                _id = (int)(event["id"])
                 if is_user(id) is True:
                     for user in Users:
-                        if user.id == target:
+                        if user.id == _id:
                             if event["type"] == "salon_message":
-                                user.socket.send(json.dumps(msg_room(user, (int)(event["room_id"]), event["game"], event["content"])))
+                                await send_server(msg_room(user, (int)(event["room_id"])
+                                                           , event["game"], event["content"]))
                             else:
-                                user.socket.send(json.dumps(msg_room_sticker(user, (int)(event["room_id"]), event["game"], event["img"])))
+                                await send_server(msg_room_sticker(user, (int)(event["room_id"])
+                                                                   , event["game"], event["img"]))
                             break
         await websocket.wait_closed()
     except Exception as e:
         logger.log("", 2, e)
     finally:
-        central_socket = None
+        SocketData.CENTRAL_SOCKET = None
 
 async def main():
-    global logger, stopFlag, central_socket, ssl_context
+    """Opens up the server and starts listening on SERVER_PORT (by default 7878)
+    """
     logger.log("Chat listener launched.", 0)
-    async with serve(handler, "", SERVER_PORT, ping_interval=10, ping_timeout=None, ssl=ssl_context):
+    async with serve(handler, "", SERVER_PORT, ping_interval=10,
+                     ping_timeout=None, ssl=ssl_context):
         await asyncio.get_running_loop().create_future()  # run forever
-    stopFlag = True
+    SocketData.STOP_FLAG = True
 
 
 async def connection_handler():
-    global central_socket, stopFlag, logger, ssl_context
-    while stopFlag is False:
-        if central_socket is None:
+    """Loop that handles connection to central server. 
+
+    Sleeps for 5 seconds, and sends a ping to the server. If the server isn't
+    connected, attempts to connect instead.
+    """
+    while SocketData.STOP_FLAG is False:
+        if SocketData.CENTRAL_SOCKET is None:
             try:
                 logger.log("Attempting connection to central server.", 1)
-                connex = "wss://172.17.0.1:" + str(CENTRAL_PORT) + "/"
-                central_socket = await connect(connex, ping_interval=10, ping_timeout=None, ssl=ssl_client)
+                uri = "wss://172.17.0.1:" + str(CENTRAL_PORT) + "/"
+                SocketData.CENTRAL_SOCKET = await connect(uri, ping_interval=10,
+                                                          ping_timeout=None, ssl=ssl_client)
                 logger.log("Central server connected.", 0)
             except Exception as e:
-                central_socket = None
+                SocketData.CENTRAL_SOCKET = None
                 logger.log("Couldn't connect to the central server.", 2, e)
         else:
             await send_server(pong())
         await asyncio.sleep(5)
 
 def connection_launcher():
+    """Launches the connection handler as a asyncio task.
+    """
     asyncio.run(connection_handler())
 
 def server_launcher():
+    """Launches the server handler as a asyncio task.
+    """
     asyncio.run(main())
 
 def signal_handler(signal, frame):
-    global central_socket, stopFlag
-    stopFlag = True
+    """blabla
+
+    Args:
+        signal (_type_): _description_
+        frame (_type_): _description_
+    """
+    SocketData.STOP_FLAG = True
     sys.exit(0)
 
 if __name__ == "__main__":

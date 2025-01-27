@@ -1,6 +1,7 @@
 """Simple logger class"""
 
 import time
+import threading
 
 CEND      = '\33[0m'
 CBOLD     = '\33[1m'
@@ -52,6 +53,7 @@ class Logger:
     """
     def __init__(self):
         self._start = time.time()
+        self._lock = threading.Lock()
 
     def tick(self):
         """Creates a string object containing the formated timer.
@@ -105,10 +107,11 @@ class Logger:
             level (int, optional): level of the log. Defaults to 0.
             error (String, optional): content of the error. Defaults to None.
         """
-        if error is not None:
-            print(self.tick(), self.warning_level(level), message, self.error_format(error))
-        else:
-            print(self.tick(), self.warning_level(level), message)
+        with self._lock:
+            if error is not None:
+                print(self.tick(), self.warning_level(level), message, self.error_format(error))
+            else:
+                print(self.tick(), self.warning_level(level), message)
 
     @property
     def start(self):
