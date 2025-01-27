@@ -1,5 +1,5 @@
 import { sendSystemMessage } from "./chat.js";
-import { editPlayerStats, playerStats } from "./playerManager.js";
+import { editPlayerStats } from "./playerManager.js";
 import { clickCancelSignIn } from "./signIn.js";
 
 export function getCSRFToken()
@@ -41,18 +41,16 @@ export async function logInPlayer(username, password)
     }
 }
 
-export async function registerUser()
+export async function registerUser(nameValue, firstNameValue, lastNameValue, emailValue, passwordValue)
 {
     const data = {
-        name: inputName.value,
-        first_name: inputFirstName.value,
-        last_name: inputLastName.value,
-        email: inputMail.value,
-        password: inputPassword.value,
-        confirm_password: inputConfirmPassword.value,
-        gdpr_consent: checkboxGdpr.checked,
+        name: nameValue,
+        first_name: firstNameValue,
+        last_name: lastNameValue,
+        email: emailValue,
+        password: passwordValue
     };
-
+    // console.log(data);
     try
     {
         const response = await fetch('/register', {

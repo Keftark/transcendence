@@ -84,6 +84,11 @@
     background-color: transparent !important;
 }
 
+.message-container-sticker img
+{
+    width: 32px;
+}
+
 .message-container-left
 {
     background-color: #1c3558;

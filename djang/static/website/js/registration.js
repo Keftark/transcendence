@@ -223,12 +223,12 @@ export function logInUserUI()
 
 async function acceptRegistration()
 {
-    // if (checkFields() === false)
-    //     return;
+    if (checkFields() === false)
+        return;
     if (registerConfirm.classList.contains('disabledButtonHover'))
         return;
 
-    const result = await registerUser();
+    const result = await registerUser(inputName.value, inputFirstName.value, inputLastName.value, inputMail.value, inputPassword.value);
     if (!result)
         return;
     

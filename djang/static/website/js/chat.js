@@ -793,21 +793,14 @@ function sendGameSticker(stickerName)
 }
 
 function convert3DTo2DScreenSpace(threejsPosition, camera, renderer) {
-    // Ensure the position is a THREE.Vector3 object (or convert it)
     if (!(threejsPosition instanceof THREE.Vector3)) {
         throw new Error('The position must be an instance of THREE.Vector3');
     }
-
-    // Project the 3D world position to normalized device coordinates (NDC)
     const vector = threejsPosition.clone().project(camera);
-
-    // Get the screen width and height
     const width = renderer.domElement.width;
     const height = renderer.domElement.height;
-
-    // Convert from NDC to screen space coordinates (in pixels)
-    const x = (vector.x * 0.5 + 0.5) * width;  // Convert to 0 to 1 range, then scale to pixel width
-    const y = -(vector.y * 0.5 + 0.5) * height; // Invert Y, then scale to pixel height
+    const x = (vector.x * 0.5 + 0.5) * width;
+    const y = -(vector.y * 0.5 + 0.5) * height;
 
     return { x, y };
 }
@@ -815,9 +808,8 @@ function convert3DTo2DScreenSpace(threejsPosition, camera, renderer) {
 
 export function receiveGameSticker(playerId, stickerName)
 {
-    console.log("receiving: " + stickerName + " from: " + playerId);
     let stickerPosition;
-    if (id_players.p1 === playerStats.id) // le joueur est a gauche
+    if (id_players.p1 === playerStats.id)
         stickerPosition = convert3DTo2DScreenSpace(getPlayerPosition(1));
     else if (id_players.p2 === playerStats.id) // le joueur est a droite
         stickerPosition = convert3DTo2DScreenSpace(getPlayerPosition(2));

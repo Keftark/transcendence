@@ -71,30 +71,23 @@ def get_address(request):
 def register_user(request):
     if request.method == 'POST':
         try:
-            # Parse JSON body
             data = json.loads(request.body)
 
-            # Extract data
             name = data.get('name', '')
             first_name = data.get('first_name', '')
             last_name = data.get('last_name', '')
             email = data.get('email', '')
             password = data.get('password', '')
-            confirm_password = data.get('confirm_password', '')
-            gdpr_consent = data.get('gdpr_consent', False)
 
-            # Validation
             if not name or not email or not password:
                 return JsonResponse({'success': False, 'error': 'Missing required fields.'}, status=400)
 
-            if password != confirm_password:
-                return JsonResponse({'success': False, 'error': 'Passwords do not match.'}, status=400)
+            if User.objects.filter(username=name).exists():
+                return JsonResponse({'success': False, 'error': 'User with this name is already registered.'}, status=400)
 
-            # Check if user exists
             if User.objects.filter(email=email).exists():
                 return JsonResponse({'success': False, 'error': 'Email is already registered.'}, status=400)
 
-            # Create user
             user = User.objects.create_user(
                 username=name,
                 first_name=first_name,
