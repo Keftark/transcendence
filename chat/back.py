@@ -18,9 +18,9 @@ import logger
 
 signal.signal(SIGPIPE, 0)
 
-UPDATE_DELAY = os.environ["UPDATE_DELAY"]
-SERVER_PORT = os.environ["PORT_1V1_CLASSIC"]
-CENTRAL_PORT = os.environ["PORT_CHAT"]
+UPDATE_DELAY        = (float)(os.environ.get("UPDATE_DELAY", 0.16))
+SERVER_PORT         = os.environ.get("PORT_CHAT", 7878)
+CENTRAL_PORT        = os.environ.get("PORT_CENTRAL", 7777)
 
 Users = []
 

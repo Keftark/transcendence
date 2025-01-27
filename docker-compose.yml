@@ -63,6 +63,8 @@ services:
       - app-network
     volumes:
       - ./certs:/etc/certs:ro
+    env_file:
+      - .env
 
   chat:
     build: ./chat/
@@ -76,6 +78,8 @@ services:
       - app-network
     volumes:
       - ./certs:/etc/certs:ro
+    env_file:
+      - .env
 
   1v1_classic:
     container_name: 1v1_classic
@@ -89,6 +93,8 @@ services:
       - app-network
     volumes:
       - ./certs:/etc/certs:ro
+    env_file:
+      - .env
 
 volumes:
   postgres_data:

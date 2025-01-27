@@ -16,11 +16,9 @@ from websockets.asyncio.server import serve
 from websockets.asyncio.client import connect
 from logger import Logger
 
-#Take the variables from the .env
-#Leave as comments until we are in docker !
-UPDATE_DELAY = os.environ["UPDATE_DELAY"]
-SERVER_PORT = os.environ["PORT_1V1_CLASSIC"]
-CENTRAL_PORT = os.environ["PORT_CENTRAL"]
+UPDATE_DELAY        = (float)(os.environ.get("UPDATE_DELAY", 0.16))
+SERVER_PORT         = os.environ.get("PORT_1V1_CLASSIC", 8001)
+CENTRAL_PORT        = os.environ.get("PORT_CENTRAL", 7777)
 
 @dataclass
 class SocketData:
