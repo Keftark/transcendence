@@ -301,7 +301,7 @@ async def handler(websocket):
             elif event["type"] == "input" or \
                 event["type"] == "ready" or event["type"] == "pause" or \
                 event["type"] == "quit_lobby":
-                room = (int)(event["room"])
+                room = (int)(event["room_id"])
                 for m in matchs:
                     if m.room_id == room:
                         m.input(event)

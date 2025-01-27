@@ -19,7 +19,6 @@ from logger import Logger
 signal.signal(SIGPIPE,SIG_DFL)
 
 start = time.time()
-STOP_FLAG = False
 userList = []
 logList = []
 
@@ -35,6 +34,7 @@ class SocketData:
     """
     SOCKET_CHAT = None
     SOCKET_1V1 = None
+    STOP_FLAG = False
 
 Sockets = SocketData
 
@@ -150,12 +150,12 @@ async def handle_answers(event):
                         user.game = "none"
                         user.status = "here"
                         user.room_id = -1
-    elif _type == "message" or type == "sticker":
+    elif _type == "message" or _type == "sticker":
         _id = (int)(event["id"])
         for user in userList:
             if user.id != _id:
                 await user.send(json.dumps(event))
-    elif _type == "room_message" or type == "room_sticker":
+    elif _type == "room_message" or _type == "room_sticker":
         _id = (int)(event["id"])
         for user in userList:
             if user.id != _id and user.status == event["game"] \
@@ -251,7 +251,16 @@ async def disconnect_user(websocket):
         if user.sock_output == websocket:
             user.sock_output = None
         if user.game == "1v1_classic":
-            pass #handle game disconnection
+            event = {
+                "type": "quit_lobby",
+                "id": user.id,
+                "room_id": user.room
+            }
+            try:
+                await SocketData.SOCKET_1V1.send(json.dumps(event)) #handle game disconnection
+            except Exception as e:
+                logger.log("", 2, e)
+                SocketData.SOCKET_1V1 = None
         #pass #handle chat disconnection
 
 async def handle_commands(websocket, event):
@@ -307,8 +316,7 @@ async def connection_loop():
     sockets to the subprocesses server. Should a connection fail,
     the loop will reconnect the subprocess.
     """
-    global Sockets
-    while STOP_FLAG is False:
+    while Sockets.STOP_FLAG is False:
         if Sockets.SOCKET_CHAT is None:
             try:
                 logger.log("Attempting connection to Chat server.", 1)
@@ -347,13 +355,11 @@ async def server_listener():
     """Server functions. Listens for incomming connections through
     websockets.
     """
-    global STOP_FLAG
-
     logger.log("Listener thread launched.", 1)
     async with serve(handler, "", SERVER_PORT, ping_interval=10, \
                      ping_timeout=None, ssl=ssl_context):
         await asyncio.get_running_loop().create_future()  # run forever
-    STOP_FLAG = True
+    Sockets.STOP_FLAG = True
 
 def connection_handler():
     """Launches the subprocess connection thread with asyncio.

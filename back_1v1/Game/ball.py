@@ -53,7 +53,6 @@ class Ball:
         self._velocity_boosted_x = 0
         self._velocity_boosted_y = 0
         self._velocity_y = 0
-        self._bounces = 0
         self._is_powered_up = False
 
     def bounce_vertical(self):
@@ -89,7 +88,6 @@ class Ball:
         """
         if self._is_powered_up is True:
             self._is_powered_up = False
-        self._bounces += 1
         self._velocity_x *= -1
         offset = self._y - y
         norm = offset / (size / 2)
@@ -113,7 +111,6 @@ class Ball:
         """
         if self._is_powered_up is True:
             self._is_powered_up = False
-        self._bounces += 1
         offset = self._y - y
         norm = offset / (size / 2)
         bounce_angle = norm * MAX_BOUNCE_ANGLE

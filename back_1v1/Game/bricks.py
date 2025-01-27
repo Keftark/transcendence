@@ -1,12 +1,21 @@
+"""BRICKS"""
+
 import random
 from obstacle import Obstacle
 
 class Brick():
+    """A simple abstract brick.
+    """
     def __init__(self):
         self._bricks = []
 
     @property
     def bricks(self):
+        """Returns the brick list of the brick.
+
+        Returns:
+            dict: brick list.
+        """
         return self._bricks
 
     @bricks.setter
@@ -14,42 +23,65 @@ class Brick():
         self._bricks = value
 
     def add_brick(self, obstacle):
+        """Adds a brick to the list.
+
+        Args:
+            obstacle (Obstacle): the brick ot add.
+        """
         self.bricks.append(obstacle)
 
     def place(self, x, y):
+        """Place a brick at x;y, this position
+        being the upper left position.
+
+        Args:
+            x (_type_): _description_
+            y (_type_): _description_
+        """
         for brick in self._bricks:
             brick.x += x
             brick.y += y
 
     def tick(self):
+        """Checks all brick. If a brick life is equal 
+        or below 0, it gets deleted, unless it is unbreakable.
+        """
         for brick in self.bricks:
             if (brick.breakable and brick.life <= 0):
                 self._bricks.remove(brick)
 
     def dump_brick(self):
-        dump = ""
+        """Dumps all the bricks data in the brick.
+
+        Returns:
+            dict: dump of the data
+        """
+        dump = []
         for brick in self._bricks:
-            dump += "["
-            dump += "x: " + brick.x
-            dump += ", y: " + brick.y
-            dump += ", color: " + brick.color
-            dump += ", life: " + brick.life
-            dump += "], "
+            data = "["
+            data += "x: " + brick.x
+            data += ", y: " + brick.y
+            data += ", color: " + brick.color
+            data += ", life: " + brick.life
+            data += "], "
+            dump.append(data)
         return dump
 
 #define a bunch of random bricks
 
-#A sad single little brick
-#     o
-class Brick_Single(Brick):
+class BrickSingle(Brick):
+    """A sad single little brick
+    #     o
+    """
     def __init__(self):
         super().__init__()
         self.add_brick(Obstacle(0, 0, 1, 1, 0xb9111))
 
-#A square
-#     oo
-#     oo
-class Brick_Square(Brick):
+class BrickSquare(Brick):
+    """A square
+    #     oo
+    #     oo
+    """
     def __init__(self):
         super().__init__()
         self.add_brick(Obstacle(0, 0, 1, 1, 0x8f0000))
@@ -57,11 +89,12 @@ class Brick_Square(Brick):
         self.add_brick(Obstacle(0, 1, 1, 1, 0x8f0000))
         self.add_brick(Obstacle(1, 1, 1, 1, 0x8f0000))
 
-#A triangle
-#     o
-#     oo
-#     o
-class Brick_Triangle(Brick):
+class BrickTriangle(Brick):
+    """A triangle
+    #     o
+    #     oo
+    #     o
+    """
     def __init__(self):
         super().__init__()
         self.add_brick(Obstacle(0, 0, 1, 1, 0x2618c4))
@@ -69,11 +102,12 @@ class Brick_Triangle(Brick):
         self.add_brick(Obstacle(0, 2, 1, 1, 0x2618c4))
         self.add_brick(Obstacle(1, 1, 1, 1, 0x2618c4))
 
-#Also a triangle
-#     o
-#    oo
-#     o
-class Brick_Triangle_Reverse(Brick):
+class BrickTriangleReverse(Brick):
+    """Also a triangle
+    #     o
+    #    oo
+    #     o
+    """
     def __init__(self):
         super().__init__()
         self.add_brick(Obstacle(1, 0, 1, 1, 0x2618c4))
@@ -81,10 +115,11 @@ class Brick_Triangle_Reverse(Brick):
         self.add_brick(Obstacle(1, 2, 1, 1, 0x2618c4))
         self.add_brick(Obstacle(0, 1, 1, 1, 0x2618c4))
 
-#Again a triangle
-#     o
-#    ooo
-class Brick_Triangle_Up(Brick):
+class BrickTriangleUp(Brick):
+    """Again a triangle
+    #     o
+    #    ooo
+    """
     def __init__(self):
         super().__init__()
         self.add_brick(Obstacle(1, 0, 1, 1, 0x2618c4))
@@ -92,10 +127,11 @@ class Brick_Triangle_Up(Brick):
         self.add_brick(Obstacle(1, 1, 1, 1, 0x2618c4))
         self.add_brick(Obstacle(2, 1, 1, 1, 0x2618c4))
 
-#A triangle with a vengeance
-#    ooo
-#     o
-class Brick_Triangle_Down(Brick):
+class BrickTriangleDown(Brick):
+    """A triangle with a vengeance
+    #    ooo
+    #     o
+    """
     def __init__(self):
         super().__init__()
         self.add_brick(Obstacle(1, 1, 1, 1, 0x2618c4))
@@ -103,11 +139,12 @@ class Brick_Triangle_Down(Brick):
         self.add_brick(Obstacle(1, 0, 1, 1, 0x2618c4))
         self.add_brick(Obstacle(2, 0, 1, 1, 0x2618c4))
 
-#A deluxe plus
-#     o
-#    ooo
-#     o
-class Brick_Plus(Brick):
+class BrickPlus(Brick):
+    """A deluxe plus
+    #     o
+    #    ooo
+    #     o
+    """
     def __init__(self):
         super().__init__()
         self.add_brick(Obstacle(1, 0, 1, 1, 0xd4be00))
@@ -116,12 +153,13 @@ class Brick_Plus(Brick):
         self.add_brick(Obstacle(2, 1, 1, 1, 0xd4be00))
         self.add_brick(Obstacle(1, 2, 1, 1, 0xd4be00))
 
-#Just another brick in the wall
-#     o
-#     o
-#     o
-#     o
-class Brick_Wall(Brick):
+class BrickWall(Brick):
+    """Just another brick in the wall
+    #     o
+    #     o
+    #     o
+    #     o
+    """
     def __init__(self):
         super().__init__()
         self.add_brick(Obstacle(0, 0, 1, 1, 0x3bdbe3))
@@ -129,9 +167,10 @@ class Brick_Wall(Brick):
         self.add_brick(Obstacle(0, 2, 1, 1, 0x3bdbe3))
         self.add_brick(Obstacle(0, 3, 1, 1, 0x3bdbe3))
 
-#A platform
-#   oooo
-class Brick_Platform(Brick):
+class BrickPlatform(Brick):
+    """A platform
+    #   oooo
+    """
     def __init__(self):
         super().__init__()
         self.add_brick(Obstacle(0, 0, 1, 1, 0x3bdbe3))
@@ -139,11 +178,12 @@ class Brick_Platform(Brick):
         self.add_brick(Obstacle(2, 0, 1, 1, 0x3bdbe3))
         self.add_brick(Obstacle(3, 0, 1, 1, 0x3bdbe3))
 
-#A bracket
-#   oo
-#   o
-#   oo
-class Brick_Bracket(Brick):
+class BrickBracket(Brick):
+    """A bracket
+    #   oo
+    #   o
+    #   oo
+    """
     def __init__(self):
         super().__init__()
         self.add_brick(Obstacle(0, 0, 1, 1, 0x722791))
@@ -152,11 +192,12 @@ class Brick_Bracket(Brick):
         self.add_brick(Obstacle(0, 2, 1, 1, 0x722791))
         self.add_brick(Obstacle(1, 2, 1, 1, 0x722791))
 
-#A bracket but reversed
-#   oo
-#    o
-#   oo
-class Brick_Bracket_Reverse(Brick):
+class BrickBracketReverse(Brick):
+    """A bracket but reversed
+    #   oo
+    #    o
+    #   oo 
+    """
     def __init__(self):
         super().__init__()
         self.add_brick(Obstacle(0, 0, 1, 1, 0x722791))
@@ -178,26 +219,28 @@ class BrickGenerator():
         Returns:
             Brick: a brick.
         """
+        value = None
         rng = random.randint(0, 10)
         if rng == 0:
-            return Brick_Single()
-        if rng == 1:
-            return Brick_Square()
-        if rng == 2:
-            return Brick_Triangle()
-        if rng == 3:
-            return Brick_Triangle_Reverse()
-        if rng == 4:
-            return Brick_Triangle_Up()
-        if rng == 5:
-            return Brick_Triangle_Down()
-        if rng == 6:
-            return Brick_Plus()
-        if rng == 7:
-            return Brick_Wall()
-        if rng == 8:
-            return Brick_Platform()
-        if rng == 9:
-            return Brick_Bracket()
-        if rng == 10:
-            return Brick_Bracket_Reverse()
+            value = BrickSingle()
+        elif rng == 1:
+            value = BrickSquare()
+        elif rng == 2:
+            value = BrickTriangle()
+        elif rng == 3:
+            value = BrickTriangleReverse()
+        elif rng == 4:
+            value = BrickTriangleUp()
+        elif rng == 5:
+            value = BrickTriangleDown()
+        elif rng == 6:
+            value = BrickPlus()
+        elif rng == 7:
+            value = BrickWall()
+        elif rng == 8:
+            value = BrickPlatform()
+        elif rng == 9:
+            value = BrickBracket()
+        elif rng == 10:
+            value = BrickBracketReverse()
+        return value

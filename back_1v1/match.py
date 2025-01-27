@@ -2,8 +2,9 @@
 
 import threading
 import time
-from back_1v1.Game import paddle
-from back_1v1.Game import ball, board
+from Game.paddle import Paddle
+from Game.ball import Ball
+from Game.board import Board
 
 WALL_OFFSET = 0.75
 
@@ -22,12 +23,12 @@ class Match:
         self._timer_count = 0
         self._quitter = 0
         self._max_time_seconds = -1
-        self._board = board.Board(25, 40)
-        self._paddle_1 = paddle.Paddle(p1, self._board.min_x + 1, 12, \
+        self._board = Board(25, 40)
+        self._paddle_1 = Paddle(p1, self._board.min_x + 1, 12, \
                                        self._board.max_y, self._board.min_y)
-        self._paddle_2 = paddle.Paddle(p2, self._board.max_x - 2, 12, \
+        self._paddle_2 = Paddle(p2, self._board.max_x - 2, 12, \
                                        self._board.max_y, self._board.min_y)
-        self._ball = ball.Ball(self._room_id)
+        self._ball = Ball(self._room_id)
         self._initialised = False
         self._started = False
         self._ended = False
@@ -735,3 +736,4 @@ class Match:
     @message_locker.setter
     def message_locker(self, value):
         self._message_locker = value
+
