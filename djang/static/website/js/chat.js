@@ -511,6 +511,12 @@ function checkNewMessage()
         chatBox.classList.add('hasNewMessage');
 }
 
+function appendMessage(message)
+{
+    messagesContainer.appendChild(message);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
 export function receiveMessage(playerName, message, isASticker, isPrivate = false, toPlayer = "")
 {
     const newMessage = createMessageElement(playerName, message, isPrivate, isASticker);
@@ -523,27 +529,30 @@ export function receiveMessage(playerName, message, isASticker, isPrivate = fals
     }
     else
         sendMessageLeft(newMessage, playerName, isASticker, message, isPrivate);
-    
-    // ne pas afficher le message si l'utilisateur est bloque
-
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
     lastSender = playerName;
     if (playerName === "Help bot")
     {
-        messagesContainer.appendChild(newMessage);
+        appendMessage(newMessage);
         return;
     }
-    getAccountUser(playerName)
-    .then((response) => {
-        if (response.is_blocked)
-            newMessage.style.display = 'none';
-        else
-            checkNewMessage();
-        messagesContainer.appendChild(newMessage);
-    })
-    .catch((error) => {
-        console.error("Failed to get the friendship relation:", error);
-    });
+    else if (playerName != playerStats.nickname)
+    {
+        getAccountUser(playerName)
+        .then((response) => {
+            if (response.is_blocked)
+                newMessage.style.display = 'none';
+            else
+                checkNewMessage();
+            appendMessage(newMessage);
+        })
+        .catch((error) => {
+            console.error("Failed to get the friendship relation:", error);
+        });
+    }
+    else
+    {
+        appendMessage(newMessage);
+    }
 }
 
 /* 
