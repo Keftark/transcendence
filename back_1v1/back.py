@@ -19,6 +19,7 @@ from logger import Logger
 UPDATE_DELAY        = (float)(os.environ.get("UPDATE_DELAY", 0.16))
 SERVER_PORT         = os.environ.get("PORT_1V1_CLASSIC", 8001)
 CENTRAL_PORT        = os.environ.get("PORT_CENTRAL", 7777)
+DEBUG               = (bool)(os.environ.get("DEBUG", False))
 
 @dataclass
 class SocketData:
@@ -281,6 +282,8 @@ async def handler(websocket):
     try:
         async for message in websocket:
             event = json.loads(message)
+            if DEBUG is True:
+                logger.log(event, 3)
             if event["type"] == "ping":
                 await send_server(pong())
             elif event["type"] == "join":

@@ -47,6 +47,7 @@ class Queue:
             return True
         except Exception as e:
             self._logger.log("", 2, e)
+        return True
 
     def del_from_queue(self, _id):
         """Removes a player from the queue by his ID.

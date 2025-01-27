@@ -144,7 +144,7 @@ class Match:
             self.timer_tick()
             if self._concluded is True:
                 return
-            elif self._ended is True:
+            if self._ended is True:
                 self._concluded = True
                 if self._abandonned is True :
                     if self._quitter == self._paddle_1.id:

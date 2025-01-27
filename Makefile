@@ -22,13 +22,20 @@ silent:
 	docker compose up --build -d
 
 #Make the migrations
+migration:
+	docker exec -it django python manage.py makemigrations accounts
+	docker exec -it django python manage.py makemigrations matchs
+	docker exec -it django python manage.py makemigrations notifications
+
 migrate:
-	docker compose run django python manage.py makemigrations -v 3
-	docker compose run django python manage.py migrate
+	docker exec -it django python manage.py migrate
 	
+show-mig:
+	docker exec -it django python manage.py showmigrations
+
 #Launch the superuser creation procedure
 superuser:
-	docker compose run django-web python manage.py createsuperuser	
+	docker exec -it django python manage.py createsuperuser	
 
 #Take down the project cleanly
 down:
