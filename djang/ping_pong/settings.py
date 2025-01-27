@@ -17,7 +17,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 LOGGING = {
     'version': 1,
@@ -50,9 +50,8 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS","*").split(",")
 
 CORS_ORIGIN_ALLOW_ALL = False
 
-CSRF_TRUSTED_ORIGINS = ["https://10.19.190.210"] 
-+ [f'https://{host}:8443' for host in ALLOWED_HOSTS] 
-+ [f'http://{host}:8000' for host in ALLOWED_HOSTS]
+CSRF_TRUSTED_ORIGINS = ["https://*"] + [f'https://{host}:8443' for host in ALLOWED_HOSTS] + [f'http://{host}:8000' for host in ALLOWED_HOSTS
+]
 
 
 # Application definition

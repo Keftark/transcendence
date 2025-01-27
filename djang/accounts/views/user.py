@@ -278,4 +278,17 @@ class UpdatePasswordView(UpdateAPIView):
     def get_object(self):
         return self.queryset.get(pk=self.request.user.pk)
 
-
+#def del_user(request, username):    
+#    try:
+#        u = User.objects.get(username = username)
+#        u.delete()
+#        messages.success(request, "The user is deleted")            
+#
+#    except User.DoesNotExist:
+#        messages.error(request, "User doesnot exist")    
+#        return render(request, 'index.html')
+#
+#    except Exception as e: 
+#        return render(request, 'index.html',{'err':e.message})
+#
+#    return render(request, 'index.html') 
