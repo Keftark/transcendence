@@ -50,7 +50,9 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS","*").split(",")
 
 CORS_ORIGIN_ALLOW_ALL = False
 
-CSRF_TRUSTED_ORIGINS = ["https://10.19.190.210"]
+CSRF_TRUSTED_ORIGINS = ["https://10.19.190.210"] 
++ [f'https://{host}:8443' for host in ALLOWED_HOSTS] 
++ [f'http://{host}:8000' for host in ALLOWED_HOSTS]
 
 
 # Application definition
