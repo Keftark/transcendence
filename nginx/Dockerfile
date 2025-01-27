@@ -1,9 +1,12 @@
-FROM nginx
+FROM	debian:buster
 
 RUN		apt-get update
 RUN		apt-get install -y nginx
 
-COPY cponmamju.fr_key.pem /etc/ssl/private/
-COPY cponmamju.fr_cert.pem /etc/ssl/certs/
+COPY    cponmamju2.fr_key.pem /etc/ssl/private/
 
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY    nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE	443
+
+CMD     ["nginx", "-g", "daemon off;"]

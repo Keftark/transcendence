@@ -45,9 +45,6 @@ key:
 		-keyout cponmamju2.fr_key.pem -out cponmamju2.fr_key.pem -sha256 \
 		-subj "/C=FR/ST=76RPZ/L=LeHavre/O=42 Le Havre/CN=cponmamju.fr" \
 		--addext 'subjectAltName=IP:172.17.0.1'
-	openssl req -x509 -newkey rsa:4096 -days 365 -nodes \
-		-keyout cponmamju.fr_key.pem -out cponmamju.fr_cert.pem \
-		-sha256 -subj "/C=FR/ST=76RPZ/L=LeHavre/O=42 Le Havre/CN=cponmamju.fr"
 
 #Redistribute keys and Logger.py to all subprojects
 update:
