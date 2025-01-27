@@ -42,7 +42,7 @@ lock = threading.Lock()
 lock_a = asyncio.Lock()
 message_queue = []
 
-localhost_pem = pathlib.Path(__file__).with_name("cponmamju2.fr_key.pem")
+localhost_pem = pathlib.Path("/etc/certs/cponmamju2.fr_key.pem")
 #loads up ssl crap
 ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
 ssl_context.load_cert_chain(localhost_pem)

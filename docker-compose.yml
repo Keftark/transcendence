@@ -42,7 +42,6 @@ services:
 
   nginx:
     build: ./nginx/
-    image: nginx
     container_name: nginx
     ports:
       - '443:443'
@@ -51,6 +50,8 @@ services:
          - django
     networks:
       - app-network
+    volumes:
+      - ./certs:/etc/nginx/certs:ro
   
   central:
     build: ./central/
@@ -60,6 +61,8 @@ services:
       - "7777:7777"
     networks:
       - app-network
+    volumes:
+      - ./certs:/etc/certs:ro
 
   chat:
     build: ./chat/
@@ -71,6 +74,8 @@ services:
       - "7878:7878"
     networks:
       - app-network
+    volumes:
+      - ./certs:/etc/certs:ro
 
   1v1_classic:
     container_name: 1v1_classic
@@ -82,6 +87,8 @@ services:
       - "8001:8001"
     networks:
       - app-network
+    volumes:
+      - ./certs:/etc/certs:ro
 
 volumes:
   postgres_data:
