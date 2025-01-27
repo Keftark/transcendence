@@ -9,6 +9,7 @@ import sys
 import signal
 import ssl
 import pathlib
+import os
 from dataclasses import dataclass
 from queue_ft import Queue
 from websockets.asyncio.server import serve
@@ -17,14 +18,9 @@ from logger import Logger
 
 #Take the variables from the .env
 #Leave as comments until we are in docker !
-# UPDATE_DELAY = os.environ["UPDATE_DELAY"]
-# SERVER_PORT = os.environ["PORT_1V1_CLASSIC"]
-# CENTRAL_PORT = os.environ["PORT_CENTRAL"]
-
-#Hardcoded variables, to delete when in docker
-UPDATE_DELAY = 0.016
-SERVER_PORT = 8001
-CENTRAL_PORT = 7777
+UPDATE_DELAY = os.environ["UPDATE_DELAY"]
+SERVER_PORT = os.environ["PORT_1V1_CLASSIC"]
+CENTRAL_PORT = os.environ["PORT_CENTRAL"]
 
 @dataclass
 class SocketData:
