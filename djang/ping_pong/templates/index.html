@@ -557,6 +557,7 @@
     <!------------------------------ Registering Panel ------------------------------>
     <div id="registering" class="page">
         <div id="registeringpanel">
+            {% csrf_token %}
             <div id="registeringPanel">
                 <div id="askSignInDiv">
                     <p id="askSignInText"></p>
@@ -606,6 +607,7 @@
                     </label>
                 </div>
                 <div id="regButtons">
+                    {% csrf_token %}
                     <button class="regButton" id="registerConfirm"></button>
                     <button class="regButton" id="registerCancel"></button>
                 </div>
