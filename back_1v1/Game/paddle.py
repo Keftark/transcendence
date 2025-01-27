@@ -1,4 +1,4 @@
-from ball import Ball
+""""e"""
 
 PRECISION = 15
 DEFAULT_SPEED = 0.75
@@ -311,3 +311,4 @@ class Paddle:
     @message_queue.setter
     def message_queue(self, value):
         self._message_queue = value
+
