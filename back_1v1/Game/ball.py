@@ -363,6 +363,12 @@ class Ball:
 
     @property
     def power_boost(self):
+        """Returns the power boost, ie how much the boost adds
+        speed to the ball
+
+        Returns:
+            float: multiplier
+        """
         return self._power_boost
 
     @power_boost.setter
@@ -371,6 +377,11 @@ class Ball:
 
     @property
     def message_queue(self):
+        """Returns the message queue.
+
+        Returns:
+            dict: Message queue
+        """
         return self._message_queue
 
     @message_queue.setter

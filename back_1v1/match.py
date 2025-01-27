@@ -2,7 +2,8 @@
 
 import threading
 import time
-from Game import Board, Ball, Paddle
+from back_1v1.Game import paddle
+from back_1v1.Game import ball, board
 
 WALL_OFFSET = 0.75
 
@@ -21,12 +22,12 @@ class Match:
         self._timer_count = 0
         self._quitter = 0
         self._max_time_seconds = -1
-        self._board = Board.Board(25, 40)
-        self._paddle_1 = Paddle.Paddle(p1, self._board.min_x + 1, 12, \
+        self._board = board.Board(25, 40)
+        self._paddle_1 = paddle.Paddle(p1, self._board.min_x + 1, 12, \
                                        self._board.max_y, self._board.min_y)
-        self._paddle_2 = Paddle.Paddle(p2, self._board.max_x - 2, 12, \
+        self._paddle_2 = paddle.Paddle(p2, self._board.max_x - 2, 12, \
                                        self._board.max_y, self._board.min_y)
-        self._ball = Ball.Ball(self._room_id)
+        self._ball = ball.Ball(self._room_id)
         self._initialised = False
         self._started = False
         self._ended = False
