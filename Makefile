@@ -44,6 +44,7 @@ down:
 #Take down then restart in background
 re:
 	docker compose down
+	$(shell ./generate_env.sh)
 	docker compose up --build -d
 
 #recreates the SSL keys (might need sudo), then puts it
@@ -54,6 +55,42 @@ key:
 		-subj "/C=FR/ST=76RPZ/L=LeHavre/O=42 Le Havre/CN=cponmamju.fr" \
 		--addext 'subjectAltName=IP:172.17.0.1'
 	cp cponmamju2.fr_key.pem certs/
+
+#Recreates the Django container
+django-re:
+	docker compose build django
+	docker compose up --no-deps -d django
+
+#Stops the chat server container
+django-down:
+	docker compose down django
+
+#Recreates the central server container
+central-re:
+	docker compose build central
+	docker compose up --no-deps -d central
+
+#Stops the chat server container
+central-down:
+	docker compose down central
+
+#Recreates the game server container
+game-re:
+	docker compose build 1v1_classic
+	docker compose up --no-deps -d 1v1_classic
+
+#Stops the chat server container
+game-down:
+	docker compose down 1v1_classic
+
+#Recreates the chat server container
+chat-re:
+	docker compose build chat
+	docker compose up --no-deps -d chat
+
+#Stops the chat server container
+chat-down:
+	docker compose down chat
 
 #Redistribute Logger.py to all subprojects
 update:
