@@ -26,6 +26,7 @@ logList = []
 SERVER_PORT         = os.environ.get("PORT_CENTRAL", 7777)
 PORT_1V1_CLASSIC    = os.environ.get("PORT_1V1_CLASSIC", 8001)
 PORT_CHAT           = os.environ.get("PORT_CHAT", 7878)
+DEBUG               = (bool)(os.environ.get("DEBUG", False))
 
 
 @dataclass

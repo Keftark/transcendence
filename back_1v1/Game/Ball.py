@@ -1,10 +1,14 @@
+"""BALLZ"""
+
 import math
 import random
 
-MAX_BOUNCE_ANGLE = math.radians(60) 
+MAX_BOUNCE_ANGLE = math.radians(60)
 PRECISION = 10
 
 class Ball:
+    """A ball class that balls around
+    """
     def __init__(self, room_id):
         self._x = 0
         self._y = 0
@@ -17,7 +21,6 @@ class Ball:
         self._speed_increment = 1.01
         self._bounce_angle_max = 75 * math.pi / 180
         self._radius = 0.7
-        self._bounces = 0
         self._is_powered_up = False
         self._power_boost = 1.5
         self._room_id = room_id
@@ -37,31 +40,53 @@ class Ball:
         self._radius = radius
 
     def reset(self, side):
+        """Resets the ball to the center, and gives it 
+        a new angle depending on side.
+
+        Args:
+            side (bool): wether or not the ball goes to the left side.
+        """
         self._x = 0
         self._y = 0
         self._speed = self._base_speed
         self._velocity_x = self._speed if side else self._speed * -1
         self._velocity_boosted_x = 0
         self._velocity_boosted_y = 0
-        self._velocity_y = 0 
+        self._velocity_y = 0
         self._bounces = 0
         self._is_powered_up = False
-    
+
     def bounce_vertical(self):
+        """Vertical bounce event.
+        """
         self._velocity_x *= -1
         self._velocity_boosted_x *= -1
         self._message_queue.append(self.dump_bounce_obstacle())
-    
+
     def bounce_horizontal(self):
+        """Horizontal bounce event.
+        """
         self._velocity_y *= -1
         self._velocity_boosted_y *= -1
         self._message_queue.append(self.dump_bounce_obstacle())
 
     def activate_power_up(self, power = 2):
+        """Activates the power up.
+
+        Args:
+            power (int, optional): The amount of added power. Defaults to 2.
+        """
         self._power_boost = power
         self._is_powered_up = True
 
     def bounce_paddle_left(self, y, size, bonus):
+        """Bounces the ball on the left side of a paddle.
+
+        Args:
+            y (float): center point of the paddle.
+            size (int): Size of the paddle.
+            bonus (float): Bonus speed multiplier.
+        """
         if self._is_powered_up is True:
             self._is_powered_up = False
         self._bounces += 1
@@ -72,11 +97,20 @@ class Ball:
         self._speed *= self._speed_increment
         self._velocity_x = (self._speed * bonus) * math.cos(bounce_angle)
         self._velocity_y = (self._speed * bonus) * math.sin(bounce_angle)
-        self._velocity_boosted_x = (self._speed * bonus) * math.cos(bounce_angle) * self._power_boost
-        self._velocity_boosted_y = (self._speed * bonus) * math.sin(bounce_angle) * self._power_boost
+        self._velocity_boosted_x = (self._speed * bonus) * \
+                math.cos(bounce_angle) * self._power_boost
+        self._velocity_boosted_y = (self._speed * bonus) * \
+                math.sin(bounce_angle) * self._power_boost
         self._message_queue.append(self.dump_bounce_player())
-    
+
     def bounce_paddle_right(self, y, size, bonus):
+        """Bounces the ball on the right side of a paddle.
+
+        Args:
+            y (float): center point of the paddle.
+            size (int): Size of the paddle.
+            bonus (float): Bonus speed multiplier.
+        """
         if self._is_powered_up is True:
             self._is_powered_up = False
         self._bounces += 1
@@ -86,12 +120,23 @@ class Ball:
         self._speed *= self._speed_increment
         self._velocity_x = (self._speed * bonus) * math.cos(bounce_angle) * -1
         self._velocity_y = (self._speed * bonus) * math.sin(bounce_angle)
-        self._velocity_boosted_x = (self._speed * bonus) * math.cos(bounce_angle) * self._power_boost * -1
-        self._velocity_boosted_y = (self._speed * bonus) * math.sin(bounce_angle) * self._power_boost
+        self._velocity_boosted_x = (self._speed * bonus) * math.cos(bounce_angle) \
+                * self._power_boost * -1
+        self._velocity_boosted_y = (self._speed * bonus) * math.sin(bounce_angle) \
+                * self._power_boost
         self._message_queue.append(self.dump_bounce_player())
-    
-    #check wether the ball is colliding with the x;y position
+
     def is_colliding(self, x, y):
+        """Checks wether the ball is collinding, or will collide, 
+        with the x;y position.
+
+        Args:
+            x (float): x position.
+            y (float): y poisiton.
+
+        Returns:
+            bool: `true` if it collides, `false` otherwise.
+        """
         for i in range(0, PRECISION, 1):
             if self._is_powered_up is True:
                 diff_x = self._x + (self._velocity_boosted_x * (i / PRECISION))
@@ -103,8 +148,11 @@ class Ball:
             if distance <= self._radius :
                 return True
         return False
-    
+
     def update_position(self):
+        """Updates the position of the ball, adding the velocity
+        vector to the position vector.
+        """
         if self._is_powered_up is True:
             self._x += self._velocity_boosted_x
             self._y += self._velocity_boosted_y
@@ -112,12 +160,19 @@ class Ball:
             self._x += self._velocity_x
             self._y += self._velocity_y
         self.round_values()
-    
+
     def round_values(self):
+        """Rounds the positional values.
+        """
         self._x = round(self._x, 4)
         self._y = round(self._y, 4)
 
     def dump_bounce_player(self):
+        """Event of a ball colliding on a player.
+
+        Returns:
+            dict: dump
+        """
         event = {
             "type": "bounce_player",
             "server": "1v1_classic",
@@ -131,6 +186,11 @@ class Ball:
         return event
 
     def dump_bounce_obstacle(self):
+        """Event of a ball colliding on an obstacle.
+
+        Returns:
+            dict: dump
+        """
         event = {
             "type": "bounce_obstacle",
             "server": "1v1_classic",
@@ -141,10 +201,15 @@ class Ball:
             "ball_speed": self._speed
         }
         return event
-    
+
     #Setters and getters
     @property
     def x(self):
+        """Current x position of the ball.
+
+        Returns:
+            float: x position.
+        """
         return self._x
 
     @x.setter
@@ -153,6 +218,11 @@ class Ball:
 
     @property
     def y(self):
+        """Current y position of the ball.
+
+        Returns:
+            float: y position.
+        """
         return self._y
 
     @y.setter
@@ -161,6 +231,11 @@ class Ball:
 
     @property
     def speed(self):
+        """Current speed value of the ball.
+
+        Returns:
+            float: speed.
+        """
         return self._speed
 
     @speed.setter
@@ -169,6 +244,12 @@ class Ball:
 
     @property
     def base_speed(self):
+        """Returns the base speed value, the value the ball
+        will reset to.
+
+        Returns:
+            float: base speed.
+        """
         return self._base_speed
 
     @base_speed.setter
@@ -177,6 +258,11 @@ class Ball:
 
     @property
     def velocity_x(self):
+        """Current x velocity of the ball.
+
+        Returns:
+            float: x velocity.
+        """
         return self._velocity_x
 
     @velocity_x.setter
@@ -185,6 +271,11 @@ class Ball:
 
     @property
     def velocity_y(self):
+        """Current y velocity of the ball.
+
+        Returns:
+            float: y velocity.
+        """
         return self._velocity_y
 
     @velocity_y.setter
@@ -193,6 +284,11 @@ class Ball:
 
     @property
     def velocity_boosted_x(self):
+        """Current x boosted velocity of the ball.
+
+        Returns:
+            float: x boosted velocity.
+        """
         return self._velocity_boosted_x
 
     @velocity_boosted_x.setter
@@ -201,6 +297,11 @@ class Ball:
 
     @property
     def velocity_boosted_y(self):
+        """Current y boosted velocity of the ball.
+
+        Returns:
+            float: y boosted velocity.
+        """
         return self._velocity_boosted_y
 
     @velocity_boosted_y.setter
@@ -209,6 +310,12 @@ class Ball:
 
     @property
     def speed_increment(self):
+        """Returns the speed multiplier that applies
+        to each bounce.
+
+        Returns:
+            float: the multiplier.
+        """
         return self._speed_increment
 
     @speed_increment.setter
@@ -217,6 +324,11 @@ class Ball:
 
     @property
     def bounce_angle_max(self):
+        """Returns the max bounce angle.
+
+        Returns:
+            float: max bounce angle
+        """
         return self._bounce_angle_max
 
     @bounce_angle_max.setter
@@ -225,6 +337,11 @@ class Ball:
 
     @property
     def radius(self):
+        """Returns the radius of the ball, ie its width.
+
+        Returns:
+            float: radius.
+        """
         return self._radius
 
     @radius.setter
@@ -232,15 +349,12 @@ class Ball:
         self._radius = value
 
     @property
-    def bounces(self):
-        return self._bounces
-
-    @bounces.setter
-    def bounces(self, value):
-        self._bounces = value
-
-    @property
     def is_powered_up(self):
+        """Returns wether the ball is powered up or not.
+
+        Returns:
+            bool: _description_
+        """
         return self._is_powered_up
 
     @is_powered_up.setter
