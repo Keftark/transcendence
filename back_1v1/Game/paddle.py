@@ -1,4 +1,4 @@
-from Game import Ball
+from ball import Ball
 
 PRECISION = 15
 DEFAULT_SPEED = 0.75
