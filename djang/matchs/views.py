@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import permissions, status
 from rest_framework.authentication import SessionAuthentication
 from django.contrib.auth.models import User
-
+from django.http import JsonResponse
 from django.http import HttpRequest
 from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
@@ -13,7 +13,54 @@ from django.shortcuts import get_object_or_404
 from .models import Match, MatchMembers
 from .serializers import MatchSerializer
 
+import json
 # Create your views here.
+
+def create_match(request):
+    if request.method == 'POST':
+        try:
+            # Parse JSON body
+            data = json.loads(request.body)
+
+            # Extract data
+            status = data.get('status', '')
+            player_1 = data.get('player_1', '')
+            player_1_score = data.get('player_1_score', '')
+            player_2 = data.get('player_2', '')
+            player_2_score = data.get('player_2_score', '')
+            start_timestamp = data.get('start_timestamp', '')
+            stop_timestamp = data.get('stop_timestamp', '')
+            winner = data.get('winner', '')
+
+            # Validation
+
+            if player_1 and player_2 == 0:
+                return JsonResponse({'success': False, 'error': 'Missing required fields.'}, status=400)
+
+            # Create user
+            match = Match.objects.create(
+                finished = True,
+                started = False,
+                winner = winner,
+                match_id = 0,
+                online = False,
+                player_1 = player_1,
+                player_1_score = player_1_score,
+                player_2 = 0,
+                player_2_score = player_2_score,
+                start_timestamp = start_timestamp,
+                stop_timestamp =  stop_timestamp,
+            )
+            match.save()
+            return JsonResponse({'success': True, 'message': 'Match successfully created.'})
+
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON.'}, status=400)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
+
 class MatchViewSet(viewsets.ModelViewSet):
 
     queryset = Match.objects
