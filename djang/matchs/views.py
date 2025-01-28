@@ -100,3 +100,9 @@ class HistoriqueViewSet(ViewSet):
         user: User = get_object_or_404(User, pk=pk)
 
         match_count = MatchMembers.objects.filter(player=user).count()
+
+    def get_matchs_winned_count(self, request: HttpRequest, pk: int = None):
+        
+        user: User = get_object_or_404(User, pk=pk)
+
+        match_count = MatchMembers.objects.filter(winner=user).count()
