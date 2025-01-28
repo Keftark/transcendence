@@ -3,13 +3,8 @@ import { PLAYER_HEIGHT, PLAYER_RADIUS, BOUNDARY } from "./levelLocal.js";
 import { getLevelState } from './main.js';
 import { ArenaType, LevelMode } from './variables.js';
 import { GLTFLoader } from '../node_modules/.vite/deps/three_examples_jsm_loaders_GLTFLoader.js';
-import { clearObject, removeModelFromObject } from './unloadScene.js';
-import { playerStats } from './playerManager.js';
-import { playersSkins } from './duelPanel.js';
 
-let wallLeft;
 let wallRight;
-let currentLevelMode;
 
 export function drawLine(scene, BOUNDARY)
 {
@@ -38,9 +33,9 @@ export function getRandomNumberBetween(min, max) {
 // positions are for fullscreen
 export function setObjectRandomPosition(object)
 {
-    let maxPosXSide = currentLevelMode === LevelMode.ADVENTURE ? 90 : 70;
+    let maxPosXSide = getLevelState() === LevelMode.ADVENTURE ? 90 : 70;
     const minPosXSide = BOUNDARY.X_MAX + 10;
-    let maxPosYTop = currentLevelMode === LevelMode.ADVENTURE ? 100 : 35;
+    let maxPosYTop = getLevelState() === LevelMode.ADVENTURE ? 100 : 35;
     const minPosYTop = BOUNDARY.Y_MAX + 10;
     let rnd = getRandomNumberBetween(0, 4);
     rnd = Math.floor(rnd);
@@ -113,24 +108,24 @@ export function updatePlayerModel(oldPlayer) {
     );
 }
 
-function getPlayerTexture(playerNbr)
+let cylinderTexture1;
+let cylinderTexture2;
+
+export function setTextures(p1, p2)
 {
-    // on recupere la variable du skin du joueur a l'emplacement playerNbr
-    // le mieux serait de sauvegarder les int lors de l'initialisation du match, on aurait juste a les prendre ici
-    return textureLoader.load(`static/mat/player${playersSkins[playerNbr]}.png`);
+    cylinderTexture1 = `static/mat/player${p1.preferredPaddle + 1}.png`;
+    cylinderTexture2 = `static/mat/player${p2.preferredPaddle + 1}.png`;
 }
 
 export function createPlayers(scene, textureLoader)
 {
     const levelState = getLevelState();
     const playerSize = levelState === LevelMode.MULTI ? PLAYER_HEIGHT / 1.5 : PLAYER_HEIGHT;
-    // faire une fonction qui va recuperer le skin choisi par chaque joueur.
-    // le skin de l'ia va etre par defaut ou aleatoire ?
-    // const cylinderTexture = getPlayerTexture(1);
-    const cylinderTexture = textureLoader.load(`static/mat/player${playerStats.currentPaddleSkin}.png`); // supprimer ca et mettre la ligne du dessus !
-    cylinderTexture.colorSpace = THREE.SRGBColorSpace;
-    const material1 = new THREE.MeshStandardMaterial({ map: cylinderTexture, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });
-    const material2 = new THREE.MeshStandardMaterial({ map: cylinderTexture, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });
+    const tex1 = textureLoader.load(cylinderTexture1);
+    const tex2 = textureLoader.load(cylinderTexture2);
+    tex1.colorSpace = tex2.colorSpace = THREE.SRGBColorSpace;
+    const material1 = new THREE.MeshStandardMaterial({ map: tex1, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });
+    const material2 = new THREE.MeshStandardMaterial({ map: tex2, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });
     const geometry = new THREE.CylinderGeometry(PLAYER_RADIUS, PLAYER_RADIUS, playerSize, 8, 1, false);
 
     const player1 = new THREE.Mesh(geometry, material1);
@@ -144,8 +139,8 @@ export function createPlayers(scene, textureLoader)
     let player4 = null;
     if (levelState === LevelMode.MULTI)
     {
-        const material3 = new THREE.MeshStandardMaterial({ map: cylinderTexture, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });
-        const material4 = new THREE.MeshStandardMaterial({ map: cylinderTexture, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });
+        const material3 = new THREE.MeshStandardMaterial({ map: cylinderTexture0, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });
+        const material4 = new THREE.MeshStandardMaterial({ map: cylinderTexture0, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });
         player3 = new THREE.Mesh(geometry, material3);
         player3.add(createPlayerBoostModel(textureLoader));
         scene.add(player3);

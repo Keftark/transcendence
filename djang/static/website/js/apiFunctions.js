@@ -1,5 +1,5 @@
 import { sendSystemMessage } from "./chat.js";
-import { editPlayerStats } from "./playerManager.js";
+import { editPlayerStats, playerStats } from "./playerManager.js";
 import { clickCancelSignIn } from "./signIn.js";
 
 export function getCSRFToken()
@@ -118,7 +118,7 @@ export async function getLoggedInUser() {
         });
         if (response.ok) {
             const userData = await response.json();
-            console.trace('Logged-in user:', userData);
+            // console.trace('Logged-in user:', userData);
             return userData;
         } else if (response.status === 403) {
             // console.log('User is not logged in.');
@@ -213,7 +213,7 @@ export async function uploadAvatar(username, url_picture)
             const errorResult = await response.json();  // Parse the error message in JSON
             alert(errorResult.message);  // Display the error message to the user
         } else {
-            const result = await response.json();  // Parse the success response in JSON
+            // const result = await response.json();  // Parse the success response in JSON
             // console.log(result);
         }
 
@@ -332,7 +332,7 @@ export async function getAccountUser(userName) {
       console.error('Error:', error);
       return null;  // You can return an error object or null if needed
     }
-  }
+}
 
 export async function askAddFriend(userName) {
     try {
@@ -457,5 +457,47 @@ export async function unblockUserRequest(userName) {
         return response;
     } catch (error) {
         console.error('Error:', error);
+    }
+}
+
+export async function sendMatch()
+{
+    // c'est un test !
+    const data = {
+        status: false,
+        player_1: playerStats.id,
+        player_1_score: 1,
+        player_2: 2,
+        player_2_score: 3,
+        start_timestamp: 10,
+        stop_timestamp: 1000,
+        winner: playerStats.id
+    };
+
+    // console.log(data);
+    try
+    {
+        const response = await fetch('api/matchs/set_match', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken(),
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok)
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        const responseData = await response.json();
+
+        if (responseData.success)
+            return true;
+        else {
+            console.error('Registration error:', responseData.error);
+            return false;
+        }
+    } catch (error) {
+        console.error('Error sending data to backend:', error);
+        return false;
     }
 }

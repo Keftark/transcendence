@@ -1,4 +1,4 @@
-import { logInPlayer } from "./apiFunctions.js";
+import { logInPlayer, sendMatch } from "./apiFunctions.js";
 import { displayWelcomeMessage } from "./chat.js";
 import { loadBlocks, loadFriends } from "./friends.js";
 import { navigateTo } from "./pages.js";
@@ -139,6 +139,8 @@ export function connectToServer()
     loadFriends();
     loadBlocks();
     displayWelcomeMessage();
+
+    sendMatch();
 }
 
 async function clickConfirmSignIn()

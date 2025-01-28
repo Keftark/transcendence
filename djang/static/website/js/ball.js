@@ -1,6 +1,5 @@
 import * as THREE from '../node_modules/.vite/deps/three.js';
-import { BOUNDARY, playerSize, spawnSparksFunction, updateSparksFunction } from './levelLocal.js';
-import { Sparks } from './sparks.js';
+import { BOUNDARY, playerSize, spawnSparksFunction } from './levelLocal.js';
 import { ArenaType, BallStats, LevelMode } from './variables.js';
 import { getRules } from './rules.js';
 import { fillPowerBarLeft, fillPowerBarRight } from './powerUp.js';
@@ -8,7 +7,6 @@ import { getBoostedStatus, stopBoostPlayer } from './playerMovement.js';
 import { getLevelState } from './main.js';
 
 const ballBaseStats = BallStats;
-let ballRadiusMult = 1.0;
 let ballSpeedMult = 1.0;
 let isBallBoosted = false;
 let boostedBallModel;
@@ -75,7 +73,6 @@ function getRandomVelocityComponent() {return Math.random() < 0.5 ? ballBaseStat
 export function createBall(scene, callBack)
 {
     currentLevelMode = getLevelState();
-    ballRadiusMult = 1;
     isBallBoosted = false;
     ballSpeedMult = 1;
     const textureLoader = new THREE.TextureLoader();
@@ -87,7 +84,6 @@ export function createBall(scene, callBack)
         emissiveIntensity: 0
     });
     const ballGeometry = new THREE.SphereGeometry(ballBaseStats.baseRadius, 32, 32);
-    const sparks = new Sparks(scene);
     const ballVelocitySpeedUp = new THREE.Vector3(0.07, 0.07, 0);
     const ball = new THREE.Mesh(ballGeometry, ballMaterial);
     const boostedBall = createBallBoostModel(textureLoader);

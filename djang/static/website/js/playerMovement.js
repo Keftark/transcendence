@@ -1,4 +1,4 @@
-import { balle, BOUNDARY, getPlayer, finalHeight, PLAYER_HEIGHT } from "./levelLocal.js";
+import { balle, BOUNDARY, getPlayer, finalHeight } from "./levelLocal.js";
 import { getLevelState, isAnOnlineMode } from "./main.js";
 import { isMenuOpen, isSettingsOpen } from "./menu.js";
 import { playerStats } from "./playerManager.js";

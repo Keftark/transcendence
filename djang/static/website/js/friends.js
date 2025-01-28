@@ -1,5 +1,5 @@
 import { blockUserRequest, getBlockedList, getFriendsList, unblockUserRequest } from "./apiFunctions.js";
-import { askAddFriendFunction, hideMessagesFrom, openNameContextMenu, removeFriendFunction, restoreMessagesFromUser, sendSystemMessage } from "./chat.js";
+import { askAddFriendFunction, hideMessagesFrom, openNameContextMenu, restoreMessagesFromUser, sendSystemMessage } from "./chat.js";
 import { playerStats } from "./playerManager.js";
 import { getTranslation } from "./translate.js";
 

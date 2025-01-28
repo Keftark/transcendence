@@ -15,8 +15,6 @@ import { clickCancelSignIn, isSigninOpen } from './signIn.js';
 import { getAddress } from './apiFunctions.js';
 import { askBackTournamentView, cancelAddPlayerTournament, cancelBackTournamentView, isAddPlayerTournamentIsOpen, isInAskBackTournamentView, isTournamentViewOpen, quitTournamentLobby } from './tournament.js';
 
-let levelMode = LevelMode.MENU;
-
 window.onbeforeunload = function() {
     localStorage.removeItem('currentPath');
 };
@@ -26,7 +24,6 @@ export function setLevelState(newLevelMode)
     if (!newLevelMode)
         return;
     localStorage.setItem('levelMode', newLevelMode);
-    levelMode = newLevelMode;
 }
 
 export function isAnOnlineMode(currentMode)
@@ -170,12 +167,12 @@ function openSocket(ip)
     // listener = new WebSocket(`wss://${ip}:7777/`);
 
     // cluster lumineux
-    socket = new WebSocket('ws://10.11.200.72:7777/ws/');
-    listener = new WebSocket('ws://10.11.200.72:7777/ws/');
+    // socket = new WebSocket('ws://10.11.200.72:7777/ws/');
+    // listener = new WebSocket('ws://10.11.200.72:7777/ws/');
 
     // cluster sombre
-    // socket = new WebSocket(`ws://10.12.200.194:7777/ws/`);
-    // listener = new WebSocket(`ws://10.12.200.194:7777/ws/`);
+    socket = new WebSocket(`ws://10.12.200.194:7777/ws/`);
+    listener = new WebSocket(`ws://10.12.200.194:7777/ws/`);
     
     socket.onopen = function() {
         console.log("WebSocket connected");

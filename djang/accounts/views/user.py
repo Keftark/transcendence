@@ -2,6 +2,7 @@ from django.shortcuts import render
 import os
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+import json
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
@@ -18,7 +19,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # from django.views.decorators.csrf import csrf_exempt
-import json
 
 def home(request):
     return render(request, 'index.html', {'current_page': 'home'})

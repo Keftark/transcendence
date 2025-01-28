@@ -1,7 +1,8 @@
-import { askAddFriend, blockUserRequest, deleteFriend, getAccountUser, getIncomingFriendRequests, getOutgoingFriendRequests } from "./apiFunctions.js";
+import * as THREE from '../node_modules/.vite/deps/three.js';
+import { askAddFriend, deleteFriend, getAccountUser, getIncomingFriendRequests, getOutgoingFriendRequests } from "./apiFunctions.js";
 import { cheatCodes } from "./cheats.js";
 import { getDuelTargetPlayer, joinDuel } from "./duelPanel.js";
-import { addBlockedUserDiv, addFriend, addFriendDiv, addFriendRequest, addOutgoingFriendRequest, blockUser, checkAndRemoveFriend } from "./friends.js";
+import { addFriend, addFriendDiv, addFriendRequest, addOutgoingFriendRequest, blockUser, checkAndRemoveFriend } from "./friends.js";
 import { getPlayerPosition, id_players, isInGame } from "./levelLocal.js";
 import { openMiniProfile } from "./menu.js";
 import { getPlayerName, playerStats } from "./playerManager.js";
@@ -233,15 +234,6 @@ export function clickBlockUser(playerName = "")
     closeNameContextMenu();
 }
 
-function clickPlayWith()
-{
-    // calls the mutiplayer (1vs1) game panel
-    // the left player is the caller, the right one is the invited player.
-    // on the screen, there is a text 'Waiting for <player>...' until he accepts the invitation.
-    // if the player accepts the invitation, he goes on the same panel and its informations are filled.
-    // if the player refuses, the panel disappears? or instead of the waiting player text, there is 
-}
-
 function clickOpenProfile()
 {
     console.log("Trying to open the " + selectedName + " profile");
@@ -259,8 +251,8 @@ export function askAddFriendFunction(playerName)
 {
     askAddFriend(playerName)
     .then((response) => {
-        console.log("Response: " + response);
-        console.log("Status: " + response.status);
+        // console.log("Response: " + response);
+        // console.log("Status: " + response.status);
         if (response.status == 200) // requete ami
         {
             sendSystemMessage("youSendRequest", playerName, true);
@@ -453,11 +445,6 @@ function sendMessageRight(newMessage, playerName, isASticker, stickerName = "", 
     if (isASticker)
         return;
     messageContent.classList.add('message-container-right');
-}
-
-function sendMessageMiddle(newMessage)
-{
-    newMessage.classList.add('message-middle');
 }
 
 // let messageCount = 0;
@@ -809,9 +796,9 @@ function convert3DTo2DScreenSpace(threejsPosition, camera, renderer) {
 export function receiveGameSticker(playerId, stickerName)
 {
     let stickerPosition;
-    if (id_players.p1 === playerStats.id)
+    if (id_players[0] === playerStats.id)
         stickerPosition = convert3DTo2DScreenSpace(getPlayerPosition(1));
-    else if (id_players.p2 === playerStats.id) // le joueur est a droite
+    else if (id_players[1] === playerStats.id) // le joueur est a droite
         stickerPosition = convert3DTo2DScreenSpace(getPlayerPosition(2));
     const imgDiv = document.createElement('img');
     imgDiv.src = `static/stickers/${stickerName}.webp`;

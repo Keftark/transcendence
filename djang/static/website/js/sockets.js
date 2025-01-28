@@ -363,21 +363,21 @@ export function socketSendSalonSticker(stickerName)
 }
 
 
-export function socketSendFriendRequest(friendId)
-{
-    if (!listener || listener.readyState !== WebSocket.OPEN)
-        return;
-    const event = { // c'est pas fait !
-        key: keySocket,
-        type: "message",
-        name: playerStats.nickname,
-        id: playerStats.id,
-        content: messageContent,
-        answer: "no",
-        server: "chat"
-    };
-    listener.send(JSON.stringify(event));
-}
+// export function socketSendFriendRequest(friendId)
+// {
+//     if (!listener || listener.readyState !== WebSocket.OPEN)
+//         return;
+//     const event = { // c'est pas fait !
+//         key: keySocket,
+//         type: "message",
+//         name: playerStats.nickname,
+//         id: playerStats.id,
+//         content: messageContent,
+//         answer: "no",
+//         server: "chat"
+//     };
+//     listener.send(JSON.stringify(event));
+// }
 
 export function socketAskListMatchs()
 {
@@ -510,14 +510,14 @@ export function addSocketListener()
             setPlayersControllers();
             break;
         case "bounce_player":
-            if (event.room_id != playerStats.room_id)
+            { if (event.room_id != playerStats.room_id)
                 return;
             const strength = event.ball_boosted ? event.ball_speed * 150 : event.ball_speed * 75;
             startScreenShake(event.ball_speed / 6, strength);
             doUpdateBallLight();
             if (event.ball_speed > 0.78)
                 spawnSparksFunction(getBallPosition(), event.ball_speed * 20);
-            break;
+            break; }
         case "victory": // end of match, dans le lobby ou dans le match
             if (event.room_id != playerStats.room_id)
                 return;

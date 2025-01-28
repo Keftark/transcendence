@@ -4,7 +4,7 @@ import { animatePlayers, resetBoostedStatus, setPlayerController, setupPlayerMov
 import { createBall } from './ball.js';
 import { ScreenShake } from './screenShake.js';
 import { setScores, addScore, setVisibleScore } from './scoreManager.js';
-import { createLights, createPlayers, setVisibilityRightWall, addLightPlayerReady } from './objects.js';
+import { createLights, createPlayers, setVisibilityRightWall, addLightPlayerReady, setTextures } from './objects.js';
 import { getLevelState, isAnOnlineMode, setLevelState } from './main.js';
 import { unloadScene } from './unloadScene.js';
 import { addGameStickers, removeGameStickers, setAccessAllDuelsInChat, tryCloseChat } from './chat.js';
@@ -13,7 +13,7 @@ import { getTranslation } from './translate.js';
 import { createSpaceLevel } from './levelSpace.js';
 import { createCaveLevel } from './levelCave.js';
 import { getMatchTime, isGamePaused, pauseStopWatch, resetStopwatch, resumeStopWatch, setStopWatch, startStopwatch, stopStopwatch } from './timer.js';
-import { closeGameMenu, isSettingsOpen, setHeaderVisibility } from './menu.js';
+import { closeGameMenu, setHeaderVisibility } from './menu.js';
 import { getRules } from './rules.js';
 import { ArenaType, LevelMode, PlayerStatus, VictoryType } from './variables.js';
 import { callVictoryScreen } from './victory.js';
@@ -21,7 +21,7 @@ import { isBoostReadyLeft, isBoostReadyRight, resetBoostBar, useBoost } from './
 import { createDeathSphere } from './deathSphere.js';
 import { Sparks } from './sparks.js';
 import { socketSendPlayerReady, setMatchAlreadyStarted } from './sockets.js';
-import { getUserById } from './apiFunctions.js';
+import { getUserById, getUserPaddleSkin } from './apiFunctions.js';
 import { getTournamentPlayers, setWinnerNbr } from './tournament.js';
 
 const gameMenuPanel = document.getElementById('gameMenuPanel');
@@ -39,13 +39,7 @@ export const BOUNDARY =
   X_MAX: 40
 }
 
-export let id_players =
-{
-    p1: -1,
-    p2: -1,
-    p3: -1,
-    p4: -1
-}
+export let id_players = [-1, -1, -1, -1];
 
 export function CreateMatchScore(newScorePlayer, newScoreOpponent)
 {
@@ -199,7 +193,7 @@ function hideInGameUI()
 
 function resetIdPlayers()
 {
-    id_players.p4 = id_players.p3 = id_players.p2 = id_players.p1 = -1;
+    id_players[3] = id_players[2] = id_players[1] = id_players[0] = -1;
 }
 
 export function unloadLevel()
@@ -238,23 +232,23 @@ export function gameEventsListener(event)
     // pressArrowsMenu(event);
 }
 
-function pressArrowsMenu(event)
-{
-    if (!gameMenuPanel.classList.contains('show') || !isSettingsOpen())
-        return;
-    const focusableElements = document.querySelectorAll('button.gameMenuButton');
-    const focusable = Array.prototype.slice.call(focusableElements);
-    const currentIndex = focusable.indexOf(document.activeElement);
-    if (event.key === 'ArrowDown') {
-        event.preventDefault();
-        const nextIndex = (currentIndex + 1) % focusable.length;
-        focusable[nextIndex].focus();
-    } else if (event.key === 'ArrowUp') {
-        event.preventDefault();
-        const prevIndex = (currentIndex - 1 + focusable.length) % focusable.length;
-        focusable[prevIndex].focus();
-    }
-}
+// function pressArrowsMenu(event)
+// {
+//     if (!gameMenuPanel.classList.contains('show') || !isSettingsOpen())
+//         return;
+//     const focusableElements = document.querySelectorAll('button.gameMenuButton');
+//     const focusable = Array.prototype.slice.call(focusableElements);
+//     const currentIndex = focusable.indexOf(document.activeElement);
+//     if (event.key === 'ArrowDown') {
+//         event.preventDefault();
+//         const nextIndex = (currentIndex + 1) % focusable.length;
+//         focusable[nextIndex].focus();
+//     } else if (event.key === 'ArrowUp') {
+//         event.preventDefault();
+//         const prevIndex = (currentIndex - 1 + focusable.length) % focusable.length;
+//         focusable[prevIndex].focus();
+//     }
+// }
 
 function resetZoomCamera(camera)
 {
@@ -394,11 +388,12 @@ export function setPlayerRightName()
 
 export function passInfosPlayersToLevel(idP1, idP2)
 {
-    return Promise.all([getUserById(idP1), getUserById(idP2)])
-        .then(([profile1, profile2]) => {
+    return Promise.all([getUserById(idP1), getUserById(idP2), getUserPaddleSkin(id_players[0]), getUserPaddleSkin(id_players[1])])
+        .then(([profile1, profile2, textureP1, textureP2]) => {
             playerProfile1 = profile1;
             playerProfile2 = profile2;
             setPlayersIds(idP1, idP2);
+            setTextures(textureP1, textureP2);
             return setPlayerController(idP1, idP2);
         })
         .catch((error) => {
@@ -804,7 +799,7 @@ export function StartLevel(levelMode)
         setVisibilityRightWall(true);
         resetFunction(true);
         resetStopwatch();
-        resetScreen(0);
+        // resetScreen(0); // remettre ca ??
         animate();
     }
 
