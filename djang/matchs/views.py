@@ -14,6 +14,7 @@ from accounts.models import AccountModel
 
 from .models import Match, MatchMembers
 from .serializers import MatchSerializer
+from django.db.models import Q
 
 def create_match(request):
     if request.method == 'POST':
@@ -95,3 +96,15 @@ class HistoriqueViewSet(ViewSet):
         games_data: list[dict] = self.serializer_class(game_model_list, many=True).data
         
         return Response(games_data)
+    
+    def get_matchs_count(self, request: HttpRequest, username):
+        
+        user = get_object_or_404(User, username=username)
+        matchs = Match.objects.filter(Q(player_1=user.accountmodel) | Q(player_2=user.accountmodel))
+
+        match_count = matchs.count()
+        wins = matchs.filter(winner=user.accountmodel).count()
+        return Response({
+            "match_count": match_count,
+            "wins": wins
+        })

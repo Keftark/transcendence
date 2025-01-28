@@ -501,3 +501,21 @@ export async function sendMatch()
         return false;
     }
 }
+
+export async function getMatchsLittleData(userName) {
+    try {
+      // Make a GET request to the retrieve_account view
+      const response = await fetch(`api/matchs/get_matchs_count/${userName}`);
+      
+      // Check if the response is ok (status code 200-299)
+      if (!response.ok)
+        throw new Error('Network response was not ok');
+      
+      const data = await response.json();
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.error('Error:', error);
+      return null;  // You can return an error object or null if needed
+    }
+}

@@ -232,8 +232,8 @@ async function acceptRegistration()
     if (!result)
         return;
     
-    connectToServer();
     createNewPlayer();
+    connectToServer();
     clickCancelRegister();
     logInUserUI();
 }

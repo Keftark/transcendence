@@ -22,7 +22,7 @@ export function updateHTML(translations)
 	document.getElementById('profileButton').innerText = translations.profileButton;
 	document.getElementById('settingsButton').innerText = translations.settings;
 	document.getElementById('mainProfileButton').innerText = translations.profileButton;
-	document.getElementById('deleteProfileText').innerText = translations.deleteProfileText;
+	document.getElementById('deleteProfileButton').innerText = translations.deleteProfileText;
 	document.getElementById('mainSettingsButton').innerText = translations.settings;
 	document.getElementById('mainButton').innerText = translations.mainButton;
 	document.getElementById('mainCustomizeButton').innerText = translations.mainCustomizeButton;

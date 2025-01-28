@@ -37,6 +37,11 @@
     align-self: center;
 }
 
+#miniProfilePicture
+{
+    width: 4rem;
+}
+
 #profilePicture
 {
     width: 10vh;
@@ -307,8 +312,9 @@
 
 #deleteProfileButton
 {
-    border: 3px solid transparent;
-    background-color: transparent;
+    border: 3px solid #ff000047;
+    background-color: #ff00005c;
+    border-radius: 4px;
 }
 
 #deleteProfileButton img

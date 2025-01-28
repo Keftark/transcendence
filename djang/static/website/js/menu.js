@@ -1,4 +1,4 @@
-import { getCSRFToken, getUserAvatar, getUserByName, uploadAvatar } from './apiFunctions.js';
+import { getCSRFToken, getMatchsLittleData, getUserAvatar, getUserByName, uploadAvatar } from './apiFunctions.js';
 import { clickChoosePaddleButton } from './customizeSkins.js';
 import { addMainEvents } from './eventsListener.js';
 import { isInGame, reinitLevelFunction, setCameraType, StartLevel } from './levelLocal.js';
@@ -221,6 +221,15 @@ export function openMiniProfile(playerName)
         .catch((error) => {
             console.error("Failed to get user by name:", error);
     });
+
+    getMatchsLittleData(playerName)
+    .then((data) =>{
+        matchsPlayedMiniProfileValue.innerHTML = data.match_count;
+        winsMiniProfileValue.innerHTML = data.wins;
+    })
+    .catch((error) => {
+        console.error("Failed to get user by name:", error);
+    });
     // getUserScores(playerName)
     //     .then((target) => {
     //         miniProfilePicture.src = target.avatar;
@@ -230,8 +239,8 @@ export function openMiniProfile(playerName)
     // });
 
     // ca va dans la requete des scores.
-    matchsPlayedMiniProfileValue.innerHTML = "2";
-    winsMiniProfileValue.innerHTML = "1";
+    // matchsPlayedMiniProfileValue.innerHTML = "2";
+    // winsMiniProfileValue.innerHTML = "1";
 
     
     miniProfilePanel.style.display = 'flex';
@@ -253,6 +262,13 @@ export function openProfile(player = playerStats)
     if (player.isRegistered === false)
         return;
     profileIsOpen = true;
+    getUserAvatar(player.nickname)
+    .then((target) => {
+        profilePicture.src = target.avatar_url;
+    })
+    .catch((error) => {
+        console.error("Failed to get user by name:", error);
+});
     loadScores(player);
     document.getElementById('nameProfile').innerText = player.nickname;
     document.getElementById('firstNameProfile').innerText = player.firstName;
