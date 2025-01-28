@@ -85,6 +85,7 @@ class AccountSerializer(serializers.ModelSerializer):
         if value.size > settings.PROFILE_PICTURE_MAX_SIZE:
             raise serializers.ValidationError(_('Image is too large.'))
         return value
+    
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

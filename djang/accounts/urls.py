@@ -12,7 +12,7 @@ from .views.friends import (GetFriendsView,
                             EditFriendView,
                             GetIncomingFriendRequestView,
                             GetOutgoingFriendRequestView)
-from views.user import *
+from .views.user import *
 
 
 

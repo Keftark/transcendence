@@ -94,3 +94,9 @@ class HistoriqueViewSet(ViewSet):
         games_data: list[dict] = self.serializer_class(game_model_list, many=True).data
         
         return Response(games_data)
+    
+    def get_matchs_count(self, request: HttpRequest, pk: int = None):
+        
+        user: User = get_object_or_404(User, pk=pk)
+
+        match_count = MatchMembers.objects.filter(player=user).count()

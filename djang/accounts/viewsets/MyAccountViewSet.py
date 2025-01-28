@@ -22,15 +22,15 @@ class MyAccountViewSet(viewsets.ModelViewSet):
         account: AccountModel = self.get_object()
 
         if (avatar is not None):
-            if (account.avatar.name != "./static//website/images/profileImage.webp"):
+            if (account.avatar.name != "./static//website/icons/guestUser.webp"):
                 account.avatar.storage.delete(account.avatar.name)
             serializer.save()
 
     def delete_avatar(self, pk=None):
         account = self.get_object()
-        if (account.avatar.name != './static//website/images/profileImage.webp'):
+        if (account.avatar.name != './static/website/icons/guestUser.webp'):
             account.avatar.storage.delete(account.avatar.name)
-        account.avatar.name = './static//website/images/profileImage.webp'
+        account.avatar.name = './static/website/icons/guestUser.webp'
         account.save()
         return Response(AccountSerializer(account).data)
 
