@@ -373,6 +373,7 @@
     </div>
     <div id="profilePanel">
         <div id="profileInfos">
+            <div id="headerProfile">
                 <div id="profilePictureDiv">
                     <img src="{% static 'icons/guestUser.webp' %}" id="profilePicture" alt="">
                     <form action="" id="profile-form" method="POST" enctype="multipart/form-data">
@@ -380,12 +381,21 @@
                         <button type="submit" id="profilePictureChangeButton" class="profilePictureChangeButton"></button>
                     </form>
                 </div>
-            <h2 id="nameProfile"></h2>
-            <p id="firstNameProfile"></p>
-            <p id="lastNameProfile"></p>
-            <div id="profileContainer">
-                <img id="mailImg" src="{% static 'icons/mail.webp' %}">
-                <p id="mailProfile"></p>
+                <h2 id="nameProfile"></h2>
+            </div>
+            <div id="mainProfileInfos">
+                <p id="firstNameProfile"></p>
+                <p id="lastNameProfile"></p>
+                <div id="profileContainer">
+                    <img id="mailImg" src="{% static 'icons/mail.webp' %}">
+                    <p id="mailProfile"></p>
+                </div>
+            </div>
+            <div id="deleteProfile">
+                <button id="deleteProfileButton">
+                    <img src="{% static 'icons/delete.webp' %}" />
+                </button>
+                <p id="deleteProfileText"></p>
             </div>
         </div>
         <div id="profileStats">
