@@ -399,6 +399,11 @@
         <div id="miniProfileInfos">
             <div id="miniProfilePictureDiv">
                 <img src="{% static 'icons/guestUser.webp' %}" id="miniProfilePicture" alt="">
+                <form action="" id="AvatarForm" name="AvatarForm" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="file" name="fileInput" id="fileInput" accept="image/*" />
+                    <button type="submit" id="profilePictureChangeButton" class="profilePictureChangeButton"></button>
+                </form>
             </div>
             <h2 id="nameMiniProfile"></h2>
             <p id="firstNameMiniProfile"></p>
@@ -422,17 +427,19 @@
         <div id="matchHistoryContainer"></div>
     </div>
     <div id="profilePanel">
+        {% csrf_token %}
         <div id="profileInfos">
                 <div id="profilePictureDiv">
+                    {% csrf_token %}
                     <img src="{% static 'icons/guestUser.webp' %}" id="profilePicture" alt="">
-                    <form action="" id="profile-form" method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
+                    <form action="" id="AvatarForm" name="AvatarForm" method="POST" enctype="multipart/form-data">
                         {{ form.as_p }}
-                        <button type="submit" id="profilePictureChangeButton" class="profilePictureChangeButton"></button>
+                        {% csrf_token %}
+                        <button type="submit" id="profilePictureChangeButton" class="profilePictureChangeButton">Upload</button>
                     </form>
-                    {% if img_obj %}  <h3>Succesfully uploaded : {{img_obj.title}}</h3> 
+                    <!--{% if img_obj %}  <h3>Succesfully uploaded : {{img_obj.title}}</h3> -->
                     <img src="{{ img_obj.image.url}}" alt="connect" style="max-height:300px">
-                    {% endif %}
+                    <!--{% endif %}-->
                 </div>
             <h2 id="nameProfile"></h2>
             <p id="firstNameProfile"></p>
