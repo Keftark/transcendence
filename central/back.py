@@ -52,8 +52,8 @@ ssl_client.load_verify_locations(localhost_pem)
 def dump_health():
     """Dumps the status of the subprocesses sockets."""
     event = {
-        "chat_server": True if Sockets.SOCKET_CHAT is not None else False,
-        "1v1_classic_server": True if Sockets.SOCKET_1V1 is not None else False,
+        "chat_server": Sockets.SOCKET_CHAT is not None,
+        "1v1_classic_server": Sockets.SOCKET_1V1 is not None,
     }
     return event
 
@@ -61,7 +61,7 @@ def dump_player_status(_id):
     """Dumps the status of a player.
 
     Args:
-        _id (int): identifier of the player
+        _id int: identifier of the player
 
     Returns:
         dict | None: a dump of the player's status, or None if no player is bound to the ID.
@@ -76,7 +76,7 @@ def dump_blacklist(_id, name, user):
     to a blacklisted user.
 
     Args:
-        _id (int): id of the blacklisted user.
+        _id int: id of the blacklisted user.
         user (User) : user sending the message
 
     Returns:
@@ -147,7 +147,7 @@ def key_check(_id, key):
     """Check if the given key matches the player's
 
     Args:
-        _id (int): identifier of the player.
+        _id int: identifier of the player.
         key (string): the key to check.
 
     Returns:
@@ -160,6 +160,102 @@ def key_check(_id, key):
             return False
     return False
 
+async def answers_game_1v1(event):
+    """Handle answers for the 1v1 game mode.
+
+    Args:
+        event (dict): contains event data.
+    """
+    for id_f in event["ids"]:
+        _id = int(id_f)
+        data = event["data"]
+        for user in userList:
+            if user.id == _id:
+                try:
+                    if event["type"] == "list_all":
+                        await user.send(json.dumps(event))
+                    else:
+                        await user.send(json.dumps(data))
+                except Exception as e:
+                    logger.log("", 2, e)
+                if data["type"] == "join_queue":
+                    user.game = "1v1_classic"
+                    user.status = "queue"
+                    user.room_id = -1
+                elif data["type"] == "exit_queue":
+                    user.game = "none"
+                    user.status = "here"
+                    user.room_id = -1
+                elif data["type"] == "match_init":
+                    user.status = "playing"
+                    user.room_id = int(data["room_id"])
+                elif data["type"] == "victory":
+                    user.game = "none"
+                    user.status = "here"
+                    user.room_id = -1
+
+async def answers_game_2v2(event):
+    """Handle answers for the 2v2 game mode.
+
+    Args:
+        event (dict): event data.
+    """
+    for id_f in event["ids"]:
+        _id = int(id_f)
+        data = event["data"]
+        for user in userList:
+            if user.id == _id:
+                try:
+                    if event["type"] == "list_all":
+                        await user.send(json.dumps(event))
+                    else:
+                        await user.send(json.dumps(data))
+                except Exception as e:
+                    logger.log("", 2, e)
+                if data["type"] == "join_queue":
+                    user.game = "2v2_classic"
+                    user.status = "queue"
+                    user.room_id = -1
+                elif data["type"] == "exit_queue":
+                    user.game = "none"
+                    user.status = "here"
+                    user.room_id = -1
+                elif data["type"] == "match_init":
+                    user.status = "playing"
+                    user.room_id = int(data["room_id"])
+                elif data["type"] == "victory":
+                    user.game = "none"
+                    user.status = "here"
+                    user.room_id = -1
+
+async def answers_chat(event, _type):
+    """Handles special chat event cases.
+
+    Args:
+        event (dict): event data.
+    """
+    if _type in ["message", "sticker"]:
+        _id = int(event["id"])
+        for user in userList:
+            if user.id != _id and user.is_blacklisted(_id) is False:
+                await user.send(json.dumps(event))
+    elif _type in ["room_message", "room_sticker"]:
+        _id = int(event["id"])
+        for user in userList:
+            if user.id != _id and user.status == event["game"] \
+                        and user.room == int(event["room_id"]):
+                await user.send(json.dumps(event))
+    elif _type in ["private_message", "private_sticker"]:
+        _id = int(event["id"])
+        for user in userList:
+            if user.id == _id and user.is_blacklisted(_id) is False:
+                await user.send(json.dumps(event))
+            elif user.is_blacklisted(_id) is True:
+                for uss in userList:
+                    if uss.id == event["sender"]:
+                        await uss.send(json.dumps(dump_blacklist(_id, uss.name, user)))
+                        break
+
 # Transfere la reponse du serveur au client
 async def handle_answers(event):
     """Handles an answer; a query from a subprocess for a user.
@@ -170,59 +266,14 @@ async def handle_answers(event):
     _type = event["type"]
     _server = event["server"]
     if _server == "1v1_classic":
-        for id_f in event["ids"]:
-            _id = (int)(id_f)
-            data = event["data"]
-            for user in userList:
-                if user.id == _id:
-                    if event["type"] == "list_all":
-                        try:
-                            await user.send(json.dumps(event))
-                        except Exception as e:
-                            logger.log("", 2, e)
-                        continue
-                    try:
-                        await user.send(json.dumps(data))
-                    except Exception as e:
-                        logger.log("", 2, e)
-                    if data["type"] == "join_queue":
-                        user.game = "1v1_classic"
-                        user.status = "queue"
-                        user.room_id = -1
-                    elif data["type"] == "exit_queue":
-                        user.game = "none"
-                        user.status = "here"
-                        user.room_id = -1
-                    elif data["type"] == "match_init":
-                        user.status = "playing"
-                        user.room_id = (int)(data["room_id"])
-                    elif data["type"] == "victory":
-                        user.game = "none"
-                        user.status = "here"
-                        user.room_id = -1
-    elif _type == "message" or _type == "sticker":
-        _id = (int)(event["id"])
-        for user in userList:
-            if user.id != _id and user.is_blacklisted(_id) is False:
-                await user.send(json.dumps(event))
-    elif _type == "room_message" or _type == "room_sticker":
-        _id = (int)(event["id"])
-        for user in userList:
-            if user.id != _id and user.status == event["game"] \
-                        and user.room == (int)(event["room_id"]):
-                await user.send(json.dumps(event))
-    elif _type in ["private_message", "private_sticker"]:
-        _id = (int)(event["id"])
-        for user in userList:
-            if user.id == _id and user.is_blacklisted(_id) is False:
-                await user.send(json.dumps(event))
-            elif user.is_blacklisted(_id) is True:
-                for uss in userList:
-                    if uss.id == event["sender"]:
-                        await uss.send(json.dumps(dump_blacklist(_id, uss.name, user)))
-                        break
+        await answers_game_1v1(event)
+    elif _server == "2v2_classic":
+        await answers_game_2v2(event)
+    elif _type in ["message", "sticker", "room_message",
+                   "room_sticker", "private_message", "private_sticker"]:
+        answers_chat(event, _type)
     else:
-        _id = (int)(event["id"])
+        _id = int(event["id"])
         for user in userList:
             if user.id == _id:
                 await user.send(json.dumps(event))
@@ -233,7 +284,7 @@ async def handle_transfer(event):
     Args:
         event (List): A list containing the query's data.
     """
-    _id = (int)(event["id"])
+    _id = int(event["id"])
     _server = event["server"]
     _type = event["type"]
 
@@ -269,7 +320,7 @@ async def handle_log(websocket, event):
         websocket (WebSocket): the websocket for the user.
         event (List): A list containing the query's data.
     """
-    _id = (int)(event["id"])
+    _id = int(event["id"])
     for user in userList:
         if user.id == _id:
             return
@@ -314,7 +365,7 @@ async def disconnect_user(websocket):
         websocket (WebSocket): the closed websocket.
     """
     for user in userList.copy():
-        if user.sock_input == websocket or user.sock_output == websocket:
+        if websocket in [user.sock_input, user.sock_output]:
             logger.log("User " + str(user.name) + " (ID :" + str(user.id) \
                        +") has disconnected.", 1)
             if user.game == "1v1_classic":
@@ -351,7 +402,7 @@ async def handle_commands(websocket, event):
     _type = event["type"]
 
     if _type == "status":
-        await websocket.send(json.dumps(dump_player_status((int)(event["id"]))))
+        await websocket.send(json.dumps(dump_player_status(int(event["id"]))))
 
 async def handler(websocket):
     """Handles incomming messages from a websocket
