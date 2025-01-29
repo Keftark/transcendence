@@ -226,8 +226,14 @@ async def handle_log(websocket, event):
                 userList.append(user)
                 text = "Created user with ID ::" + str(user.id) + "\tKey ::" \
                     + str(user.key) + "\t Adress::" + str(user)
-                logger.log(text, 3)
+                logger.log(text, 1)
                 await user.send(json.dumps(user.dump_key()))
+                to_send = {
+                    "type": "join_chat",
+                    "id": user.id,
+                    "name": user.name
+                }
+                await SocketData.SOCKET_CHAT.send(json.dumps(to_send))
             break
     if flag is False:
         user = user.User()
