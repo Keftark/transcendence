@@ -16,6 +16,7 @@ from dataclasses import dataclass
 from websockets.asyncio.server import serve
 from websockets.asyncio.client import connect
 from logger import Logger
+from user import User
 signal.signal(SIGPIPE,SIG_DFL)
 
 start = time.time()
@@ -63,12 +64,32 @@ def dump_player_status(_id):
         _id (int): identifier of the player
 
     Returns:
-        List | None: a dump of the player's status, or None if no player is bound to the ID.
+        dict | None: a dump of the player's status, or None if no player is bound to the ID.
     """
     for user in userList:
         if user.id == _id:
             return user.dump_status()
     return None
+
+def dump_blacklist(_id, name, user):
+    """Dumps the event of trying to send a message
+    to a blacklisted user.
+
+    Args:
+        _id (int): id of the blacklisted user.
+        user (User) : user sending the message
+
+    Returns:
+        dict | None: a dump of the evnet.
+    """
+    event = {
+        "type": "blacklist",
+        "name": name,
+        "id" : _id,
+        "block_id" : user.id,
+        "block_name" : user.name
+    }
+    return event
 
 def key_generator(size=36, chars=string.ascii_uppercase + string.digits):
     """Generates a random unique key identifier.
@@ -153,7 +174,7 @@ async def handle_answers(event):
     elif _type == "message" or _type == "sticker":
         _id = (int)(event["id"])
         for user in userList:
-            if user.id != _id:
+            if user.id != _id and user.is_blacklisted(_id) is False:
                 await user.send(json.dumps(event))
     elif _type == "room_message" or _type == "room_sticker":
         _id = (int)(event["id"])
@@ -161,6 +182,16 @@ async def handle_answers(event):
             if user.id != _id and user.status == event["game"] \
                         and user.room == (int)(event["room_id"]):
                 await user.send(json.dumps(event))
+    elif _type in ["private_message", "private_sticker"]:
+        _id = (int)(event["id"])
+        for user in userList:
+            if user.id == _id and user.is_blacklisted(_id) is False:
+                await user.send(json.dumps(event))
+            elif user.is_blacklisted(_id) is True:
+                for uss in userList:
+                    if uss.id == event["sender"]:
+                        await uss.send(json.dumps(dump_blacklist(_id, uss.name, user)))
+                        break
     else:
         _id = (int)(event["id"])
         for user in userList:
@@ -236,7 +267,7 @@ async def handle_log(websocket, event):
                 await SocketData.SOCKET_CHAT.send(json.dumps(to_send))
             break
     if flag is False:
-        user = user.User()
+        user = User()
         user.id = id
         user.name = event["name"]
         if event["socket"] == "input":

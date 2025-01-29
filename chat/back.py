@@ -14,6 +14,7 @@ from signal import SIGPIPE
 from websockets.asyncio.server import serve
 from websockets.asyncio.client import connect
 from socket_ft import UserSocket
+import dumps
 import logger
 
 signal.signal(SIGPIPE, 0)
@@ -46,212 +47,6 @@ ssl_context.load_cert_chain(localhost_pem)
 #loads up ssl crap but for clients
 ssl_client = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
 ssl_client.load_verify_locations(localhost_pem)
-
-def dump_message(user, message):
-    """Dumps a message. Contains user data and message content.
-
-    Args:
-        user (UserSocket): user data.
-        message (string): message data.
-
-    Returns:
-        dict: dumped data.
-    """
-    event = {
-        "answer": "yes",
-        "type": "message",
-        "server": "main",
-        "name": user.name,
-        "id": user.id,
-        "content": message
-    }
-    return event
-
-def sticker(user, img):
-    """Dumps a sticker. Contains user data and image content.
-
-    Args:
-        user (UserSocket): user data.
-        img (string): image data.
-
-    Returns:
-        dict: dumped data.
-    """
-    event = {
-        "answer": "yes",
-        "type": "sticker",
-        "server": "main",
-        "name": user.name,
-        "id": user.id,
-        "img": img
-    }
-    return event
-
-def msg_private(user, sender, message):
-    """Dumps a private message from sender to user.
-    Contains both users data and message content.
-
-    Args:
-        user (UserSocket): user data.
-        sender (UserSocket) : sender data.
-        message (string): message data.
-
-    Returns:
-        dict: dumped data.
-    """
-    event = {
-        "answer": "yes",
-        "type": "private_message",
-        "server": "main",
-        "name": user.name,
-        "id": user.id,
-        "sender": sender.id,
-        "sender_name": sender.name,
-        "content": message
-    }
-    return event
-
-def invite_friend(user, sender):
-    """Dumps a friend invitation from sender to user.
-
-    Args:
-        user (UserSocket): user data.
-        sender (UserSocket) : sender data.
-
-    Returns:
-        dict: dumped data.
-    """
-    event = {
-        "answer": "yes",
-        "type": "friend",
-        "server": "main",
-        "name": user.name,
-        "id": user.id,
-        "sender": sender.id,
-        "sender_name": sender.name,
-        "method": "demand"
-    }
-    return event
-
-def accept_friend(user, sender):
-    """Dumps a friend invitation acceptance
-    from sender to user.
-
-    Args:
-        user (UserSocket): user data.
-        sender (UserSocket) : sender data.
-
-    Returns:
-        dict: dumped data.
-    """
-    event = {
-        "answer": "yes",
-        "type": "friend",
-        "server": "main",
-        "name": user.name,
-        "id": user.id,
-        "sender": sender.id,
-        "sender_name": sender.name,
-        "method": "accept"
-    }
-    return event
-
-def refuse_friend(user, sender):
-    """Dumps a friend invitation refusal
-    from sender to user.
-
-    Args:
-        user (UserSocket): user data.
-        sender (UserSocket) : sender data.
-
-    Returns:
-        dict: dumped data.
-    """
-    event = {
-        "answer": "yes",
-        "type": "friend",
-        "server": "main",
-        "name": user.name,
-        "id": user.id,
-        "sender": sender.id,
-        "sender_name": sender.name,
-        "method": "refuse"
-    }
-    return event
-
-def msg_private_sticker(user, sender, img):
-    """Dumps a private sticker from sender to user.
-    Contains both users data and image content.
-
-    Args:
-        user (UserSocket): user data.
-        sender (UserSocket) : sender data.
-        img (string): image data.
-
-    Returns:
-        dict: dumped data.
-    """
-    event = {
-        "answer": "yes",
-        "type": "private_sticker",
-        "server": "main",
-        "name": user.name,
-        "id": user.id,
-        "sender": sender.id,
-        "sender_name": sender.name,
-        "img": img
-    }
-    return event
-
-def msg_room(user, room, game, message):
-    """Dumps a message to a game room.
-    Contains user data and message content.
-
-    Args:
-        user (UserSocket): user data.
-        room (int) : ID of the room.
-        game (string) : game type of the room.
-        message (string): message data.
-
-    Returns:
-        dict: dumped data.
-    """
-    event = {
-        "answer": "yes",
-        "type": "salon_message",
-        "server": "main",
-        "room_id": room,
-        "game": game,
-        "name": user.name,
-        "id": user.id,
-        "content": message
-    }
-    return event
-
-def msg_room_sticker(user, room, game, img):
-    """Dumps a message to a game room.
-    Contains user data and image content.
-
-    Args:
-        user (UserSocket): user data.
-        room (int) : ID of the room.
-        game (string) : game type of the room.
-        img (string): image data.
-
-    Returns:
-        dict: dumped data.
-    """
-    event = {
-        "answer": "yes",
-        "type": "salon_sticker",
-        "server": "main",
-        "room_id": room,
-        "game": game,
-        "name": user.name,
-        "id": user.id,
-        "img": img
-    }
-    return event
 
 def pong():
     """PING PONG
@@ -291,6 +86,105 @@ async def send_server(data):
         logger.log("", 2, e)
         Sockets.CENTRAL_SOCKET = None
 
+async def message_handler(event):
+    """Handles messages.
+
+    Args:
+        event (dict): Dict containing the data of the
+        message.
+    """
+    _id = (int)(event["id"])
+    if is_user(id) is True:
+        for user in Users:
+            if user.id == _id:
+                if event["type"] == "sticker":
+                    await send_server(dumps.sticker(user, event["img"]))
+                else:
+                    await send_server(dumps.dump_message(user, event["content"]))
+                break
+
+async def private_handler(event):
+    """Handles private messages.
+
+    Args:
+        event (dict): Dict containing the data of the
+        message.
+    """
+    _id = (int)(event["id"])
+    target = (int)(event["target"])
+    if is_user(id) is True and is_user(target) is True:
+        for user in Users:
+            if user.id == _id:
+                for targ in Users:
+                    if targ.id == target:
+                        if event["type"] == "private_sticker":
+                            await send_server(dumps.msg_private_sticker
+                                                (targ, user, event["img"]))
+                        else:
+                            await send_server(dumps.msg_private
+                                                (targ, user, event["content"]))
+                        break
+
+async def salon_handler(event):
+    """Handles salon messages.
+
+    Args:
+        event (dict): Dict containing the data of the
+        message.
+    """
+    _id = (int)(event["id"])
+    if is_user(id) is True:
+        for user in Users:
+            if user.id == _id:
+                if event["type"] == "salon_message":
+                    await send_server(dumps.msg_room(user, (int)(event["room_id"])
+                                                , event["game"], event["content"]))
+                else:
+                    await send_server(dumps.msg_room_sticker(user, (int)(event["room_id"])
+                                                        , event["game"], event["img"]))
+                break
+
+async def friends_handler(event):
+    """Handles friend messages.
+
+    Args:
+        event (dict): Dict containing the data of the
+        message.
+    """
+    _id = (int)(event["id"])
+    target = (int)(event["target"])
+    if is_user(id) is True and is_user(target) is True:
+        for user in Users:
+            if user.id == _id:
+                for targ in Users:
+                    if targ.id == target:
+                        if event["method"] == "invite":
+                            await send_server(dumps.invite_friend(targ, user))
+                        elif event["method"] == "accept":
+                            await send_server(dumps.accept_friend(targ, user))
+                        else: #refuse
+                            await send_server(dumps.refuse_friend(targ, user))
+                        break
+
+async def chat_handler(event):
+    """Handles joining and quitting chat events.
+
+    Args:
+        event (dict): Dict containing the data of the
+        message.
+    """
+    if event["type"] == "join_chat":
+        _id = (int)(event["id"])
+        if is_user(id) is False:
+            sock = UserSocket(_id, event["name"])
+            Users.append(sock)
+    elif event["type"] == "quit_chat":
+        _id = (int)(event["id"])
+        for user in Users.copy():
+            if user.id == _id:
+                Users.remove(user)
+                break
+
 async def handler(websocket):
     """Receives and handle incomming messages from websocket.
 
@@ -304,69 +198,16 @@ async def handler(websocket):
                 logger.log(event, 3)
             if event["type"] == "ping":
                 await send_server(pong())
-            elif event["type"] == "join_chat":
-                _id = (int)(event["id"])
-                if is_user(id) is False:
-                    sock = UserSocket(_id, event["name"])
-                    Users.append(sock)
-            elif event["type"] == "quit_chat":
-                _id = (int)(event["id"])
-                for user in Users.copy():
-                    if user.id == _id:
-                        Users.remove(user)
-                        break
+            elif event["type"] == "join_chat" or event["type"] == "quit_chat":
+                await chat_handler(event)
             elif event["type"] == "message" or event["type"] == "sticker":
-                _id = (int)(event["id"])
-                if is_user(id) is True:
-                    for user in Users:
-                        if user.id == _id:
-                            if event["type"] == "sticker":
-                                await send_server(sticker(user, event["img"]))
-                            else:
-                                await send_server(dump_message(user, event["content"]))
-                            break
+                await message_handler(event)
             elif event["type"] == "private_message" or event["type"] == "private_sticker":
-                _id = (int)(event["id"])
-                target = (int)(event["target"])
-                if is_user(id) is True and is_user(target) is True:
-                    for user in Users:
-                        if user.id == _id:
-                            for targ in Users:
-                                if targ.id == target:
-                                    if event["type"] == "private_sticker":
-                                        await send_server(msg_private_sticker
-                                                          (targ, user, event["img"]))
-                                    else:
-                                        await send_server(msg_private
-                                                          (targ, user, event["content"]))
-                                    break
+                await private_handler(event)
             elif event["type"] == "salon_message" or event["type"] == "salon_sticker":
-                _id = (int)(event["id"])
-                if is_user(id) is True:
-                    for user in Users:
-                        if user.id == _id:
-                            if event["type"] == "salon_message":
-                                await send_server(msg_room(user, (int)(event["room_id"])
-                                                           , event["game"], event["content"]))
-                            else:
-                                await send_server(msg_room_sticker(user, (int)(event["room_id"])
-                                                                   , event["game"], event["img"]))
-                            break
+                await salon_handler(event)
             elif event["type"] == "friend":
-                _id = (int)(event["id"])
-                target = (int)(event["target"])
-                if is_user(id) is True and is_user(target) is True:
-                    for user in Users:
-                        if user.id == _id:
-                            for targ in Users:
-                                if targ.id == target:
-                                    if event["method"] == "invite":
-                                        await send_server(invite_friend(targ, user))
-                                    elif event["method"] == "accept":
-                                        await send_server(accept_friend(targ, user))
-                                    else: #refuse
-                                        await send_server(refuse_friend(targ, user))
-                                    break
+                await friends_handler(event)
         await websocket.wait_closed()
     except Exception as e:
         logger.log("", 2, e)
