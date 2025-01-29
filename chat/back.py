@@ -95,13 +95,10 @@ async def message_handler(event):
         message.
     """
     _id = (int)(event["id"])
-    print("Sending a message for ID =", _id)
     if is_user(_id) is True:
-        print("Uwu")
         for user in Users:
             print("Testing user with ID", user.id)
             if user.id == _id:
-                print("sending it back")
                 if event["type"] == "sticker":
                     await send_server(dumps.sticker(user, event["img"]))
                 else:

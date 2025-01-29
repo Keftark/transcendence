@@ -138,7 +138,6 @@ async def handle_answers(event):
     Args:
         event (List): A list containing the query's data.
     """
-    logger.log("Coucou", 3, event)
     _type = event["type"]
     _server = event["server"]
     if _server == "1v1_classic":
@@ -174,11 +173,8 @@ async def handle_answers(event):
                         user.room_id = -1
     elif _type == "message" or _type == "sticker":
         _id = (int)(event["id"])
-        logger.log("On est la", 3)
         for user in userList:
-            logger.log("Found you", 3, str(_id))
             if user.id != _id and user.is_blacklisted(_id) is False:
-                logger.log("Sending", 3)
                 await user.send(json.dumps(event))
     elif _type == "room_message" or _type == "room_sticker":
         _id = (int)(event["id"])
@@ -219,7 +215,6 @@ async def handle_transfer(event):
                 return
             break
     if _server == "chat":
-        print("Recieved that ::\t", event)
         for user in userList:
             if user.id == _id:
                 event["room_id"] = user.room
