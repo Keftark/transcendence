@@ -15,8 +15,8 @@ from signal import SIGPIPE, SIG_DFL
 from dataclasses import dataclass
 from websockets.asyncio.server import serve
 from websockets.asyncio.client import connect
-from logger import Logger
 from user import User
+from logger import Logger
 signal.signal(SIGPIPE,SIG_DFL)
 
 start = time.time()
@@ -211,7 +211,7 @@ async def handle_transfer(event):
     for user in userList:
         if user.id == _id:
             if user.key != event["key"]:
-                logger.log("User with ID :: " + str(id), 3, "Key not matching")
+                logger.log("User with ID :: " + str(_id), 3, "Key not matching")
                 return
             break
     if _server == "chat":
