@@ -366,6 +366,8 @@ async def disconnect_user(websocket):
         websocket (WebSocket): the closed websocket.
     """
     for user in userList.copy():
+        print("Comparing ::", websocket)
+        print("To those two :\n", user.sock_input, "\n", user.sock_output)
         if websocket in [user.sock_input, user.sock_output]:
             logger.log("User " + str(user.name) + " (ID :" + str(user.id) \
                        +") has disconnected.", 1)
