@@ -12,6 +12,7 @@ class User:
         self._game = "none"
         self._room = -1
         self._key = ""
+        self._blacklist = []
 
     def dump_key(self):
         """Dumps the key.
@@ -51,6 +52,21 @@ class User:
         except Exception as e:
             print(e)
             self._sock_output = None
+
+    def is_blacklisted(self, _id):
+        """Returns wether the ID belongs to the user's
+        blacklist.
+
+        Args:
+            _id (int): ID of the potentially blacklisted user.
+
+        Returns:
+            bool: `True` if the user is blacklisted, `False` otherwise.
+        """
+        for bl in self._blacklist:
+            if bl == int(_id):
+                return True
+        return False
 
     @property
     def sock_input(self):
@@ -155,3 +171,16 @@ class User:
     @room.setter
     def room(self, value):
         self._room = value
+
+    @property
+    def blacklist(self):
+        """Returns the blacklist of the user.
+
+        Returns:
+            dict: blacklist of the user.
+        """
+        return self._blacklist
+
+    @blacklist.setter
+    def blacklist(self, value):
+        self._blacklist = value
