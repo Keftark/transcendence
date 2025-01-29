@@ -91,7 +91,7 @@ def dump_blacklist(_id, name, user):
     }
     return event
 
-def dump_server_crashed(server):
+def dump_server_crashed(name):
     """Dumps the event of a server crashing to all users.
     Wooops.
 
@@ -103,7 +103,7 @@ def dump_server_crashed(server):
     """
     event = {
         "type": "crash",
-        "server": server
+        "server": name
     }
     return event
 
@@ -240,7 +240,7 @@ async def handle_transfer(event):
     for user in userList:
         if user.id == _id:
             if user.key != event["key"]:
-                logger.log("User with ID :: " + str(_id), 3, "Key not matching")
+                logger.log("User with ID :: " + str(_id), 2, "Key not matching")
                 return
             break
     if _server == "chat":
