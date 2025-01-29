@@ -13,12 +13,8 @@
 #launches the project in the foreground
 all:
 	$(shell ./generate_env.sh)
-	docker compose up --build -d
+	docker compose up --build 
 	docker ps
-	docker exec -it django python manage.py makemigrations accounts
-	docker exec -it django python manage.py makemigrations matchs
-	docker exec -it django python manage.py makemigrations notifications
-	docker exec -it django python manage.py migrate
 
 #launches the project with the logs
 logs:
