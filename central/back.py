@@ -16,6 +16,7 @@ from dataclasses import dataclass
 from websockets.asyncio.server import serve
 from websockets.asyncio.client import connect
 from logger import Logger
+from user import User
 signal.signal(SIGPIPE,SIG_DFL)
 
 start = time.time()
@@ -266,7 +267,7 @@ async def handle_log(websocket, event):
                 await SocketData.SOCKET_CHAT.send(json.dumps(to_send))
             break
     if flag is False:
-        user = user.User()
+        user = User()
         user.id = id
         user.name = event["name"]
         if event["socket"] == "input":
