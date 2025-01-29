@@ -15,8 +15,8 @@ from signal import SIGPIPE, SIG_DFL
 from dataclasses import dataclass
 from websockets.asyncio.server import serve
 from websockets.asyncio.client import connect
-from logger import Logger
 from user import User
+from logger import Logger
 signal.signal(SIGPIPE,SIG_DFL)
 
 start = time.time()
