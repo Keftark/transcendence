@@ -113,6 +113,46 @@ mainSettingsButton.addEventListener('click', () => {
     openSettings();
 });
 
+/**MADE BY NOLAN LOL */
+document.getElementById('profilePictureChangeButton').addEventListener('click', async (event) => {
+    event.preventDefault(); // Prevent the default form submission
+
+    let fileInput = document.getElementById('fileInput');
+    if (fileInput.files.length === 0) {
+        alert("Please select a file first!");
+        return;
+    }
+
+    let formData = new FormData();
+    formData.append('fileInput', fileInput.files[0]);
+
+    try {
+        const response = await fetch(`/uploadavatar/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken() // Ensure CSRF protection
+            },
+            body: formData
+        });
+
+        // Check if the response is OK (status 200-299)
+        if (!response.ok) {
+            const errorResult = await response.json();  // Parse the error message in JSON
+            alert(errorResult.message);  // Display the error message to the user
+        } else {
+            // const result = await response.json();  // Parse the success response in JSON
+            // console.log(result);
+        }
+
+    } catch (error) {
+        console.error('Error during upload:', error);
+    }
+});
+
+/** END OF NOLAN */
+
+
 document.getElementById('closeSettingsButton').addEventListener('click', () => {
     closeSettings();
 });

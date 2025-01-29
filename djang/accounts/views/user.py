@@ -243,6 +243,7 @@ def login_user(request):
 
 @login_required
 def upload_avatar(request):
+    print("Coucou")
     print(f"Request method: {request.method}")
     print(f"Request FIELDS: {request.FILES}")
 
