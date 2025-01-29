@@ -44,6 +44,13 @@ class Queue:
                     if private.player_1_paddle.id == _id:
                         private.join_player()
                         break
+            elif message["private"] == "refuse":
+                _id = (int)(message["invited_by"])
+                for private in self._private:
+                    if private.player_1_paddle.id == _id:
+                        self._message_queue.append(self.dump_refusal(_id))
+                        self._private.remove(private)
+                        break
             else:
                 self._liste.append(user)
             return True
@@ -76,6 +83,24 @@ class Queue:
                 }
             }
             self._message_queue.append(event)
+
+    def dump_refusal(self, _id):
+        """Dumps the refusal event.
+
+        Returns:
+            dict : refusal event.
+        """
+        event = {
+            "server": "1v1_classic",
+            "answer": "yes",
+            "ids": [_id],
+            "type" : "wait",
+            "data": {
+                "type" : "refusal",
+                "id": _id
+            }
+        }
+        return event
 
     async def tick(self):
         """Ticks the queue, creating matches if two compatible
