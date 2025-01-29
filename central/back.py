@@ -91,6 +91,35 @@ def dump_blacklist(_id, name, user):
     }
     return event
 
+def dump_server_crashed(server):
+    """Dumps the event of a server crashing to all users.
+    Wooops.
+
+    Args:
+        server (string): which server crashed
+
+    Returns:
+        dict: Dumped event.
+    """
+    event = {
+        "type": "crash",
+        "server": server
+    }
+    return event
+
+async def broadcast(data):
+    """Sends a message to every single user
+    connected.
+
+    Args:
+        data (dict): Message to send.
+    """
+    for user in userList:
+        try:
+            await user.send(json.dumps(data))
+        except Exception as e:
+            logger.log("", 2, e)
+
 def key_generator(size=36, chars=string.ascii_uppercase + string.digits):
     """Generates a random unique key identifier.
 
@@ -224,12 +253,14 @@ async def handle_transfer(event):
         except Exception as e:
             logger.log("", 2, e)
             Sockets.SOCKET_CHAT = None
+            await broadcast(dump_server_crashed("chat"))
     elif _server == "1v1_classic":
         try:
             await Sockets.SOCKET_1V1.send(json.dumps(event))
         except Exception as e:
             logger.log("", 2, e)
             Sockets.SOCKET_1V1 = None
+            await broadcast(dump_server_crashed("1v1"))
 
 async def handle_log(websocket, event):
     """Handles a connecting user.
@@ -264,6 +295,7 @@ async def handle_log(websocket, event):
                     "name": user.name
                 }
                 await SocketData.SOCKET_CHAT.send(json.dumps(to_send))
+                await broadcast(dump_server_crashed("chat"))
             break
     if flag is False:
         user = User()
@@ -296,6 +328,7 @@ async def disconnect_user(websocket):
                 except Exception as e:
                     logger.log("", 2, e)
                     SocketData.SOCKET_1V1 = None
+                    await broadcast(dump_server_crashed("1v1"))
             event = {
                 "type": "quit_chat",
                 "id": user.id,
@@ -305,6 +338,7 @@ async def disconnect_user(websocket):
             except Exception as e:
                 logger.log("", 2, e)
                 SocketData.SOCKET_CHAT = None
+                await broadcast(dump_server_crashed("chat"))
             userList.remove(user)
 
 async def handle_commands(websocket, event):
@@ -371,12 +405,14 @@ async def connection_loop():
             except Exception as e:
                 Sockets.SOCKET_CHAT = None
                 logger.log("Couldn't connect to the chat server.", 2, e)
+                await broadcast(dump_server_crashed("chat"))
         else:
             try:
                 await Sockets.SOCKET_CHAT.send(json.dumps(ping()))
             except Exception as e:
                 logger.log("", 2, e)
                 Sockets.SOCKET_CHAT = None
+                await broadcast(dump_server_crashed("chat"))
         if Sockets.SOCKET_1V1 is None:
             try:
                 logger.log("Attempting connection to Game (1v1 Classical) server.", 1)
@@ -386,6 +422,7 @@ async def connection_loop():
                 logger.log("Game (1v1 Classical) server connected.", 0)
             except Exception as e:
                 Sockets.SOCKET_1V1 = None
+                await broadcast(dump_server_crashed("1v1"))
                 logger.log("Couldn't connect to the game (1v1 Classical) server.", 2, e)
         else:
             try:
@@ -393,6 +430,8 @@ async def connection_loop():
             except Exception as e:
                 logger.log("", 2, e)
                 Sockets.SOCKET_1V1 = None
+                await broadcast(dump_server_crashed("1v1"))
+        await broadcast(dump_health())
         await asyncio.sleep(5)
 
 async def server_listener():
