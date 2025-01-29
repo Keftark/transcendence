@@ -35,6 +35,7 @@ Requête :
   * `invite` : crée une salle privée. 
   * `join` : rejoint une salle privée.
   * `none` : rejoint la queue de manière simple (matchmaking). Si la valeur de `private` vaut autre chose que ces trois valeurs, `private` sera traité comme valant `none`.
+* `invited` : un `int` faisant reference au joueur invite
 * `invited_by` : un `int` faisant référence au joueur ayant crée la salle privée. Obligatoire uniquement si `private` vaut `join`.
 * `payload` : une liste `{}` contenant les réglages du match. Obligatoire uniquement si `private` vaut `invite`. Toutes les valeurs de la liste sont obligatoires.
   * `id_p1` réfère au joueur ayant crée la salle. Il doit donc être égale a `id` !

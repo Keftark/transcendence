@@ -236,37 +236,37 @@ export function socketBoostPaddle()
     socket.send(JSON.stringify(event));
 }
 
-export function socketJoinChat()
-{
-    if (!listener || listener.readyState !== WebSocket.OPEN)
-        return;
-    // console.log("Joining the chat");
-    const event = {
-        key: keySocket,
-        type: "join_chat",
-        id: playerStats.id,
-        name: playerStats.nickname,
-        blacklist: playerStats.blacklist,
-        answer: "no",
-        server: "chat"
-    };
-    listener.send(JSON.stringify(event));
-}
+// export function socketJoinChat()
+// {
+//     if (!listener || listener.readyState !== WebSocket.OPEN)
+//         return;
+//     // console.log("Joining the chat");
+//     const event = {
+//         key: keySocket,
+//         type: "join_chat",
+//         id: playerStats.id,
+//         name: playerStats.nickname,
+//         blacklist: playerStats.blacklist,
+//         answer: "no",
+//         server: "chat"
+//     };
+//     listener.send(JSON.stringify(event));
+// }
 
-export function socketQuitChat()
-{
-    if (!listener || listener.readyState !== WebSocket.OPEN)
-        return;
-    // console.log("Quitting the chat");
-    const event = {
-        key: keySocket,
-        type: "quit_chat",
-        id: playerStats.id,
-        answer: "no",
-        server: "chat"
-    };
-    listener.send(JSON.stringify(event));
-}
+// export function socketQuitChat()
+// {
+//     if (!listener || listener.readyState !== WebSocket.OPEN)
+//         return;
+//     // console.log("Quitting the chat");
+//     const event = {
+//         key: keySocket,
+//         type: "quit_chat",
+//         id: playerStats.id,
+//         answer: "no",
+//         server: "chat"
+//     };
+//     listener.send(JSON.stringify(event));
+// }
 
 export function socketSendMessage(messageContent)
 {
@@ -282,6 +282,45 @@ export function socketSendMessage(messageContent)
         server: "chat"
     };
     listener.send(JSON.stringify(event));
+}
+
+export function socketCreateDuelInvit(targetMsg) {
+    console.log("Trying to send an invitation to: " + targetMsg);
+    if (!listener || listener.readyState !== WebSocket.OPEN)
+        return;
+    if (targetMsg != "")
+    {
+        getUserByName(targetMsg)
+            .then((target) => {
+                const event = {
+                    key: keySocket,
+                    server: "1v1_classic",
+                    type: "join",
+                    answer: "no",
+                    id: playerStats.id,
+                    blacklist: {}, // mettre les id au lieu des noms
+                    private: "invite", // 
+                    invited: target.id,
+                    invited_by: playerStats.id, // utile seulement si private n'est pas none
+                    payload: { //Regles de configuration du match, TOUS doivent etre integres !
+                        id_p1: 8,
+                        id_p2: 5, //id du joueur a inviter
+                        point: 3,
+                        board_x: 40,
+                        board_y: 25,
+                        ball_radius: 0.8,
+                        ball_speed: 0.5,
+                        ball_increment: 0.05,
+                        max_time: 300
+                    }
+                };
+                console.log("Sending an invitation to: " + targetMsg);
+                listener.send(JSON.stringify(event));
+            })
+            .catch((error) => {
+                console.error("Failed to get user by name:", error);
+            });
+    }
 }
 
 export function socketSendPrivMessage(targetMsg, messageContent) {
@@ -425,7 +464,7 @@ export function socketUnspectateMatch()
 export function addSocketListener()
 {
     listener.addEventListener("message", ({ data }) => {
-        // console.log(data);
+        console.log(data);
         let event;
         try {
             event = JSON.parse(data);
@@ -434,7 +473,7 @@ export function addSocketListener()
             console.error("Failed to parse JSON:", error);
             return;
         }
-        if (keySocket == null && 'id' in event && 'key' in event && event.id === playerStats.id)
+        if ('id' in event && 'key' in event && event.id === playerStats.id)
         {
             keySocket = event.key;
         }
@@ -570,6 +609,14 @@ export function addSocketListener()
                 checkPowerUpState(event.p1_boosting, event.p2_boosting, event.ball_boosting);
                 setTimeFromServer(event.timer);
             }
+            break;
+        case "wait_start_invited":
+            
+            break;
+        case "join":
+            console.log("Invitation percue");
+            if (event.invited === playerStats.id)
+                console.log("Invitation recue");
             break;
         case "ping":
             break;

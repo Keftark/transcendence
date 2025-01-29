@@ -2,10 +2,9 @@ import { createNewPlayer, editPlayerStats, playerStats, resetPlayerStats } from 
 import { removeAllScores } from "./scoreManager.js";
 import { getTranslation } from "./translate.js";
 import { navigateTo } from "./pages.js";
-import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
+import { addDisableButtonEffect, closeListener, closeSocket, getListener, getSocket, listener, openSocket, removeDisableButtonEffect, socket } from "./main.js";
 import { checkAccessToChat } from "./chat.js";
 import { getLoggedInUser, logoutUser, registerUser } from "./apiFunctions.js";
-import { socketJoinChat, socketQuitChat } from "./sockets.js";
 import { connectToServer } from "./signIn.js";
 import { deleteAllFriendRequests, showFriendsBox } from "./friends.js";
 
@@ -215,7 +214,8 @@ export async function welcomeBackUser()
 
 export function logInUserUI()
 {
-    socketJoinChat();
+    // socketJoinChat();
+    openSocket();
     replaceLogInButtons();
     removeDisableButtonEffect(profileButton);
     checkAccessIfRegistered();
@@ -252,7 +252,11 @@ function replaceLogOutButtons()
 
 export function clickLogOut()
 {
-    socketQuitChat();
+    if (getSocket() === null || getListener() === null)
+        return;
+    closeSocket();
+    closeListener();
+    // socketQuitChat();
     logoutUser();
     replaceLogOutButtons();
     resetPlayerStats();

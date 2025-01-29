@@ -111,11 +111,6 @@ export function clickPlayGame()
         navigateTo('game-online', selecMode);
     else if (selecMode === LevelMode.TOURNAMENT)
         navigateTo('game-tournament', selecMode);
-    else if (selecMode === LevelMode.DUEL)
-    {
-        sendInvitationDuel(playerStats.nickname);
-        navigateTo('duel');
-    }
 }
 
 function resetBigModesAnim()
@@ -320,8 +315,10 @@ export function askForDuel()
 {
     if (getSelectedMode() === LevelMode.DUEL || isInGame)
         return;
+    console.log("asking for a duel");
     setSelectedMode(LevelMode.DUEL);
-    navigateTo('rules');
+    sendInvitationDuel(playerStats.nickname);
+    navigateTo('duel');
 }
 
 const matchListPanel = document.getElementById('listSpectateDivPanel');

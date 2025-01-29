@@ -204,6 +204,7 @@ async def handle_transfer(event):
     Args:
         event (List): A list containing the query's data.
     """
+    print("Ah ::", event)
     _id = (int)(event["id"])
     _server = event["server"]
     _type = event["type"]
@@ -282,6 +283,8 @@ async def disconnect_user(websocket):
         websocket (WebSocket): the closed websocket.
     """
     for user in userList.copy():
+        print("Conparing ::", websocket)
+        print("To those two :\n", user.sock_input, "\n", user.sock_output)
         if user.sock_input == websocket or user.sock_output == websocket:
             logger.log("User " + str(user.name) + " (ID :" + str(user.id) \
                        +") has disconnected.", 1)

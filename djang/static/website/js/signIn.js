@@ -134,11 +134,11 @@ function passwordIsValid(pass)
 
 export function connectToServer()
 {
-    connectToServerInput();
-    connectToServerOutput();
-    loadFriends();
-    loadBlocks();
-    displayWelcomeMessage();
+    // connectToServerInput();
+    // connectToServerOutput();
+    // loadFriends();
+    // loadBlocks();
+    // displayWelcomeMessage();
 
     // sendMatch(); // todo 
 }

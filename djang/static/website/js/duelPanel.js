@@ -6,6 +6,7 @@ import { showModeChoice } from "./modesSelection.js";
 import { socketExitLobby, socketNotReadyToDuel, socketReadyToDuel } from "./sockets.js";
 import { getTranslation } from "./translate.js";
 import { clickPlayGame } from "./modesSelection.js";
+import { LevelMode } from "./variables.js";
 
 document.getElementById('leaveDuelButton').addEventListener('click', () => {
     closeDuelPanel();
@@ -54,6 +55,7 @@ export function getDuelTargetPlayer()
 
 export function setDuelTargetPlayer(playerNick)
 {
+    console.log("Setting the player to invite: " + playerNick);
     duelTargetPlayer = playerNick;
 }
 
@@ -96,6 +98,7 @@ export function closeDuelPanel()
 {
     // double chargement de la page de retour pour le joueur qui quitte
     // mettre un message indiquant que l'autre joueur a quitte
+    setSelectedMode(LevelMode.MENU);
     document.getElementById('waitingMatch').style.display = "none";
     socketExitLobby();
     showModeChoice();

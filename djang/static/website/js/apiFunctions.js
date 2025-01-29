@@ -195,9 +195,10 @@ export async function uploadAvatar(username, url_picture)
     console.log("Caca :: " + username + ", img ::" + url_picture)
     const data = new FormData();
     data.append('username', username);
+    console.log("url: ", url_picture);
     data.append('url', url_picture); //<----- Le probleme vient de la
-    console.log("Boujou")
-    console.log(data)
+    console.log("Boujou");
+    console.log(data);
     // console.log("Token: ", getCSRFToken());
     // console.log(data);
 

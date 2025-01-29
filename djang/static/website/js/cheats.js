@@ -73,9 +73,9 @@ function changePaddlesSize(newSize)
 
 function sendInvitDuel(playerInvit = "")
 {
-    askForDuel();
     if (playerInvit != "")
-        setDuelTargetPlayer(playerInvit)
+        setDuelTargetPlayer(playerInvit);
+    askForDuel();
 }
 
 function sendPrivateMessage(target = "", message = "")

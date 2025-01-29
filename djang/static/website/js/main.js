@@ -2,18 +2,19 @@ import { setButtonsColors, closeProfile, closeSettings, focusOldButton, isProfil
 import { initTranslation } from './translate.js';
 import { addMainEvents } from './eventsListener.js';
 import { LevelMode } from './variables.js';
-import { isChatOpen, tryCloseChat } from './chat.js';
+import { displayWelcomeMessage, isChatOpen, tryCloseChat } from './chat.js';
 import { clickCancelRules } from './rules.js';
 import { gameEnded, isInGame } from './levelLocal.js';
-import { clickCancelRegister, closeGdprPanel, isGdprOpen, isRegistrationOpen } from './registration.js';
+import { clickCancelRegister, clickLogOut, closeGdprPanel, isGdprOpen, isRegistrationOpen } from './registration.js';
 import { getCurrentView } from './pages.js';
 import { closeDuelPanel } from './duelPanel.js';
 import { clickBackButtonMenu, closeMatchList, isMatchListOpen } from './modesSelection.js';
-import { addSocketListener } from './sockets.js';
+import { addSocketListener, connectToServerInput, connectToServerOutput } from './sockets.js';
 import { closePaddleChoice, isPaddleChoiceOpen } from './customizeSkins.js';
 import { clickCancelSignIn, isSigninOpen } from './signIn.js';
 import { getAddress } from './apiFunctions.js';
 import { askBackTournamentView, cancelAddPlayerTournament, cancelBackTournamentView, isAddPlayerTournamentIsOpen, isInAskBackTournamentView, isTournamentViewOpen, quitTournamentLobby } from './tournament.js';
+import { loadBlocks, loadFriends } from './friends.js';
 
 window.onbeforeunload = function() {
     localStorage.removeItem('currentPath');
@@ -158,13 +159,33 @@ export function isElementVisible(element) {
 
 export let socket = null;
 export let listener = null;
+let ip_address;
 
-function openSocket(ip)
+export function getSocket()
+{
+    return socket;
+}
+
+export function getListener()
+{
+    return listener;
+}
+
+export function closeSocket()
+{
+    socket.close();
+}
+
+export function closeListener()
+{
+    listener.close();
+}
+
+export function openSocket()
 {
     // pour le docker
-    console.log(ip);
-    socket = new WebSocket(`wss://${ip}:7777/`);
-    listener = new WebSocket(`wss://${ip}:7777/`);
+    socket = new WebSocket(`wss://${ip_address}:7777/`);
+    listener = new WebSocket(`wss://${ip_address}:7777/`);
 
     // cluster lumineux
     // socket = new WebSocket('ws://10.11.200.72:7777/ws/');
@@ -176,16 +197,22 @@ function openSocket(ip)
     
     socket.onopen = function() {
         console.log("WebSocket connected");
+        connectToServerInput();
     };
     
     socket.onclose = function() {
         socket = null;
         console.log('WebSocket closed');
+        clickLogOut();
     };
     socket.onerror = (error) => console.log("Websocket Error:", error);
 
     listener.onopen = function() {
         console.log("WebSocket connected");
+        connectToServerOutput();
+        loadFriends();
+        loadBlocks();
+        displayWelcomeMessage();
     };
     
     listener.onclose = function() {
@@ -212,7 +239,8 @@ focusOldButton();
 document.addEventListener("DOMContentLoaded", function() {
     getAddress()
         .then(data => {
-            openSocket(data);
+            ip_address = data;
+            // openSocket(data);
         })
         .catch(error => {
             console.error('Error getting address:', error);

@@ -7,7 +7,7 @@ import { getPlayerPosition, id_players, isInGame } from "./levelLocal.js";
 import { openMiniProfile } from "./menu.js";
 import { getPlayerName, playerStats } from "./playerManager.js";
 import { getRules, resetInputfieldsRules } from "./rules.js";
-import { socketSendMessage, socketSendPrivSticker, socketSendPublicSticker, socketSendSalonSticker } from "./sockets.js";
+import { socketCreateDuelInvit, socketSendMessage, socketSendPrivSticker, socketSendPublicSticker, socketSendSalonSticker } from "./sockets.js";
 import { getTranslation } from "./translate.js";
 import { ArenaType } from "./variables.js";
 
@@ -582,8 +582,13 @@ export function getDuelInvitContent()
 let divDuel;
 export function sendInvitationDuel(sender)
 {
-    if (getDuelTargetPlayer() != "" && getDuelTargetPlayer() != playerStats.nickname.toUpperCase())
+    console.log("0");
+    if (getDuelTargetPlayer() != "" && getDuelTargetPlayer() != playerStats.nickname)
+    {
+        socketCreateDuelInvit(getDuelTargetPlayer());
         return;
+    }
+    console.log("trying to get the invitation duel");
     const newMessage = document.createElement('div');
     divDuel = newMessage;
     newMessage.setAttribute('sender', sender);
