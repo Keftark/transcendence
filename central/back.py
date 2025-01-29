@@ -292,11 +292,19 @@ async def disconnect_user(websocket):
                     "room_id": user.room
                 }
                 try:
-                    await SocketData.SOCKET_1V1.send(json.dumps(event)) #handle game disconnection
+                    await SocketData.SOCKET_1V1.send(json.dumps(event))
                 except Exception as e:
                     logger.log("", 2, e)
                     SocketData.SOCKET_1V1 = None
-            #pass #handle chat disconnection
+            event = {
+                "type": "quit_chat",
+                "id": user.id,
+            }
+            try:
+                await SocketData.SOCKET_CHAT.send(json.dumps(event))
+            except Exception as e:
+                logger.log("", 2, e)
+                SocketData.SOCKET_CHAT = None
             userList.remove(user)
 
 async def handle_commands(websocket, event):
