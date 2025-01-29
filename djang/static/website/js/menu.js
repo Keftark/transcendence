@@ -113,42 +113,10 @@ mainSettingsButton.addEventListener('click', () => {
     openSettings();
 });
 
-/**MADE BY NOLAN LOL */
-document.getElementById('profilePictureChangeButton').addEventListener('click', async (event) => {
-    event.preventDefault(); // Prevent the default form submission
-
-    let fileInput = document.getElementById('fileInput');
-    if (fileInput.files.length === 0) {
-        alert("Please select a file first!");
-        return;
-    }
-
-    let formData = new FormData();
-    formData.append('fileInput', fileInput.files[0]);
-
-    try {
-        const response = await fetch(`/uploadavatar/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCSRFToken() // Ensure CSRF protection
-            },
-            body: formData
-        });
-
-        // Check if the response is OK (status 200-299)
-        if (!response.ok) {
-            const errorResult = await response.json();  // Parse the error message in JSON
-            alert(errorResult.message);  // Display the error message to the user
-        } else {
-            // const result = await response.json();  // Parse the success response in JSON
-            // console.log(result);
-        }
-
-    } catch (error) {
-        console.error('Error during upload:', error);
-    }
-});
+/**MADE BY NOLAN LOL 
+ * ITS SHIT
+ * IT WORKS NOT
+*/
 
 /** END OF NOLAN */
 
@@ -188,8 +156,24 @@ document.querySelectorAll('.mainMenuButton').forEach(button => {
   button.addEventListener('blur', hideImage);
 });
 
-document.getElementById('profilePictureChangeButton').addEventListener('click', function() {
-    document.getElementById('fileInput').click();
+document.getElementById('profilePictureChangeButton').addEventListener('click', async function() {
+    console.log("Bite")
+    //requette post la
+    const fileInput = document.getElementById('fileInput');
+    
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0]; // Get the first file
+        const imageUrl = URL.createObjectURL(file); // Create a URL for preview
+
+        console.log("File selected:", file);
+        console.log("File URL:", imageUrl);
+
+        await uploadAvatar("Caca", imageUrl)
+    }
+    else
+    {
+        console.log("No file selected.");
+    }
 });
 
 // document.getElementById('fileInput').addEventListener('change', function(event) {

@@ -192,13 +192,17 @@ export async function getUserAvatar(userName) {
 
 export async function uploadAvatar(username, url_picture)
 {
+    console.log("Caca :: " + username + ", img ::" + url_picture)
     const data = new FormData();
     data.append('username', username);
-    data.append('url', url_picture);
+    data.append('url', url_picture); //<----- Le probleme vient de la
+    console.log("Boujou")
+    console.log(data)
     // console.log("Token: ", getCSRFToken());
     // console.log(data);
 
     try {
+        console.log("On est la")
         const response = await fetch(`/uploadavatar/`, {
             method: 'POST',
             headers: {
@@ -207,7 +211,7 @@ export async function uploadAvatar(username, url_picture)
             },
             body: data
         });
-
+        console.log("ca va ca vient")
         // Check if the response is OK (status 200-299)
         if (!response.ok) {
             const errorResult = await response.json();  // Parse the error message in JSON
@@ -218,6 +222,7 @@ export async function uploadAvatar(username, url_picture)
         }
 
     } catch (error) {
+        console.log("Aye aye aye")
         console.error('Error during upload:', error);
     }
 }

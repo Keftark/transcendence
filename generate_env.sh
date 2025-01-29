@@ -3,7 +3,7 @@
 echo "HOST_ADDRESS=$(ip addr | awk '/enp0s3/{f=1} f && /inet/{print $2; exit}' | cut -d'/' -f1)" > .env
 export HOST_ADDRESS=$(ip addr | awk '/enp0s3/{f=1} f && /inet/{print $2; exit}' | cut -d'/' -f1)
 
-echo "UPDATE_DELAY=0.16" >> .env
+echo "UPDATE_DELAY=0.016" >> .env
 echo "PORT_DJANGO=8000" >> .env
 echo "PORT_CENTRAL=7777" >> .env
 echo "PORT_CHAT=7878" >> .env

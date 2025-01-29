@@ -281,23 +281,23 @@ async def disconnect_user(websocket):
     Args:
         websocket (WebSocket): the closed websocket.
     """
-    for user in userList:
-        if user.sock_input == websocket:
-            user.sock_input = None
-        if user.sock_output == websocket:
-            user.sock_output = None
-        if user.game == "1v1_classic":
-            event = {
-                "type": "quit_lobby",
-                "id": user.id,
-                "room_id": user.room
-            }
-            try:
-                await SocketData.SOCKET_1V1.send(json.dumps(event)) #handle game disconnection
-            except Exception as e:
-                logger.log("", 2, e)
-                SocketData.SOCKET_1V1 = None
-        #pass #handle chat disconnection
+    for user in userList.copy():
+        if user.sock_input == websocket or user.sock_output == websocket:
+            logger.log("User " + str(user.name) + " (ID :" + str(user.id) \
+                       +") has disconnected.", 1)
+            if user.game == "1v1_classic":
+                event = {
+                    "type": "quit_lobby",
+                    "id": user.id,
+                    "room_id": user.room
+                }
+                try:
+                    await SocketData.SOCKET_1V1.send(json.dumps(event)) #handle game disconnection
+                except Exception as e:
+                    logger.log("", 2, e)
+                    SocketData.SOCKET_1V1 = None
+            #pass #handle chat disconnection
+            userList.remove(user)
 
 async def handle_commands(websocket, event):
     """Handles central server commands.

@@ -248,6 +248,7 @@ def upload_avatar(request):
     print(f"Request FIELDS: {request.FILES}")
 
     if request.method == "POST":
+        print("OUILLE : ", request)
         if 'fileInput' in request.FILES:
             profile_picture = request.FILES['fileInput']
             print(f"Received file: {profile_picture.name} (size: {profile_picture.size} bytes)")
