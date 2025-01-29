@@ -4,7 +4,7 @@ import { animatePlayers, resetBoostedStatus, setPlayerController, setupPlayerMov
 import { createBall } from './ball.js';
 import { ScreenShake } from './screenShake.js';
 import { setScores, addScore, setVisibleScore } from './scoreManager.js';
-import { createLights, createPlayers, setVisibilityRightWall, addLightPlayerReady } from './objects.js';
+import { createLights, createPlayers, setVisibilityRightWall, addLightPlayerReady, setTextures } from './objects.js';
 import { getLevelState, isAnOnlineMode, setLevelState } from './main.js';
 import { unloadScene } from './unloadScene.js';
 import { addGameStickers, removeGameStickers, setAccessAllDuelsInChat, tryCloseChat } from './chat.js';
@@ -13,7 +13,7 @@ import { getTranslation } from './translate.js';
 import { createSpaceLevel } from './levelSpace.js';
 import { createCaveLevel } from './levelCave.js';
 import { getMatchTime, isGamePaused, pauseStopWatch, resetStopwatch, resumeStopWatch, setStopWatch, startStopwatch, stopStopwatch } from './timer.js';
-import { closeGameMenu, isSettingsOpen, setHeaderVisibility } from './menu.js';
+import { closeGameMenu, setHeaderVisibility } from './menu.js';
 import { getRules } from './rules.js';
 import { ArenaType, LevelMode, PlayerStatus, VictoryType } from './variables.js';
 import { callVictoryScreen } from './victory.js';
@@ -21,7 +21,8 @@ import { isBoostReadyLeft, isBoostReadyRight, resetBoostBar, useBoost } from './
 import { createDeathSphere } from './deathSphere.js';
 import { Sparks } from './sparks.js';
 import { socketSendPlayerReady, setMatchAlreadyStarted } from './sockets.js';
-import { getUserById } from './apiFunctions.js';
+import { getUserById, getUserPaddleSkin } from './apiFunctions.js';
+import { getTournamentPlayers, setWinnerNbr } from './tournament.js';
 
 const gameMenuPanel = document.getElementById('gameMenuPanel');
 const inputChat = document.getElementById('inputChat');
@@ -38,34 +39,7 @@ export const BOUNDARY =
   X_MAX: 40
 }
 
-export let id_players =
-{
-    p1: -1,
-    p2: -1,
-    p3: -1,
-    p4: -1
-}
-
-let rightCtrlPressed = false;
-
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Control' && event.location === KeyboardEvent.DOM_KEY_LOCATION_RIGHT) {
-        console.log("right control pressed");
-        rightCtrlPressed = true;
-        event.preventDefault();
-    }
-    if (rightCtrlPressed && event.key !== 'Control') {
-        alert("preventing default");
-        console.log("preventing default");
-        event.preventDefault();
-    }
-});
-document.addEventListener('keyup', function(event) {
-    if (event.key === 'Control' && event.location === KeyboardEvent.DOM_KEY_LOCATION_RIGHT) {
-        console.log("right control released");
-        rightCtrlPressed = false;
-    }
-});
+export let id_players = [-1, -1, -1, -1];
 
 export function CreateMatchScore(newScorePlayer, newScoreOpponent)
 {
@@ -219,7 +193,7 @@ function hideInGameUI()
 
 function resetIdPlayers()
 {
-    id_players.p4 = id_players.p3 = id_players.p2 = id_players.p1 = -1;
+    id_players[3] = id_players[2] = id_players[1] = id_players[0] = -1;
 }
 
 export function unloadLevel()
@@ -258,23 +232,23 @@ export function gameEventsListener(event)
     // pressArrowsMenu(event);
 }
 
-function pressArrowsMenu(event)
-{
-    if (!gameMenuPanel.classList.contains('show') || !isSettingsOpen())
-        return;
-    const focusableElements = document.querySelectorAll('button.gameMenuButton');
-    const focusable = Array.prototype.slice.call(focusableElements);
-    const currentIndex = focusable.indexOf(document.activeElement);
-    if (event.key === 'ArrowDown') {
-        event.preventDefault();
-        const nextIndex = (currentIndex + 1) % focusable.length;
-        focusable[nextIndex].focus();
-    } else if (event.key === 'ArrowUp') {
-        event.preventDefault();
-        const prevIndex = (currentIndex - 1 + focusable.length) % focusable.length;
-        focusable[prevIndex].focus();
-    }
-}
+// function pressArrowsMenu(event)
+// {
+//     if (!gameMenuPanel.classList.contains('show') || !isSettingsOpen())
+//         return;
+//     const focusableElements = document.querySelectorAll('button.gameMenuButton');
+//     const focusable = Array.prototype.slice.call(focusableElements);
+//     const currentIndex = focusable.indexOf(document.activeElement);
+//     if (event.key === 'ArrowDown') {
+//         event.preventDefault();
+//         const nextIndex = (currentIndex + 1) % focusable.length;
+//         focusable[nextIndex].focus();
+//     } else if (event.key === 'ArrowUp') {
+//         event.preventDefault();
+//         const prevIndex = (currentIndex - 1 + focusable.length) % focusable.length;
+//         focusable[prevIndex].focus();
+//     }
+// }
 
 function resetZoomCamera(camera)
 {
@@ -382,7 +356,7 @@ function showInGameUI()
     {
         controlsSrc = 'static/images/controlsP1Local.webp';
     }
-    if (currentLevelMode === LevelMode.LOCAL)
+    if (currentLevelMode === LevelMode.LOCAL || currentLevelMode === LevelMode.TOURNAMENT)
     {
         controlsP1.style.display = 'flex';
         controlsLeftImg.src = 'static/images/controlsP1Local.webp';
@@ -414,11 +388,12 @@ export function setPlayerRightName()
 
 export function passInfosPlayersToLevel(idP1, idP2)
 {
-    return Promise.all([getUserById(idP1), getUserById(idP2)])
-        .then(([profile1, profile2]) => {
+    return Promise.all([getUserById(idP1), getUserById(idP2), getUserPaddleSkin(id_players[0]), getUserPaddleSkin(id_players[1])])
+        .then(([profile1, profile2, textureP1, textureP2]) => {
             playerProfile1 = profile1;
             playerProfile2 = profile2;
             setPlayersIds(idP1, idP2);
+            setTextures(textureP1, textureP2);
             return setPlayerController(idP1, idP2);
         })
         .catch((error) => {
@@ -429,7 +404,13 @@ export function passInfosPlayersToLevel(idP1, idP2)
 
 function setPlayerNames()
 {
-    if (isAnOnlineMode(currentLevelMode))
+    if (currentLevelMode === LevelMode.TOURNAMENT)
+    {
+        const [player1Tournament, player2Tournament] = getTournamentPlayers();
+        player1Name.innerText = player1Tournament;
+        player2Name.innerText = player2Tournament;
+    }
+    else if (isAnOnlineMode(currentLevelMode))
     {
         player1Name.innerText = playerProfile1.username;
         player2Name.innerText = playerProfile2.username;
@@ -465,7 +446,7 @@ export function changeBallSpeedInstance(newSpeed)
     changeBallSpeedFunction(newSpeed);
 }
 
-function setUpConsts()
+function setUpScreenShake()
 {
     if (screenShake != null)
         return;
@@ -682,7 +663,7 @@ export function StartLevel(levelMode)
 
     const { ball, updateBall, resetBall, changeBallSize, changeBallSpeed, updateBallLight } = createBall(scene, resetScreenFunction);
     balle = ball;
-    setUpConsts();
+    setUpScreenShake();
     setScores(0, 0);
     setAccessAllDuelsInChat(false);
     tryCloseChat();
@@ -806,7 +787,7 @@ export function StartLevel(levelMode)
             useBoost(0);
             event.preventDefault();
         }
-        else if ((event.key === 'e' && playerStats.playerController === 2 && isBoostReadyRight()) || (event.code === 'ArrowLeft' && playerStats.playerController === 2 && isBoostReadyRight()))
+        else if ((event.key === 'e' && playerStats.playerController === 2 && isBoostReadyRight()) || (event.code === 'ArrowLeft' && (playerStats.playerController === 2 || currentLevelMode === LevelMode.TOURNAMENT) && isBoostReadyRight()))
         {
             useBoost(1);
             event.preventDefault();
@@ -818,7 +799,7 @@ export function StartLevel(levelMode)
         setVisibilityRightWall(true);
         resetFunction(true);
         resetStopwatch();
-        resetScreen(0);
+        // resetScreen(0); // remettre ca ??
         animate();
     }
 
@@ -868,10 +849,17 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
 
     let victoryType;
     let winner = '';
+    let winnerNbr = 0;
     if (scoreP1 > scoreP2)
+    {
+        winnerNbr = 1;
         winner = player1NameText;
+    }
     else if (scoreP1 < scoreP2)
+    {
+        winnerNbr = 2;
         winner = player2NameText;
+    }
     if (forcedVictory)
         victoryType = VictoryType.VICTORY;
     else if (winner != '')
@@ -883,7 +871,9 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
     }
     else
         victoryType = VictoryType.EXAEQUO;
-
+    
+    if (currentLevelMode === LevelMode.TOURNAMENT)
+        setWinnerNbr(winnerNbr);
     if (!isSpectator())
         addMatchToHistory(victoryType, scorePlayer, scoreOpponent, opponentName, getMatchTime());
     pressPlayDiv.style.display = 'none';
@@ -905,6 +895,10 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
         }
         if (forcedVictory)
             callVictoryScreen(VictoryType.VICTORY);
+        else if (currentLevelMode === LevelMode.TOURNAMENT)
+        {
+            callVictoryScreen(VictoryType.VICTORY, winner);
+        }
         else if (winner != '')
         {
             if (winner === getPlayerName())

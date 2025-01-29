@@ -12,36 +12,36 @@ from .views.friends import (GetFriendsView,
                             EditFriendView,
                             GetIncomingFriendRequestView,
                             GetOutgoingFriendRequestView)
-from .views.user import *
 
 
 
 urlpatterns = [
-    path('get_address', get_address, name='get_address'),
-    path("", index, name="home"),
-    path('home', index, name='home'),
-    path('register', register_user, name='register_user'),
-    path('login', login_user, name='login'),
-    path('logout', logout_user, name='logout_user'),
-    path('registering', registering, name='registering'),  # Registration page
-    path('signIn', sign_in, name='signIn'),  # Sign-in page
-    path('modes', modes, name='modes'),  # Modes page
-    path('rules', rules, name='rules'),  # Rules page
-    path('duel', duel, name='duel'),  # Duel page
-    path('game-local', game_local, name='game-local'),  # Game local page
-    path('game-ai', game_ai, name='game-ai'),  # Game AI page
-    path('game-online', game_online, name='game-online'),  # Game online duel page
-    path('tournament-menu', tournament_menu, name='tournament-menu'),  # Tournament menu page
-    path('tournament-lobby', tournament_lobby, name='tournament-lobby'),  # Tournament lobby page
-    path('tournament-join', tournament_join, name='tournament-join'),  # Tournament join page
-    path('check-login/', check_user_login, name='check_user_login'),
-    path('current_user', get_logged_in_user, name='current_user'),
-    path('useravatar/<str:username>/', get_user_avatar, name='user_avatar'),
-    path('upload_avatar/', upload_avatar, name='upload_avatar'),
-    path('user_paddle/<int:user_id>/', get_user_paddle, name='user_paddle'),
-    path('get-user/<str:username>/', get_user_by_name, name='get-user-by-name'),
-    path('user/<int:user_id>/', get_user_by_id, name='user_detail'),
-    path('username/<int:user_id>/', get_username, name='user_name_only'),
+    path('get_address', user.get_address, name='get_address'),
+    path("", user.index, name="home"),
+    path('home', user.index, name='home'),
+    path('register', user.register_user, name='register_user'),
+    path('login', user.login_user, name='login'),
+    path('logout', user.logout_user, name='logout_user'),
+    path('registering', user.registering, name='registering'),  # Registration page
+    path('signIn', user.sign_in, name='signIn'),  # Sign-in page
+    path('modes', user.modes, name='modes'),  # Modes page
+    path('rules', user.rules, name='rules'),  # Rules page
+    path('duel', user.duel, name='duel'),  # Duel page
+    path('game-local', user.game_local, name='game-local'),  # Game local page
+    path('game-ai', user.game_ai, name='game-ai'),  # Game AI page
+    path('game-tournament', user.game_tournament, name='game-tournament'),  # Game AI page
+    path('game-online', user.game_online, name='game-online'),  # Game online duel page
+    path('tournament-menu', user.tournament_menu, name='tournament-menu'),  # Tournament menu page
+    path('tournament-lobby', user.tournament_lobby, name='tournament-lobby'),  # Tournament lobby page
+    path('tournament-join', user.tournament_join, name='tournament-join'),  # Tournament join page
+    path('check-login/', user.check_user_login, name='check_user_login'),
+    path('current_user', user.get_logged_in_user, name='current_user'),
+    path('useravatar/<str:username>/', user.get_user_avatar, name='user_avatar'),
+    path('uploadavatar/', user.upload_avatar, name='user_uploadavatar'),
+    path('user_paddle/<int:user_id>/', user.get_user_paddle, name='user_paddle'),
+    path('get-user/<str:username>/', user.get_user_by_name, name='get-user-by-name'),
+    path('user/<int:user_id>/', user.get_user_by_id, name='user_detail'),
+    path('username/<int:user_id>/', user.get_username, name='user_name_only'),
     path("me", MyAccountViewSet.as_view({'get': 'retrieve'}), name="my_account_page"), #My Account page
     #path("update-profile", update_profile.UpdateProfileView.as_view(), name="update-user"), # update user
     #path('update_password', update_password.UpdatePasswordView.as_view(), name='update_password'), # update user password

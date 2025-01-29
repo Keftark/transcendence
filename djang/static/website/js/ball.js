@@ -1,6 +1,5 @@
 import * as THREE from '../node_modules/.vite/deps/three.js';
-import { BOUNDARY, playerSize, spawnSparksFunction, updateSparksFunction } from './levelLocal.js';
-import { Sparks } from './sparks.js';
+import { BOUNDARY, playerSize, spawnSparksFunction } from './levelLocal.js';
 import { ArenaType, BallStats, LevelMode } from './variables.js';
 import { getRules } from './rules.js';
 import { fillPowerBarLeft, fillPowerBarRight } from './powerUp.js';
@@ -8,10 +7,10 @@ import { getBoostedStatus, stopBoostPlayer } from './playerMovement.js';
 import { getLevelState } from './main.js';
 
 const ballBaseStats = BallStats;
-let ballRadiusMult = 1.0;
 let ballSpeedMult = 1.0;
 let isBallBoosted = false;
 let boostedBallModel;
+let currentLevelMode;
 
 let ballPosition =
 {
@@ -73,7 +72,7 @@ function getRandomVelocityComponent() {return Math.random() < 0.5 ? ballBaseStat
 
 export function createBall(scene, callBack)
 {
-    ballRadiusMult = 1;
+    currentLevelMode = getLevelState();
     isBallBoosted = false;
     ballSpeedMult = 1;
     const textureLoader = new THREE.TextureLoader();
@@ -85,7 +84,6 @@ export function createBall(scene, callBack)
         emissiveIntensity: 0
     });
     const ballGeometry = new THREE.SphereGeometry(ballBaseStats.baseRadius, 32, 32);
-    const sparks = new Sparks(scene);
     const ballVelocitySpeedUp = new THREE.Vector3(0.07, 0.07, 0);
     const ball = new THREE.Mesh(ballGeometry, ballMaterial);
     const boostedBall = createBallBoostModel(textureLoader);
@@ -229,7 +227,7 @@ export function createBall(scene, callBack)
         if (!isLeft)
         {
             ballVelocity.x = -ballVelocity.x;
-            if (getLevelState() === LevelMode.LOCAL)
+            if (currentLevelMode === LevelMode.LOCAL || currentLevelMode === LevelMode.TOURNAMENT)
                 fillPowerBarRight(absVeloX * 25);
         }
         else
@@ -324,9 +322,9 @@ export function createBall(scene, callBack)
 
     function updateBall(player1, player2)
     {
-        if (getLevelState() === LevelMode.LOCAL || getLevelState() === LevelMode.ADVENTURE)
+        if (currentLevelMode === LevelMode.LOCAL || currentLevelMode === LevelMode.ADVENTURE || currentLevelMode === LevelMode.TOURNAMENT)
             moveBall(player1, player2);
-        else if (getLevelState() === LevelMode.ONLINE)
+        else if (currentLevelMode === LevelMode.ONLINE)
             setBallPosition(ballPosition.x, ballPosition.y);
         pointLight.position.copy(ball.position);
         rotateBall();

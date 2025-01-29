@@ -24,7 +24,7 @@ class EditFriendView(APIView):
         return self.request.user.accountmodel
 
     def post(self, request, username=None):
-        user_profile: AccountModel = self.get_object()
+        user_profile = request.user.accountmodel
         friend_profile = get_object_or_404(AccountModel, user__username=username)
 
         if user_profile.user.username == username:
@@ -47,7 +47,7 @@ class EditFriendView(APIView):
         return Response(_('Friend request sent.'), status.HTTP_200_OK)
 
     def delete(self, request, username=None):
-        user_profile = self.get_object()
+        user_profile = request.user.accountmodel
         friend_profile = get_object_or_404(AccountModel, user__username=username)
 
         outgoing_request = user_profile.get_outgoing_friend_request_to(friend_profile)

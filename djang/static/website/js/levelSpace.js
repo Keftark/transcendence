@@ -15,10 +15,10 @@ export function animateScene()
     wallTop.rotation.x += 0.02;
 }
 
-function addModels(scene)
-{
+// function addModels(scene)
+// {
     
-}
+// }
 
 function drawBackground(scene, textureLoader)
 {
@@ -110,7 +110,7 @@ export function createSpaceLevel(scene, textureLoader)
 {
     createWalls(scene, textureLoader);
     drawBackground(scene, textureLoader);
-    addModels(scene, textureLoader);
+    // addModels(scene, textureLoader);
     setWallRight(wallRight);
     return animateScene;
 }

@@ -31,7 +31,7 @@ export async function logInPlayer(username, password)
             alert(errorResult.message);
         } else {
             const result = await response.json();
-            console.log(result.message);
+            // console.log(result.message);
             editPlayerStats(result.user);
             clickCancelSignIn(true);
         }
@@ -41,18 +41,16 @@ export async function logInPlayer(username, password)
     }
 }
 
-export async function registerUser()
+export async function registerUser(nameValue, firstNameValue, lastNameValue, emailValue, passwordValue)
 {
     const data = {
-        name: inputName.value,
-        first_name: inputFirstName.value,
-        last_name: inputLastName.value,
-        email: inputMail.value,
-        password: inputPassword.value,
-        confirm_password: inputConfirmPassword.value,
-        gdpr_consent: checkboxGdpr.checked,
+        name: nameValue,
+        first_name: firstNameValue,
+        last_name: lastNameValue,
+        email: emailValue,
+        password: passwordValue
     };
-
+    // console.log(data);
     try
     {
         const response = await fetch('/register', {
@@ -120,10 +118,10 @@ export async function getLoggedInUser() {
         });
         if (response.ok) {
             const userData = await response.json();
-            console.trace('Logged-in user:', userData);
+            // console.trace('Logged-in user:', userData);
             return userData;
         } else if (response.status === 403) {
-            console.log('User is not logged in.');
+            // console.log('User is not logged in.');
             return null;
         } else {
             console.error('Error retrieving user:', response.status);
@@ -160,7 +158,7 @@ export async function getUserName(userId) {
         return;
     }
     try {
-        console.log("Trying to get the user name");
+        // console.log("Trying to get the user name");
         const response = await fetch(`/username/${userId}/`);
         if (!response.ok)
             throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);
@@ -185,7 +183,7 @@ export async function getUserAvatar(userName) {
         const userData = await response.json();
         if (userData.error)
             console.error(userData.error);
-        console.log("user data: " + JSON.stringify(userData));
+        // console.log("user data: " + JSON.stringify(userData));
         return userData;
     } catch (error) {
         console.error("An error occurred while fetching the user details:", error);
@@ -197,7 +195,7 @@ export async function uploadAvatar(username, url_picture)
     const data = new FormData();
     data.append('username', username);
     data.append('url', url_picture);
-    console.log("Token: ", getCSRFToken());
+    // console.log("Token: ", getCSRFToken());
     // console.log(data);
 
     try {
@@ -214,12 +212,9 @@ export async function uploadAvatar(username, url_picture)
         if (!response.ok) {
             const errorResult = await response.json();  // Parse the error message in JSON
             alert(errorResult.message);  // Display the error message to the user
-            return response;
         } else {
-            const result = await response.json();  // Parse the success response in JSON
-            self.accountprofile.avatar = result.avatar;
-            console.log(result);
-            return null;
+            // const result = await response.json();  // Parse the success response in JSON
+            // console.log(result);
         }
 
     } catch (error) {
@@ -239,7 +234,7 @@ export async function getUserScores(userName) {
         const userData = await response.json();
         if (userData.error)
             console.error(userData.error);
-        console.log("user data: " + JSON.stringify(userData));
+        // console.log("user data: " + JSON.stringify(userData));
         return userData;
     } catch (error) {
         console.error("An error occurred while fetching the user details:", error);
@@ -277,7 +272,7 @@ export async function getUserPaddleSkin(userId) {
         const userData = await response.json();
         if (userData.error)
             console.error(userData.error);
-        console.log("user data: " + JSON.stringify(userData));
+        // console.log("user data: " + JSON.stringify(userData));
         return userData;
     } catch (error) {
         console.error("An error occurred while fetching the user details:", error);
@@ -337,7 +332,7 @@ export async function getAccountUser(userName) {
       console.error('Error:', error);
       return null;  // You can return an error object or null if needed
     }
-  }
+}
 
 export async function askAddFriend(userName) {
     try {
@@ -445,5 +440,82 @@ export async function blockUserRequest(userName) {
         return response;
     } catch (error) {
         console.error('Error:', error);
+    }
+}
+
+export async function unblockUserRequest(userName) {
+    try {
+        const response = await fetch(`/block_user/${userName}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            }
+        });
+        if (!response.ok)
+            throw new Error('Network response was not ok');
+        return response;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+export async function sendMatch()
+{
+    // c'est un test !
+    const data = {
+        status: 1,
+        player_1: playerStats.id,
+        player_1_score: 1,
+        player_2: 2,
+        player_2_score: 3,
+        start_timestamp: 10,
+        stop_timestamp: 1000,
+        winner: playerStats.id
+    };
+
+    // console.log(data);
+    try
+    {
+        const response = await fetch('api/matchs/set_match', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken(),
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok)
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        const responseData = await response.json();
+
+        if (responseData.success)
+            return true;
+        else {
+            console.error('Registration error:', responseData.error);
+            return false;
+        }
+    } catch (error) {
+        console.error('Error sending data to backend:', error);
+        return false;
+    }
+}
+
+export async function getMatchsLittleData(userName) {
+    try {
+      // Make a GET request to the retrieve_account view
+      const response = await fetch(`api/matchs/get_matchs_count/${userName}`);
+      
+      // Check if the response is ok (status code 200-299)
+      if (!response.ok)
+        throw new Error('Network response was not ok');
+      
+      const data = await response.json();
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.error('Error:', error);
+      return null;  // You can return an error object or null if needed
     }
 }

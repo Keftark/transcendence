@@ -1,7 +1,7 @@
 import { getLoggedInUser, getUserById } from "./apiFunctions.js";
 import { deleteDuelInChat } from "./chat.js";
 import { id_players, passInfosPlayersToLevel } from "./levelLocal.js";
-import { addDisableButtonEffect, hasDisabledButtonEffect, removeDisableButtonEffect } from "./main.js";
+import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
 import { showModeChoice } from "./modesSelection.js";
 import { socketExitLobby, socketNotReadyToDuel, socketReadyToDuel } from "./sockets.js";
 import { getTranslation } from "./translate.js";
@@ -24,7 +24,6 @@ const waitingPlayer2 = document.getElementById('waitingForPlayer');
 const animDiv = document.getElementById('vsImg');
 const baseImgPath = "static/icons/playerNoImg.webp";
 
-let isOtherConnected = false;
 let duelTargetPlayer = "";
 let duelSender = "";
 let player1IsReady = false;
@@ -32,7 +31,6 @@ let player2IsReady = false;
 
 let idP1 = -1;
 let idP2 = -1;
-export let playersSkins = [0, 0, 0, 0];
 
 player1ReadyButton.addEventListener('click', () => {
     clickReadyDuel(1);
@@ -77,7 +75,6 @@ function resetDuelPanel()
     player2IsReady = false;
     player1ReadyButton.classList.remove('active');
     player2ReadyButton.classList.remove('active');
-    isOtherConnected = false;
     player1Img.src = baseImgPath;
     player2Img.src = baseImgPath;
     waitingPlayer2.innerText = getTranslation('waitingForPlayer');
@@ -199,7 +196,6 @@ export function clickReadyDuel(playerNbr)
 
 export function joinDuel()
 {
-    isOtherConnected = true;
     // fillInfosPlayer(2);
     resetVSAnimation();
 }
@@ -253,8 +249,8 @@ export function matchFound(player1, player2)
     // console.log("Player2: " + player2);
     idP1 = player1;
     idP2 = player2;
-    id_players.idP1 = player1;
-    id_players.idP2 = player2;
+    id_players[0] = player1;
+    id_players[1] = player2;
     displayUIPlayer(player1, player2);
     Promise.all([
         fillInfosPlayer(1, player1),

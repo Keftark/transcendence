@@ -16,8 +16,8 @@ import time
 class Match(models.Model):
     finished = models.BooleanField(default = False)
     started = models.BooleanField(default = False)
+    winner = models.ForeignKey(User, on_delete=CASCADE, null=True, blank=True)
     match_id = models.IntegerField()
-    online = models.BooleanField(default = False)
     player_1 = models.ForeignKey(AccountModel, on_delete=models.SET_NULL, null=True, related_name='player_1')
     player_1_score = models.IntegerField(null=True)
     
