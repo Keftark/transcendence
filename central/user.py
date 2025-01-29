@@ -6,7 +6,7 @@ class User:
     def __init__(self):
         self._sock_input = None
         self._sock_output = None
-        self._id_user = 0
+        self._id = 0
         self._name = ""
         self._status = "here"
         self._game = "none"
@@ -95,17 +95,17 @@ class User:
         self._sock_output = value
 
     @property
-    def id_user(self):
+    def id(self):
         """Returns the ID of the user.
 
         Returns:
             int: ID of the user.
         """
-        return self._id_user
+        return self._id
 
-    @id_user.setter
-    def id_user(self, value):
-        self._id_user = value
+    @id.setter
+    def id(self, value):
+        self._id = value
 
     @property
     def name(self):

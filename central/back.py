@@ -67,7 +67,7 @@ def dump_player_status(_id):
         dict | None: a dump of the player's status, or None if no player is bound to the ID.
     """
     for user in userList:
-        if user.id_user == _id:
+        if user.id == _id:
             return user.dump_status()
     return None
 
@@ -86,7 +86,7 @@ def dump_blacklist(_id, name, user):
         "type": "blacklist",
         "name": name,
         "id" : _id,
-        "block_id" : user.id_user,
+        "block_id" : user.id,
         "block_name" : user.name
     }
     return event
@@ -125,7 +125,7 @@ def key_check(_id, key):
         bool: True if the key matches the existing player, False otherwise.
     """
     for user in userList:
-        if user.id_user == _id:
+        if user.id == _id:
             if user.key == key:
                 return True
             return False
@@ -145,7 +145,7 @@ async def handle_answers(event):
             _id = (int)(id_f)
             data = event["data"]
             for user in userList:
-                if user.id_user == _id:
+                if user.id == _id:
                     if event["type"] == "list_all":
                         try:
                             await user.send(json.dumps(event))
@@ -174,18 +174,18 @@ async def handle_answers(event):
     elif _type == "message" or _type == "sticker":
         _id = (int)(event["id"])
         for user in userList:
-            if user.id_user != _id and user.is_blacklisted(_id) is False:
+            if user.id != _id and user.is_blacklisted(_id) is False:
                 await user.send(json.dumps(event))
     elif _type == "room_message" or _type == "room_sticker":
         _id = (int)(event["id"])
         for user in userList:
-            if user.id_user != _id and user.status == event["game"] \
+            if user.id != _id and user.status == event["game"] \
                         and user.room == (int)(event["room_id"]):
                 await user.send(json.dumps(event))
     elif _type in ["private_message", "private_sticker"]:
         _id = (int)(event["id"])
         for user in userList:
-            if user.id_user == _id and user.is_blacklisted(_id) is False:
+            if user.id == _id and user.is_blacklisted(_id) is False:
                 await user.send(json.dumps(event))
             elif user.is_blacklisted(_id) is True:
                 for uss in userList:
@@ -195,7 +195,7 @@ async def handle_answers(event):
     else:
         _id = (int)(event["id"])
         for user in userList:
-            if user.id_user == _id:
+            if user.id == _id:
                 await user.send(json.dumps(event))
 
 async def handle_transfer(event):
@@ -209,7 +209,7 @@ async def handle_transfer(event):
     _type = event["type"]
 
     for user in userList:
-        if user.id_user == _id:
+        if user.id == _id:
             if user.key != event["key"]:
                 logger.log("User with ID :: " + str(id), 3, "Key not matching")
                 return
@@ -217,7 +217,7 @@ async def handle_transfer(event):
     if _server == "chat":
         print("Recieved that ::\t", event)
         for user in userList:
-            if user.id_user == _id:
+            if user.id == _id:
                 event["room_id"] = user.room
                 event["game"] = user.game
         try:
@@ -241,11 +241,11 @@ async def handle_log(websocket, event):
     """
     _id = (int)(event["id"])
     for user in userList:
-        if user.id_user == _id:
+        if user.id == _id:
             return
     flag = False
     for user in logList.copy():
-        if user.id_user == _id:
+        if user.id == _id:
             flag = True
             if event["socket"] == "input":
                 user.sock_input = websocket
@@ -255,20 +255,20 @@ async def handle_log(websocket, event):
                 user.key = key_generator()
                 logList.remove(user)
                 userList.append(user)
-                text = "Created user with ID ::" + str(user.id_user) + "\tKey ::" \
+                text = "Created user with ID ::" + str(user.id) + "\tKey ::" \
                     + str(user.key) + "\t Adress::" + str(user)
                 logger.log(text, 1)
                 await user.send(json.dumps(user.dump_key()))
                 to_send = {
                     "type": "join_chat",
-                    "id": user.id_user,
+                    "id": user.id,
                     "name": user.name
                 }
                 await SocketData.SOCKET_CHAT.send(json.dumps(to_send))
             break
     if flag is False:
         user = User()
-        user.id_user = id
+        user.id = _id
         user.name = event["name"]
         if event["socket"] == "input":
             user.sock_input = websocket
@@ -290,7 +290,7 @@ async def disconnect_user(websocket):
         if user.game == "1v1_classic":
             event = {
                 "type": "quit_lobby",
-                "id": user.id_user,
+                "id": user.id,
                 "room_id": user.room
             }
             try:
