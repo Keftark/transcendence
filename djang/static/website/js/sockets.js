@@ -15,7 +15,7 @@ import { callVictoryScreen } from "./victory.js";
 
 export let keySocket = null;
 let matchAlreadyStarted = false;
-let room_id = 0;
+let id_room = 0;
 
 export function setMatchAlreadyStarted(isTrue)
 {
@@ -90,7 +90,7 @@ export function socketReadyToDuel()
         answer: "no",
         server: "1v1_classic",
         type: "ready",
-        room: room_id,
+        room_id: id_room,
         id: playerStats.id
     };
     socket.send(JSON.stringify(event));
@@ -103,7 +103,7 @@ export function socketNotReadyToDuel()
         answer: "no",
         server: "1v1_classic",
         type: "pause",
-        room: room_id,
+        room_id: id_room,
         id: playerStats.id
     };
     socket.send(JSON.stringify(event));
@@ -116,7 +116,7 @@ export function socketExitLobby()
         answer: "no",
         server: "1v1_classic",
         type: "quit_lobby",
-        room: playerStats.room_id,
+        room_id: playerStats.room_id,
         id: playerStats.id
     };
     socket.send(JSON.stringify(event));
@@ -129,7 +129,7 @@ export function socketExitDuel()
         answer: "no",
         server: "1v1_classic",
         type: "quit_lobby",
-        room: playerStats.room_id,
+        room_id: playerStats.room_id,
         id: playerStats.id
     };
     socket.send(JSON.stringify(event));    
@@ -142,7 +142,7 @@ export function socketSendPlayerReady()
         answer: "no",
         server: "1v1_classic",
         type: "ready",
-        room: playerStats.room_id,
+        room_id: playerStats.room_id,
         id: playerStats.id
     };
     socket.send(JSON.stringify(event));
@@ -155,7 +155,7 @@ export function socketPlayerUp()
         answer: "no",
         server: "1v1_classic",
         type: "input",
-        room: playerStats.room_id,
+        room_id: playerStats.room_id,
         id: playerStats.id,
         move: "up",
         method: "held"
@@ -170,7 +170,7 @@ export function socketPlayerUpNot()
         answer: "no",
         server: "1v1_classic",
         type: "input",
-        room: playerStats.room_id,
+        room_id: playerStats.room_id,
         id: playerStats.id,
         move: "up",
         method: "release"
@@ -185,7 +185,7 @@ export function socketPlayerDown()
         answer: "no",
         server: "1v1_classic",
         type: "input",
-        room: playerStats.room_id,
+        room_id: playerStats.room_id,
         id: playerStats.id,
         move: "down",
         method: "held"
@@ -200,7 +200,7 @@ export function socketPlayerDownNot()
         answer: "no",
         server: "1v1_classic",
         type: "input",
-        room: playerStats.room_id,
+        room_id: playerStats.room_id,
         id: playerStats.id,
         move: "down",
         method: "release"
@@ -228,7 +228,7 @@ export function socketBoostPaddle()
         answer: "no",
         server: "1v1_classic",
         type: "input",
-        room: room_id,
+        room_id: id_room,
         id: playerStats.id,
         move: "boost",
         method: "osef"
@@ -356,7 +356,7 @@ export function socketSendSalonSticker(stickerName)
         name: playerStats.nickname,
         id: playerStats.id,
         img: stickerName,
-        room: room_id,
+        room_id: id_room,
         answer: "no",
         server: "chat"
     };
@@ -490,8 +490,8 @@ export function addSocketListener()
             }
             break;
         case "match_init":
-            room_id = event.room_id;
-            playerStats.room_id = room_id;
+            id_room = event.room_id;
+            playerStats.room_id = id_room;
             // console.log("Found a match against player " + event.id_p2);
             setTimeout(() => {
                 matchFound(event.id_p1, event.id_p2);
