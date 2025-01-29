@@ -4,17 +4,17 @@ from rest_framework.response import Response
 from rest_framework import permissions, status
 from rest_framework.authentication import SessionAuthentication
 from django.contrib.auth.models import User
+import json
 from django.http import JsonResponse
+
 from django.http import HttpRequest
 from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
-
+from accounts.models import AccountModel
 
 from .models import Match, MatchMembers
 from .serializers import MatchSerializer
-
-import json
-# Create your views here.
+from django.db.models import Q
 
 def create_match(request):
     if request.method == 'POST':
@@ -24,7 +24,8 @@ def create_match(request):
 
             # Extract data
             status = data.get('status', '')
-            player_1 = data.get('player_1', '')
+            user_1 = data.get('player_1', '')
+            player_1 = AccountModel.objects.get(id=user_1)
             player_1_score = data.get('player_1_score', '')
             player_2 = data.get('player_2', '')
             player_2_score = data.get('player_2_score', '')
@@ -46,7 +47,7 @@ def create_match(request):
                 online = False,
                 player_1 = player_1,
                 player_1_score = player_1_score,
-                player_2 = 0,
+                player_2 = NULL,
                 player_2_score = player_2_score,
                 start_timestamp = start_timestamp,
                 stop_timestamp =  stop_timestamp,
@@ -61,6 +62,7 @@ def create_match(request):
 
     return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
 
+# Create your views here.
 class MatchViewSet(viewsets.ModelViewSet):
 
     queryset = Match.objects
@@ -95,18 +97,14 @@ class HistoriqueViewSet(ViewSet):
         
         return Response(games_data)
     
-    def get_matchs_count(self, request: HttpRequest, pk: int = None):
+    def get_matchs_count(self, request: HttpRequest, username):
         
-        user: User = get_object_or_404(User, pk=pk)
+        user = get_object_or_404(User, username=username)
+        matchs = Match.objects.filter(Q(player_1=user.accountmodel) | Q(player_2=user.accountmodel))
 
-        match_count = MatchMembers.objects.filter(player=user).count()
-
-        return match_count
-
-    def get_matchs_winned_count(self, request: HttpRequest, pk: int = None):
-        
-        user: User = get_object_or_404(User, pk=pk)
-
-        match_winned_count = MatchMembers.objects.filter(winner=user).count()
-
-        return match_winned_count
+        match_count = matchs.count()
+        wins = matchs.filter(winner=user.accountmodel).count()
+        return Response({
+            "match_count": match_count,
+            "wins": wins
+        })

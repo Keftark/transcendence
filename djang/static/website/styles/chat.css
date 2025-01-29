@@ -84,6 +84,11 @@
     background-color: transparent !important;
 }
 
+.message-container-sticker img
+{
+    width: 32px;
+}
+
 .message-container-left
 {
     background-color: #1c3558;
@@ -99,6 +104,7 @@
     text-align: left;
     align-self: flex-start;
     align-items: start;
+    padding-left: 0.5rem;
 }
 
 .message-middle {

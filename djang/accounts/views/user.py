@@ -2,14 +2,13 @@ from django.shortcuts import render
 import os
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+import json
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.utils.translation import gettext as _
 from accounts.models import *
 from ..serializers import UpdateUserSerializer, UpdatePasswordSerializer
-from django.shortcuts import render, redirect
-from accounts.forms import AvatarForm
 from rest_framework.generics import UpdateAPIView
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
@@ -20,7 +19,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # from django.views.decorators.csrf import csrf_exempt
-import json
 
 def home(request):
     return render(request, 'index.html', {'current_page': 'home'})
@@ -49,6 +47,9 @@ def game_online(request):
 def game_ai(request):
     return render(request, 'index.html', {'current_page': 'game-ai'})
 
+def game_tournament(request):
+    return render(request, 'index.html', {'current_page': 'game-tournament'})
+
 def tournament_menu(request):
     return render(request, 'index.html', {'current_page': 'tournament-menu'})
 
@@ -70,30 +71,23 @@ def get_address(request):
 def register_user(request):
     if request.method == 'POST':
         try:
-            # Parse JSON body
             data = json.loads(request.body)
 
-            # Extract data
             name = data.get('name', '')
             first_name = data.get('first_name', '')
             last_name = data.get('last_name', '')
             email = data.get('email', '')
             password = data.get('password', '')
-            confirm_password = data.get('confirm_password', '')
-            gdpr_consent = data.get('gdpr_consent', False)
 
-            # Validation
             if not name or not email or not password:
                 return JsonResponse({'success': False, 'error': 'Missing required fields.'}, status=400)
 
-            if password != confirm_password:
-                return JsonResponse({'success': False, 'error': 'Passwords do not match.'}, status=400)
+            if User.objects.filter(username=name).exists():
+                return JsonResponse({'success': False, 'error': 'User with this name is already registered.'}, status=400)
 
-            # Check if user exists
             if User.objects.filter(email=email).exists():
                 return JsonResponse({'success': False, 'error': 'Email is already registered.'}, status=400)
 
-            # Create user
             user = User.objects.create_user(
                 username=name,
                 first_name=first_name,
@@ -249,17 +243,24 @@ def login_user(request):
 
 @login_required
 def upload_avatar(request):
-    """Process images uploaded by users"""
-    if request.method == 'POST':
-        form = AvatarForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            # Get the current instance object to display in the template
-            img_obj = form.instance
-            return render(request, 'index.html', {'form': form, 'img_obj': img_obj})
-    else:
-        form = AvatarForm()
-        return render(request, 'index.html', {'form': form})
+    print(f"Request method: {request.method}")
+    print(f"Request FIELDS: {request.FILES}")
+
+    if request.method == "POST":
+        if 'fileInput' in request.FILES:
+            profile_picture = request.FILES['fileInput']
+            print(f"Received file: {profile_picture.name} (size: {profile_picture.size} bytes)")
+
+            # Save the file to the user’s avatar field
+            user = request.user
+            user.accountmodel.avatar = profile_picture
+            user.save()
+            return JsonResponse({"message": "Uploaded successfully"}, status=200)
+        else:
+            print("No file found in request.FILES")
+            return JsonResponse({"message": "No file uploaded"}, status=400)
+
+    return JsonResponse({"message": "Invalid request method"}, status=405)
 
 class UpdateProfileView(UpdateAPIView):
 
@@ -278,17 +279,4 @@ class UpdatePasswordView(UpdateAPIView):
     def get_object(self):
         return self.queryset.get(pk=self.request.user.pk)
 
-def del_user(request, username):    
-    try:
-        u = User.objects.get(username = username)
-        u.delete()
-        JsonResponse({'user deleted successfully'}, status=200)           
 
-    except User.DoesNotExist:
-        JsonResponse({'error': 'User not found'}, status=404)  
-        return render(request, 'index.html')
-
-    except Exception as e: 
-        return render(request, 'index.html',e)
-
-    return render(request, 'index.html') 

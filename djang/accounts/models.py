@@ -15,7 +15,7 @@ def upload_to(instance, filename: str):
 
 class AccountModel(models.Model):
     user = OneToOneField(User, on_delete=CASCADE, default=True)
-    avatar = ImageField(upload_to="account/images", default='guestUser.webp')
+    avatar = ImageField(upload_to=upload_to, default='guestUser.webp')
     status = models.CharField(max_length=150, default="offline")
     description = models.CharField(max_length=150, default='')
     is42 = models.BooleanField(default=False)
@@ -45,10 +45,9 @@ class AccountModel(models.Model):
             (Q(friend1=self) & Q(friend2=friend)) |
             (Q(friend2=self) & Q(friend1=friend))
         ).exists()
-    
+
     def is_blocked(self, block):
         return BlockModel.objects.filter(
-            (Q(blocker=self) & Q(blocked=block)) |
             (Q(blocked=self) & Q(blocker=block))
         ).exists()
 

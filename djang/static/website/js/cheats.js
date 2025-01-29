@@ -1,23 +1,26 @@
-import { askAddFriendFunction, clickBlockUser, receiveMessage, removeFriendFunction, sendPubSticker, sendSystemMessage } from "./chat.js";
+import { askAddFriendFunction, clickBlockUser, helpFunctionDisplay, receiveMessage, removeFriendFunction, sendPubSticker, sendSystemMessage } from "./chat.js";
 import { setDuelTargetPlayer } from "./duelPanel.js";
 import { removeBlockedUser } from "./friends.js";
 import { changeBallSizeInstance, changeBallSpeedInstance, changePlayersSize, getBallPosition } from "./levelLocal.js";
+import { isAnOfflineMode } from "./main.js";
 import { askForDuel } from "./modesSelection.js";
+import { getCurrentView } from "./pages.js";
 import { playerStats } from "./playerManager.js";
 import { socketSendPrivMessage, socketSendPrivSticker } from "./sockets.js";
 
 export const cheatCodes =
 {
+    "/HELP" : helpFunction,
     "/BALLSIZE" : changeBallSize,
     "/BALLSPEED" : changeBallSpeed,
     "/PADDLESIZE" : changePaddlesSize,
+    "/GBP" : getBallPos,
     "/DUEL" : sendInvitDuel,
     "/MSG" : sendPrivateMessage,
     "/BLOCK" : blockPlayer,
     "/UNBLOCK" : unblockPlayer,
     "/ADDFRIEND" : addFriend,
     "/REMOVEFRIEND" : deleteFriend,
-    "/GBP" : getBallPos,
     "/SAD" : () => sendSticker("sticker_sad"),
     "/HAPPY" : () => sendSticker("sticker_happy"),
     "/ANGRY" : () => sendSticker("sticker_angry"),
@@ -30,20 +33,40 @@ export const cheatCodes =
     "/TRASH" : () => sendSticker("sticker_trash")
 }
 
+function helpFunction()
+{
+    helpFunctionDisplay();
+}
+
 function changeBallSize(newSize)
 {
+    if (!isAnOfflineMode(getCurrentView()))
+    {
+        sendSystemMessage("needOfflineMode", "");
+        return;
+    }
     changeBallSizeInstance(newSize);
     sendSystemMessage("ballSizeChanged", newSize);
 }
 
 function changeBallSpeed(newSpeed)
 {
+    if (!isAnOfflineMode(getCurrentView()))
+    {
+        sendSystemMessage("needOfflineMode", "");
+        return;
+    }
     changeBallSpeedInstance(newSpeed);
     sendSystemMessage("ballSpeedChanged", newSpeed);
 }
 
 function changePaddlesSize(newSize)
 {
+    if (!isAnOfflineMode(getCurrentView()))
+    {
+        sendSystemMessage("needOfflineMode", "");
+        return;
+    }
     changePlayersSize(newSize)
     sendSystemMessage("paddleSizeChanged", newSize);
 }

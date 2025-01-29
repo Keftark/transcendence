@@ -1,5 +1,4 @@
 import { AExchangeable } from "./AExchangable.js";
-import { Client } from "./Client.js";
 
 export class Profile extends AExchangeable
 {

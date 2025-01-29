@@ -6,6 +6,7 @@ import { isGdprOpen, isRegistrationOpen } from "./registration.js";
 import { isMatchListOpen } from "./modesSelection.js";
 import { isSigninOpen } from "./signIn.js";
 import { isPaddleChoiceOpen } from "./customizeSkins.js";
+import { isAddPlayerTournamentIsOpen, isInAskBackTournamentView, isTournamentViewOpen } from "./tournament.js";
 
 function getFocusableElements()
 {
@@ -23,6 +24,12 @@ function getFocusableElements()
         return document.getElementById('settingsPanel').querySelectorAll('button, input, a, textarea, select');
     else if (isMatchListOpen())
         return document.getElementById('spectateList').querySelectorAll('button, input, a, textarea, select');
+    else if (isInAskBackTournamentView())
+        return document.getElementById('askBackTournamentViewPanel').querySelectorAll('button, input, a, textarea, select');
+    else if (isTournamentViewOpen())
+        return document.getElementById('tournamentMatchsCanvas').querySelectorAll('button, input, a, textarea, select');
+    else if (isAddPlayerTournamentIsOpen())
+        return document.getElementById('addPlayerTournamentPanel').querySelectorAll('button, input, a, textarea, select');
     else
         return document.querySelectorAll('button, input, a, textarea, select');
 }

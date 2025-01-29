@@ -1,6 +1,6 @@
 import { getDuelInvitContent } from "./chat.js";
 import { setPlayerRightName } from "./levelLocal.js";
-import { getPlayerVictories, playerStats } from "./playerManager.js";
+import { playerStats } from "./playerManager.js";
 import { openGdprPanel } from "./registration.js";
 
 let translations;
@@ -22,6 +22,7 @@ export function updateHTML(translations)
 	document.getElementById('profileButton').innerText = translations.profileButton;
 	document.getElementById('settingsButton').innerText = translations.settings;
 	document.getElementById('mainProfileButton').innerText = translations.profileButton;
+	document.getElementById('deleteProfileButton').innerText = translations.deleteProfileText;
 	document.getElementById('mainSettingsButton').innerText = translations.settings;
 	document.getElementById('mainButton').innerText = translations.mainButton;
 	document.getElementById('mainCustomizeButton').innerText = translations.mainCustomizeButton;
@@ -50,7 +51,7 @@ export function updateHTML(translations)
 	document.getElementById('inputPassword').placeholder = translations.inputPassword;
 	document.getElementById('registerConfirmPassword').innerText = translations.registerConfirmPassword;
 	document.getElementById('inputConfirmPassword').placeholder = translations.inputConfirmPassword;
-	document.getElementById('registerConfirm').innerText = translations.registerConfirm;
+	document.getElementById('registerConfirm').innerText = translations.confirm;
 	document.getElementById('registerCancel').innerText = translations.cancel;
 	document.getElementById('buttonSignUp').innerText = translations.registerHeader;
 	document.getElementById('buttonLogIn').innerText = translations.signInHeader;
@@ -87,7 +88,7 @@ export function updateHTML(translations)
 	document.getElementById('ready2DuelButton').innerText = translations.ready;
 	document.getElementById('duelHeaderText').innerText = translations.headerDuel;
 	document.getElementById('connectToChat').innerText = translations.connectToChat;
-	document.getElementById('signInConfirm').innerText = translations.registerConfirm;
+	document.getElementById('signInConfirm').innerText = translations.confirm;
 	document.getElementById('signInCancel').innerText = translations.cancel;
 	document.getElementById('signInPassword').innerText = translations.registerPassword;
 	document.getElementById('signInName').innerText = translations.registerName;
@@ -96,28 +97,15 @@ export function updateHTML(translations)
 	document.getElementById('askRegister').innerText = translations.registerHeader;
 	document.getElementById('askSignInText').innerText = translations.askSignInText;
 	document.getElementById('askRegisterText').innerText = translations.askRegisterText;
-	document.getElementById('createTournamentText').innerText = translations.createTournamentText;
-	document.getElementById('joinTournamentText').innerText = translations.joinTournamentText;
-	document.getElementById('tournamentHeaderText').innerText = translations.tournamentText;
-	document.getElementById('cancelTournamentButton').innerText = translations.cancel;
 	document.getElementById('startTournamentButton').innerText = translations.start;
+	document.getElementById('startMatchTournamentButton').innerText = translations.start;
 	document.getElementById('cancelTournamentLobbyButton').innerText = translations.cancel;
-	document.getElementById('sendTournamentInvitToChat').innerText = translations.sendTournamentInvitToChat;
+	document.getElementById('cancelMatchTournamentButton').innerText = translations.cancel;
+	document.getElementById('confirmBackTournamentButton').innerText = translations.confirm;
+	document.getElementById('cancelBackTournamentButton').innerText = translations.cancel;
+	document.getElementById('addPlayerTournament').innerText = translations.addPlayerTournament;
 	document.getElementById('tournamentLobbyHeaderText').innerText = translations.tournamentLobbyHeaderText;
-	document.getElementById('rulesHeaderTournament').innerText = translations.rulesHeaderText;
-	document.getElementById('rulesArenaTextTournament').innerText = translations.rulesArenaText;
-	document.getElementById('rulesPointsTextTournament').innerText = translations.rulesPointsText;
-	document.getElementById('rulesPointsTextTournament').innerText = translations.rulesPointsText;
-	document.getElementById('rulesTimeTextTournament').innerText = translations.rulesTimerText;
-	document.getElementById('rulesPlayersTextTournament').innerText = translations.rulesMaxPlayersText;
-	document.getElementById('availableTournamentHeader').innerText = translations.availableTournamentHeader;
-	document.getElementById('joinTournamentLobbyButton').innerText = translations.join;
-	document.getElementById('cancelJoinTournamentLobbyButton').innerText = translations.cancel;
-	document.getElementById('rulesJoinHeaderTournament').innerText = translations.rulesHeaderText;
-	document.getElementById('rulesJoinArenaTextTournament').innerText = translations.rulesArenaText;
-	document.getElementById('rulesJoinPointsTextTournament').innerText = translations.rulesPointsText;
-	document.getElementById('rulesJoinTimeTextTournament').innerText = translations.rulesTimerText;
-	document.getElementById('rulesJoinPlayersTextTournament').innerText = translations.rulesMaxPlayersText;
+	document.getElementById('tournamentAskBackText').innerText = translations.tournamentAskBackText;
 	document.getElementById('modesLocalText').innerText = translations.modesLocalHeader;
 	document.getElementById('modesOnlineText').innerText = translations.modesOnlineHeader;
 	document.getElementById('2v2Text').innerText = translations.coopText;
@@ -136,6 +124,10 @@ export function updateHTML(translations)
 	document.getElementById('closeMiniProfileButton').innerHTML = translations.close;
 	document.getElementById('matchsPlayedMiniProfile').innerHTML = translations.gamesPlayed;
 	document.getElementById('winsMiniProfile').innerHTML = translations.gamesWon;
+	document.getElementById('confirmAddPlayerButton').innerHTML = translations.addPlayerTournament;
+	document.getElementById('cancelAddPlayerButton').innerHTML = translations.cancel;
+	document.getElementById('closeTournamentVictoryButton').innerHTML = translations.close;
+
 	
     document.querySelector('.gdpr').addEventListener('click', function(event) {
 		event.preventDefault();

@@ -1,5 +1,5 @@
-import { blockUserRequest, getBlockedList, getFriendsList } from "./apiFunctions.js";
-import { askAddFriendFunction, hideMessagesFrom, openNameContextMenu, removeFriendFunction, restoreMessagesFromUser, sendSystemMessage } from "./chat.js";
+import { blockUserRequest, getBlockedList, getFriendsList, unblockUserRequest } from "./apiFunctions.js";
+import { askAddFriendFunction, hideMessagesFrom, openNameContextMenu, restoreMessagesFromUser, sendSystemMessage } from "./chat.js";
 import { playerStats } from "./playerManager.js";
 import { getTranslation } from "./translate.js";
 
@@ -121,7 +121,7 @@ export function addBlockedUserDiv(userName)
     const removeButton = document.createElement('div');
     removeButton.classList.add('removeBlockedButton');
     removeButton.addEventListener('click', () => {
-        removeBlockedUser(userName);
+        unblockUser(userName);
     });
     newDiv.appendChild(removeButton);
 
@@ -301,12 +301,28 @@ export function blockUser(playerName)
             sendSystemMessage("youBlockedPlayer", playerName, true);
             hideMessagesFrom(playerName);
             addBlockedUserDiv(playerName);
-            removeFriendFunction(playerName); // seulement s'ils sont amis ??
+            // removeFriendFunction(playerName); // seulement s'ils sont amis ??
+
             // envoyer un signal a l'autre joueur pour lui dire qu'il a un nouvel ami
             // ensuite on cree le div avec addFriend()
         }
         else if (response.status == 409)
             sendSystemMessage("youAlreadyBlocked", playerName, true);
+    })
+    .catch((error) => {
+        console.error("Failed to get the friendship relation:", error);
+    });
+}
+
+export function unblockUser(playerName)
+{
+
+    unblockUserRequest(playerName)
+    .then((response) => {
+        if (response.status === 200) // unblocked
+        {
+            removeBlockedUser(playerName);
+        }
     })
     .catch((error) => {
         console.error("Failed to get the friendship relation:", error);

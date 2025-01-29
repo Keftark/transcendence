@@ -30,7 +30,7 @@ class EditBlocksView(APIView):
         return self.request.user.accountmodel
 
     def post(self, request, username=None):
-        user_profile = self.get_object()
+        user_profile = request.user.accountmodel
         blocked_profile = get_object_or_404(AccountModel, user__username=username)
 
         if user_profile.user.username == username:
@@ -43,10 +43,9 @@ class EditBlocksView(APIView):
         return Response(_('User successfully blocked.'), status.HTTP_201_CREATED)
 
     def delete(self, request, username=None):
-        user_profile = self.get_object()
+        user_profile = request.user.accountmodel
         blocked_profile = get_object_or_404(AccountModel, user__username=username)
-
-        if user_profile.username == username:
+        if user_profile.user.username == username:
             return Response(_('You can\'t unblock yourself.'), status.HTTP_400_BAD_REQUEST)
 
         block_record = BlockModel.objects.filter(blocker=user_profile, blocked=blocked_profile).first()

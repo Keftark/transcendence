@@ -1,4 +1,4 @@
-import { balle, BOUNDARY, getPlayer, finalHeight, PLAYER_HEIGHT } from "./levelLocal.js";
+import { balle, BOUNDARY, getPlayer, finalHeight } from "./levelLocal.js";
 import { getLevelState, isAnOnlineMode } from "./main.js";
 import { isMenuOpen, isSettingsOpen } from "./menu.js";
 import { playerStats } from "./playerManager.js";
@@ -57,7 +57,7 @@ export function boostPlayer(playerNbr)
 {
     if (playerNbr === 0)
     {
-        socketBoostPaddle();
+        socketBoostPaddle(); // WTF!!! it's the same thing
     }
     else
     {
@@ -323,7 +323,7 @@ export function setupPlayerMovement(player1, player2, player3, player4)
         checkPlayer1Movements(adjustedSpeed);
         if (levelState === LevelMode.ADVENTURE)
             checkBotMovements(adjustedSpeed);
-        else if (levelState === LevelMode.LOCAL)
+        else if (levelState === LevelMode.LOCAL || levelState === LevelMode.TOURNAMENT)
             checkPlayer2Movements(adjustedSpeed);
         else
         {

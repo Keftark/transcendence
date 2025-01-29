@@ -1,7 +1,8 @@
-import { askAddFriend, blockUserRequest, deleteFriend, getAccountUser, getIncomingFriendRequests, getOutgoingFriendRequests } from "./apiFunctions.js";
+import * as THREE from '../node_modules/.vite/deps/three.js';
+import { askAddFriend, deleteFriend, getAccountUser, getIncomingFriendRequests, getOutgoingFriendRequests } from "./apiFunctions.js";
 import { cheatCodes } from "./cheats.js";
 import { getDuelTargetPlayer, joinDuel } from "./duelPanel.js";
-import { addBlockedUserDiv, addFriend, addFriendDiv, addFriendRequest, addOutgoingFriendRequest, blockUser, checkAndRemoveFriend } from "./friends.js";
+import { addFriend, addFriendDiv, addFriendRequest, addOutgoingFriendRequest, blockUser, checkAndRemoveFriend } from "./friends.js";
 import { getPlayerPosition, id_players, isInGame } from "./levelLocal.js";
 import { openMiniProfile } from "./menu.js";
 import { getPlayerName, playerStats } from "./playerManager.js";
@@ -185,6 +186,20 @@ blockUserButton.addEventListener('click', () => {
     clickBlockUser();
 });
 
+export function displayWelcomeMessage()
+{
+    sendSystemMessage("welcomeMessage", "");
+    sendSystemMessage("typeHelp", "");
+}
+
+export function helpFunctionDisplay()
+{
+    receiveMessage("Help bot", getTranslation('helpBasicCommands'), false);
+    receiveMessage("Help bot", getTranslation('helpInGameCommands'), false);
+    // sendSystemMessage("helpBasicCommands", "");
+    // sendSystemMessage("helpInGameCommands", "");
+}
+
 function sendPrivateMessage()
 {
     if (!chatIsOpen)
@@ -219,15 +234,6 @@ export function clickBlockUser(playerName = "")
     closeNameContextMenu();
 }
 
-function clickPlayWith()
-{
-    // calls the mutiplayer (1vs1) game panel
-    // the left player is the caller, the right one is the invited player.
-    // on the screen, there is a text 'Waiting for <player>...' until he accepts the invitation.
-    // if the player accepts the invitation, he goes on the same panel and its informations are filled.
-    // if the player refuses, the panel disappears? or instead of the waiting player text, there is 
-}
-
 function clickOpenProfile()
 {
     console.log("Trying to open the " + selectedName + " profile");
@@ -245,8 +251,8 @@ export function askAddFriendFunction(playerName)
 {
     askAddFriend(playerName)
     .then((response) => {
-        console.log("Response: " + response);
-        console.log("Status: " + response.status);
+        // console.log("Response: " + response);
+        // console.log("Status: " + response.status);
         if (response.status == 200) // requete ami
         {
             sendSystemMessage("youSendRequest", playerName, true);
@@ -376,7 +382,7 @@ function createMessageElement(name, messageText, isPrivate, isASticker) {
     else if (!isASticker)
     {
         // console.trace("this is not a sticker");
-        messageContent.textContent = messageText;
+        messageContent.innerHTML = messageText;
         if (name != '')
             messageContent.style.color = playerStats.colors;
     }
@@ -441,11 +447,6 @@ function sendMessageRight(newMessage, playerName, isASticker, stickerName = "", 
     messageContent.classList.add('message-container-right');
 }
 
-function sendMessageMiddle(newMessage)
-{
-    newMessage.classList.add('message-middle');
-}
-
 // let messageCount = 0;
 // function sendRandomMessage(newMessage)
 // {
@@ -497,9 +498,14 @@ function checkNewMessage()
         chatBox.classList.add('hasNewMessage');
 }
 
+function appendMessage(message)
+{
+    messagesContainer.appendChild(message);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
 export function receiveMessage(playerName, message, isASticker, isPrivate = false, toPlayer = "")
 {
-    // console.log("Receiving message from: " + playerName + ": " + message + ". Sticker: " + isASticker + ". Private: " + isPrivate + ". To player: " + toPlayer);
     const newMessage = createMessageElement(playerName, message, isPrivate, isASticker);
     if (playerName === playerStats.nickname)
     {
@@ -510,10 +516,30 @@ export function receiveMessage(playerName, message, isASticker, isPrivate = fals
     }
     else
         sendMessageLeft(newMessage, playerName, isASticker, message, isPrivate);
-    messagesContainer.appendChild(newMessage);
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
     lastSender = playerName;
-    checkNewMessage();
+    if (playerName === "Help bot")
+    {
+        appendMessage(newMessage);
+        return;
+    }
+    else if (playerName != playerStats.nickname)
+    {
+        getAccountUser(playerName)
+        .then((response) => {
+            if (response.is_blocked)
+                newMessage.style.display = 'none';
+            else
+                checkNewMessage();
+            appendMessage(newMessage);
+        })
+        .catch((error) => {
+            console.error("Failed to get the friendship relation:", error);
+        });
+    }
+    else
+    {
+        appendMessage(newMessage);
+    }
 }
 
 /* 
@@ -754,21 +780,14 @@ function sendGameSticker(stickerName)
 }
 
 function convert3DTo2DScreenSpace(threejsPosition, camera, renderer) {
-    // Ensure the position is a THREE.Vector3 object (or convert it)
     if (!(threejsPosition instanceof THREE.Vector3)) {
         throw new Error('The position must be an instance of THREE.Vector3');
     }
-
-    // Project the 3D world position to normalized device coordinates (NDC)
     const vector = threejsPosition.clone().project(camera);
-
-    // Get the screen width and height
     const width = renderer.domElement.width;
     const height = renderer.domElement.height;
-
-    // Convert from NDC to screen space coordinates (in pixels)
-    const x = (vector.x * 0.5 + 0.5) * width;  // Convert to 0 to 1 range, then scale to pixel width
-    const y = -(vector.y * 0.5 + 0.5) * height; // Invert Y, then scale to pixel height
+    const x = (vector.x * 0.5 + 0.5) * width;
+    const y = -(vector.y * 0.5 + 0.5) * height;
 
     return { x, y };
 }
@@ -776,11 +795,10 @@ function convert3DTo2DScreenSpace(threejsPosition, camera, renderer) {
 
 export function receiveGameSticker(playerId, stickerName)
 {
-    console.log("receiving: " + stickerName + " from: " + playerId);
     let stickerPosition;
-    if (id_players.p1 === playerStats.id) // le joueur est a gauche
+    if (id_players[0] === playerStats.id)
         stickerPosition = convert3DTo2DScreenSpace(getPlayerPosition(1));
-    else if (id_players.p2 === playerStats.id) // le joueur est a droite
+    else if (id_players[1] === playerStats.id) // le joueur est a droite
         stickerPosition = convert3DTo2DScreenSpace(getPlayerPosition(2));
     const imgDiv = document.createElement('img');
     imgDiv.src = `static/stickers/${stickerName}.webp`;
@@ -793,8 +811,9 @@ export function receiveGameSticker(playerId, stickerName)
     document.body.appendChild(imgDiv);
 }
 
-document.getElementById('stickers-container').addEventListener('click', function() {
-    document.getElementById('stickers-container').style.display = 'none';
+stickersList.addEventListener('click', function() {
+    if (stickersList.classList.contains('centerClass'))
+        stickersList.style.display = 'none';
 });
 
 export function removeGameStickers()

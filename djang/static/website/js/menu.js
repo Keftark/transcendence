@@ -1,4 +1,4 @@
-import { getCSRFToken, getUserAvatar, getUserByName, uploadAvatar } from './apiFunctions.js';
+import { getCSRFToken, getMatchsLittleData, getUserAvatar, getUserByName, uploadAvatar } from './apiFunctions.js';
 import { clickChoosePaddleButton } from './customizeSkins.js';
 import { addMainEvents } from './eventsListener.js';
 import { isInGame, reinitLevelFunction, setCameraType, StartLevel } from './levelLocal.js';
@@ -8,6 +8,7 @@ import { getCurrentView, navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
 import { loadScores, removeAllScores } from './scoreManager.js';
 import { exitGameSocket } from './sockets.js';
+import { setCancelledInMatch } from './tournament.js';
 import { changeLanguage, getTranslation } from './translate.js';
 import { LevelMode, PlayerStatus } from './variables.js';
 
@@ -118,6 +119,7 @@ document.getElementById('closeSettingsButton').addEventListener('click', () => {
 
 document.getElementById('mainButton').addEventListener('click', () => {
     exitGameSocket();
+    setCancelledInMatch(true);
     clickBackButtonMenu();
 });
 
@@ -146,9 +148,9 @@ document.querySelectorAll('.mainMenuButton').forEach(button => {
   button.addEventListener('blur', hideImage);
 });
 
-//document.getElementById('profilePictureChangeButton').addEventListener('click', function() {
-//    document.getElementById('fileInput').click();
-//});
+document.getElementById('profilePictureChangeButton').addEventListener('click', function() {
+    document.getElementById('fileInput').click();
+});
 
 // document.getElementById('fileInput').addEventListener('change', function(event) {
 //     const file = event.target.files[0];
@@ -219,6 +221,15 @@ export function openMiniProfile(playerName)
         .catch((error) => {
             console.error("Failed to get user by name:", error);
     });
+
+    getMatchsLittleData(playerName)
+    .then((data) =>{
+        matchsPlayedMiniProfileValue.innerHTML = data.match_count;
+        winsMiniProfileValue.innerHTML = data.wins;
+    })
+    .catch((error) => {
+        console.error("Failed to get user by name:", error);
+    });
     // getUserScores(playerName)
     //     .then((target) => {
     //         miniProfilePicture.src = target.avatar;
@@ -228,8 +239,8 @@ export function openMiniProfile(playerName)
     // });
 
     // ca va dans la requete des scores.
-    matchsPlayedMiniProfileValue.innerHTML = "2";
-    winsMiniProfileValue.innerHTML = "1";
+    // matchsPlayedMiniProfileValue.innerHTML = "2";
+    // winsMiniProfileValue.innerHTML = "1";
 
     
     miniProfilePanel.style.display = 'flex';
@@ -251,6 +262,13 @@ export function openProfile(player = playerStats)
     if (player.isRegistered === false)
         return;
     profileIsOpen = true;
+    getUserAvatar(player.nickname)
+    .then((target) => {
+        profilePicture.src = target.avatar_url;
+    })
+    .catch((error) => {
+        console.error("Failed to get user by name:", error);
+});
     loadScores(player);
     document.getElementById('nameProfile').innerText = player.nickname;
     document.getElementById('firstNameProfile').innerText = player.firstName;
@@ -538,7 +556,7 @@ export function isProfileOpen()
 
 // add a way to save the image to the DB and check if the format is ok + no sql injection?
 // injec sql -> verifier metadata
-/*fileInput.addEventListener('change', (event) => {
+fileInput.addEventListener('change', (event) => {
     const file = event.target.files[0];
     if (file)
     {
@@ -549,9 +567,9 @@ export function isProfileOpen()
         };
         reader.readAsDataURL(file);
     }
-});*/
+});
 
-/*document.getElementById('profile-form').addEventListener("submit", function(e) {
+document.getElementById('profile-form').addEventListener("submit", function(e) {
     e.preventDefault();  // Prevent the default form submission
     
     var formData = new FormData(this);  // Create a FormData object to hold the file and form data
@@ -573,4 +591,4 @@ export function isProfileOpen()
     .catch(error => {
         console.error("Error uploading file", error);
     });
-});*/
+});

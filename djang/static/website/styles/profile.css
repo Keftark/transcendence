@@ -37,11 +37,35 @@
     align-self: center;
 }
 
+#miniProfilePicture
+{
+    width: 4rem;
+}
+
 #profilePicture
 {
     width: 10vh;
     height: 10vh;
     border: 2px solid black;
+}
+
+#headerProfile, #deleteProfile
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+
+#headerProfile
+{
+    padding-bottom: 1rem;
+}
+
+#deleteProfile
+{
+    position: absolute;
+    bottom: 0.5rem;
 }
 
 #profileInfos, #profileStats {
@@ -209,6 +233,11 @@
     border-color: rgb(98, 197, 164);
 }
 
+#fileInput
+{
+    display: none;
+}
+
 #miniProfilePanel
 {
     display: none;
@@ -268,4 +297,27 @@
 {
     margin: 0;
     font-size: 1rem;
+}
+
+#deleteProfile
+{
+    align-items: center;
+    gap: 0;
+}
+
+#deleteProfile p
+{
+    margin: 0;
+}
+
+#deleteProfileButton
+{
+    border: 3px solid #ff000047;
+    background-color: #ff00005c;
+    border-radius: 4px;
+}
+
+#deleteProfileButton img
+{
+    height: 32px;
 }

@@ -1,243 +1,170 @@
-import { addDisableButtonEffect, removeDisableButtonEffect, setLevelState } from "./main.js";
-import { showModeChoice } from "./modesSelection.js";
-import { getCurrentView, navigateTo } from "./pages.js";
+import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
+import { clickPlayGame, showModeChoice } from "./modesSelection.js";
+import { navigateTo } from "./pages.js";
 import { playerStats } from "./playerManager.js";
-import { getRules } from "./rules.js";
 import { getTranslation } from "./translate.js";
-import { ArenaType, LevelMode } from "./variables.js";
 
 const nbrPlayersTournament = document.getElementById('nbrPlayersTournament');
 const listplayersDiv = document.getElementById('listPlayersTournament');
 const startTournamentButton = document.getElementById('startTournamentButton');
-const rulesTextTournament = document.getElementById('rulesTextTournament');
-const listTournamentsDiv = document.getElementById('listTournaments');
-const rulesJoinTournamentDiv = document.getElementById('rulesJoinTournamentDiv');
-const createTournamentButton = document.getElementById('createTournament');
-const joinTournamentButton = document.getElementById('joinTournament');
+const addPlayerButton = document.getElementById('addPlayerTournament');
+const inputAddPlayer = document.getElementById('inputAddPlayer');
+const addPlayerTournamentPanel = document.getElementById('addPlayerTournamentPanel');
+const confirmAddPlayerButton = document.getElementById('confirmAddPlayerButton');
+const tournamentWinVictory = document.getElementById('tournamentWinVictory');
+const tournamentWinVictoryText = document.getElementById('tournamentWinVictoryText');
+const closeTournamentVictoryButton = document.getElementById('closeTournamentVictoryButton');
+const startMatchTournamentButton = document.getElementById('startMatchTournamentButton');
+const cancelMatchTournamentButton = document.getElementById('cancelMatchTournamentButton');
+const confirmBackTournamentButton = document.getElementById('confirmBackTournamentButton');
+const cancelBackTournamentButton = document.getElementById('cancelBackTournamentButton');
+const askBackTournamentViewPanel = document.getElementById('askBackTournamentViewPanel');
+
 
 let countPlayers = 0;
-let maxPlayers = 0;
-let tournamentLeader = "";
-let curSelectedTournament = "";
 
-document.getElementById('cancelTournamentButton').addEventListener('click', () => {
-    closeTournamentMenu();
+let players = [];
+
+let player1Name = "";
+let player2Name = "";
+
+export function getTournamentPlayers()
+{
+    return [player1Name, player2Name];
+}
+
+closeTournamentVictoryButton.addEventListener('click', () => {
+    closeTournamentView();
 });
 
-document.getElementById('cancelJoinTournamentLobbyButton').addEventListener('click', () => {
-    closeTournamentJoinMenu();
+cancelMatchTournamentButton.addEventListener('click', () => {
+    askBackTournamentView();
 });
 
-document.getElementById('joinTournamentLobbyButton').addEventListener('click', () => {
-    joinSpecificTournament();
+confirmBackTournamentButton.addEventListener('click', () => {
+    cancelBackTournamentView();
+    backTournamentView();
+});
+
+cancelBackTournamentButton.addEventListener('click', () => {
+    cancelBackTournamentView();
 });
 
 startTournamentButton.addEventListener('click', () => {
     startTournament();
 });
 
-document.getElementById('cancelTournamentLobbyButton').addEventListener('click', () => {
-    closeTournamentLobbyMenu();
+startMatchTournamentButton.addEventListener('click', () => {
+    startMatchTournament();
 });
 
-let previousPage = '';
+document.getElementById('cancelTournamentLobbyButton').addEventListener('click', () => {
+    quitTournamentLobby();
+});
 
-function animTournamentButtons()
+addPlayerButton.addEventListener('click', () => {
+    openAddPlayer();
+});
+
+confirmAddPlayerButton.addEventListener('click', () => {
+    confirmAddPlayer();
+});
+
+document.getElementById('cancelAddPlayerButton').addEventListener('click', () => {
+    cancelAddPlayerTournament();
+});
+
+inputAddPlayer.addEventListener('input', () => {
+
+    if (inputAddPlayer.value === "" || players.map(item => item.toUpperCase()).includes(inputAddPlayer.value.toUpperCase()))
+        addDisableButtonEffect(confirmAddPlayerButton);
+    else
+        removeDisableButtonEffect(confirmAddPlayerButton);
+});
+
+let addPlayerIsOpen = false;
+
+function startMatchTournament()
 {
-    createTournamentButton.classList.add('bigAppearAnim');
-    joinTournamentButton.classList.add('bigAppearAnim');
+    tournamentMatchsCanvas.style.display = 'none';
+    tournamentViewIsOpen = false;
+    clickPlayGame();
 }
 
-function resetTournamentButtons()
+export function quitTournamentLobby()
 {
-    createTournamentButton.classList.remove('bigAppearAnim');
-    joinTournamentButton.classList.remove('bigAppearAnim');
-    void createTournamentButton.offsetWidth;
-    void joinTournamentButton.offsetWidth;
-    animTournamentButtons();
+    showModeChoice();
+    deleteEveryone();
 }
 
-function closeTournamentButtons()
+export function isAddPlayerTournamentIsOpen()
 {
-    createTournamentButton.style.animationDirection = 'reverse';
-    joinTournamentButton.style.animationDirection = 'reverse';
-    resetTournamentButtons();
+    return addPlayerIsOpen;
 }
 
-function joinSpecificTournament()
+function confirmAddPlayer()
 {
-    previousPage = getCurrentView();
-    // select a tournament with getAttribute('name') on the selected item
+    addPlayerToTournament(inputAddPlayer.value);
+    cancelAddPlayerTournament();
+}
+
+export function cancelAddPlayerTournament()
+{
+    addPlayerIsOpen = false;
+    inputAddPlayer.value = "";
+    addPlayerTournamentPanel.style.display = 'none';
+    addPlayerButton.focus();
+}
+
+function openAddPlayer()
+{
+    addDisableButtonEffect(confirmAddPlayerButton);
+    addPlayerIsOpen = true;
+    addPlayerTournamentPanel.style.display = 'flex';
+    inputAddPlayer.focus();
+}
+
+export function openTournamentLobby()
+{
+    addDisableButtonEffect(startTournamentButton);
+    nbrPlayersTournament.innerText = countPlayers + " " + getTranslation('players');
     navigateTo('tournament-lobby');
 }
 
-export function onTournamentMenuOpen()
+export function onTournamentLobbyOpen()
 {
-    setLevelState(LevelMode.TOURNAMENTLOBBY);
-    document.getElementById('createTournamentButton').focus();
-    createTournamentButton.style.animationDirection = 'normal';
-    joinTournamentButton.style.animationDirection = 'normal';
-    animTournamentButtons();
-}
-
-function showTournamentRules()
-{
-    const rules = getRules();
-    maxPlayers = rules.nbrPlayers;
-    document.getElementById('rulesArenaValueTournament').textContent = ArenaType[rules.arena];
-    document.getElementById('rulesPointsValueTournament').textContent = rules.pointsToWin;
-    document.getElementById('rulesTimeValueTournament').textContent = rules.maxTime;
-    document.getElementById('rulesPlayersValueTournament').textContent = rules.nbrPlayers;
-}
-
-export function onTournamentLobbyOpen(otherVar)
-{
-    if (otherVar != null) // c'est le createur du tournoi
-    {
-        tournamentLeader = playerStats.nickname;
-        showTournamentRules();
-    }
-    // ajouter le joueur dans la base de donnees du tournoi
-    // recuperer dans la base de donnees la liste des joueurs presents et les ajouter
-    addPlayerToTournament(playerStats.nickname);
-}
-
-function getTournamentRules(tournament)
-{
-    // recuperer les valeurs des rules du tournoi et les mettre dans le struct ci-dessous
-    let rules =
-    {
-        pointsToWin: 3,
-        arena: ArenaType.CAVE,
-        maxTime: 0,
-        nbrPlayers: 0,
-    }
-    return rules;
-}
-
-function fillRulesInfos(tournament)
-{
-    const rules = getTournamentRules(tournament);
-    maxPlayers = rules.nbrPlayers;
-    document.getElementById('rulesJoinArenaValueTournament').textContent = ArenaType[rules.arena];
-    document.getElementById('rulesJoinPointsValueTournament').textContent = rules.pointsToWin;
-    document.getElementById('rulesJoinTimeValueTournament').textContent = rules.maxTime;
-    document.getElementById('rulesJoinPlayersValueTournament').textContent = rules.nbrPlayers;
-}
-
-function addTournamentInList(tournamentName)
-{
-    const tournamentDiv = document.createElement('button');
-    tournamentDiv.setAttribute('name', tournamentName);
-    tournamentDiv.addEventListener('click', function(event)
-    {
-        if (lastClickedTournament != null)
-            lastClickedTournament.classList.remove('selectedTournament');
-        lastClickedTournament = event.target;
-        curSelectedTournament = lastClickedTournament.getAttribute('name');
-        lastClickedTournament.classList.add('selectedTournament');
-        removeDisableButtonEffect(document.getElementById('joinTournamentLobbyButton'));
-    });
-    tournamentDiv.addEventListener('focus', function()
-    {
-        fillRulesInfos(tournamentName);
-        rulesJoinTournamentDiv.style.display = 'flex';
-    });
-    tournamentDiv.addEventListener('mouseenter', function()
-    {
-        fillRulesInfos(tournamentName);
-        rulesJoinTournamentDiv.style.display = 'flex';
-    });
-    tournamentDiv.addEventListener('mouseleave', function()
-    {
-        if (lastClickedTournament === null)
-            rulesJoinTournamentDiv.style.display = 'none';
-    });
-    tournamentDiv.addEventListener('blur', function()
-    {
-        if (lastClickedTournament === null)
-            rulesJoinTournamentDiv.style.display = 'none';
-    });
-    
-    tournamentDiv.classList.add('tournamentDiv');
-    const tournamentNameDiv = document.createElement('div');
-    tournamentNameDiv.classList.add('playerNameTournament');
-    tournamentNameDiv.textContent = tournamentName;
-    tournamentDiv.appendChild(tournamentNameDiv);
-    listTournamentsDiv.appendChild(tournamentDiv);
-}
-
-function getTournamentsFromDatabase()
-{
-    const names = ["coucou", "tournament", "again"];
-    // recuperation des noms dans la database, sous forme de tableau?
-    for(let i = 0; i < names.length; i++)
-        addTournamentInList(names[i]);
-}
-
-let lastClickedTournament;
-export function onTournamentJoinOpen()
-{
-    lastClickedTournament = null;
-    rulesJoinTournamentDiv.style.display = 'none';
-    // charger tous les tournois a partir de la database
-    getTournamentsFromDatabase();
-    addDisableButtonEffect(document.getElementById('joinTournamentLobbyButton'));
+    addPlayerButton.focus();
+    if (playerStats.isRegistered)
+        addPlayerToTournament(playerStats.nickname);
 }
 
 export function startTournament()
 {
     if (startTournamentButton.classList.contains('disabledButtonHover'))
         return;
-    // code pour lancer le tournoi
-}
-
-export function closeTournamentMenu()
-{
-    closeTournamentButtons();
-    setTimeout(() => {
-        showModeChoice();
-    }, 300);
+    createTournamentView();
+    displayNextMatch();
+    startMatchTournamentButton.focus();
 }
 
 function deleteEveryone()
 {
-    // suppression de tout le monde dans la base de donnees si c'est le leader qui quitte
     while (listplayersDiv.firstChild)
         listplayersDiv.removeChild(listplayersDiv.firstChild);
+    players.length = 0;
+    countPlayers = 0;
 }
 
-function deleteEveryTournament()
-{
-    while (listTournamentsDiv.firstChild)
-        listTournamentsDiv.removeChild(listTournamentsDiv.firstChild);
+function isPowerOfTwo(n) {
+    if (n <= 1) return false; // Power of 2 must be greater than 0
+    return (n & (n - 1)) === 0;
 }
 
-export function goTournamentMenu()
+function modPlayerCount(nbr)
 {
-    navigateTo('tournament-menu');
-}
-
-export function closeTournamentLobbyMenu()
-{
-    deleteEveryone();
-    if (playerStats.nickname === tournamentLeader)
-        goTournamentMenu();
-    else
-        navigateTo(previousPage);
-    // else go to the previous page
-}
-
-export function closeTournamentJoinMenu()
-{
-    deleteEveryTournament();
-    goTournamentMenu();
-}
-
-function addPlayerToCount()
-{
-    countPlayers++;
-    if (countPlayers === maxPlayers)
+    countPlayers += nbr;
+    nbrPlayersTournament.innerText = countPlayers + " " + getTranslation('players');
+    if (isPowerOfTwo(countPlayers))
         removeDisableButtonEffect(startTournamentButton);
     else
         addDisableButtonEffect(startTournamentButton);
@@ -245,13 +172,11 @@ function addPlayerToCount()
 
 export function addPlayerToTournament(playerName)
 {
-    addPlayerToCount();
-    nbrPlayersTournament.innerText = getTranslation('players') + " " + countPlayers + "/" + maxPlayers;
+    players.push(playerName);
+    modPlayerCount(1);
     const newPlayer = document.createElement('p');
     newPlayer.setAttribute('playerName', playerName);
     newPlayer.classList.add('playerTournament');
-    if (playerName === tournamentLeader)
-        newPlayer.classList.add('leaderTournament');
     const newPlayerName = document.createElement('div');
     newPlayerName.classList.add('playerNameTournament');
     newPlayerName.textContent = playerName;
@@ -260,7 +185,7 @@ export function addPlayerToTournament(playerName)
     const redCross = document.createElement('button');
     redCross.classList.add('redCrossButton');
     redCross.addEventListener('click', function() {
-        redCrossButtonClick(playerName);
+        redCrossButtonClick(newPlayer, playerName);
     });
     const redCrossImg = document.createElement('img');
     redCrossImg.src = '../static/icons/redCross.webp';
@@ -270,8 +195,312 @@ export function addPlayerToTournament(playerName)
     listplayersDiv.appendChild(newPlayer);
 }
 
-function redCrossButtonClick(playerName)
+function redCrossButtonClick(div, name)
 {
-    // on supprime le joueur du lobby, il revient donc a sa page precedente
-    // le nom du joueur est supprime dans la base de donnees et son bouton aussi
+    players = players.filter(str => str !== name);
+    modPlayerCount(-1);
+    div.remove();
 }
+
+let currentMatch = 
+{
+    player1: 0,
+    player2: 1
+};
+let currentTier = 0;
+
+let iteration = 0;
+let playersInTier = 0;
+const tournamentMatchsCanvas = document.getElementById('tournamentMatchsCanvas');
+
+let tiersList = []
+function createPlayersTier()
+{
+    const tierDiv = document.createElement('div');
+    tiersList.push(tierDiv);
+    tierDiv.classList.add('itemListTournament');
+    tournamentMatchsCanvas.appendChild(tierDiv);
+    return tierDiv;
+}
+
+let lastPlayer;
+function createPlayerInTier(parentDiv, isFirst, playerNbr)
+{
+    const childDiv = document.createElement('div');
+    childDiv.style.color = playerStats.colors;
+    if (isFirst)
+    {
+        childDiv.setAttribute('data-name', players[playerNbr]);
+        childDiv.innerText = players[playerNbr];
+    }
+    else
+    {
+        childDiv.innerText = "?";
+        lastPlayer = childDiv;
+    }
+    childDiv.classList.add('itemTournament');
+    parentDiv.appendChild(childDiv);
+}
+
+let canvasList = [];
+function createCanvasDiv()
+{
+    const canvasDiv = document.createElement('canvas');
+    canvasList.push(canvasDiv);
+    canvasDiv.classList.add('tournamentCanvas');
+    tournamentMatchsCanvas.appendChild(canvasDiv);
+}
+
+function drawOnCanvases() {
+    for (let i = 0; i < canvasList.length; i++) {
+        const canvas = canvasList[i];
+        const prev = canvas.previousElementSibling;
+        const next = canvas.nextElementSibling;
+        if (!prev || !next) {
+            console.warn(`Canvas at index ${i} is missing a previous or next sibling.`);
+            continue;
+        }
+        const prevElementsCount = prev.childElementCount;
+        const nextElementsCount = next.childElementCount;
+        if (prevElementsCount === 0 || nextElementsCount === 0) {
+            console.warn(`Canvas at index ${i} has siblings with no children.`);
+            continue;
+        }
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = '#006b6b';
+        ctx.lineWidth = 2;
+        let nextIndex = 0;
+        for (let j = 0; j < prevElementsCount; j++) {
+            const nextElement = next.children[nextIndex];
+            const rect1 = prev.children[j].getBoundingClientRect();
+            const rect2 = nextElement.getBoundingClientRect();
+            const y1 = rect1.top + rect1.height / 2;
+            const y2 = rect2.top + rect2.height / 2;
+            const x1 = rect1.right;
+            const x2 = rect2.left;
+            const distance = Math.abs(x2 - x1);
+            const controlDistance = distance * 0.4;
+            const controlX1 = x1 + controlDistance;
+            const midpointX = (x1 + x2) / 2;
+            const controlX2 = midpointX;
+            let controlY1, controlY2;
+            if (j % 2 === 0) {
+                controlY1 = y1 - 5;
+                controlY2 = y2 - 5;
+            } else {
+                controlY1 = y1 + 5;
+                controlY2 = y2 + 5;
+            }
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.bezierCurveTo(controlX1, controlY1, controlX2, controlY2, x2, y2);
+            ctx.stroke();
+            if ((j + 1) % 2 === 0) {
+                nextIndex++;
+                if (nextIndex >= nextElementsCount) {
+                    nextIndex = 0;
+                }
+            }
+        }
+    }
+}
+
+let last = false;
+let first = true;
+function createTournamentView()
+{
+    last = false;
+    first = true;
+    playersInTier = countPlayers;
+    // playersInTier = 8;
+    while (playersInTier > 0)
+    {
+        let curTierDiv = createPlayersTier();
+        for (let i = 0; i < playersInTier; i++)
+        {
+            createPlayerInTier(curTierDiv, first, i);
+        }
+        if (last === true)
+        {
+            tournamentMatchsCanvas.style.display = 'flex';
+            tournamentViewIsOpen = true;
+            drawOnCanvases();
+            return;
+        }
+        createCanvasDiv();
+        playersInTier /= 2;
+        if (playersInTier === 1)
+        {
+            last = true;
+        }
+        first = false;
+    }
+}
+
+let inAskCancelBack = false;
+
+export function isInAskBackTournamentView()
+{
+    return inAskCancelBack;
+}
+
+export function askBackTournamentView()
+{
+    inAskCancelBack = true;
+    askBackTournamentViewPanel.style.display = 'flex';
+    confirmBackTournamentButton.focus();
+}
+
+export function cancelBackTournamentView()
+{
+    inAskCancelBack = false;
+    askBackTournamentViewPanel.style.display = 'none';
+    startMatchTournamentButton.focus();
+}
+
+export function backTournamentView()
+{
+    currentTier = 0;
+    playersInTier = 0
+    currentMatch.player1 = 0;
+    currentMatch.player2 = 1;
+    while (canvasList.firstChild)
+        canvasList.removeChild(canvasList.firstChild);
+    canvasList.length = 0;
+    while (tiersList.firstChild)
+        tiersList.removeChild(tiersList.firstChild);
+    tiersList.length = 0;
+    while (tournamentMatchsCanvas.children.length > 1)
+        tournamentMatchsCanvas.removeChild(tournamentMatchsCanvas.lastChild);
+    tournamentViewIsOpen = false;
+    tournamentMatchsCanvas.style.display = 'none';
+    addPlayerButton.focus();
+}
+
+export function closeTournamentView()
+{
+    deleteEveryone();
+    backTournamentView();
+    tournamentWinVictory.style.display = 'none';
+}
+
+// function displayLostPlayer(playerName, tier)
+// {
+//     const children = canvasList[tier].children;
+//     for (let i = 0; i < children.length; i++) {
+//         if (children[i].getAttribute('data-name') === playerName)
+//         {
+//             children[i].classList.add('lost');
+//         }
+//     }
+// }
+
+function displayNextMatch()
+{
+    const child = tiersList[currentTier].children;
+    child[currentMatch.player1].classList.add('nextMatch');
+    child[currentMatch.player2].classList.add('nextMatch');
+    player1Name = child[currentMatch.player1].getAttribute('data-name');
+    player2Name = child[currentMatch.player2].getAttribute('data-name');
+}
+
+function goToNextTier()
+{
+    currentTier += 1;
+    currentMatch.player1 = 0;
+    currentMatch.player2 = 1;
+}
+
+function callVictory()
+{
+    tournamentWinVictoryText.innerText = lastPlayer.getAttribute('data-name') + getTranslation("isVictorious");
+    tournamentWinVictory.style.display = 'flex';
+}
+
+function prepareNextMatch()
+{
+    if (currentMatch.player2 >= tiersList[currentTier].children.length - 1)
+    {
+        goToNextTier();
+        if (currentTier === tiersList.length - 1)
+        {
+            callVictory();
+            console.log("End of tournament!");
+        }
+    }
+    else
+    {
+        currentMatch.player1+=2;
+        currentMatch.player2+=2;
+    }
+    displayNextMatch();
+}
+
+let winnerNbr;
+let tournamentViewIsOpen = false;
+
+export function isTournamentViewOpen()
+{
+    return tournamentViewIsOpen;
+}
+
+export function setWinnerNbr(nbr)
+{
+    winnerNbr = nbr;
+}
+
+let cancelledInMatch = false;
+
+export function setCancelledInMatch(isTrue)
+{
+    cancelledInMatch = isTrue;
+}
+
+export function endOfTournamentMatch()
+{
+    if (cancelledInMatch)
+    {
+        cancelledInMatch = false;
+        closeTournamentView();
+        return;
+    }
+    cancelledInMatch = false;
+    tournamentMatchsCanvas.style.display = 'flex';
+    tournamentViewIsOpen = true;
+    const item = tiersList[currentTier].children;
+    item[currentMatch.player1].classList.remove('nextMatch');
+    item[currentMatch.player2].classList.remove('nextMatch');
+    if (winnerNbr === 1)
+    {
+        item[currentMatch.player2].classList.add('lost');
+        if (currentTier + 1 < tiersList.length)
+        {
+            const child = tiersList[currentTier + 1].children[Math.floor(currentMatch.player2 / 2)];
+            const attribute = item[currentMatch.player1].getAttribute('data-name');
+            child.setAttribute('data-name', attribute)
+            child.textContent = attribute;
+        }
+    }
+    else
+    {
+        item[currentMatch.player1].classList.add('lost');
+        if (currentTier + 1 < tiersList.length)
+        {
+            const child = tiersList[currentTier + 1].children[Math.floor(currentMatch.player2 / 2)];
+            const attribute = item[currentMatch.player2].getAttribute('data-name');
+            child.setAttribute('data-name', attribute)
+            child.textContent = attribute;
+        }
+    }
+
+    prepareNextMatch();
+    setTimeout(() => {
+        startMatchTournamentButton.focus();
+    }, 10);
+}
+
+// createTournamentView();
+// setInterval(() => endOfTournamentMatch(1), 500);
