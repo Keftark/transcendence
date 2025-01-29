@@ -247,6 +247,30 @@ class Match:
         except Exception as e: #unknown JSON case, ignore it
             print(e)
 
+    def generate_invitation(self):
+        """Generate an invitation for the awaited player.
+        """
+        self._formatted_queue.append(self.dump_invitation())
+
+    def dump_invitation(self):
+        """Generates the dump for an invitation
+
+        Returns:
+            _type_: _description_
+        """
+        event = {
+            "type": "invite",
+            "server": "1v1_classic",
+            "answer": "yes",
+            "ids": [self._paddle_2.id],
+            "data": {
+                "type": "invite",
+                "from": self._paddle_1.id,
+                "room_id" : self._room_id
+            }
+        }
+        return event
+
     def dump_point(self, player):
         """Dump for a point scored.
 

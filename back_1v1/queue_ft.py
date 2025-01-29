@@ -31,10 +31,12 @@ class Queue:
                     return False
             user = User(_id, bl)
             if message["private"] == "invite":
+                invited = int(message["invited"])
                 self._room_id += 1
-                match = Match(self._room_id, _id, 0)
+                match = Match(self._room_id, _id, invited)
                 match.needs_to_wait = True
                 match.load_parameters(message["payload"])
+                match.generate_invitation()
                 self._private.append(match)
             elif message["private"] == "join":
                 _id = (int)(message["invited_by"])

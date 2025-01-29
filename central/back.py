@@ -11,6 +11,7 @@ import signal
 import pathlib
 import ssl
 import os
+import sys
 from signal import SIGPIPE, SIG_DFL
 from dataclasses import dataclass
 from websockets.asyncio.server import serve
@@ -505,7 +506,15 @@ def server_thread():
     """
     asyncio.run(server_listener())
 
+def signal_handler():
+    """Handles signals.
+    """
+    Sockets.STOP_FLAG = True
+    sys.exit(0)
+
 if __name__ == "__main__":
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
     logger.log("Central Server launched.", 0)
     try:
         connections = threading.Thread(target=connection_handler)
