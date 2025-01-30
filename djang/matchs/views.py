@@ -25,32 +25,34 @@ def create_match(request):
             # Extract data
             status = data.get('status', '')
             user_1 = data.get('player_1', '')
-            player_1 = AccountModel.objects.get(id=user_1)
+            player_1 = AccountModel.objects.filter(user__username=user_1).first()
             player_1_score = data.get('player_1_score', '')
-            player_2 = data.get('player_2', '')
+            user_2 = data.get('player_2', '')
+            player_2 = AccountModel.objects.filter(user__username=user_2).first()
             player_2_score = data.get('player_2_score', '')
             start_timestamp = data.get('start_timestamp', '')
             stop_timestamp = data.get('stop_timestamp', '')
             winner = data.get('winner', '')
+            win = AccountModel.objects.filter(user__username=winner).first()
 
             # Validation
 
             if player_1 and player_2 == 0:
                 return JsonResponse({'success': False, 'error': 'Missing required fields.'}, status=400)
 
-            # Create user
+            # Create match
             match = Match.objects.create(
                 finished = True,
                 started = False,
-                winner = winner,
-                match_id = 0,
-                online = False,
+                winner = win,
+                match_id = Match.objects.count(),
                 player_1 = player_1,
                 player_1_score = player_1_score,
-                player_2 = NULL,
+                player_2 = player_2,
                 player_2_score = player_2_score,
                 start_timestamp = start_timestamp,
                 stop_timestamp =  stop_timestamp,
+                status = status
             )
             match.save()
             return JsonResponse({'success': True, 'message': 'Match successfully created.'})
@@ -122,12 +124,14 @@ class HistoriqueViewSet(ViewSet):
             "wins": wins
         })
         for match in matchs:
-            player_1 = User.objects.get(username=match.player_1)
-            player_2 = User.objects.get(username=match.player_2)
+            player_1 = User.objects.filter(username=match.player_1).first()
+            player_2 = User.objects.filter(username=match.player_2).first()
+            player_1_name = player_1.username if player_1 else "anonymous"
+            player_2_name = player_2.username if player_2 else "anonymous"
             matches_data.append({
                 "id": match.id,
-                "player_1": player_1.username,
-                "player_2": player_2.username,
+                "player_1": player_1_name,
+                "player_2": player_2_name,
                 "winner": match.winner.user.username,
                 "player_1_score": match.player_1_score,
                 "player_2_score": match.player_2_score,

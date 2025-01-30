@@ -1,3 +1,4 @@
+import { sendMatch } from "./apiFunctions.js";
 import { fakeDatabase } from "./database.js";
 import { changeTextsColor } from "./menu.js";
 import { getRandomNumberBetween } from "./objects.js";
@@ -43,9 +44,11 @@ export function addMatchToHistory(victoryType, playerScore, opponentScore, oppon
     if (!playerStats.isRegistered)
         return;
     console.log("Adding match to history:\nplayer score: " + playerScore + "\nOpponent score: " + opponentScore + "\nOpponent name: " + opponentName);
-    setTimeout(() => {
-        playerStats.matches.push(new MatchResult(victoryType, playerScore, opponentScore, opponentName, matchTime));
-    }, 50);
+    if (victoryType === VictoryType.VICTORY)
+        sendMatch(playerStats.nickname, opponentName, playerScore, opponentScore, matchTime);
+    // setTimeout(() => {
+    //     playerStats.matches.push(new MatchResult(victoryType, playerScore, opponentScore, opponentName, matchTime));
+    // }, 50);
     // prendre le joueur depuis la base de donnees et inserer le nouveau score
 }
 

@@ -17,7 +17,7 @@ export function setTimeFromServer(timeFromServer)
 }
 
 // Function to format time as HH:MM:SS
-function formatTime(seconds) {
+export function formatTime(seconds) {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
@@ -76,6 +76,13 @@ export function resumeStopWatch()
     isPaused = false;
 }
 
+export function getRawMatchTime()
+{
+    if (baseTimer > 0)
+        return baseTimer - elapsedTime;
+    else
+        return elapsedTime;
+}
 export function getMatchTime()
 {
     if (baseTimer > 0)

@@ -466,18 +466,21 @@ export async function unblockUserRequest(userName) {
     }
 }
 
-export async function sendMatch()
+export async function sendMatch(name1, name2, score1, score2, timer)
 {
+    const winnerPlayer = score1 > score2 ? name1 : name2;
     // c'est un test !
     const data = {
+        finished: true,
+        started: false,
         status: 1,
-        player_1: playerStats.id,
-        player_1_score: 1,
-        player_2: 2,
-        player_2_score: 3,
-        start_timestamp: 10,
-        stop_timestamp: 1000,
-        winner: playerStats.id
+        player_1: name1,
+        player_1_score: score1,
+        player_2: name2,
+        player_2_score: score2,
+        start_timestamp: 0,
+        stop_timestamp: timer,
+        winner: winnerPlayer
     };
 
     // console.log(data);
@@ -536,7 +539,7 @@ export async function getMatchsFullData(userName) {
         throw new Error('Network response was not ok');
       
       const data = await response.json();
-      console.log(data);
+    //   console.log(data);
       return data;
     } catch (error) {
       console.error('Error:', error);

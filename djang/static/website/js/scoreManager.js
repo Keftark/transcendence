@@ -2,6 +2,7 @@ import { getMatchsFullData } from "./apiFunctions.js";
 import { endMatch } from "./levelLocal.js";
 import { getPlayerVictories, playerStats } from "./playerManager.js";
 import { checkPoints } from "./rules.js";
+import { formatTime } from "./timer.js";
 import { getTranslation } from "./translate.js";
 import { VictoryType } from "./variables.js";
 
@@ -133,7 +134,7 @@ export function loadScores(player = playerStats)
                 const timerContent = document.createElement('p');
                 timerContent.classList.add('score-timer');
                 timerContent.style.color = color;
-                timerContent.textContent = match.timer;
+                timerContent.textContent = formatTime(match.timer);
                 newContainer.appendChild(timerContent);
                 scoresContainer.appendChild(newContainer);
             }

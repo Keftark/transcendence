@@ -3,6 +3,7 @@ import { PLAYER_HEIGHT, PLAYER_RADIUS, BOUNDARY } from "./levelLocal.js";
 import { getLevelState } from './main.js';
 import { ArenaType, LevelMode } from './variables.js';
 import { GLTFLoader } from '../node_modules/.vite/deps/three_examples_jsm_loaders_GLTFLoader.js';
+import { playerStats } from './playerManager.js';
 
 let wallRight;
 
@@ -108,8 +109,8 @@ export function updatePlayerModel(oldPlayer) {
     );
 }
 
-let cylinderTexture1;
-let cylinderTexture2;
+let cylinderTexture1 = null;
+let cylinderTexture2 = null;
 
 export function setTextures(p1, p2)
 {
@@ -121,6 +122,12 @@ export function createPlayers(scene, textureLoader)
 {
     const levelState = getLevelState();
     const playerSize = levelState === LevelMode.MULTI ? PLAYER_HEIGHT / 1.5 : PLAYER_HEIGHT;
+    if (cylinderTexture1 === null)
+    {
+        const paddle = playerStats.currentPaddleSkin | 0;
+        cylinderTexture1 = `static/mat/player${paddle + 1}.png`;
+        cylinderTexture2 = `static/mat/player${paddle + 1}.png`;
+    }
     const tex1 = textureLoader.load(cylinderTexture1);
     const tex2 = textureLoader.load(cylinderTexture2);
     tex1.colorSpace = tex2.colorSpace = THREE.SRGBColorSpace;

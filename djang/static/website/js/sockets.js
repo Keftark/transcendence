@@ -476,6 +476,7 @@ export function addSocketListener()
         if ('id' in event && 'key' in event && event.id === playerStats.id)
         {
             keySocket = event.key;
+            return;
         }
         switch (event.type) {
 
@@ -624,8 +625,8 @@ export function addSocketListener()
         case "ping":
             break;
         default:
-            console.log("Undefined: " + data);
-            throw new Error(`Unsupported event type: ${event.type}.`);
+            console.log("Undefined event: " + data);
+            // throw new Error(`Unsupported event type: ${event.type}.`);
         }
     });    
 }

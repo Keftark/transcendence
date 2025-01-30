@@ -5,12 +5,11 @@ const paddleList = document.getElementById('choosePaddleList');
 
 
 document.getElementById('choosePaddle1Button').addEventListener('click', () => {
-    choosePaddleSkin(1);
+    choosePaddleSkin(0);
 });
 document.getElementById('choosePaddle2Button').addEventListener('click', () => {
-    choosePaddleSkin(2);
+    choosePaddleSkin(1);
 });
-
 
 let paddleChoiceIsOpen = false;
 

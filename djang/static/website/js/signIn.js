@@ -140,7 +140,6 @@ export function connectToServer()
     // loadBlocks();
     // displayWelcomeMessage();
 
-    // sendMatch(); // todo 
 }
 
 async function clickConfirmSignIn()

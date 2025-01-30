@@ -12,7 +12,7 @@ import { addMatchToHistory, getPlayerName, playerStats } from './playerManager.j
 import { getTranslation } from './translate.js';
 import { createSpaceLevel } from './levelSpace.js';
 import { createCaveLevel } from './levelCave.js';
-import { getMatchTime, isGamePaused, pauseStopWatch, resetStopwatch, resumeStopWatch, setStopWatch, startStopwatch, stopStopwatch } from './timer.js';
+import { getMatchTime, getRawMatchTime, isGamePaused, pauseStopWatch, resetStopwatch, resumeStopWatch, setStopWatch, startStopwatch, stopStopwatch } from './timer.js';
 import { closeGameMenu, setHeaderVisibility } from './menu.js';
 import { getRules } from './rules.js';
 import { ArenaType, LevelMode, PlayerStatus, VictoryType } from './variables.js';
@@ -875,7 +875,7 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
     if (currentLevelMode === LevelMode.TOURNAMENT)
         setWinnerNbr(winnerNbr);
     if (!isSpectator())
-        addMatchToHistory(victoryType, scorePlayer, scoreOpponent, opponentName, getMatchTime());
+        addMatchToHistory(victoryType, scorePlayer, scoreOpponent, opponentName, getRawMatchTime());
     pressPlayDiv.style.display = 'none';
     stopStopwatch();
     deathSphereGrew = false;

@@ -1,5 +1,6 @@
 .score-container
 {
+    position: relative;
     display: flex;
     width: 98%;
     height: 5vh;
