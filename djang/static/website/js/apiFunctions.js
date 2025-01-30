@@ -190,43 +190,35 @@ export async function getUserAvatar(userName) {
     }
 }
 
-export async function uploadAvatar(username, url_picture)
-{
-    console.log("Caca :: " + username + ", img ::" + url_picture)
-    const data = new FormData();
-    data.append('username', username);
-    console.log("url: ", url_picture);
-    data.append('url', url_picture); //<----- Le probleme vient de la
-    console.log("Boujou");
-    console.log(data);
-    // console.log("Token: ", getCSRFToken());
-    // console.log(data);
+// export async function uploadAvatar(username, url_picture)
+// {
+//     const data = new FormData();
+//     data.append('username', username);
+//     data.append('url', url_picture); //<----- Le probleme vient de la
+//     console.log(data);
+//     try {
+//         const response = await fetch(`/uploadavatar/`, {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//                 'X-CSRFToken': getCSRFToken() // Ensure CSRF protection
+//             },
+//             body: data
+//         });
+//         // Check if the response is OK (status 200-299)
+//         if (!response.ok) {
+//             const errorResult = await response.json();  // Parse the error message in JSON
+//             alert(errorResult.message);  // Display the error message to the user
+//         } else {
+//             // const result = await response.json();  // Parse the success response in JSON
+//             // console.log(result);
+//         }
 
-    try {
-        console.log("On est la")
-        const response = await fetch(`/uploadavatar/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCSRFToken() // Ensure CSRF protection
-            },
-            body: data
-        });
-        console.log("ca va ca vient")
-        // Check if the response is OK (status 200-299)
-        if (!response.ok) {
-            const errorResult = await response.json();  // Parse the error message in JSON
-            alert(errorResult.message);  // Display the error message to the user
-        } else {
-            // const result = await response.json();  // Parse the success response in JSON
-            // console.log(result);
-        }
-
-    } catch (error) {
-        console.log("Aye aye aye")
-        console.error('Error during upload:', error);
-    }
-}
+//     } catch (error) {
+//         console.log("Aye aye aye")
+//         console.error('Error during upload:', error);
+//     }
+// }
 
 export async function getUserScores(userName) {
     if (!userName) {

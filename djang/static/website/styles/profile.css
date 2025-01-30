@@ -215,7 +215,7 @@
     height: calc(1.5vw + 1.5vh);
 }
 
-.profilePictureChangeButton
+/* .profilePictureChangeButton
 {
     background-color: #00302d;
     border: 1px solid #40977a;
@@ -231,7 +231,7 @@
 {
     background-color: #005e57;
     border-color: rgb(98, 197, 164);
-}
+} */
 
 
 #miniProfilePanel

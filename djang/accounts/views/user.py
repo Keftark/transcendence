@@ -14,6 +14,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.decorators import login_required
 from dotenv import load_dotenv
+from django.core.files.storage import FileSystemStorage
+from django.conf import settings
 
 # Load environment variables from .env file
 load_dotenv()
@@ -131,15 +133,6 @@ def get_logged_in_user(request):
     else:
         return JsonResponse({'error': 'User is not logged in.'}, status=403)
 
-def get_user_scores(request, username):
-    try:
-        user = User.objects.get(username=username)
-        return JsonResponse({
-            'games': user.accountmodel.avatar
-        })
-    except User.DoesNotExist:
-        return JsonResponse({'error': 'User not found'}, status=404)
-
 def get_user_avatar(request, username):
     try:
         # Get the user by username
@@ -241,29 +234,25 @@ def login_user(request):
 
     return JsonResponse({"message": "Invalid request method"}, status=405)
 
-@login_required
-def upload_avatar(request):
-    print("Coucou")
-    print(f"Request method: {request.method}")
-    print(f"Request FIELDS: {request.FILES}")
+def upload_image(request):
+    if request.method == 'POST' and request.FILES.get('image'):
+        image = request.FILES['image']
+        fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
-    if request.method == "POST":
-        print("OUILLE : ", request)
-        if 'fileInput' in request.FILES:
-            profile_picture = request.FILES['fileInput']
-            print(f"Received file: {profile_picture.name} (size: {profile_picture.size} bytes)")
+        # Save the image with the sanitized filename
+        filename = fs.save(image.name, image)
+        uploaded_file_url = fs.url(filename)
+        
+        # Retrieve the user and update the avatar field
+        user = request.user
+        user.accountmodel.avatar = fs.url(filename)  # This gets the file object for the avatar
+        user.accountmodel.save()  # Save the model instance
 
-            # Save the file to the user’s avatar field
-            user = request.user
-            user.accountmodel.avatar = profile_picture
-            user.save()
-            return JsonResponse({"message": "Uploaded successfully"}, status=200)
-        else:
-            print("No file found in request.FILES")
-            return JsonResponse({"message": "No file uploaded"}, status=400)
+        return JsonResponse({'success': True, 'url': uploaded_file_url})
 
-    return JsonResponse({"message": "Invalid request method"}, status=405)
-
+    else:
+        return JsonResponse({'success': False, 'message': 'No image uploaded.'})
+      
 class UpdateProfileView(UpdateAPIView):
 
     queryset = User.objects.all()

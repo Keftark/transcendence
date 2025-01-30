@@ -37,7 +37,6 @@ urlpatterns = [
     path('check-login/', user.check_user_login, name='check_user_login'),
     path('current_user', user.get_logged_in_user, name='current_user'),
     path('useravatar/<str:username>/', user.get_user_avatar, name='user_avatar'),
-    path('uploadavatar/', user.upload_avatar, name='user_uploadavatar'),
     path('user_paddle/<int:user_id>/', user.get_user_paddle, name='user_paddle'),
     path('get-user/<str:username>/', user.get_user_by_name, name='get-user-by-name'),
     path('user/<int:user_id>/', user.get_user_by_id, name='user_detail'),
@@ -49,12 +48,11 @@ urlpatterns = [
     path("friends", GetFriendsView.as_view(), name="friends_list_page"), # Friends list page
     path("blocked", GetBlocksView.as_view(), name="blocks_list_page"), # Friends list page
     path("block_user/<str:username>", EditBlocksView.as_view(), name="blocks_user"), # Block user
-
+    path('upload/', user.upload_image, name='upload_image'),
     path("retrieve_account/<str:username>", AccountViewSet.as_view({'get': 'retrieve'}), name='retrieve_account'),
     path("delete_friend/<str:username>", EditFriendView.as_view(), name='delete_friend'),
     path("send_friend_request/<str:username>", EditFriendView.as_view(), name='send_friend_request'),
     path("incoming_friend_requests", GetIncomingFriendRequestView.as_view(), name="incoming_friend_requests"), #list of incoming friends requests
     path("outgoing_friend_requests", GetOutgoingFriendRequestView.as_view(), name="outgoing_friend_requests"), #list of outgoing friends requests
 ]
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

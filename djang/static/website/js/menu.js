@@ -1,4 +1,4 @@
-import { getCSRFToken, getMatchsLittleData, getUserAvatar, getUserByName, uploadAvatar } from './apiFunctions.js';
+import { getCSRFToken, getMatchsLittleData, getUserAvatar, getUserByName } from './apiFunctions.js';
 import { clickChoosePaddleButton } from './customizeSkins.js';
 import { addMainEvents } from './eventsListener.js';
 import { isInGame, reinitLevelFunction, setCameraType, StartLevel } from './levelLocal.js';
@@ -34,7 +34,7 @@ const mainMenuPanel = document.getElementById('mainMenuPanel');
 const toggleCameraText = document.getElementById('cameraTypeHeader');
 const gameSettingsButton = document.getElementById('settingsButton');
 const profilePicture = document.getElementById('profilePicture');
-const fileInput = document.getElementById('fileInput');
+// const fileInput = document.getElementById('fileInput');
 const profileButton = document.getElementById('buttonProfile');
 const miniNicknameText = document.getElementById('nameMiniProfile');
 const miniProfilePicture = document.getElementById('miniProfilePicture');
@@ -156,25 +156,66 @@ document.querySelectorAll('.mainMenuButton').forEach(button => {
   button.addEventListener('blur', hideImage);
 });
 
-document.getElementById('profilePictureChangeButton').addEventListener('click', async function() {
-    console.log("Bite")
-    //requette post la
-    const fileInput = document.getElementById('fileInput');
+document.getElementById('uploadForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent form from submitting the traditional way
     
-    if (fileInput.files.length > 0) {
-        const file = fileInput.files[0]; // Get the first file
-        const imageUrl = URL.createObjectURL(file); // Create a URL for preview
-
-        console.log("File selected:", file);
-        console.log("File URL:", imageUrl);
-
-        await uploadAvatar("Caca", imageUrl)
-    }
-    else
-    {
-        console.log("No file selected.");
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0]; // Get the selected file
+    
+    if (file) {
+        const formData = new FormData();
+        formData.append('image', file); // Append file to form data
+        // Send file to the server using Fetch API
+        fetch('/upload/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCSRFToken()
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('status').textContent = 'Upload successful!';
+            } else {
+                document.getElementById('status').textContent = 'Upload failed!';
+            }
+        })
+        .catch(error => {
+            document.getElementById('status').textContent = 'Error during upload!';
+            console.error('Error:', error);
+        });
+    } else {
+        document.getElementById('status').textContent = 'Please select a file to upload.';
     }
 });
+
+// document.getElementById('fileInput').addEventListener('change', function(event)
+// {
+
+//     if (event.target.files.length > 0)
+//     {
+//         const file = event.target.files[0]; // Get the first file
+//         console.log(file);
+//         if (file) {
+//             const imageUrl = URL.createObjectURL(file); // Create a URL for preview
+//             console.log("File name: " + file.name);
+//             console.log("File path: " + imageUrl);
+//             const reader = new FileReader();
+    
+//             // When the file is successfully read
+//             reader.onload = function() {
+//                 uploadAvatar(playerStats.nickname, file);
+//             };
+//             reader.readAsDataURL(file);
+//         }
+
+//     }
+//     else
+//     {
+//         console.log("No file selected.");
+//     }
+// });
 
 // document.getElementById('fileInput').addEventListener('change', function(event) {
 //     const file = event.target.files[0];
@@ -288,6 +329,7 @@ export function openProfile(player = playerStats)
     profileIsOpen = true;
     getUserAvatar(player.nickname)
         .then((target) => {
+            console.log(target);
             profilePicture.src = target.avatar_url;
         })
         .catch((error) => {
@@ -580,39 +622,39 @@ export function isProfileOpen()
 
 // add a way to save the image to the DB and check if the format is ok + no sql injection?
 // injec sql -> verifier metadata
-fileInput.addEventListener('change', (event) => {
-    const file = event.target.files[0];
-    if (file)
-    {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-        profilePicture.src = e.target.result;
-        // uploadAvatar(playerStats.nickname, e.target.result);
-        };
-        reader.readAsDataURL(file);
-    }
-});
+// fileInput.addEventListener('change', (event) => {
+//     const file = event.target.files[0];
+//     if (file)
+//     {
+//         const reader = new FileReader();
+//         reader.onload = (e) => {
+//         profilePicture.src = e.target.result;
+//         // uploadAvatar(playerStats.nickname, e.target.result);
+//         };
+//         reader.readAsDataURL(file);
+//     }
+// });
 
-document.getElementById('profile-form').addEventListener("submit", function(e) {
-    e.preventDefault();  // Prevent the default form submission
+// document.getElementById('profile-form').addEventListener("submit", function(e) {
+//     e.preventDefault();  // Prevent the default form submission
     
-    var formData = new FormData(this);  // Create a FormData object to hold the file and form data
-    for (var pair of formData.entries()) {
-        console.log("Pairs: " + pair[0]+ ', ' + pair[1]);
-    }
-    fetch('/uploadavatar/', {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': getCSRFToken()
-        },
-        body: formData
-    })
-    .then(response => response.json())  // Assuming server responds with JSON
-    .then(data => {
-        console.log("Upload successful", data);
-        // Handle successful upload (e.g., update UI, show a success message)
-    })
-    .catch(error => {
-        console.error("Error uploading file", error);
-    });
-});
+//     var formData = new FormData(this);  // Create a FormData object to hold the file and form data
+//     for (var pair of formData.entries()) {
+//         console.log("Pairs: " + pair[0]+ ', ' + pair[1]);
+//     }
+//     fetch('/uploadavatar/', {
+//         method: 'POST',
+//         headers: {
+//             'X-CSRFToken': getCSRFToken()
+//         },
+//         body: formData
+//     })
+//     .then(response => response.json())  // Assuming server responds with JSON
+//     .then(data => {
+//         console.log("Upload successful", data);
+//         // Handle successful upload (e.g., update UI, show a success message)
+//     })
+//     .catch(error => {
+//         console.error("Error uploading file", error);
+//     });
+// });

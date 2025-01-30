@@ -84,7 +84,7 @@ export function checkEscapeKey()
 
 function changeCursors()
 {
-    const buttons = document.querySelectorAll('button, input[type="checkbox"], .arena, #showPasswordButton, #showConfirmPasswordButton, #header-title, #profilePictureChangeButton, a, #askSignIn, #askRegister, #friendsHeader');
+    const buttons = document.querySelectorAll('button, input[type="checkbox"], .arena, #showPasswordButton, #showConfirmPasswordButton, #header-title, a, #askSignIn, #askRegister, #friendsHeader');
     buttons.forEach(button => {
         button.style.cursor = "url('./static/icons/cursor-button.webp'), pointer";
     });

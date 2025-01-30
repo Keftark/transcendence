@@ -110,7 +110,6 @@ export function updateHTML(translations)
 	document.getElementById('modesOnlineText').innerText = translations.modesOnlineHeader;
 	document.getElementById('2v2Text').innerText = translations.coopText;
 	document.getElementById('rulesIsPrivateText').innerText = translations.rulesIsPrivateInput;
-	document.getElementById('profilePictureChangeButton').innerText = translations.profilePictureChangeButton;
 	document.getElementById('friendsHeader').innerText = translations.friendsHeader;
 	document.getElementById('blockUserButton').innerText = translations.blockUserButton;
 	document.getElementById('consent-text').innerHTML = translations.consentText;
@@ -166,7 +165,7 @@ export async function changeLanguage(lang)
   	}
 	catch (error)
 	{
-		console.error('Error changing language:', error);
+		console.trace('Error changing language:', error);
   	}
 }
 
