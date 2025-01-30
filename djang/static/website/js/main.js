@@ -208,7 +208,7 @@ export function openSocket()
     socket.onerror = (error) => console.log("Websocket Error:", error);
 
     listener.onopen = function() {
-        console.log("WebSocket connected");
+        console.log("WebSocket listener connected");
         connectToServerOutput();
         loadFriends();
         loadBlocks();
@@ -217,7 +217,7 @@ export function openSocket()
     
     listener.onclose = function() {
         listener = null;
-        console.log('WebSocket closed');
+        console.log('WebSocket listener closed');
     };
     listener.onerror = (error) => console.log("Websocket Listener Error:", error);
     

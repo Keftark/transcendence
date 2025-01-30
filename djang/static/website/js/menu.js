@@ -287,12 +287,12 @@ export function openProfile(player = playerStats)
         return;
     profileIsOpen = true;
     getUserAvatar(player.nickname)
-    .then((target) => {
-        profilePicture.src = target.avatar_url;
-    })
-    .catch((error) => {
-        console.error("Failed to get user by name:", error);
-});
+        .then((target) => {
+            profilePicture.src = target.avatar_url;
+        })
+        .catch((error) => {
+            console.error("Failed to get user by name:", error);
+        });
     loadScores(player);
     document.getElementById('nameProfile').innerText = player.nickname;
     document.getElementById('firstNameProfile').innerText = player.firstName;

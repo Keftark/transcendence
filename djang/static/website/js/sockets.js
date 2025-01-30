@@ -464,7 +464,7 @@ export function socketUnspectateMatch()
 export function addSocketListener()
 {
     listener.addEventListener("message", ({ data }) => {
-        console.log(data);
+        // console.log(data);
         let event;
         try {
             event = JSON.parse(data);
@@ -618,9 +618,13 @@ export function addSocketListener()
             if (event.invited === playerStats.id)
                 console.log("Invitation recue");
             break;
+        case "crash":
+            console.log(data);
+            break;
         case "ping":
             break;
         default:
+            console.log("Undefined: " + data);
             throw new Error(`Unsupported event type: ${event.type}.`);
         }
     });    

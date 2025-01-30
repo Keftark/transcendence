@@ -11,7 +11,6 @@ import signal
 import pathlib
 import ssl
 import os
-import sys
 from signal import SIGPIPE, SIG_DFL
 from dataclasses import dataclass
 from websockets.asyncio.server import serve
@@ -53,8 +52,8 @@ ssl_client.load_verify_locations(localhost_pem)
 def dump_health():
     """Dumps the status of the subprocesses sockets."""
     event = {
-        "chat_server": Sockets.SOCKET_CHAT is not None,
-        "1v1_classic_server": Sockets.SOCKET_1V1 is not None,
+        "chat_server": True if Sockets.SOCKET_CHAT is not None else False,
+        "1v1_classic_server": True if Sockets.SOCKET_1V1 is not None else False,
     }
     return event
 
@@ -62,7 +61,7 @@ def dump_player_status(_id):
     """Dumps the status of a player.
 
     Args:
-        _id int: identifier of the player
+        _id (int): identifier of the player
 
     Returns:
         dict | None: a dump of the player's status, or None if no player is bound to the ID.
@@ -77,7 +76,7 @@ def dump_blacklist(_id, name, user):
     to a blacklisted user.
 
     Args:
-        _id int: id of the blacklisted user.
+        _id (int): id of the blacklisted user.
         user (User) : user sending the message
 
     Returns:
@@ -91,35 +90,6 @@ def dump_blacklist(_id, name, user):
         "block_name" : user.name
     }
     return event
-
-def dump_server_crashed(name):
-    """Dumps the event of a server crashing to all users.
-    Wooops.
-
-    Args:
-        server (string): which server crashed
-
-    Returns:
-        dict: Dumped event.
-    """
-    event = {
-        "type": "crash",
-        "server": name
-    }
-    return event
-
-async def broadcast(data):
-    """Sends a message to every single user
-    connected.
-
-    Args:
-        data (dict): Message to send.
-    """
-    for user in userList:
-        try:
-            await user.send(json.dumps(data))
-        except Exception as e:
-            logger.log("", 2, e)
 
 def key_generator(size=36, chars=string.ascii_uppercase + string.digits):
     """Generates a random unique key identifier.
@@ -148,7 +118,7 @@ def key_check(_id, key):
     """Check if the given key matches the player's
 
     Args:
-        _id int: identifier of the player.
+        _id (int): identifier of the player.
         key (string): the key to check.
 
     Returns:
@@ -161,102 +131,6 @@ def key_check(_id, key):
             return False
     return False
 
-async def answers_game_1v1(event):
-    """Handle answers for the 1v1 game mode.
-
-    Args:
-        event (dict): contains event data.
-    """
-    for id_f in event["ids"]:
-        _id = int(id_f)
-        data = event["data"]
-        for user in userList:
-            if user.id == _id:
-                try:
-                    if event["type"] == "list_all":
-                        await user.send(json.dumps(event))
-                    else:
-                        await user.send(json.dumps(data))
-                except Exception as e:
-                    logger.log("", 2, e)
-                if data["type"] == "join_queue":
-                    user.game = "1v1_classic"
-                    user.status = "queue"
-                    user.room_id = -1
-                elif data["type"] == "exit_queue":
-                    user.game = "none"
-                    user.status = "here"
-                    user.room_id = -1
-                elif data["type"] == "match_init":
-                    user.status = "playing"
-                    user.room_id = int(data["room_id"])
-                elif data["type"] == "victory":
-                    user.game = "none"
-                    user.status = "here"
-                    user.room_id = -1
-
-async def answers_game_2v2(event):
-    """Handle answers for the 2v2 game mode.
-
-    Args:
-        event (dict): event data.
-    """
-    for id_f in event["ids"]:
-        _id = int(id_f)
-        data = event["data"]
-        for user in userList:
-            if user.id == _id:
-                try:
-                    if event["type"] == "list_all":
-                        await user.send(json.dumps(event))
-                    else:
-                        await user.send(json.dumps(data))
-                except Exception as e:
-                    logger.log("", 2, e)
-                if data["type"] == "join_queue":
-                    user.game = "2v2_classic"
-                    user.status = "queue"
-                    user.room_id = -1
-                elif data["type"] == "exit_queue":
-                    user.game = "none"
-                    user.status = "here"
-                    user.room_id = -1
-                elif data["type"] == "match_init":
-                    user.status = "playing"
-                    user.room_id = int(data["room_id"])
-                elif data["type"] == "victory":
-                    user.game = "none"
-                    user.status = "here"
-                    user.room_id = -1
-
-async def answers_chat(event, _type):
-    """Handles special chat event cases.
-
-    Args:
-        event (dict): event data.
-    """
-    if _type in ["message", "sticker"]:
-        _id = int(event["id"])
-        for user in userList:
-            if user.id != _id and user.is_blacklisted(_id) is False:
-                await user.send(json.dumps(event))
-    elif _type in ["room_message", "room_sticker"]:
-        _id = int(event["id"])
-        for user in userList:
-            if user.id != _id and user.status == event["game"] \
-                        and user.room == int(event["room_id"]):
-                await user.send(json.dumps(event))
-    elif _type in ["private_message", "private_sticker"]:
-        _id = int(event["id"])
-        for user in userList:
-            if user.id == _id and user.is_blacklisted(_id) is False:
-                await user.send(json.dumps(event))
-            elif user.is_blacklisted(_id) is True:
-                for uss in userList:
-                    if uss.id == event["sender"]:
-                        await uss.send(json.dumps(dump_blacklist(_id, uss.name, user)))
-                        break
-
 # Transfere la reponse du serveur au client
 async def handle_answers(event):
     """Handles an answer; a query from a subprocess for a user.
@@ -267,14 +141,59 @@ async def handle_answers(event):
     _type = event["type"]
     _server = event["server"]
     if _server == "1v1_classic":
-        await answers_game_1v1(event)
-    elif _server == "2v2_classic":
-        await answers_game_2v2(event)
-    elif _type in ["message", "sticker", "room_message",
-                   "room_sticker", "private_message", "private_sticker"]:
-        answers_chat(event, _type)
+        for id_f in event["ids"]:
+            _id = (int)(id_f)
+            data = event["data"]
+            for user in userList:
+                if user.id == _id:
+                    if event["type"] == "list_all":
+                        try:
+                            await user.send(json.dumps(event))
+                        except Exception as e:
+                            logger.log("", 2, e)
+                        continue
+                    try:
+                        await user.send(json.dumps(data))
+                    except Exception as e:
+                        logger.log("", 2, e)
+                    if data["type"] == "join_queue":
+                        user.game = "1v1_classic"
+                        user.status = "queue"
+                        user.room_id = -1
+                    elif data["type"] == "exit_queue":
+                        user.game = "none"
+                        user.status = "here"
+                        user.room_id = -1
+                    elif data["type"] == "match_init":
+                        user.status = "playing"
+                        user.room_id = (int)(data["room_id"])
+                    elif data["type"] == "victory":
+                        user.game = "none"
+                        user.status = "here"
+                        user.room_id = -1
+    elif _type == "message" or _type == "sticker":
+        _id = (int)(event["id"])
+        for user in userList:
+            if user.id != _id and user.is_blacklisted(_id) is False:
+                await user.send(json.dumps(event))
+    elif _type == "room_message" or _type == "room_sticker":
+        _id = (int)(event["id"])
+        for user in userList:
+            if user.id != _id and user.status == event["game"] \
+                        and user.room == (int)(event["room_id"]):
+                await user.send(json.dumps(event))
+    elif _type in ["private_message", "private_sticker"]:
+        _id = (int)(event["id"])
+        for user in userList:
+            if user.id == _id and user.is_blacklisted(_id) is False:
+                await user.send(json.dumps(event))
+            elif user.is_blacklisted(_id) is True:
+                for uss in userList:
+                    if uss.id == event["sender"]:
+                        await uss.send(json.dumps(dump_blacklist(_id, uss.name, user)))
+                        break
     else:
-        _id = int(event["id"])
+        _id = (int)(event["id"])
         for user in userList:
             if user.id == _id:
                 await user.send(json.dumps(event))
@@ -293,7 +212,7 @@ async def handle_transfer(event):
     for user in userList:
         if user.id == _id:
             if user.key != event["key"]:
-                logger.log("User with ID :: " + str(_id), 2, "Key not matching")
+                logger.log("User with ID :: " + str(_id), 3, "Key not matching")
                 return
             break
     if _server == "chat":
@@ -306,14 +225,12 @@ async def handle_transfer(event):
         except Exception as e:
             logger.log("", 2, e)
             Sockets.SOCKET_CHAT = None
-            await broadcast(dump_server_crashed("chat"))
     elif _server == "1v1_classic":
         try:
             await Sockets.SOCKET_1V1.send(json.dumps(event))
         except Exception as e:
             logger.log("", 2, e)
             Sockets.SOCKET_1V1 = None
-            await broadcast(dump_server_crashed("1v1"))
 
 async def handle_log(websocket, event):
     """Handles a connecting user.
@@ -322,7 +239,7 @@ async def handle_log(websocket, event):
         websocket (WebSocket): the websocket for the user.
         event (List): A list containing the query's data.
     """
-    _id = int(event["id"])
+    _id = (int)(event["id"])
     for user in userList:
         if user.id == _id:
             return
@@ -348,7 +265,6 @@ async def handle_log(websocket, event):
                     "name": user.name
                 }
                 await SocketData.SOCKET_CHAT.send(json.dumps(to_send))
-                await broadcast(dump_server_crashed("chat"))
             break
     if flag is False:
         user = User()
@@ -383,7 +299,6 @@ async def disconnect_user(websocket):
                 except Exception as e:
                     logger.log("", 2, e)
                     SocketData.SOCKET_1V1 = None
-                    await broadcast(dump_server_crashed("1v1"))
             event = {
                 "type": "quit_chat",
                 "id": user.id,
@@ -393,7 +308,6 @@ async def disconnect_user(websocket):
             except Exception as e:
                 logger.log("", 2, e)
                 SocketData.SOCKET_CHAT = None
-                await broadcast(dump_server_crashed("chat"))
             userList.remove(user)
 
 async def handle_commands(websocket, event):
@@ -406,7 +320,7 @@ async def handle_commands(websocket, event):
     _type = event["type"]
 
     if _type == "status":
-        await websocket.send(json.dumps(dump_player_status(int(event["id"]))))
+        await websocket.send(json.dumps(dump_player_status((int)(event["id"]))))
 
 async def handler(websocket):
     """Handles incomming messages from a websocket
@@ -460,14 +374,12 @@ async def connection_loop():
             except Exception as e:
                 Sockets.SOCKET_CHAT = None
                 logger.log("Couldn't connect to the chat server.", 2, e)
-                await broadcast(dump_server_crashed("chat"))
         else:
             try:
                 await Sockets.SOCKET_CHAT.send(json.dumps(ping()))
             except Exception as e:
                 logger.log("", 2, e)
                 Sockets.SOCKET_CHAT = None
-                await broadcast(dump_server_crashed("chat"))
         if Sockets.SOCKET_1V1 is None:
             try:
                 logger.log("Attempting connection to Game (1v1 Classical) server.", 1)
@@ -477,7 +389,6 @@ async def connection_loop():
                 logger.log("Game (1v1 Classical) server connected.", 0)
             except Exception as e:
                 Sockets.SOCKET_1V1 = None
-                await broadcast(dump_server_crashed("1v1"))
                 logger.log("Couldn't connect to the game (1v1 Classical) server.", 2, e)
         else:
             try:
@@ -485,8 +396,6 @@ async def connection_loop():
             except Exception as e:
                 logger.log("", 2, e)
                 Sockets.SOCKET_1V1 = None
-                await broadcast(dump_server_crashed("1v1"))
-        await broadcast(dump_health())
         await asyncio.sleep(5)
 
 async def server_listener():
@@ -509,15 +418,7 @@ def server_thread():
     """
     asyncio.run(server_listener())
 
-def signal_handler():
-    """Handles signals.
-    """
-    Sockets.STOP_FLAG = True
-    sys.exit(0)
-
 if __name__ == "__main__":
-    signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler)
     logger.log("Central Server launched.", 0)
     try:
         connections = threading.Thread(target=connection_handler)

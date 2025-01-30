@@ -8,18 +8,19 @@ from accounts.serializers import AccountSerializer
 
 class MatchSerializer(serializers.ModelSerializer):
 
-    players = serializers.SerializerMethodField()
+    player1 = serializers.SerializerMethodField()
+    player2 = serializers.SerializerMethodField()
     winner = serializers.SerializerMethodField()
     state = serializers.SerializerMethodField()
-    started = serializers.ReadOnlyField()
-    finished = serializers.ReadOnlyField()
-    start_timestamp = serializers.ReadOnlyField()
-    stop_timestamp = serializers.ReadOnlyField()
-    match_type = serializers.ReadOnlyField()
+    started = serializers.SerializerMethodField()
+    finished = serializers.SerializerMethodField()
+    start_timestamp = serializers.SerializerMethodField()
+    stop_timestamp = serializers.SerializerMethodField()
+    match_type = serializers.SerializerMethodField()
 
     class Meta:
         model = Match
-        fields = ["id", "winner", "state", "started", "finished", "players", "start_timestamp", "stop_timestamp", "match_type"]
+        fields = ["id", "winner", "state", "started", "finished", "player1", "player2", "start_timestamp", "stop_timestamp", "match_type"]
 
     def get_state(self, instance: Match):
         if (instance.finished):

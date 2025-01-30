@@ -108,3 +108,32 @@ class HistoriqueViewSet(ViewSet):
             "match_count": match_count,
             "wins": wins
         })
+
+    def get_matchs_history(self, request: HttpRequest, username):
+        
+        user = get_object_or_404(User, username=username)
+        matchs = Match.objects.filter(Q(player_1=user.accountmodel) | Q(player_2=user.accountmodel))
+
+        matches_data = []
+        match_count = matchs.count()
+        wins = matchs.filter(winner=user.accountmodel).count()
+        matches_data.append({
+            "match_count": match_count,
+            "wins": wins
+        })
+        for match in matchs:
+            player_1 = User.objects.get(username=match.player_1)
+            player_2 = User.objects.get(username=match.player_2)
+            matches_data.append({
+                "id": match.id,
+                "player_1": player_1.username,
+                "player_2": player_2.username,
+                "winner": match.winner.user.username,
+                "player_1_score": match.player_1_score,
+                "player_2_score": match.player_2_score,
+                "timer": match.stop_timestamp - match.start_timestamp
+                # "date": match.date.isoformat()  # Format the date to ISO format
+            })
+
+        # Return the list as a JSON response
+        return Response(matches_data, status=status.HTTP_200_OK)

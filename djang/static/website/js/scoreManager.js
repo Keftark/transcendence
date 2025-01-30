@@ -1,3 +1,4 @@
+import { getMatchsFullData } from "./apiFunctions.js";
 import { endMatch } from "./levelLocal.js";
 import { getPlayerVictories, playerStats } from "./playerManager.js";
 import { checkPoints } from "./rules.js";
@@ -90,50 +91,58 @@ function getTotalMatchesText(player = playerStats)
 // ne prendre que les 10 derniers matches ? La fenetre sera trop grande sinon
 export function loadScores(player = playerStats)
 {
-    if (player.matches.length > 0)
-    {
-        document.getElementById('seeMatchesButton').style.display = 'flex';
-        document.getElementById('profileTotalContainer').style.display = 'flex';
-        document.getElementById('victories').innerText = getTranslation('victories');
-        document.getElementById('victoriesNbr').innerText = getVictoriesText(player);
-        document.getElementById('matchesPlayed').innerText = getTranslation('matchesPlayed');
-        document.getElementById('matchesPlayedNbr').innerText = getTotalMatchesText(player);
-    }
-    else
-    {
-        document.getElementById('seeMatchesButton').style.display = 'none';
-        document.getElementById('profileTotalContainer').style.display = 'none';
-        document.getElementById('victories').innerText = getTranslation('noMatchHistory');
-        document.getElementById('victoriesNbr').innerText = "";
-    }
-    const scoresContainer = document.getElementById('matchHistoryContainer');
-    for (let i = 0; i < player.matches.length; i++)
-    {
-        const color = playerStats.colors || "white";
-        let match = player.matches[i];
-        const newContainer = document.createElement('div');
-        newContainer.classList.add('score-container');
-        const leftContent = document.createElement('div');
-        leftContent.style.color = color;
-        leftContent.classList.add('score-left');
-        leftContent.textContent = player.nickname + "\n" + match.scorePlayer;
-        newContainer.appendChild(leftContent);
-        const rightContent = document.createElement('div');
-        rightContent.style.color = color;
-        rightContent.classList.add('score-right');
-        rightContent.textContent = match.nameOpponent + "\n" + match.scoreOpponent;
-        newContainer.appendChild(rightContent);
-        if (match.victoryType === VictoryType.VICTORY)
-            newContainer.style.background = 'linear-gradient(to right, #228822 30%, #006666 70%)';
-        else if (match.victoryType === VictoryType.DEFEAT)
-            newContainer.style.background = 'linear-gradient(to right, #882222 30%, #006666 70%)';
-        const timerContent = document.createElement('p');
-        timerContent.classList.add('score-timer');
-        timerContent.style.color = color;
-        timerContent.textContent = match.matchTime;
-        newContainer.appendChild(timerContent);
-        scoresContainer.appendChild(newContainer);
-    }
+    getMatchsFullData(player.nickname)
+        .then((data) =>{
+            if (data.length > 1)
+            {
+                document.getElementById('seeMatchesButton').style.display = 'flex';
+                document.getElementById('profileTotalContainer').style.display = 'flex';
+                document.getElementById('victories').innerText = getTranslation('victories');
+                document.getElementById('victoriesNbr').innerText = data[0].wins;
+                document.getElementById('matchesPlayed').innerText = getTranslation('matchesPlayed');
+                document.getElementById('matchesPlayedNbr').innerText = data[0].match_count;
+            }
+            else
+            {
+                document.getElementById('seeMatchesButton').style.display = 'none';
+                document.getElementById('profileTotalContainer').style.display = 'none';
+                document.getElementById('victories').innerText = getTranslation('noMatchHistory');
+                document.getElementById('victoriesNbr').innerText = "";
+            }
+            const scoresContainer = document.getElementById('matchHistoryContainer');
+            for (let i = 1; i < data.length; i++)
+            {
+                const color = playerStats.colors || "white";
+                let match = data[i];
+                const newContainer = document.createElement('div');
+                newContainer.classList.add('score-container');
+                const leftContent = document.createElement('div');
+                leftContent.style.color = color;
+                leftContent.classList.add('score-left');
+                leftContent.textContent = match.player_1 + "\n" + match.player_1_score;
+                newContainer.appendChild(leftContent);
+                const rightContent = document.createElement('div');
+                rightContent.style.color = color;
+                rightContent.classList.add('score-right');
+                rightContent.textContent = match.player_2 + "\n" + match.player_2_score;
+                newContainer.appendChild(rightContent);
+                if (match.winner === playerStats.nickname)
+                    newContainer.style.background = 'linear-gradient(to right, #228822 30%, #006666 70%)';
+                else
+                    newContainer.style.background = 'linear-gradient(to right, #882222 30%, #006666 70%)';
+                const timerContent = document.createElement('p');
+                timerContent.classList.add('score-timer');
+                timerContent.style.color = color;
+                timerContent.textContent = match.timer;
+                newContainer.appendChild(timerContent);
+                scoresContainer.appendChild(newContainer);
+            }
+        })
+        .catch((error) => {
+            console.error("Failed to match data:", error);
+        });
+
+    
 }
 
 export function endOfMatch(forcedVictory = false)
