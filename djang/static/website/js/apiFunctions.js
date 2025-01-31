@@ -543,3 +543,25 @@ export async function getMatchsFullData(userName) {
       return null;  // You can return an error object or null if needed
     }
 }
+
+export async function deleteAccount() {
+    try {
+        const response = await fetch(`/user/del_user`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            }
+        });
+        if (!response.ok)
+        {
+            if (response.status === 400) {
+                return response;
+            } else
+                throw new Error(`Network response was not ok. Status: ${response.status}`);
+        }
+        return response;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}

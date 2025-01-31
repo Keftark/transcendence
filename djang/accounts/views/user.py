@@ -239,23 +239,20 @@ def upload_image(request):
         image = request.FILES['image']
         fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
-        # Save the image with the sanitized filename
         filename = fs.save(image.name, image)
-        uploaded_file_url = fs.url(filename)
         
-        # Retrieve the user and update the avatar field
         user = request.user
-        user.accountmodel.avatar = fs.url(filename)  # This gets the file object for the avatar
-        user.accountmodel.save()  # Save the model instance
+        user.accountmodel.avatar = filename
+        user.accountmodel.save()
 
         return JsonResponse({'success': True, 'url': uploaded_file_url})
 
     else:
         return JsonResponse({'success': False, 'message': 'No image uploaded.'})
     
-def del_user(request, username):    
+def del_user(request):
     try:
-        u = User.objects.get(username = username)
+        u = User.objects.get(username = request.user.username)
         u.delete()
         JsonResponse({'success': True, 'message':'The user is deleted'})         
 

@@ -1,4 +1,4 @@
-import { getCSRFToken, getMatchsLittleData, getUserAvatar, getUserByName } from './apiFunctions.js';
+import { deleteAccount, getCSRFToken, getMatchsLittleData, getUserAvatar, getUserByName } from './apiFunctions.js';
 import { clickChoosePaddleButton } from './customizeSkins.js';
 import { addMainEvents } from './eventsListener.js';
 import { isInGame, reinitLevelFunction, setCameraType, StartLevel } from './levelLocal.js';
@@ -89,6 +89,9 @@ menuPanel.addEventListener('mouseleave', () => {
 
 document.getElementById('profileButton').addEventListener('click', () => {
     openProfile();
+});
+document.getElementById('deleteProfile').addEventListener('click', () => {
+    deleteAccount();
 });
 
 mainProfileButton.addEventListener('click', () => {
@@ -620,6 +623,7 @@ export function isProfileOpen()
 {
     return profileIsOpen;
 }
+
 
 
 
