@@ -9,7 +9,10 @@ from django.contrib.auth import logout
 from django.utils.translation import gettext as _
 from accounts.models import *
 from ..serializers import UpdateUserSerializer, UpdatePasswordSerializer
+from rest_framework.response import Response
 from rest_framework.generics import UpdateAPIView
+from django.http import HttpRequest
+from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.decorators import login_required
@@ -261,6 +264,17 @@ def del_user(request):
         return render(request, 'index.html')
 
     return render(request, 'index.html') 
+
+def delete_user(self, request: HttpRequest):
+       data: dict = request.data
+       password: str = data["password"]
+       if (request.user.check_password(password) is False):
+           return Response({"password": _("Password incorrect.")},
+                           status.HTTP_401_UNAUTHORIZED)
+       request.user.delete()
+       logout(request)
+       return Response(status=status.HTTP_200_OK)
+
       
 class UpdateProfileView(UpdateAPIView):
 
