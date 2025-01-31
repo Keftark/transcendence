@@ -37,9 +37,17 @@
     align-self: center;
 }
 
+#miniProfilePictureDiv
+{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
 #miniProfilePicture
 {
     width: 4rem;
+    height: 4rem;
 }
 
 #profilePicture

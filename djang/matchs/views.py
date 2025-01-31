@@ -126,18 +126,19 @@ class HistoriqueViewSet(ViewSet):
         for match in matchs:
             player_1 = User.objects.filter(username=match.player_1).first()
             player_2 = User.objects.filter(username=match.player_2).first()
+            winner = User.objects.filter(username=match.winner).first()
+            winner_name = winner.username if winner else "anonymous"
             player_1_name = player_1.username if player_1 else "anonymous"
             player_2_name = player_2.username if player_2 else "anonymous"
             matches_data.append({
                 "id": match.id,
                 "player_1": player_1_name,
                 "player_2": player_2_name,
-                "winner": match.winner.user.username,
+                "winner": winner_name,
                 "player_1_score": match.player_1_score,
                 "player_2_score": match.player_2_score,
                 "timer": match.stop_timestamp - match.start_timestamp
                 # "date": match.date.isoformat()  # Format the date to ISO format
             })
 
-        # Return the list as a JSON response
         return Response(matches_data, status=status.HTTP_200_OK)

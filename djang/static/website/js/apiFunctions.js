@@ -1,6 +1,6 @@
 import { sendSystemMessage } from "./chat.js";
 import { editPlayerStats, playerStats } from "./playerManager.js";
-import { clickCancelSignIn } from "./signIn.js";
+import { clickCancelSignIn, invalidCredentials } from "./signIn.js";
 
 export function getCSRFToken()
 {
@@ -26,6 +26,11 @@ export async function logInPlayer(username, password)
             }
         });
         if (!response.ok) {
+            if (response.status === 400)
+            {
+                invalidCredentials();
+                return;
+            }
             const errorResult = await response.json();
             console.error('Login failed:', errorResult.message);
             alert(errorResult.message);

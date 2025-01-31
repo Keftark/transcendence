@@ -40,6 +40,7 @@
     "victories": "Victories",
     "isVictorious": " won the tournament!",
     "matchesPlayed": "Matches played",
+    "errInvalidCredentials": "Error: invalid credentials",
     "errEmptyName": "Error: empty nickname.",
     "errEmptyFirstName": "Error: empty first name.",
     "errEmptyLastName": "Error: empty last name.",

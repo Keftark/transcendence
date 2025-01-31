@@ -40,6 +40,7 @@
     "victories": "Victoires",
     "isVictorious": " a remporté le tournoi!",
     "matchesPlayed": "Parties jouées",
+    "errInvalidCredentials": "Erreur : identifiants incorrects",
     "errEmptyName": "Erreur: pseudonyme vide.",
     "errEmptyFirstName": "Erreur: prénom vide.",
     "errEmptyLastName": "Erreur: nom vide.",

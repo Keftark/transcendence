@@ -1,9 +1,6 @@
-import { logInPlayer, sendMatch } from "./apiFunctions.js";
-import { displayWelcomeMessage } from "./chat.js";
-import { loadBlocks, loadFriends } from "./friends.js";
+import { logInPlayer } from "./apiFunctions.js";
 import { navigateTo } from "./pages.js";
 import { logInUserUI } from "./registration.js";
-import { connectToServerInput, connectToServerOutput } from "./sockets.js";
 import { getTranslation } from "./translate.js";
 
 const signInPanel = document.getElementById('signinpanel');
@@ -69,7 +66,7 @@ export function onSignInClose()
 function  resetSignInInputs()
 {
     inputPassword.value = inputNick.value = "";
-    signInErrorName.innerText = "";
+    signInErrorPassword.innerText = signInErrorName.innerText = "";
     showPass = false;
     passwordImg.src = 'static/icons/eyeOpen.webp';
     inputPassword.type = "password";
@@ -90,56 +87,9 @@ function toggleShowPassword()
     }
 }
 
-async function nameIsInDatabase(name)
+export function invalidCredentials()
 {
-    let isInDb;
-
-    if (name.trim() === "")
-    {
-        signInErrorName.innerText = getTranslation('errEmptyName');
-        return false;
-    }
-
-    const userData = await getUserInfos(name);
-    if (!userData)
-        isInDb = false;
-    else
-        isInDb = true;
-    // faire l'appel a la base de donnees et verifier si le nom existe
-
-
-    if (isInDb === false)
-    {
-        signInErrorName.innerText = getTranslation('errIncorrectName');
-        return false;
-    }
-    signInErrorName.innerText = "";
-    return true;
-}
-
-function passwordIsValid(pass)
-{
-    let isInDb;
-
-    // faire l'appel a la base de donnees et verifier si le password existe
-
-    if (isInDb === false)
-    {
-        signInErrorPassword.innerText = getTranslation('errBadPassword');
-        return false;
-    }
-    signInErrorPassword.innerText = "";
-    return true;
-}
-
-export function connectToServer()
-{
-    // connectToServerInput();
-    // connectToServerOutput();
-    // loadFriends();
-    // loadBlocks();
-    // displayWelcomeMessage();
-
+    signInErrorPassword.innerText = getTranslation('errInvalidCredentials');
 }
 
 async function clickConfirmSignIn()
@@ -148,19 +98,6 @@ async function clickConfirmSignIn()
     const password = inputPassword.value;
 
     await logInPlayer(username, password);
-    connectToServer();
-    // Prepare the data for the POST request
-    
-    // let errors = 0;
-    // if (!nameIsInDatabase(inputNick.value))
-    //     errors++;
-    // if (!passwordIsValid(inputPassword.value))
-    //     errors++;
-
-    // if (errors === 0)
-    //     console.log("oui !");
-    // else
-    //     console.log("non !");
 }
 
 export function clickCancelSignIn(login = false)

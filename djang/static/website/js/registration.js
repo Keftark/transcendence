@@ -5,7 +5,6 @@ import { navigateTo } from "./pages.js";
 import { addDisableButtonEffect, closeListener, closeSocket, getListener, getSocket, listener, openSocket, removeDisableButtonEffect, socket } from "./main.js";
 import { checkAccessToChat } from "./chat.js";
 import { getLoggedInUser, logoutUser, registerUser } from "./apiFunctions.js";
-import { connectToServer } from "./signIn.js";
 import { deleteAllFriendRequests, showFriendsBox } from "./friends.js";
 
 const inputName = document.getElementById('inputName');
@@ -233,7 +232,6 @@ async function acceptRegistration()
         return;
     
     await createNewPlayer();
-    connectToServer();
     clickCancelRegister();
     logInUserUI();
 }
