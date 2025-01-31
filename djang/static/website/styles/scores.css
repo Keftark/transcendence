@@ -3,36 +3,35 @@
     position: relative;
     display: flex;
     width: 98%;
-    height: 5vh;
+    height: 3rem;
     min-height: 32px;
     flex-direction: row;
     justify-content: space-between;
     border: 2px solid #002627;
+    max-height: 40rem;
 }
 
 .score-left
 {
-    line-height: 1;
-    position: relative;
-    font-family: 'MyCustomFont', Arial, sans-serif;
-    padding: 4px;
+    /* position: relative; */
+    /* font-family: 'MyCustomFont', Arial, sans-serif; */
+    padding-left: 4px;
     white-space: pre-line;
-    text-align: start;
+    /* text-align: start; */
     align-self: center;
-    font-size: clamp(0.5rem, 0.5rem + 0.5vw + 0.5vh, 10vw);
+    /* font-size: clamp(0.5rem, 0.5rem + 0.5vw + 0.5vh, 10vw); */
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
 }
 
 .score-right
 {
-    line-height: 1;
-    position: relative;
-    font-family: 'MyCustomFont', Arial, sans-serif;
-    padding: 4px;
+    /* position: relative; */
+    /* font-family: 'MyCustomFont', Arial, sans-serif; */
+    padding-right: 4px;
     text-align: end;
     white-space: pre-line;
     align-self: center;
-    font-size: clamp(0.5rem, 0.5rem + 0.5vw + 0.5vh, 10vw);
+    /* font-size: clamp(0.5rem, 0.5rem + 0.5vw + 0.5vh, 10vw); */
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
 }
 

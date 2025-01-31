@@ -3,12 +3,11 @@ import { endMatch } from "./levelLocal.js";
 import { getPlayerVictories, playerStats } from "./playerManager.js";
 import { checkPoints } from "./rules.js";
 import { formatTime } from "./timer.js";
-import { getTranslation } from "./translate.js";
-import { VictoryType } from "./variables.js";
 
 const scores = document.getElementById('scores');
 const scoreRight = document.getElementById('score-right');
 const scoreLeft = document.getElementById('score-left');
+const matchListPanel = document.getElementById('matchListPanel');
 let player1Score = 0;
 let player2Score = 0;
 
@@ -68,9 +67,8 @@ export function setVisibleScore(boolean)
 
 export function removeAllScores()
 {
-    let parentElement = document.getElementById('matchHistoryContainer');
-    while (parentElement.firstChild)
-        parentElement.removeChild(parentElement.firstChild);
+    while (matchListPanel.firstChild)
+        matchListPanel.removeChild(matchListPanel.firstChild);
 }
 
 function getVictoriesRatioText(player = playerStats)
@@ -94,23 +92,8 @@ export function loadScores(player = playerStats)
 {
     getMatchsFullData(player.nickname)
         .then((data) =>{
-            if (data.length > 1)
-            {
-                document.getElementById('seeMatchesButton').style.display = 'flex';
-                document.getElementById('profileTotalContainer').style.display = 'flex';
-                document.getElementById('victories').innerText = getTranslation('victories');
-                document.getElementById('victoriesNbr').innerText = data[0].wins;
-                document.getElementById('matchesPlayed').innerText = getTranslation('matchesPlayed');
-                document.getElementById('matchesPlayedNbr').innerText = data[0].match_count;
-            }
-            else
-            {
-                document.getElementById('seeMatchesButton').style.display = 'none';
-                document.getElementById('profileTotalContainer').style.display = 'none';
-                document.getElementById('victories').innerText = getTranslation('noMatchHistory');
-                document.getElementById('victoriesNbr').innerText = "";
-            }
-            const scoresContainer = document.getElementById('matchHistoryContainer');
+            document.getElementById('victoriesNbr').innerText = data[0].wins;
+            document.getElementById('matchesPlayedNbr').innerText = data[0].match_count;
             for (let i = 1; i < data.length; i++)
             {
                 const color = playerStats.colors || "white";
@@ -136,7 +119,7 @@ export function loadScores(player = playerStats)
                 timerContent.style.color = color;
                 timerContent.textContent = formatTime(match.timer);
                 newContainer.appendChild(timerContent);
-                scoresContainer.appendChild(newContainer);
+                matchListPanel.appendChild(newContainer);
             }
         })
         .catch((error) => {

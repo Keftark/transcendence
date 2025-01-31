@@ -56,7 +56,6 @@ export function updateHTML(translations)
 	document.getElementById('buttonSignUp').innerText = translations.registerHeader;
 	document.getElementById('buttonLogIn').innerText = translations.signInHeader;
 	document.getElementById('buttonLogOut').innerText = translations.buttonLogOut;
-	document.getElementById('seeMatchesButton').innerText = translations.seeMatchesButton;
 	document.getElementById('addFriendButton').innerText = translations.addFriendButton;
 	document.getElementById('sendMessageButton').innerText = translations.sendMessageButton;
 	document.getElementById('sendStickerButton').innerText = translations.sendStickerButton;
@@ -122,10 +121,14 @@ export function updateHTML(translations)
 	document.getElementById('buttonProfile').innerHTML = translations.profileButton;
 	document.getElementById('closeMiniProfileButton').innerHTML = translations.close;
 	document.getElementById('matchsPlayedMiniProfile').innerHTML = translations.gamesPlayed;
+	document.getElementById('matchesPlayed').innerText = translations.gamesPlayed;
 	document.getElementById('winsMiniProfile').innerHTML = translations.gamesWon;
+	document.getElementById('victories').innerText = translations.gamesWon;
 	document.getElementById('confirmAddPlayerButton').innerHTML = translations.addPlayerTournament;
 	document.getElementById('cancelAddPlayerButton').innerHTML = translations.cancel;
 	document.getElementById('closeTournamentVictoryButton').innerHTML = translations.close;
+	document.getElementById('headerMainProfileButton').innerText = translations.headerMainProfileButton;
+	document.getElementById('headerMatchsProfileButton').innerText = translations.headerMatchsProfileButton;
 
 	
     document.querySelector('.gdpr').addEventListener('click', function(event) {

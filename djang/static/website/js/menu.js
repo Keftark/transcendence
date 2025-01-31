@@ -46,7 +46,10 @@ const winsMiniProfile = document.getElementById('winsMiniProfile');
 const matchsPlayedMiniProfileValue = document.getElementById('matchsPlayedMiniProfileValue');
 const winsMiniProfileValue = document.getElementById('winsMiniProfileValue');
 const closeMiniProfileButton = document.getElementById('closeMiniProfileButton');
-
+const profileStats = document.getElementById('profileStats');
+const headerMainProfileButton = document.getElementById('headerMainProfileButton');
+const headerMatchsProfileButton = document.getElementById('headerMatchsProfileButton');
+const profileInfos = document.getElementById('profileInfos');
 
 const buttonsLanguage = document.querySelectorAll('.language');
 const imageSources = {
@@ -65,10 +68,6 @@ export let isMenuOpen = false;
 
 document.getElementById('header-title').addEventListener('click', () => {
     navigateTo('home');
-});
-
-document.getElementById('seeMatchesButton').addEventListener('click', () => {
-    showMatchListProfile();
 });
 
 mainPlayButton.addEventListener('click', () => {
@@ -113,14 +112,6 @@ mainSettingsButton.addEventListener('click', () => {
     openSettings();
 });
 
-/**MADE BY NOLAN LOL 
- * ITS SHIT
- * IT WORKS NOT
-*/
-
-/** END OF NOLAN */
-
-
 document.getElementById('closeSettingsButton').addEventListener('click', () => {
     closeSettings();
 });
@@ -147,6 +138,14 @@ profileButton.addEventListener('click', () => {
 
 closeMiniProfileButton.addEventListener('click', () => {
     closeMiniProfile();
+});
+
+headerMainProfileButton.addEventListener('click', () => {
+    openProfileMainStats();
+});
+
+headerMatchsProfileButton.addEventListener('click', () => {
+    openProfileMatchStats();
 });
 
 document.querySelectorAll('.mainMenuButton').forEach(button => {
@@ -322,10 +321,26 @@ function closeMiniProfile()
     }, 100);
 }
 
+function openProfileMainStats()
+{
+    headerMainProfileButton.classList.add('light');
+    headerMatchsProfileButton.classList.remove('light');
+    profileInfos.style.display = 'flex';
+    profileStats.style.display = 'none';
+}
+
+function openProfileMatchStats()
+{
+    headerMatchsProfileButton.classList.add('light');
+    headerMainProfileButton.classList.remove('light');
+    profileStats.style.display = 'flex';
+    profileInfos.style.display = 'none';
+}
 export function openProfile(player = playerStats)
 {
     if (player.isRegistered === false)
         return;
+    openProfileMainStats();
     profileIsOpen = true;
     getUserAvatar(player.nickname)
         .then((target) => {
@@ -378,21 +393,7 @@ function closeMatchListProfile()
 export function closeProfile()
 {
     profileIsOpen = false;
-    if (profilePanel.classList.contains('toLeft') === true) {
-        closeMatchListProfile();
-        profilePanel.classList.remove('appear');
-        setTimeout(() => {
-            profilePanel.style.display = 'none';
-        }, 100);
-    }
-    else
-    {
-        profilePanel.classList.remove('appear');
-        setTimeout(() => {
-            matchListPanel.style.display = 'none';
-            profilePanel.style.display = 'none';
-        }, 100);
-    }
+    profilePanel.style.display = 'none';
     setTimeout(() => {
         removeAllScores();
         focusOldButton();
@@ -450,7 +451,7 @@ export function changeTextsColor(newColor)
 {
     const textElements = document.querySelectorAll(' \
         h1, h2, div, h3, p, button, #header-title, #menu-label span, #pressplay, #play, #score-left, #score-right, .score-timer, #playername-left, \
-        #playername-right, #inputChat, input, label, #spectateList');
+        #playername-right, #inputChat, input, label, #spectateList, .headerProfileButton');
     textElements.forEach(element => {
         element.style.color = newColor;
     });
@@ -619,6 +620,8 @@ export function isProfileOpen()
 {
     return profileIsOpen;
 }
+
+
 
 // add a way to save the image to the DB and check if the format is ok + no sql injection?
 // injec sql -> verifier metadata

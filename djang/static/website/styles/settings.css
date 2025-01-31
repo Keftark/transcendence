@@ -44,7 +44,7 @@
     gap: 0.5vw;
 }
 
-#closeSettingsButton:hover, #closeMiniProfileButton:hover, #closeProfileButton:hover, #seeMatchesButton:hover
+#closeSettingsButton:hover, #closeMiniProfileButton:hover, #closeProfileButton:hover
 {
     background-color: rgba(0, 255, 255, 0.267);
     opacity: 0.8;
@@ -97,13 +97,13 @@
     height: 100%;
 }
 
-#perspectiveButton, #orthographicButton
+.cameraTypeSettings
 {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 4.5vh;
-    height: 4.5vh;
+    width: calc(1.5vh + 1.5vw);
+    height: calc(1.5vh + 1.5vw);
     min-height: 18px;
     min-width: 18px;
     border: none;
@@ -114,8 +114,7 @@
     transition: none;
 }
 
-#perspectiveButton img,
-#orthographicButton img
+.cameraTypeSettings img
 {
     width: 100%;
     height: 100%;

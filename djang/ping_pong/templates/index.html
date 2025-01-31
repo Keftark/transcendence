@@ -368,10 +368,11 @@
     </div>
 
     <!------------------------------ Profile Panel ------------------------------>
-    <div id="matchListPanel">
-        <div id="matchHistoryContainer"></div>
-    </div>
     <div id="profilePanel">
+        <div id="headerButtonsProfile">
+            <div id="headerMainProfileButton" class="headerProfileButton"></div>
+            <div id="headerMatchsProfileButton" class="headerProfileButton"></div>
+        </div>
         <div id="profileInfos">
             <div id="headerProfile">
                 <div id="profilePictureDiv">
@@ -403,15 +404,18 @@
             </div>
         </div>
         <div id="profileStats">
-            <div id="profileStatsContainer">
-                <h1 id="victoriesNbr"></h1>
-                <h1 id="victories"></h1>
+            <div id="statsContainer">
+                <div id="profileTotalContainer" class="scoreMiniPanel">
+                    <p id="matchesPlayed"></p>
+                    <p id="matchesPlayedNbr"></p>
+                </div>
+                <div id="profileStatsContainer" class="scoreMiniPanel">
+                    <p id="victories"></p>
+                    <p id="victoriesNbr"></p>
+                </div>
             </div>
-            <div id="profileTotalContainer">
-                <h1 id="matchesPlayedNbr"></h1>
-                <h1 id="matchesPlayed"></h1>
+            <div id="matchListPanel">
             </div>
-            <button id="seeMatchesButton"></button>
         </div>
         <button id="closeProfileButton"></button>
     </div>
