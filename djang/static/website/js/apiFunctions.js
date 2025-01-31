@@ -1,5 +1,7 @@
 import { sendSystemMessage } from "./chat.js";
+import { closeProfile } from "./menu.js";
 import { editPlayerStats, playerStats } from "./playerManager.js";
+import { clickLogOut } from "./registration.js";
 import { clickCancelSignIn, invalidCredentials } from "./signIn.js";
 
 export function getCSRFToken()
@@ -560,6 +562,8 @@ export async function deleteAccount() {
             } else
                 throw new Error(`Network response was not ok. Status: ${response.status}`);
         }
+        clickLogOut(true);
+        closeProfile();
         return response;
     } catch (error) {
         console.error('Error:', error);

@@ -86,7 +86,6 @@ def delete_profile_picture(sender, instance, **kwargs):
 def on_user_created(sender, instance, created, **kwargs):
     if created:
         accountmodel: AccountModel = AccountModel.objects.create(pk=instance.pk, user=instance)
-        accountmodel.avatar 
         accountmodel.save()
         
 

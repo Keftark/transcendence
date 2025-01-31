@@ -248,14 +248,15 @@ function replaceLogOutButtons()
     logOutButtons.style.display = 'none';
 }
 
-export function clickLogOut()
+export function clickLogOut(isAlreadyLoggedOut = false)
 {
     if (getSocket() === null || getListener() === null)
         return;
     closeSocket();
     closeListener();
     // socketQuitChat();
-    logoutUser();
+    if (!isAlreadyLoggedOut)
+        logoutUser();
     replaceLogOutButtons();
     resetPlayerStats();
     addDisableButtonEffect(profileButton);

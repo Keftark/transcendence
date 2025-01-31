@@ -34,7 +34,7 @@ const mainMenuPanel = document.getElementById('mainMenuPanel');
 const toggleCameraText = document.getElementById('cameraTypeHeader');
 const gameSettingsButton = document.getElementById('settingsButton');
 const profilePicture = document.getElementById('profilePicture');
-// const fileInput = document.getElementById('fileInput');
+const fileInput = document.getElementById('fileInput');
 const profileButton = document.getElementById('buttonProfile');
 const miniNicknameText = document.getElementById('nameMiniProfile');
 const miniProfilePicture = document.getElementById('miniProfilePicture');
@@ -65,6 +65,10 @@ let settingsIsOpen = false;
 let profileIsOpen = false;
 let oldButton = mainPlayButton;
 export let isMenuOpen = false;
+
+document.getElementById('customButton').addEventListener('click', () => {
+    fileInput.click();
+});
 
 document.getElementById('header-title').addEventListener('click', () => {
     navigateTo('home');
@@ -158,16 +162,18 @@ document.querySelectorAll('.mainMenuButton').forEach(button => {
   button.addEventListener('blur', hideImage);
 });
 
+document.getElementById('uploadForm').addEventListener('change', function(event)
+{
+    if (event.target.files.length > 0)
+        document.getElementById('submitButton').click();
+});
+
 document.getElementById('uploadForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent form from submitting the traditional way
-    
-    const fileInput = document.getElementById('fileInput');
-    const file = fileInput.files[0]; // Get the selected file
-    
+    event.preventDefault();
+    const file = fileInput.files[0];
     if (file) {
         const formData = new FormData();
-        formData.append('image', file); // Append file to form data
-        // Send file to the server using Fetch API
+        formData.append('image', file);
         fetch('/upload/', {
             method: 'POST',
             headers: {
@@ -178,6 +184,7 @@ document.getElementById('uploadForm').addEventListener('submit', function(event)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
+                profilePicture.src = "/media/" + data.url;
                 document.getElementById('status').textContent = 'Upload successful!';
             } else {
                 document.getElementById('status').textContent = 'Upload failed!';
@@ -191,51 +198,6 @@ document.getElementById('uploadForm').addEventListener('submit', function(event)
         document.getElementById('status').textContent = 'Please select a file to upload.';
     }
 });
-
-// document.getElementById('fileInput').addEventListener('change', function(event)
-// {
-
-//     if (event.target.files.length > 0)
-//     {
-//         const file = event.target.files[0]; // Get the first file
-//         console.log(file);
-//         if (file) {
-//             const imageUrl = URL.createObjectURL(file); // Create a URL for preview
-//             console.log("File name: " + file.name);
-//             console.log("File path: " + imageUrl);
-//             const reader = new FileReader();
-    
-//             // When the file is successfully read
-//             reader.onload = function() {
-//                 uploadAvatar(playerStats.nickname, file);
-//             };
-//             reader.readAsDataURL(file);
-//         }
-
-//     }
-//     else
-//     {
-//         console.log("No file selected.");
-//     }
-// });
-
-// document.getElementById('fileInput').addEventListener('change', function(event) {
-//     const file = event.target.files[0];
-//     if (file) {
-//         console.log("Selected file:", file);
-
-//         // Example: Display the selected image (optional)
-//         const reader = new FileReader();
-//         reader.onload = function(e) {
-//             const img = document.createElement('img');
-//             img.src = e.target.result;
-//             img.style.maxWidth = "200px";
-//             img.style.border = "1px solid #ccc";
-//             document.body.appendChild(img);
-//         };
-//         reader.readAsDataURL(file);
-//     }
-// });
 
 document.getElementById('perspectiveButton').classList.add('applyBorderOptions');
 document.getElementById('lang1Button').classList.add('applyBorderOptions');

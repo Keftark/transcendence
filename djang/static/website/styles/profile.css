@@ -262,6 +262,9 @@
 {
     align-items: center;
     gap: 0;
+    right: 0;
+    bottom: 0;
+    max-width: 4rem;
 }
 
 #deleteProfile p
@@ -271,9 +274,16 @@
 
 #deleteProfileButton
 {
+
     border: 3px solid #ff000047;
     background-color: #ff00005c;
     border-radius: 4px;
+}
+#deleteProfileButton:hover
+{
+    border: 3px solid #ff000069;
+    background-color: #ff000094;
+
 }
 
 #deleteProfileButton img
@@ -306,4 +316,19 @@
 {
     background-color: transparent;
     filter: brightness(100%);
+}
+
+#fileInput, #submitButton {
+    display: none;
+}
+
+#uploadForm button {
+    padding: 5px 10px;
+    background-color: rgba(56, 255, 0, 0.18);
+    border: 3px solid rgba(0, 0, 0, 0.4);
+    border-radius: 4px;
+}
+
+#uploadForm button:hover {
+    background-color: #009106;
 }
