@@ -252,6 +252,18 @@ def upload_image(request):
 
     else:
         return JsonResponse({'success': False, 'message': 'No image uploaded.'})
+    
+def del_user(request, username):    
+    try:
+        u = User.objects.get(username = username)
+        u.delete()
+        JsonResponse({'success': True, 'message':'The user is deleted'})         
+
+    except User.DoesNotExist:
+        JsonResponse({'success': False, 'message':'The user does not exists'})   
+        return render(request, 'index.html')
+
+    return render(request, 'index.html') 
       
 class UpdateProfileView(UpdateAPIView):
 

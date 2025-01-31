@@ -88,7 +88,7 @@ def on_user_created(sender, instance, created, **kwargs):
         accountmodel: AccountModel = AccountModel.objects.create(pk=instance.pk, user=instance)
         accountmodel.avatar 
         accountmodel.save()
-
+        
 
 class FriendModel(Model):
     friend1 = ForeignKey(AccountModel, on_delete=CASCADE, related_name='friend1')
