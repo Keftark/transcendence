@@ -1,4 +1,5 @@
 import * as THREE from '../node_modules/.vite/deps/three.js';
+import { unsetTextures } from './objects.js';
 import { addPlayerMovementKeyDown, addPlayerMovementKeyUp } from "./playerMovement.js";
 
 function hideUiElements()
@@ -47,7 +48,7 @@ export function unloadScene(scene, renderer, animationId)
 
     while (scene.children.length > 0)
         scene.remove(scene.children[0]);
-
+    unsetTextures();
     cancelAnimationFrame(animationId);
     renderer.clear();
     renderer.dispose();

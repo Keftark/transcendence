@@ -285,6 +285,40 @@ export async function getUserPaddleSkin(userId) {
     }
 }
 
+export async function setUserPaddleSkin(userId, newPaddleSkin) {
+    if (!userId || !newPaddleSkin) {
+        console.error("User id and new paddle skin are required.");
+        return;
+    }
+    try {
+        const response = await fetch(`/user_paddle/${userId}/`, {
+            method: 'PUT',  // You can also use 'PATCH' if you want partial updates
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken(), // Include CSRF token if needed
+            },
+            body: JSON.stringify({
+                preferredPaddle: newPaddleSkin  // Send the new skin as part of the request body
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to update paddle skin: ${response.status} ${response.statusText}`);
+        }
+
+        const updatedUserData = await response.json();
+
+        if (updatedUserData.error) {
+            console.error(updatedUserData.error);
+        } else {
+            return updatedUserData;  // You can return the updated user data if needed
+        }
+    } catch (error) {
+        console.error("An error occurred while updating the paddle skin:", error);
+    }
+}
+
+
 export async function getFriendsList() {
     try {
         const response = await fetch(`/friends`, {

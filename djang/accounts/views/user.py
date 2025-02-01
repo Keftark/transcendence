@@ -16,6 +16,7 @@ from django.contrib.auth.decorators import login_required
 from dotenv import load_dotenv
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
+from django.views.decorators.http import require_http_methods
 
 # Load environment variables from .env file
 load_dotenv()
@@ -152,14 +153,44 @@ def get_user_avatar(request, username):
         # Handle case where user is not found
         return JsonResponse({'error': 'User not found'}, status=404)
 
+@require_http_methods(["GET", "PUT"])  # Allow GET and PUT methods
 def get_user_paddle(request, user_id):
     try:
         user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+
+    # Handle GET request: return preferred paddle skin
+    if request.method == 'GET':
         return JsonResponse({
             'preferredPaddle': user.accountmodel.preferredPaddle
         })
-    except User.DoesNotExist:
-        return JsonResponse({'error': 'User not found'}, status=404)
+
+    # Handle PUT request: update preferred paddle skin
+    elif request.method == 'PUT':
+        try:
+            # Get the JSON data sent in the request body
+            data = json.loads(request.body)
+
+            # Get the new preferred paddle skin from the request data
+            new_paddle_skin = data.get('preferredPaddle')
+            if not new_paddle_skin:
+                return JsonResponse({'error': 'Preferred paddle skin is required'}, status=400)
+
+            # Update the user's preferred paddle skin
+            user.accountmodel.preferredPaddle = new_paddle_skin
+            user.accountmodel.save()
+
+            # Return the updated user data
+            return JsonResponse({
+                'preferredPaddle': user.accountmodel.preferredPaddle
+            })
+
+        except KeyError:
+            return JsonResponse({'error': 'Invalid data'}, status=400)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
 
 def get_notifications(request, user_id):
     try:
@@ -221,10 +252,9 @@ def login_user(request):
                 "username": user.username,
                 "email": user.email,
                 "first_name": user.first_name,
-                "last_name": user.last_name
+                "last_name": user.last_name,
+                "preferredPaddle": user.accountmodel.preferredPaddle
             }
-
-            # Return user data in JSON response
             return JsonResponse({
                 "message": "Login successful",
                 "user": user_data

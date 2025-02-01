@@ -1,3 +1,4 @@
+import { setUserPaddleSkin } from "./apiFunctions.js";
 import { playerStats } from "./playerManager.js";
 
 const choosePaddlePanel = document.getElementById('choosePaddlePanel');
@@ -5,10 +6,10 @@ const paddleList = document.getElementById('choosePaddleList');
 
 
 document.getElementById('choosePaddle1Button').addEventListener('click', () => {
-    choosePaddleSkin(0);
+    choosePaddleSkin(1);
 });
 document.getElementById('choosePaddle2Button').addEventListener('click', () => {
-    choosePaddleSkin(1);
+    choosePaddleSkin(2);
 });
 
 let paddleChoiceIsOpen = false;
@@ -40,12 +41,18 @@ export function closePaddleChoice()
 
 export function choosePaddleSkin(nbr)
 {
-    if (playerStats.currentPaddleSkin != nbr)
+    const nb = parseInt(nbr);
+    if (playerStats.currentPaddleSkin != nb)
     {
-        playerStats.currentPaddleSkin = nbr;
-        // envoyer le changement au backend
+        playerStats.currentPaddleSkin = nb;
+        setUserPaddleSkin(playerStats.id, nb)
+        .then(() => {
+            closePaddleChoice();
+        })
+        .catch(error => {
+            console.error("Error updating paddle skin:", error);
+        });
     }
-    // envoyer nbr au serveur lors d'un match online
-    // genre setPaddleSkin(nbr, playerId);
-    closePaddleChoice();
+    else
+        closePaddleChoice();
 }
