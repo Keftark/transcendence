@@ -1,7 +1,9 @@
 import { logInPlayer } from "./apiFunctions.js";
+import { callGameDialog } from "./chat.js";
 import { navigateTo } from "./pages.js";
 import { logInUserUI } from "./registration.js";
 import { getTranslation } from "./translate.js";
+import { EmotionType } from "./variables.js";
 
 const signInPanel = document.getElementById('signinpanel');
 const overlayPanel = document.getElementById('overlay');
@@ -98,6 +100,7 @@ async function clickConfirmSignIn()
     const password = inputPassword.value;
 
     await logInPlayer(username, password);
+    callGameDialog("entityLogIn", EmotionType.NORMAL);
 }
 
 export function clickCancelSignIn(login = false)

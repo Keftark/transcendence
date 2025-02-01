@@ -129,7 +129,11 @@ export function updateHTML(translations)
 	document.getElementById('closeTournamentVictoryButton').innerHTML = translations.close;
 	document.getElementById('headerMainProfileButton').innerText = translations.headerMainProfileButton;
 	document.getElementById('headerMatchsProfileButton').innerText = translations.headerMatchsProfileButton;
-
+	document.getElementById('buttonAcceptDelete').innerText = translations.confirm;
+	document.getElementById('buttonCancelDelete').innerText = translations.cancel;
+	document.getElementById('deleteProfileAskText').innerText = translations.deleteProfileAskText;
+	document.getElementById('customButtonChangePicture').innerText = translations.customButtonChangePicture;
+	
 	
     document.querySelector('.gdpr').addEventListener('click', function(event) {
 		event.preventDefault();

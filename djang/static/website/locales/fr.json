@@ -129,5 +129,15 @@
     "youAlreadySentRequest": "Vous avez déjà envoyé une demande d'ami à ",
     "youAlreadyBlocked": "Vous avez déjà bloqué ",
     "requestSent": "Une demande d'ami a été envoyée à ",
-    "buttonSpectate": "Spectateur"
+    "deleteProfileAskText": "Voulez-vous vraiment supprimer votre compte ?",
+    "customButtonChangePicture": "Changer de photo",
+    "buttonSpectate": "Spectateur",
+    "entityDontLeaveMe": "Non... S'il vous plaît... J'ai besoin de vous...",
+    "entityRegister": "Ah ! Un nouveau joueur... C'est délicieux !",
+    "entityLogIn": "Bon retour, cher joueur.",
+    "entityVictory": "Oui... Donnez-moi plus d'énergie !",
+    "entityDefeat": "Oh non. Toute cette énergie gaspillée...",
+    "entityExaequo": "Vous ferez mieux la prochaine fois, il le faut.",
+    "entityCancelDeleteAccount": "Ne me faites plus peur comme ça, s'il vous plaît.",
+    "entityDeleteAccount": "Vous ne pouvez... pas... m'abandonner..."
 }

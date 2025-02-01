@@ -1,4 +1,5 @@
 import { deleteAccount, getCSRFToken, getMatchsLittleData, getUserAvatar, getUserByName } from './apiFunctions.js';
+import { callGameDialog } from './chat.js';
 import { clickChoosePaddleButton } from './customizeSkins.js';
 import { addMainEvents } from './eventsListener.js';
 import { isInGame, reinitLevelFunction, setCameraType, StartLevel } from './levelLocal.js';
@@ -10,7 +11,7 @@ import { loadScores, removeAllScores } from './scoreManager.js';
 import { exitGameSocket } from './sockets.js';
 import { setCancelledInMatch } from './tournament.js';
 import { changeLanguage, getTranslation } from './translate.js';
-import { LevelMode, PlayerStatus } from './variables.js';
+import { EmotionType, LevelMode, PlayerStatus } from './variables.js';
 
 const overlayPanel = document.getElementById('overlay');
 const profilePanel = document.getElementById('profilePanel');
@@ -50,6 +51,7 @@ const profileStats = document.getElementById('profileStats');
 const headerMainProfileButton = document.getElementById('headerMainProfileButton');
 const headerMatchsProfileButton = document.getElementById('headerMatchsProfileButton');
 const profileInfos = document.getElementById('profileInfos');
+const deleteProfileConfirm = document.getElementById('deleteProfileConfirm');
 
 const buttonsLanguage = document.querySelectorAll('.language');
 const imageSources = {
@@ -66,7 +68,7 @@ let profileIsOpen = false;
 let oldButton = mainPlayButton;
 export let isMenuOpen = false;
 
-document.getElementById('customButton').addEventListener('click', () => {
+document.getElementById('customButtonChangePicture').addEventListener('click', () => {
     fileInput.click();
 });
 
@@ -94,8 +96,19 @@ menuPanel.addEventListener('mouseleave', () => {
 document.getElementById('profileButton').addEventListener('click', () => {
     openProfile();
 });
-document.getElementById('deleteProfile').addEventListener('click', () => {
+
+document.getElementById('buttonAcceptDelete').addEventListener('click', () => {
+    cancelDeleteAccount();
     deleteAccount();
+});
+
+document.getElementById('deleteProfile').addEventListener('click', () => {
+    askDeleteProfile();
+});
+
+document.getElementById('buttonCancelDelete').addEventListener('click', () => {
+    callGameDialog("entityCancelDeleteAccount", EmotionType.SAD);
+    cancelDeleteAccount();
 });
 
 mainProfileButton.addEventListener('click', () => {
@@ -183,25 +196,41 @@ document.getElementById('uploadForm').addEventListener('submit', function(event)
         })
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
+            if (data.success)
+            {
                 profilePicture.src = "/media/" + data.url;
-                document.getElementById('status').textContent = 'Upload successful!';
-            } else {
-                document.getElementById('status').textContent = 'Upload failed!';
             }
         })
         .catch(error => {
-            document.getElementById('status').textContent = 'Error during upload!';
             console.error('Error:', error);
         });
-    } else {
-        document.getElementById('status').textContent = 'Please select a file to upload.';
     }
 });
 
 document.getElementById('perspectiveButton').classList.add('applyBorderOptions');
 document.getElementById('lang1Button').classList.add('applyBorderOptions');
 document.getElementById('color1Button').classList.add('applyBorderOptions');
+
+let askingDeleteAccount = false;
+
+export function isAskingDeleteAccount()
+{
+    return askingDeleteAccount;
+}
+
+function askDeleteProfile()
+{
+    callGameDialog("entityDontLeaveMe", EmotionType.FEAR);
+    askingDeleteAccount = true;
+    deleteProfileConfirm.style.display = 'flex';
+    document.getElementById('buttonCancelDelete').focus();
+}
+
+export function cancelDeleteAccount()
+{
+    askingDeleteAccount = false;
+    deleteProfileConfirm.style.display = 'none';
+}
 
 export function openGameMenu()
 {
@@ -232,8 +261,16 @@ export function openOrCloseGameMenu()
         document.activeElement.blur();
 }
 
+let miniProfileIsOpen = false;
+
+export function isMiniProfileOpen()
+{
+    return miniProfileIsOpen;
+}
+
 export function openMiniProfile(playerName)
 {
+    miniProfileIsOpen = true;
     getUserByName(playerName)
     .then((target) =>{
         miniNicknameText.textContent = target.username;
@@ -273,16 +310,19 @@ export function openMiniProfile(playerName)
 
     
     miniProfilePanel.style.display = 'flex';
+    closeMiniProfileButton.focus();
     setTimeout(() => {
         miniProfilePanel.classList.add('appear');
     }, 100);
 }
 
-function closeMiniProfile()
+export function closeMiniProfile()
 {
+    miniProfileIsOpen = false;
     miniProfilePanel.classList.remove('appear');
     setTimeout(() => {
         miniProfilePanel.style.display = 'none';
+        mainPlayButton.focus();
     }, 100);
 }
 

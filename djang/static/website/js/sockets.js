@@ -65,7 +65,7 @@ export function socketConnectToDuel()
         type: "join",
         answer: "no",
         id: playerStats.id,
-        blacklist: {}, // mettre les id au lieu des noms
+        blacklist: playerStats.blacklist, // mettre les id au lieu des noms
         private: "none", // 
         invited_by: 8, // utile seulement si private n'est pas none
         payload: { //Regles de configuration du match, TOUS doivent etre integres !
@@ -298,7 +298,7 @@ export function socketCreateDuelInvit(targetMsg) {
                     type: "join",
                     answer: "no",
                     id: playerStats.id,
-                    blacklist: {}, // mettre les id au lieu des noms
+                    blacklist: playerStats.blacklist, // mettre les id au lieu des noms
                     private: "invite", // 
                     invited: target.id,
                     invited_by: playerStats.id, // utile seulement si private n'est pas none

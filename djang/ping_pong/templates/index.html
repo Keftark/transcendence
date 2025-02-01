@@ -370,8 +370,8 @@
     <!------------------------------ Profile Panel ------------------------------>
     <div id="profilePanel">
         <div id="headerButtonsProfile">
-            <div id="headerMainProfileButton" class="headerProfileButton"></div>
-            <div id="headerMatchsProfileButton" class="headerProfileButton"></div>
+            <button id="headerMainProfileButton" class="headerProfileButton"></button>
+            <button id="headerMatchsProfileButton" class="headerProfileButton"></button>
         </div>
         <div id="profileInfos">
             <div id="headerProfile">
@@ -379,15 +379,10 @@
                     <img src="{% static 'icons/guestUser.webp' %}" id="profilePicture" alt="">
                     <form id="uploadForm" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <button type="button" id="customButton">Choose File</button>
+                        <button type="button" id="customButtonChangePicture"></button>
                         <input type="file" id="fileInput" accept="image/*" />
-                        <button id="submitButton" type="submit">Upload</button>
+                        <button id="submitButton" type="submit"></button>
                     </form>
-                    <div id="status"></div>
-                    <!-- <form action="" id="profile-form" method="POST" enctype="multipart/form-data">
-                        <input type="file" name="fileInput" id="fileInput" accept="image/*" />
-                        <button type="submit" id="profilePictureChangeButton" class="profilePictureChangeButton"></button>
-                    </form> -->
                 </div>
                 <h2 id="nameProfile"></h2>
             </div>
@@ -400,8 +395,7 @@
                 </div>
             </div>
             <div id="deleteProfile">
-                <button id="deleteProfileButton">
-                </button>
+                <button id="deleteProfileButton"></button>
             </div>
         </div>
         <div id="profileStats">
@@ -419,6 +413,13 @@
             </div>
         </div>
         <button id="closeProfileButton"></button>
+    </div>
+    <div id="deleteProfileConfirm">
+        <h2 id="deleteProfileAskText"></h2>
+        <div id="buttonsAskDelete">
+            <button class="buttonAccept" id="buttonAcceptDelete"></button>
+            <button class="buttonCancel" id="buttonCancelDelete"></button>
+        </div>
     </div>
 
     <!------------------------------ Settings Panel ------------------------------>
@@ -615,6 +616,10 @@
             <p id="gdprText"></p>
             <button class="regButton" id="gdprBack"></button>
         </div>
+    </div>
+
+    <div id="dialogDiv">
+        <p id="dialogText"></p>
     </div>
 
 </body>

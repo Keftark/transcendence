@@ -3,9 +3,10 @@ import { removeAllScores } from "./scoreManager.js";
 import { getTranslation } from "./translate.js";
 import { navigateTo } from "./pages.js";
 import { addDisableButtonEffect, closeListener, closeSocket, getListener, getSocket, listener, openSocket, removeDisableButtonEffect, socket } from "./main.js";
-import { checkAccessToChat } from "./chat.js";
+import { callGameDialog, checkAccessToChat } from "./chat.js";
 import { getLoggedInUser, logoutUser, registerUser } from "./apiFunctions.js";
 import { deleteAllFriendRequests, showFriendsBox } from "./friends.js";
+import { EmotionType } from "./variables.js";
 
 const inputName = document.getElementById('inputName');
 const inputFirstName = document.getElementById('inputFirstName');
@@ -232,6 +233,7 @@ async function acceptRegistration()
         return;
     
     await createNewPlayer();
+    callGameDialog("entityRegister", EmotionType.NORMAL);
     clickCancelRegister();
     logInUserUI();
 }

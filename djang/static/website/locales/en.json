@@ -129,6 +129,16 @@
     "youAlreadySentRequest": "You already sent a friend request to ",
     "youAlreadyBlocked": "You already blocked ",
     "requestSent": "A friend request has been sent to ",
-    "buttonSpectate": "Spectate"
-    
+    "deleteProfileAskText": "Do you really want to delete your account?",
+    "customButtonChangePicture": "Change picture",
+    "buttonSpectate": "Spectate",
+    "entityDontLeaveMe": "No... Please... I need you...",
+    "entityRegister": "Ah! A new player... Delicious.",
+    "entityLogIn": "Welcome back, dear player.",
+    "entityVictory": "Yes... Give me more energy!",
+    "entityDefeat": "Oh no. All this energy wasted...",
+    "entityExaequo": "You will do better next time, you need to.",
+    "entityCancelDeleteAccount": "Don't scare me like that anymore, please.",
+    "entityDeleteAccount": "You can't... leave... me..."
+
 }

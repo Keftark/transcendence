@@ -39,3 +39,12 @@ export const PlayerStatus =
     ONLINE: 1,
 	BUSY: 2
 }
+
+export const EmotionType = 
+{
+    NORMAL: 0,
+	FEAR: 1,
+	ANGER: 2,
+	SAD: 3,
+	LOVE: 4
+}

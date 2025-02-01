@@ -902,9 +902,9 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
         else if (winner != '')
         {
             if (winner === getPlayerName())
-                callVictoryScreen(VictoryType.VICTORY);
+                callVictoryScreen(VictoryType.VICTORY, winner);
             else
-                callVictoryScreen(VictoryType.DEFEAT);
+                callVictoryScreen(VictoryType.DEFEAT, winner);
         }
         else
             callVictoryScreen(VictoryType.EXAEQUO);

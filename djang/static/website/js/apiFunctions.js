@@ -1,8 +1,9 @@
-import { sendSystemMessage } from "./chat.js";
+import { callGameDialog, sendSystemMessage } from "./chat.js";
 import { closeProfile } from "./menu.js";
 import { editPlayerStats, playerStats } from "./playerManager.js";
 import { clickLogOut } from "./registration.js";
 import { clickCancelSignIn, invalidCredentials } from "./signIn.js";
+import { EmotionType } from "./variables.js";
 
 export function getCSRFToken()
 {
@@ -562,6 +563,7 @@ export async function deleteAccount() {
             } else
                 throw new Error(`Network response was not ok. Status: ${response.status}`);
         }
+        callGameDialog("entityDeleteAccount", EmotionType.SAD);
         clickLogOut(true);
         closeProfile();
         return response;

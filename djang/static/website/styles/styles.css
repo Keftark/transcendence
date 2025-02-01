@@ -5,6 +5,10 @@
     src: url('../fonts/PixelGame.otf') format('opentype');
 }
 
+:root {
+    --glow-color: #00ffff;
+}
+
 .message li {
     margin-bottom: -13px;
 }
