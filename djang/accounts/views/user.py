@@ -318,8 +318,10 @@ def set_settings(request, user_id):
     try:
         user = User.objects.get(id=user_id)
         data = json.loads(request.body)
-        user.accountmodel.settings.language = data.language
-        user.accountmodel.settings.color = data.color
+        user.settingsmodel.language = data.language
+        user.settingsmodel.color = data.color
+        user.settingsmodel.view = data.view
+        user.settingsmodel.save()
         JsonResponse({'success': True, 'message':'The user is deleted'})         
 
     except User.DoesNotExist:
