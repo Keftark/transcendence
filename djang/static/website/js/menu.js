@@ -128,6 +128,10 @@ document.getElementById('reinitLevelButton').addEventListener('click', () => {
     reinitLevelFunction();
 });
 
+document.getElementById('seeTournamentButton').addEventListener('click', () => {
+    // todo afficher la vue du tournoi
+});
+
 mainSettingsButton.addEventListener('click', () => {
     openSettings();
 });

@@ -48,7 +48,7 @@ export function getLevelState()
 export function checkEscapeKey()
 {
     const currentView = getCurrentView();
-    if (isGdprOpen)
+    if (isGdprOpen())
         closeGdprPanel();
     else if (isAskingDeleteAccount())
         cancelDeleteAccount();
@@ -132,34 +132,6 @@ export function isElementVisible(element) {
       rect.right <= (window.innerWidth || document.documentElement.clientWidth)
     );
 }
-
-// export function IsLoggedIn()
-// {
-//     document.addEventListener("DOMContentLoaded", function() {
-//         fetch('/check-login/')
-//             .then(response => response.json())
-//             .then(data => {
-//                 return (data.is_logged_in)
-//             })
-//             .catch(error => {
-//                 console.error('Error checking login status:', error);
-//             });
-//     });
-// }
-
-// function retrievePlayer()
-// {
-//     if (isUserLoggedIn())
-//     {
-//         const currentPage = getCurrentView();
-//         switch (currentPage)
-//         {
-//             case "home":
-                
-//             break;
-//         }
-//     }
-// }
 
 export let socket = null;
 export let listener = null;

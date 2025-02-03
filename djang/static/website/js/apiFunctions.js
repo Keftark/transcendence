@@ -278,7 +278,7 @@ export async function getUserPaddleSkin(userId) {
         const userData = await response.json();
         if (userData.error)
             console.error(userData.error);
-        // console.log("user data: " + JSON.stringify(userData));
+        // console.log("Paddle data: " + JSON.stringify(userData));
         return userData;
     } catch (error) {
         console.error("An error occurred while fetching the user details:", error);
@@ -292,13 +292,13 @@ export async function setUserPaddleSkin(userId, newPaddleSkin) {
     }
     try {
         const response = await fetch(`/user_paddle/${userId}/`, {
-            method: 'PUT',  // You can also use 'PATCH' if you want partial updates
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': getCSRFToken(), // Include CSRF token if needed
+                'X-CSRFToken': getCSRFToken(),
             },
             body: JSON.stringify({
-                preferredPaddle: newPaddleSkin  // Send the new skin as part of the request body
+                preferredPaddle: newPaddleSkin
             })
         });
 

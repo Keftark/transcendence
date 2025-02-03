@@ -36,7 +36,7 @@ const checkboxGdpr = document.getElementById('checkboxGdpr');
 let isRegistOpen = false;
 let showPass = false;
 let showPassConfirm = false;
-export let isGdprOpen = false;
+let gdprIsOpen = false;
 let isFirstTime = true;
 
 document.getElementById('buttonLogOut').addEventListener('click', () => {
@@ -127,7 +127,6 @@ export function onRegistrationOpen()
     setTimeout(() => {
         openGdprPanel();
     }, 300);
-    // inputName.focus();
 }
 
 function checkFields()
@@ -338,29 +337,31 @@ function clickCheckboxGdpr()
     verifyCheckboxGdpr();
 }
 
+export function isGdprOpen()
+{
+    return gdprIsOpen;
+}
+
 export function openGdprPanel()
 {
-    isGdprOpen = true;
+    gdprIsOpen = true;
     gdprPanel.style.display = 'flex';
     setTimeout(() => {
-        document.querySelector('#gdprPanel').focus();
+        
+        document.getElementById('gdprPanel').focus();
     }, 10);
 }
 
 export function closeGdprPanel()
 {
     document.querySelector('#gdprPanel').scrollTop = 0;
-    isGdprOpen = false;
+    gdprIsOpen = false;
     gdprPanel.style.display = 'none';
     if (isFirstTime)
         inputName.focus();
     else
         checkboxGdpr.focus();
     isFirstTime = false;
-}
-
-export function isUserLoggedIn() {
-    return document.cookie.includes('sessionid=');
 }
 
 function addSelectableTexts()

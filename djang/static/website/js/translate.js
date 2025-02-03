@@ -27,6 +27,7 @@ export function updateHTML(translations)
 	document.getElementById('mainButton').innerText = translations.mainButton;
 	document.getElementById('mainCustomizeButton').innerText = translations.mainCustomizeButton;
 	document.getElementById('reinitLevelButton').innerText = translations.reinitLevelButton;
+	document.getElementById('seeTournamentButton').innerText = translations.tournamentText;
 	document.getElementById('settingsHeader').innerText = translations.settings;
 	document.getElementById('colors').innerText = translations.colors;
 	document.getElementById('closeProfileButton').innerText = translations.close;
