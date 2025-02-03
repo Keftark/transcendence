@@ -628,14 +628,19 @@ export async function setSettingsInDatabase(id, newColor, newLanguage, newView) 
     }
 }
 
-export async function updateSettingsInDatabase(id, newColor, newLanguage, newView) {
+export async function updateSettingsInDatabase(newColor, newLanguage, newView) {
     try {
         const response = await fetch(`/update_settings`, {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': getCSRFToken()
-            }
+            },
+            body: JSON.stringify({
+                color: newColor,
+                language: newLanguage,
+                view: Number(newView)
+            })
         });
         if (!response.ok)
             throw new Error('Network response was not ok');

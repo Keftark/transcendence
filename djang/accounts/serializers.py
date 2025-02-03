@@ -33,14 +33,11 @@ class AccountSerializer(serializers.ModelSerializer):
     has_incoming_request = serializers.SerializerMethodField()
     has_outgoing_request = serializers.SerializerMethodField()
     preferredPaddle = serializers.SerializerMethodField()
-    color = serializers.SerializerMethodField()
-    language = serializers.SerializerMethodField()
-    view = serializers.SerializerMethodField()
 
     class Meta:
         model = AccountModel
         fields = ["username", "avatar", "id", 'status', 'description', 'is42', 'is_friend', 'is_blocked',
-                  'has_outgoing_request', 'has_incoming_request', 'preferredPaddle', 'color', 'language', 'view']
+                  'has_outgoing_request', 'has_incoming_request', 'preferredPaddle']
 
     def get_status(self, obj: AccountModel):
         from notifications.consumers import notification_manager
@@ -162,13 +159,13 @@ class UpdatePasswordSerializer(ModelSerializer):
     
 class UpdateSettingsSerializer(ModelSerializer):
     class Meta:
-        model = AccountModel
+        model = SettingsModel
         fields =['color', 'language', 'view']
 
     def update(self, instance, validated_data):
-        account = self.context['request'].user
+        settings = self.context['request'].user
 
-        if account.pk != instance.pk:
+        if settings.pk != instance.pk:
             raise ValidationError({'authorize': _('You dont have permission for this user.')})
 
         instance.username = validated_data.get('username', instance.username)
