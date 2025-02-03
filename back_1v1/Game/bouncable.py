@@ -22,7 +22,7 @@ class Bouncable():
         """Returns the lower bound of the Bouncable.
         """
         return self.bounds()[3]
-    
+
     def upper_bound(self):
         """Returns the upper bound of the Bouncable.
         """
