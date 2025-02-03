@@ -313,6 +313,20 @@ def del_user(request):
         return render(request, 'index.html')
 
     return render(request, 'index.html') 
+
+def set_settings(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+        data = json.loads(request.body)
+        user.accountmodel.settings.language = data.language
+        user.accountmodel.settings.color = data.color
+        JsonResponse({'success': True, 'message':'The user is deleted'})         
+
+    except User.DoesNotExist:
+        JsonResponse({'success': False, 'message':'The user does not exists'})   
+        return render(request, 'index.html')
+
+    return render(request, 'index.html') 
       
 class UpdateProfileView(UpdateAPIView):
 
@@ -330,5 +344,4 @@ class UpdatePasswordView(UpdateAPIView):
 
     def get_object(self):
         return self.queryset.get(pk=self.request.user.pk)
-
 
