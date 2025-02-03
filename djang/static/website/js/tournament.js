@@ -336,6 +336,8 @@ let last = false;
 let first = true;
 function createTournamentView()
 {
+    storePlayers();
+    storeCurrentMatch();
     last = false;
     first = true;
     playersInTier = countPlayers;
@@ -427,6 +429,7 @@ export function closeTournamentView()
 
 function displayNextMatch()
 {
+    storeCurrentTier();
     const child = tiersList[currentTier].children;
     child[currentMatch.player1].classList.add('nextMatch');
     child[currentMatch.player2].classList.add('nextMatch');
@@ -439,6 +442,7 @@ function goToNextTier()
     currentTier += 1;
     currentMatch.player1 = 0;
     currentMatch.player2 = 1;
+    storeCurrentMatch();
 }
 
 function callVictory()
@@ -455,13 +459,14 @@ function prepareNextMatch()
         if (currentTier === tiersList.length - 1)
         {
             callVictory();
-            console.log("End of tournament!");
+            removeStorage();
         }
     }
     else
     {
         currentMatch.player1+=2;
         currentMatch.player2+=2;
+        storeCurrentMatch();
     }
     displayNextMatch();
 }
@@ -474,9 +479,10 @@ export function isTournamentViewOpen()
     return tournamentViewIsOpen;
 }
 
-export function setWinnerNbr(nbr)
+export function setWinner(p1, p2, s1, s2)
 {
-    winnerNbr = nbr;
+    winnerNbr = s1 > s2 ? 1 : 2;
+    storeMatchResult(p1, p2, s1, s2);
 }
 
 let cancelledInMatch = false;
@@ -527,6 +533,50 @@ export function endOfTournamentMatch()
     setTimeout(() => {
         startMatchTournamentButton.focus();
     }, 10);
+}
+
+function storePlayers()
+{
+    if (localStorage.getItem('players') === null)
+        localStorage.setItem('players', JSON.stringify(players));
+}
+
+function storeCurrentTier()
+{
+    localStorage.setItem('currentTier', currentTier);
+}
+
+function storeCurrentMatch()
+{
+    localStorage.setItem('currentP1', currentMatch.player1);
+    localStorage.setItem('currentP2', currentMatch.player2);
+}
+
+function storeMatchResult(p1, p2, s1, s2)
+{
+    let matchs = JSON.parse(localStorage.getItem('matchs')) || [];
+    const newMatch = {
+        player1: p1,
+        player2: p2,
+        score1: s1,
+        score2: s2
+    };
+    matchs.push(newMatch);
+    localStorage.setItem('matchs', JSON.stringify(matchs));
+}
+
+function removeStorage()
+{
+    localStorage.removeItem('players');
+    localStorage.removeItem('currentTier');
+    localStorage.removeItem('currentP1');
+    localStorage.removeItem('currentP2');
+    localStorage.removeItem('matchs');
+}
+
+export function askResumeTournament()
+{
+    
 }
 
 // createTournamentView();

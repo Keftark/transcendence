@@ -87,7 +87,7 @@ modesOnlineButton.addEventListener('click', () => {
     clickModesOnline();
 });
 
-function setSelectedMode(newSelectedMode)
+export function setSelectedMode(newSelectedMode)
 {
     localStorage.setItem('selectedMode', newSelectedMode);
 }

@@ -22,7 +22,7 @@ import { createDeathSphere } from './deathSphere.js';
 import { Sparks } from './sparks.js';
 import { socketSendPlayerReady, setMatchAlreadyStarted } from './sockets.js';
 import { getUserById, getUserPaddleSkin } from './apiFunctions.js';
-import { getTournamentPlayers, setWinnerNbr } from './tournament.js';
+import { getTournamentPlayers, setWinner } from './tournament.js';
 
 const gameMenuPanel = document.getElementById('gameMenuPanel');
 const inputChat = document.getElementById('inputChat');
@@ -850,17 +850,10 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
 
     let victoryType;
     let winner = '';
-    let winnerNbr = 0;
     if (scoreP1 > scoreP2)
-    {
-        winnerNbr = 1;
         winner = player1NameText;
-    }
     else if (scoreP1 < scoreP2)
-    {
-        winnerNbr = 2;
         winner = player2NameText;
-    }
     if (forcedVictory)
         victoryType = VictoryType.VICTORY;
     else if (winner != '')
@@ -874,7 +867,7 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
         victoryType = VictoryType.EXAEQUO;
     
     if (currentLevelMode === LevelMode.TOURNAMENT)
-        setWinnerNbr(winnerNbr);
+        setWinner(player1NameText, player2NameText, scoreP1, scoreP2);
     if (!isSpectator())
         addMatchToHistory(victoryType, scorePlayer, scoreOpponent, opponentName, getRawMatchTime());
     pressPlayDiv.style.display = 'none';
