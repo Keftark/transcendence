@@ -41,6 +41,7 @@ urlpatterns = [
     path("me", MyAccountViewSet.as_view({'get': 'retrieve'}), name="my_account_page"), #My Account page
     path("update-profile", UpdateProfileView.as_view(), name="update-user"), # update user
     path('update_password', UpdatePasswordView.as_view(), name='update_password'), # update user password
+    path('update_password', UpdateSettingsView.as_view(), name='update_password'), # update user settings
     path("settings", MyAccountViewSet.as_view({'patch': 'partial_update', 'delete': 'delete_avatar'}), name="my_profile_page"), #Update account page
     path("friends", GetFriendsView.as_view(), name="friends_list_page"), # Friends list page
     path("blocked", GetBlocksView.as_view(), name="blocks_list_page"), # Friends list page
