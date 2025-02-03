@@ -372,17 +372,16 @@ async def connection_handler():
     """
     while Sockets.STOP_FLAG is False:
         if Sockets.CENTRAL_SOCKET is None:
-            try:
-                logger.log("Attempting connection to central server.", 1)
-                uri = "wss://172.17.0.1:" + str(CENTRAL_PORT) + "/"
-                Sockets.CENTRAL_SOCKET = await connect(uri, ping_interval=10,
-                                                       ping_timeout=None, ssl=ssl_client,
-                                                       max_size=10485760, max_queue=256,
-                                                       write_limit=327680)
-                logger.log("Central server connected.", 1)
-            except Exception as e:
-                Sockets.CENTRAL_SOCKET = None
-                logger.log("Couldn't connect to the central server", 2, e)
+            with lock:
+                try:
+                    logger.log("Attempting connection to central server.", 1)
+                    uri = "wss://172.17.0.1:" + str(CENTRAL_PORT) + "/"
+                    Sockets.CENTRAL_SOCKET = await connect(uri, ping_interval=10,
+                                                        ping_timeout=None, ssl=ssl_client)
+                    logger.log("Central server connected.", 1)
+                except Exception as e:
+                    Sockets.CENTRAL_SOCKET = None
+                    logger.log("Couldn't connect to the central server", 2, e)
         else:
             with lock:
                 try:
