@@ -13,7 +13,7 @@ import { addSocketListener, connectToServerInput, connectToServerOutput } from '
 import { closePaddleChoice, isPaddleChoiceOpen } from './customizeSkins.js';
 import { clickCancelSignIn, isSigninOpen } from './signIn.js';
 import { getAddress } from './apiFunctions.js';
-import { askBackTournamentView, cancelAddPlayerTournament, cancelBackTournamentView, isAddPlayerTournamentIsOpen, isInAskBackTournamentView, isTournamentViewOpen, quitTournamentLobby } from './tournament.js';
+import { askBackTournamentView, cancelAddPlayerTournament, cancelBackTournamentView, closeTournamentViewPanel, isAddPlayerTournamentIsOpen, isInAskBackTournamentView, isTournamentViewOpen, quitTournamentLobby } from './tournament.js';
 import { loadBlocks, loadFriends } from './friends.js';
 
 window.onbeforeunload = function() {
@@ -71,7 +71,12 @@ export function checkEscapeKey()
     else if (isInAskBackTournamentView())
         cancelBackTournamentView();
     else if (isTournamentViewOpen())
-        askBackTournamentView();
+    {
+        if (isInGame)
+            closeTournamentViewPanel();
+        else
+            askBackTournamentView();
+    }
     else if (isAddPlayerTournamentIsOpen())
         cancelAddPlayerTournament();
     else if (currentView === 'rules')

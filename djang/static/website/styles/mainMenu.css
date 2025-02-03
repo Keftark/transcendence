@@ -102,6 +102,11 @@
     box-shadow: 0 0 8px rgba(255, 0, 0, 0.301);
 }
 
+.buttonCenter
+{
+    transform: none;
+}
+
 .buttonCancel:hover
 {
     border-color: #b60000;

@@ -101,6 +101,7 @@ export function updateHTML(translations)
 	document.getElementById('startMatchTournamentButton').innerText = translations.start;
 	document.getElementById('cancelTournamentLobbyButton').innerText = translations.cancel;
 	document.getElementById('cancelMatchTournamentButton').innerText = translations.cancel;
+	document.getElementById('closeTournamentViewButton').innerText = translations.close;
 	document.getElementById('confirmBackTournamentButton').innerText = translations.confirm;
 	document.getElementById('cancelBackTournamentButton').innerText = translations.cancel;
 	document.getElementById('addPlayerTournament').innerText = translations.addPlayerTournament;
