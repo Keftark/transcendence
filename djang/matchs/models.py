@@ -3,10 +3,8 @@ from datetime import datetime
 from os.path import splitext
 
 from django.db import models
-from django.utils import timezone
 from django.contrib.auth.models import User
-from django.db.models import Q, Model, CASCADE, ForeignKey, ImageField, OneToOneField, QuerySet
-from django.dispatch import receiver
+from django.db.models import CASCADE, QuerySet
 from django.contrib.postgres.fields import ArrayField
 from django.db.models.signals import post_save, pre_delete
 from accounts.models import AccountModel
@@ -84,3 +82,16 @@ class Historique(models.Model):
     match = models.ForeignKey(Match, on_delete=models.SET_NULL , null=True, related_name='match')
     goal_timestamp = models.BigIntegerField(null = True, blank = True)
     player = models.ForeignKey(AccountModel, on_delete=models.SET_NULL, null=True, related_name='player')
+
+class TournamentMatchModel(models.Model):
+    tournament_match_id = models.IntegerField()
+    player_1 = models.CharField(max_length=150)
+    player_1_score = models.IntegerField(null=True)
+    player_2 = models.CharField(max_length=150)
+    player_2_score = models.IntegerField(null=True)
+
+class TournamentModel(models.Model):
+    tournament_id = models.IntegerField()
+    players = ArrayField(models.CharField(max_length=150))
+    matchs =  ArrayField(models.IntegerField())
+    winner = models.CharField(max_length=150)

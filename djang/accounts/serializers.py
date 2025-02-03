@@ -1,7 +1,7 @@
 from os import path
 from django.conf import settings
 from django.utils.translation import gettext as _
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import User
 from accounts.models import *
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer, ValidationError
@@ -155,5 +155,21 @@ class UpdatePasswordSerializer(ModelSerializer):
 
         instance.save()
         login(self.context['request'], instance)
+        return instance
+    
+class UpdateSettingsSerializer(ModelSerializer):
+    class Meta:
+        model = AccountModel
+        fields =['color', 'language', 'view']
+
+    def update(self, instance, validated_data):
+        account = self.context['request'].user
+
+        if account.pk != instance.pk:
+            raise ValidationError({'authorize': _('You dont have permission for this user.')})
+
+        instance.username = validated_data.get('username', instance.username)
+
+        instance.save()
         return instance
 

@@ -605,3 +605,25 @@ export async function deleteAccount() {
         console.error('Error:', error);
     }
 }
+
+export async function setSettingsInDatabase(id, newColor, newLanguage, newView) {
+    try {
+        const response = await fetch(`/set_settings/${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            },
+            body: JSON.stringify({
+                color: newColor,
+                language: newLanguage,
+                view: newView
+            })
+        });
+        if (!response.ok)
+            throw new Error('Network response was not ok');
+        return response;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}

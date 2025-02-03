@@ -111,6 +111,6 @@ class BlockModel(Model):
 
 class SettingsModel(Model):
     account = ForeignKey(AccountModel, on_delete=CASCADE, null=True, related_name='account')
-    color = models.CharField(max_length=150, default="white")
-    language = models.CharField(max_length=150, default="french")
-    view = models.IntegerField(default=1)
+    color = models.CharField(max_length=15, default="white")
+    language = models.CharField(max_length=2, default="en")
+    view = models.IntegerField(default=0)

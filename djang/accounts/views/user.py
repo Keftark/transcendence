@@ -9,7 +9,7 @@ from django.contrib.auth import logout
 from django.utils.translation import gettext as _
 from django.core.files.uploadedfile import SimpleUploadedFile
 from accounts.models import *
-from ..serializers import UpdateUserSerializer, UpdatePasswordSerializer
+from ..serializers import UpdateUserSerializer, UpdatePasswordSerializer, UpdateSettingsSerializer
 from rest_framework.generics import UpdateAPIView
 from django.shortcuts import get_object_or_404
 from accounts.serializers import AccountSerializer
@@ -313,6 +313,20 @@ def del_user(request):
         return render(request, 'index.html')
 
     return render(request, 'index.html') 
+
+def set_settings(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+        data = json.loads(request.body)
+        user.accountmodel.settings.language = data.language
+        user.accountmodel.settings.color = data.color
+        JsonResponse({'success': True, 'message':'The user is deleted'})         
+
+    except User.DoesNotExist:
+        JsonResponse({'success': False, 'message':'The user does not exists'})   
+        return render(request, 'index.html')
+
+    return render(request, 'index.html') 
       
 class UpdateProfileView(UpdateAPIView):
 
@@ -330,5 +344,12 @@ class UpdatePasswordView(UpdateAPIView):
 
     def get_object(self):
         return self.queryset.get(pk=self.request.user.pk)
+    
+class UpdateSettingsView(UpdateAPIView):
+    queryset = AccountModel.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UpdateSettingsSerializer
 
+    def get_object(self):
+        return self.queryset.get(pk=self.request.accountmodel.pk)
 
