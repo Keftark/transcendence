@@ -24,7 +24,7 @@ from drf_extra_fields.fields import Base64ImageField
 class AccountSerializer(serializers.ModelSerializer):
 
     username = serializers.ReadOnlyField(source='user.username')
-    #avatar = serializers.Base64ImageField(required=False)
+    avatar = Base64ImageField(required=False)
     status = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
     is42 = serializers.ReadOnlyField()
