@@ -4,7 +4,7 @@ import math
 import random
 
 MAX_BOUNCE_ANGLE = math.radians(60)
-PRECISION = 10
+PRECISION = 5
 
 class Ball:
     """A ball class that balls around
@@ -26,18 +26,20 @@ class Ball:
         self._room_id = room_id
         self._message_queue = []
 
-    def load_parameters(self, radius, base_speed, speed_increment):
-        self._x = 0
-        self._y = 0
-        self._speed = base_speed
-        self._base_speed = self._speed
-        self._velocity_x = self._speed if random.random() < 0.5 else self._speed * -1
-        self._velocity_y = 0
-        self._velocity_boosted_x = 0
-        self._velocity_boosted_y = 0
-        self._speed_increment = speed_increment
-        self._bounce_angle_max = 75 * math.pi / 180
-        self._radius = radius
+    def set_up(self, payload):
+        """Loads optionnal parameters.
+
+        Args:
+            payload (dict): contains optional parameters.
+        """
+        for data in payload:
+            match data:
+                case "base_speed":
+                    self._base_speed = (int)(payload[data])
+                case "speed_increment":
+                    self.speed_increment = (int)(payload[data])
+                case "radius":
+                    self._radius = (int)(payload[data])
 
     def reset(self, side):
         """Resets the ball to the center, and gives it 
