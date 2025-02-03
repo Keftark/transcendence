@@ -207,6 +207,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-evenly;
+    z-index: 2;
 }
 
 .tournamentCanvas

@@ -13,7 +13,7 @@ import { addSocketListener, connectToServerInput, connectToServerOutput } from '
 import { closePaddleChoice, isPaddleChoiceOpen } from './customizeSkins.js';
 import { clickCancelSignIn, isSigninOpen } from './signIn.js';
 import { getAddress } from './apiFunctions.js';
-import { askBackTournamentView, cancelAddPlayerTournament, cancelBackTournamentView, isAddPlayerTournamentIsOpen, isInAskBackTournamentView, isTournamentViewOpen, quitTournamentLobby } from './tournament.js';
+import { askBackTournamentView, cancelAddPlayerTournament, cancelBackTournamentView, closeTournamentViewPanel, isAddPlayerTournamentIsOpen, isInAskBackTournamentView, isTournamentViewOpen, quitTournamentLobby } from './tournament.js';
 import { loadBlocks, loadFriends } from './friends.js';
 
 window.onbeforeunload = function() {
@@ -48,7 +48,7 @@ export function getLevelState()
 export function checkEscapeKey()
 {
     const currentView = getCurrentView();
-    if (isGdprOpen)
+    if (isGdprOpen())
         closeGdprPanel();
     else if (isAskingDeleteAccount())
         cancelDeleteAccount();
@@ -71,7 +71,12 @@ export function checkEscapeKey()
     else if (isInAskBackTournamentView())
         cancelBackTournamentView();
     else if (isTournamentViewOpen())
-        askBackTournamentView();
+    {
+        if (isInGame)
+            closeTournamentViewPanel();
+        else
+            askBackTournamentView();
+    }
     else if (isAddPlayerTournamentIsOpen())
         cancelAddPlayerTournament();
     else if (currentView === 'rules')
@@ -132,34 +137,6 @@ export function isElementVisible(element) {
       rect.right <= (window.innerWidth || document.documentElement.clientWidth)
     );
 }
-
-// export function IsLoggedIn()
-// {
-//     document.addEventListener("DOMContentLoaded", function() {
-//         fetch('/check-login/')
-//             .then(response => response.json())
-//             .then(data => {
-//                 return (data.is_logged_in)
-//             })
-//             .catch(error => {
-//                 console.error('Error checking login status:', error);
-//             });
-//     });
-// }
-
-// function retrievePlayer()
-// {
-//     if (isUserLoggedIn())
-//     {
-//         const currentPage = getCurrentView();
-//         switch (currentPage)
-//         {
-//             case "home":
-                
-//             break;
-//         }
-//     }
-// }
 
 export let socket = null;
 export let listener = null;

@@ -9,7 +9,7 @@ import { getCurrentView, navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
 import { loadScores, removeAllScores } from './scoreManager.js';
 import { exitGameSocket } from './sockets.js';
-import { setCancelledInMatch } from './tournament.js';
+import { openTournamentView, setCancelledInMatch } from './tournament.js';
 import { changeLanguage, getTranslation } from './translate.js';
 import { EmotionType, LevelMode, PlayerStatus } from './variables.js';
 
@@ -83,6 +83,8 @@ mainPlayButton.addEventListener('click', () => {
 gameSettingsButton.addEventListener('click', () => {
     gameSettingsButton.blur();
     openSettings();
+    if (isMenuOpen)
+        closeGameMenu();
 });
 
 menuPanel.addEventListener('mouseenter', () => {
@@ -95,6 +97,8 @@ menuPanel.addEventListener('mouseleave', () => {
 
 document.getElementById('profileButton').addEventListener('click', () => {
     openProfile();
+    if (isMenuOpen)
+        closeGameMenu();
 });
 
 document.getElementById('buttonAcceptDelete').addEventListener('click', () => {
@@ -128,6 +132,12 @@ document.getElementById('reinitLevelButton').addEventListener('click', () => {
     reinitLevelFunction();
 });
 
+document.getElementById('seeTournamentButton').addEventListener('click', () => {
+    openTournamentView(true);
+    if (isMenuOpen)
+        closeGameMenu();
+});
+
 mainSettingsButton.addEventListener('click', () => {
     openSettings();
 });
@@ -140,6 +150,8 @@ document.getElementById('mainButton').addEventListener('click', () => {
     exitGameSocket();
     setCancelledInMatch(true);
     clickBackButtonMenu();
+    if (isMenuOpen)
+        closeGameMenu();
 });
 
 document.getElementById('perspectiveButton').addEventListener('click', () => {
@@ -234,10 +246,8 @@ export function cancelDeleteAccount()
 
 export function openGameMenu()
 {
-    setTimeout(() => {
-        isMenuOpen = true;
-        menuPanel.classList.add('show');
-    });
+    isMenuOpen = true;
+    menuPanel.classList.add('show');
 }
 
 export function closeGameMenu()
@@ -625,45 +635,3 @@ export function isProfileOpen()
 {
     return profileIsOpen;
 }
-
-
-
-
-// add a way to save the image to the DB and check if the format is ok + no sql injection?
-// injec sql -> verifier metadata
-// fileInput.addEventListener('change', (event) => {
-//     const file = event.target.files[0];
-//     if (file)
-//     {
-//         const reader = new FileReader();
-//         reader.onload = (e) => {
-//         profilePicture.src = e.target.result;
-//         // uploadAvatar(playerStats.nickname, e.target.result);
-//         };
-//         reader.readAsDataURL(file);
-//     }
-// });
-
-// document.getElementById('profile-form').addEventListener("submit", function(e) {
-//     e.preventDefault();  // Prevent the default form submission
-    
-//     var formData = new FormData(this);  // Create a FormData object to hold the file and form data
-//     for (var pair of formData.entries()) {
-//         console.log("Pairs: " + pair[0]+ ', ' + pair[1]);
-//     }
-//     fetch('/uploadavatar/', {
-//         method: 'POST',
-//         headers: {
-//             'X-CSRFToken': getCSRFToken()
-//         },
-//         body: formData
-//     })
-//     .then(response => response.json())  // Assuming server responds with JSON
-//     .then(data => {
-//         console.log("Upload successful", data);
-//         // Handle successful upload (e.g., update UI, show a success message)
-//     })
-//     .catch(error => {
-//         console.error("Error uploading file", error);
-//     });
-// });

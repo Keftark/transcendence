@@ -16,6 +16,7 @@ const tournamentWinVictoryText = document.getElementById('tournamentWinVictoryTe
 const closeTournamentVictoryButton = document.getElementById('closeTournamentVictoryButton');
 const startMatchTournamentButton = document.getElementById('startMatchTournamentButton');
 const cancelMatchTournamentButton = document.getElementById('cancelMatchTournamentButton');
+const closeTournamentViewButton = document.getElementById('closeTournamentViewButton');
 const confirmBackTournamentButton = document.getElementById('confirmBackTournamentButton');
 const cancelBackTournamentButton = document.getElementById('cancelBackTournamentButton');
 const askBackTournamentViewPanel = document.getElementById('askBackTournamentViewPanel');
@@ -32,6 +33,10 @@ export function getTournamentPlayers()
 {
     return [player1Name, player2Name];
 }
+
+closeTournamentViewButton.addEventListener('click', () => {
+    closeTournamentViewPanel();
+});
 
 closeTournamentVictoryButton.addEventListener('click', () => {
     closeTournamentView();
@@ -86,8 +91,7 @@ let addPlayerIsOpen = false;
 
 function startMatchTournament()
 {
-    tournamentMatchsCanvas.style.display = 'none';
-    tournamentViewIsOpen = false;
+    closeTournamentViewPanel();
     clickPlayGame();
 }
 
@@ -308,6 +312,26 @@ function drawOnCanvases() {
     }
 }
 
+export function openTournamentView(fromGame = false)
+{
+    tournamentMatchsCanvas.style.display = 'flex';
+    if (fromGame)
+    {
+        closeTournamentViewButton.style.display = 'flex';
+        startMatchTournamentButton.style.display = 'none';
+        cancelMatchTournamentButton.style.display = 'none';
+        closeTournamentViewButton.focus();
+    }
+    else
+    {
+        closeTournamentViewButton.style.display = 'none';
+        startMatchTournamentButton.style.display = 'flex';
+        cancelMatchTournamentButton.style.display = 'flex';
+        startMatchTournamentButton.focus();
+    }
+    tournamentViewIsOpen = true;
+}
+
 let last = false;
 let first = true;
 function createTournamentView()
@@ -315,7 +339,6 @@ function createTournamentView()
     last = false;
     first = true;
     playersInTier = countPlayers;
-    // playersInTier = 8;
     while (playersInTier > 0)
     {
         let curTierDiv = createPlayersTier();
@@ -325,8 +348,7 @@ function createTournamentView()
         }
         if (last === true)
         {
-            tournamentMatchsCanvas.style.display = 'flex';
-            tournamentViewIsOpen = true;
+            openTournamentView();
             drawOnCanvases();
             return;
         }
@@ -375,9 +397,14 @@ export function backTournamentView()
     tiersList.length = 0;
     while (tournamentMatchsCanvas.children.length > 1)
         tournamentMatchsCanvas.removeChild(tournamentMatchsCanvas.lastChild);
-    tournamentViewIsOpen = false;
-    tournamentMatchsCanvas.style.display = 'none';
+    closeTournamentViewPanel();
     addPlayerButton.focus();
+}
+
+export function closeTournamentViewPanel()
+{
+    tournamentMatchsCanvas.style.display = 'none';
+    tournamentViewIsOpen = false;
 }
 
 export function closeTournamentView()

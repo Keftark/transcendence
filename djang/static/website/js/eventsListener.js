@@ -10,8 +10,8 @@ import { isAddPlayerTournamentIsOpen, isInAskBackTournamentView, isTournamentVie
 
 function getFocusableElements()
 {
-    if (isGdprOpen)
-        return document.getElementById('gdprPanel').querySelectorAll('button');
+    if (isGdprOpen())
+        return [document.getElementById('gdprBack')];
     else if (isAskingDeleteAccount())
         return document.getElementById('buttonsAskDelete').querySelectorAll('button');
     else if (isMiniProfileOpen())

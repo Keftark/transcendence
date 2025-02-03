@@ -330,7 +330,8 @@ function setUpScene()
 
 function setupInterface()
 {
-    document.getElementById('reinitLevelButton').style.display = isAnOnlineMode(currentLevelMode) ? 'none' : 'block';
+    document.getElementById('reinitLevelButton').style.display = isAnOnlineMode(currentLevelMode) || currentLevelMode === LevelMode.TOURNAMENT ? 'none' : 'block';
+    document.getElementById('seeTournamentButton').style.display = currentLevelMode === LevelMode.TOURNAMENT ? 'block' : 'none';
     document.getElementById('profileButton').style.display = playerStats.isRegistered ? 'block' : 'none';
     gameMenuPanel.style.display = 'block';
     showInGameUI();

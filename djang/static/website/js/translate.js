@@ -27,6 +27,7 @@ export function updateHTML(translations)
 	document.getElementById('mainButton').innerText = translations.mainButton;
 	document.getElementById('mainCustomizeButton').innerText = translations.mainCustomizeButton;
 	document.getElementById('reinitLevelButton').innerText = translations.reinitLevelButton;
+	document.getElementById('seeTournamentButton').innerText = translations.tournamentText;
 	document.getElementById('settingsHeader').innerText = translations.settings;
 	document.getElementById('colors').innerText = translations.colors;
 	document.getElementById('closeProfileButton').innerText = translations.close;
@@ -100,6 +101,7 @@ export function updateHTML(translations)
 	document.getElementById('startMatchTournamentButton').innerText = translations.start;
 	document.getElementById('cancelTournamentLobbyButton').innerText = translations.cancel;
 	document.getElementById('cancelMatchTournamentButton').innerText = translations.cancel;
+	document.getElementById('closeTournamentViewButton').innerText = translations.close;
 	document.getElementById('confirmBackTournamentButton').innerText = translations.confirm;
 	document.getElementById('cancelBackTournamentButton').innerText = translations.cancel;
 	document.getElementById('addPlayerTournament').innerText = translations.addPlayerTournament;
