@@ -13,8 +13,7 @@
 #launches the project in the foreground
 all:
 	$(shell ./generate_env.sh)
-	docker compose up --build 
-	docker ps
+	docker compose up --build
 
 #launches the project with the logs
 logs:
@@ -37,6 +36,10 @@ migrate:
 	
 show-mig:
 	docker exec -it django python manage.py showmigrations
+
+#Does the first launch procedure
+first: silent migration migrate superuser 
+	docker compose logs -f
 
 #Launch the superuser creation procedure
 superuser:
