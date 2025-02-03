@@ -330,7 +330,8 @@ function setUpScene()
 
 function setupInterface()
 {
-    document.getElementById('reinitLevelButton').style.display = isAnOnlineMode(currentLevelMode) ? 'none' : 'block';
+    document.getElementById('reinitLevelButton').style.display = isAnOnlineMode(currentLevelMode) || currentLevelMode === LevelMode.TOURNAMENT ? 'none' : 'block';
+    document.getElementById('seeTournamentButton').style.display = currentLevelMode === LevelMode.TOURNAMENT ? 'block' : 'none';
     document.getElementById('profileButton').style.display = playerStats.isRegistered ? 'block' : 'none';
     gameMenuPanel.style.display = 'block';
     showInGameUI();
@@ -902,9 +903,9 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
         else if (winner != '')
         {
             if (winner === getPlayerName())
-                callVictoryScreen(VictoryType.VICTORY);
+                callVictoryScreen(VictoryType.VICTORY, winner);
             else
-                callVictoryScreen(VictoryType.DEFEAT);
+                callVictoryScreen(VictoryType.DEFEAT, winner);
         }
         else
             callVictoryScreen(VictoryType.EXAEQUO);

@@ -262,6 +262,9 @@
 {
     align-items: center;
     gap: 0;
+    right: 0;
+    bottom: 0;
+    max-width: 4rem;
 }
 
 #deleteProfile p
@@ -271,9 +274,16 @@
 
 #deleteProfileButton
 {
+
     border: 3px solid #ff000047;
     background-color: #ff00005c;
     border-radius: 4px;
+}
+#deleteProfileButton:hover
+{
+    border: 3px solid #ff000069;
+    background-color: #ff000094;
+
 }
 
 #deleteProfileButton img
@@ -300,10 +310,87 @@
     color: white;
     text-align: center;
     filter: brightness(40%);
+    border: 3px solid transparent;
 }
 
 .headerProfileButton.light
 {
     background-color: transparent;
     filter: brightness(100%);
+}
+
+
+#headerMatchsProfileButton
+{
+    border-left: 2px solid rgb(1, 105, 97);
+}
+
+#headerMainProfileButton
+{
+    border-right: 2px solid rgb(1, 105, 97);
+}
+
+#fileInput, #submitButton {
+    display: none;
+}
+
+#uploadForm button {
+    padding: 5px 10px;
+    background-color: rgba(56, 255, 0, 0.18);
+    border: 3px solid rgba(0, 0, 0, 0.4);
+    border-radius: 4px;
+}
+
+#uploadForm button:hover {
+    background-color: #009106;
+}
+
+#deleteProfileConfirm
+{
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 5;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+#buttonsAskDelete
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+}
+
+#buttonAcceptDelete, #buttonCancelDelete
+{
+    position: inherit;
+    margin: 0;
+    transform: none;
+}
+
+#buttonAcceptDelete
+{
+    transform: scale(70%);
+}
+#buttonAcceptDelete:hover
+{
+    border-color: #fb0000;
+    background-color: #800000;
+    opacity: 0.8;
+    box-shadow: 0 0 32px rgb(255, 0, 0);
+}
+
+#buttonCancelDelete:hover
+{
+    border-color: #00fbc0;
+    background-color: #00807a;
+    box-shadow: 0 0 24px rgb(0, 255, 255);
 }

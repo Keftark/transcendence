@@ -9,7 +9,7 @@ import { getPlayerName, playerStats } from "./playerManager.js";
 import { getRules, resetInputfieldsRules } from "./rules.js";
 import { socketCreateDuelInvit, socketSendMessage, socketSendPrivSticker, socketSendPublicSticker, socketSendSalonSticker } from "./sockets.js";
 import { getTranslation } from "./translate.js";
-import { ArenaType } from "./variables.js";
+import { ArenaType, EmotionType } from "./variables.js";
 
 const messagesContainer = document.getElementById('messages');
 const inputElement = document.getElementById('inputChat');
@@ -834,10 +834,36 @@ function showPrivateStickers()
     stickersList.classList.add('centerClass');
 }
 
-// export function addStickersGame()
-// {
-//     stickersList.classList.remove('centerClass');
-//     stickersList.classList.add('centerGameClass');
-// }
+function changeGlowColor(newColor)
+{
+    document.documentElement.style.setProperty('--glow-color', newColor);
+}
+
+export function callGameDialog(gameDialog, emotionType)
+{
+    switch (emotionType)
+    {
+        case EmotionType.NORMAL:
+            changeGlowColor('#00ffff');
+            break;
+        case EmotionType.FEAR:
+            changeGlowColor('#7777bb');
+            break;
+        case EmotionType.ANGER:
+            changeGlowColor('#ff0000');
+            break;
+        case EmotionType.SAD:
+            changeGlowColor('#008850');
+            break;
+        case EmotionType.LOVE:
+            changeGlowColor('#ff20ff');
+            break;
+    }
+    document.getElementById('dialogText').innerHTML = getTranslation(gameDialog);
+    document.getElementById('dialogDiv').classList.add('appear');
+    setTimeout(() => {
+        document.getElementById('dialogDiv').classList.remove('appear');
+    }, 4000);
+}
 
 addStickersFunctions();

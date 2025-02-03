@@ -1,6 +1,6 @@
 """"Paddle"""
 
-PRECISION = 15
+PRECISION = 5
 DEFAULT_SPEED = 0.75
 MOVE_UP    = 1
 MOVE_DOWN  = -1

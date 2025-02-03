@@ -1,7 +1,7 @@
 import { checkEscapeKey, isElementVisible } from "./main.js";
 import { gameEventsListener, isInGame } from "./levelLocal.js";
 import { chatIsFocused } from "./chat.js";
-import { isProfileOpen, isSettingsOpen } from "./menu.js";
+import { isAskingDeleteAccount, isMiniProfileOpen, isProfileOpen, isSettingsOpen } from "./menu.js";
 import { isGdprOpen, isRegistrationOpen } from "./registration.js";
 import { isMatchListOpen } from "./modesSelection.js";
 import { isSigninOpen } from "./signIn.js";
@@ -10,8 +10,12 @@ import { isAddPlayerTournamentIsOpen, isInAskBackTournamentView, isTournamentVie
 
 function getFocusableElements()
 {
-    if (isGdprOpen)
-        return document.getElementById('gdprPanel').querySelectorAll('button');
+    if (isGdprOpen())
+        return [document.getElementById('gdprBack')];
+    else if (isAskingDeleteAccount())
+        return document.getElementById('buttonsAskDelete').querySelectorAll('button');
+    else if (isMiniProfileOpen())
+        return document.getElementById('miniProfilePanel').querySelectorAll('button');
     else if (isRegistrationOpen())
         return document.getElementById('registering').querySelectorAll('button, input, a, textarea, select, #askSignIn');
     else if (isSigninOpen())
@@ -19,7 +23,7 @@ function getFocusableElements()
     else if (isPaddleChoiceOpen())
         return document.getElementById('choosePaddlePanel').querySelectorAll('button, input, a, textarea, select');
     else if (isProfileOpen())
-        return document.getElementById('profilePanel').querySelectorAll('button, input, a, textarea, select');
+        return document.getElementById('profilePanel').querySelectorAll('button, input, a, textarea, select, .headerProfileButton');
     else if (isSettingsOpen())
         return document.getElementById('settingsPanel').querySelectorAll('button, input, a, textarea, select');
     else if (isMatchListOpen())

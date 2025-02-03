@@ -19,7 +19,7 @@ class AccountModel(models.Model):
     status = models.CharField(max_length=150, default="offline")
     description = models.CharField(max_length=150, default='')
     is42 = models.BooleanField(default=False)
-    preferredPaddle = models.IntegerField(default=0)
+    preferredPaddle = models.IntegerField(default=1)
 
     def __str__(self):
         return self.user.username
@@ -86,7 +86,6 @@ def delete_profile_picture(sender, instance, **kwargs):
 def on_user_created(sender, instance, created, **kwargs):
     if created:
         accountmodel: AccountModel = AccountModel.objects.create(pk=instance.pk, user=instance)
-        accountmodel.avatar 
         accountmodel.save()
         
 

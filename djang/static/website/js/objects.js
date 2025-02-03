@@ -112,10 +112,16 @@ export function updatePlayerModel(oldPlayer) {
 let cylinderTexture1 = null;
 let cylinderTexture2 = null;
 
+export function unsetTextures()
+{
+    cylinderTexture1 = null;
+    cylinderTexture2 = null;
+}
+
 export function setTextures(p1, p2)
 {
-    cylinderTexture1 = `static/mat/player${p1.preferredPaddle + 1}.png`;
-    cylinderTexture2 = `static/mat/player${p2.preferredPaddle + 1}.png`;
+    cylinderTexture1 = `static/mat/player${p1.preferredPaddle}.png`;
+    cylinderTexture2 = `static/mat/player${p2.preferredPaddle}.png`;
 }
 
 export function createPlayers(scene, textureLoader)
@@ -124,9 +130,9 @@ export function createPlayers(scene, textureLoader)
     const playerSize = levelState === LevelMode.MULTI ? PLAYER_HEIGHT / 1.5 : PLAYER_HEIGHT;
     if (cylinderTexture1 === null)
     {
-        const paddle = playerStats.currentPaddleSkin | 0;
-        cylinderTexture1 = `static/mat/player${paddle + 1}.png`;
-        cylinderTexture2 = `static/mat/player${paddle + 1}.png`;
+        const paddle = playerStats.currentPaddleSkin;
+        cylinderTexture1 = `static/mat/player${paddle}.png`;
+        cylinderTexture2 = `static/mat/player${paddle}.png`;
     }
     const tex1 = textureLoader.load(cylinderTexture1);
     const tex2 = textureLoader.load(cylinderTexture2);
@@ -146,8 +152,9 @@ export function createPlayers(scene, textureLoader)
     let player4 = null;
     if (levelState === LevelMode.MULTI)
     {
-        const material3 = new THREE.MeshStandardMaterial({ map: cylinderTexture0, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });
-        const material4 = new THREE.MeshStandardMaterial({ map: cylinderTexture0, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });
+        // TODO recuperer les paddle skins des joueurs 3 et 4 pour appliquer les textures
+        const material3 = new THREE.MeshStandardMaterial({ map: cylinderTexture1, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });
+        const material4 = new THREE.MeshStandardMaterial({ map: cylinderTexture1, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });
         player3 = new THREE.Mesh(geometry, material3);
         player3.add(createPlayerBoostModel(textureLoader));
         scene.add(player3);

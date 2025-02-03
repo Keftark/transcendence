@@ -3,9 +3,10 @@ import { removeAllScores } from "./scoreManager.js";
 import { getTranslation } from "./translate.js";
 import { navigateTo } from "./pages.js";
 import { addDisableButtonEffect, closeListener, closeSocket, getListener, getSocket, listener, openSocket, removeDisableButtonEffect, socket } from "./main.js";
-import { checkAccessToChat } from "./chat.js";
+import { callGameDialog, checkAccessToChat } from "./chat.js";
 import { getLoggedInUser, logoutUser, registerUser } from "./apiFunctions.js";
 import { deleteAllFriendRequests, showFriendsBox } from "./friends.js";
+import { EmotionType } from "./variables.js";
 
 const inputName = document.getElementById('inputName');
 const inputFirstName = document.getElementById('inputFirstName');
@@ -35,7 +36,7 @@ const checkboxGdpr = document.getElementById('checkboxGdpr');
 let isRegistOpen = false;
 let showPass = false;
 let showPassConfirm = false;
-export let isGdprOpen = false;
+let gdprIsOpen = false;
 let isFirstTime = true;
 
 document.getElementById('buttonLogOut').addEventListener('click', () => {
@@ -126,7 +127,6 @@ export function onRegistrationOpen()
     setTimeout(() => {
         openGdprPanel();
     }, 300);
-    // inputName.focus();
 }
 
 function checkFields()
@@ -232,6 +232,7 @@ async function acceptRegistration()
         return;
     
     await createNewPlayer();
+    callGameDialog("entityRegister", EmotionType.NORMAL);
     clickCancelRegister();
     logInUserUI();
 }
@@ -248,14 +249,15 @@ function replaceLogOutButtons()
     logOutButtons.style.display = 'none';
 }
 
-export function clickLogOut()
+export function clickLogOut(isAlreadyLoggedOut = false)
 {
     if (getSocket() === null || getListener() === null)
         return;
     closeSocket();
     closeListener();
     // socketQuitChat();
-    logoutUser();
+    if (!isAlreadyLoggedOut)
+        logoutUser();
     replaceLogOutButtons();
     resetPlayerStats();
     addDisableButtonEffect(profileButton);
@@ -335,29 +337,31 @@ function clickCheckboxGdpr()
     verifyCheckboxGdpr();
 }
 
+export function isGdprOpen()
+{
+    return gdprIsOpen;
+}
+
 export function openGdprPanel()
 {
-    isGdprOpen = true;
+    gdprIsOpen = true;
     gdprPanel.style.display = 'flex';
     setTimeout(() => {
-        document.querySelector('#gdprPanel').focus();
+        
+        document.getElementById('gdprPanel').focus();
     }, 10);
 }
 
 export function closeGdprPanel()
 {
     document.querySelector('#gdprPanel').scrollTop = 0;
-    isGdprOpen = false;
+    gdprIsOpen = false;
     gdprPanel.style.display = 'none';
     if (isFirstTime)
         inputName.focus();
     else
         checkboxGdpr.focus();
     isFirstTime = false;
-}
-
-export function isUserLoggedIn() {
-    return document.cookie.includes('sessionid=');
 }
 
 function addSelectableTexts()

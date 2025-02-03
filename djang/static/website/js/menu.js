@@ -1,4 +1,5 @@
 import { deleteAccount, getCSRFToken, getMatchsLittleData, getUserAvatar, getUserByName } from './apiFunctions.js';
+import { callGameDialog } from './chat.js';
 import { clickChoosePaddleButton } from './customizeSkins.js';
 import { addMainEvents } from './eventsListener.js';
 import { isInGame, reinitLevelFunction, setCameraType, StartLevel } from './levelLocal.js';
@@ -8,9 +9,9 @@ import { getCurrentView, navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
 import { loadScores, removeAllScores } from './scoreManager.js';
 import { exitGameSocket } from './sockets.js';
-import { setCancelledInMatch } from './tournament.js';
+import { openTournamentView, setCancelledInMatch } from './tournament.js';
 import { changeLanguage, getTranslation } from './translate.js';
-import { LevelMode, PlayerStatus } from './variables.js';
+import { EmotionType, LevelMode, PlayerStatus } from './variables.js';
 
 const overlayPanel = document.getElementById('overlay');
 const profilePanel = document.getElementById('profilePanel');
@@ -34,7 +35,7 @@ const mainMenuPanel = document.getElementById('mainMenuPanel');
 const toggleCameraText = document.getElementById('cameraTypeHeader');
 const gameSettingsButton = document.getElementById('settingsButton');
 const profilePicture = document.getElementById('profilePicture');
-// const fileInput = document.getElementById('fileInput');
+const fileInput = document.getElementById('fileInput');
 const profileButton = document.getElementById('buttonProfile');
 const miniNicknameText = document.getElementById('nameMiniProfile');
 const miniProfilePicture = document.getElementById('miniProfilePicture');
@@ -50,6 +51,7 @@ const profileStats = document.getElementById('profileStats');
 const headerMainProfileButton = document.getElementById('headerMainProfileButton');
 const headerMatchsProfileButton = document.getElementById('headerMatchsProfileButton');
 const profileInfos = document.getElementById('profileInfos');
+const deleteProfileConfirm = document.getElementById('deleteProfileConfirm');
 
 const buttonsLanguage = document.querySelectorAll('.language');
 const imageSources = {
@@ -66,6 +68,10 @@ let profileIsOpen = false;
 let oldButton = mainPlayButton;
 export let isMenuOpen = false;
 
+document.getElementById('customButtonChangePicture').addEventListener('click', () => {
+    fileInput.click();
+});
+
 document.getElementById('header-title').addEventListener('click', () => {
     navigateTo('home');
 });
@@ -77,6 +83,8 @@ mainPlayButton.addEventListener('click', () => {
 gameSettingsButton.addEventListener('click', () => {
     gameSettingsButton.blur();
     openSettings();
+    if (isMenuOpen)
+        closeGameMenu();
 });
 
 menuPanel.addEventListener('mouseenter', () => {
@@ -89,9 +97,22 @@ menuPanel.addEventListener('mouseleave', () => {
 
 document.getElementById('profileButton').addEventListener('click', () => {
     openProfile();
+    if (isMenuOpen)
+        closeGameMenu();
 });
-document.getElementById('deleteProfile').addEventListener('click', () => {
+
+document.getElementById('buttonAcceptDelete').addEventListener('click', () => {
+    cancelDeleteAccount();
     deleteAccount();
+});
+
+document.getElementById('deleteProfile').addEventListener('click', () => {
+    askDeleteProfile();
+});
+
+document.getElementById('buttonCancelDelete').addEventListener('click', () => {
+    callGameDialog("entityCancelDeleteAccount", EmotionType.SAD);
+    cancelDeleteAccount();
 });
 
 mainProfileButton.addEventListener('click', () => {
@@ -111,6 +132,12 @@ document.getElementById('reinitLevelButton').addEventListener('click', () => {
     reinitLevelFunction();
 });
 
+document.getElementById('seeTournamentButton').addEventListener('click', () => {
+    openTournamentView(true);
+    if (isMenuOpen)
+        closeGameMenu();
+});
+
 mainSettingsButton.addEventListener('click', () => {
     openSettings();
 });
@@ -123,6 +150,8 @@ document.getElementById('mainButton').addEventListener('click', () => {
     exitGameSocket();
     setCancelledInMatch(true);
     clickBackButtonMenu();
+    if (isMenuOpen)
+        closeGameMenu();
 });
 
 document.getElementById('perspectiveButton').addEventListener('click', () => {
@@ -158,16 +187,18 @@ document.querySelectorAll('.mainMenuButton').forEach(button => {
   button.addEventListener('blur', hideImage);
 });
 
+document.getElementById('uploadForm').addEventListener('change', function(event)
+{
+    if (event.target.files.length > 0)
+        document.getElementById('submitButton').click();
+});
+
 document.getElementById('uploadForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent form from submitting the traditional way
-    
-    const fileInput = document.getElementById('fileInput');
-    const file = fileInput.files[0]; // Get the selected file
-    
+    event.preventDefault();
+    const file = fileInput.files[0];
     if (file) {
         const formData = new FormData();
-        formData.append('image', file); // Append file to form data
-        // Send file to the server using Fetch API
+        formData.append('image', file);
         fetch('/upload/', {
             method: 'POST',
             headers: {
@@ -177,76 +208,46 @@ document.getElementById('uploadForm').addEventListener('submit', function(event)
         })
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
-                document.getElementById('status').textContent = 'Upload successful!';
-            } else {
-                document.getElementById('status').textContent = 'Upload failed!';
+            if (data.success)
+            {
+                profilePicture.src = "/media/" + data.url;
             }
         })
         .catch(error => {
-            document.getElementById('status').textContent = 'Error during upload!';
             console.error('Error:', error);
         });
-    } else {
-        document.getElementById('status').textContent = 'Please select a file to upload.';
     }
 });
-
-// document.getElementById('fileInput').addEventListener('change', function(event)
-// {
-
-//     if (event.target.files.length > 0)
-//     {
-//         const file = event.target.files[0]; // Get the first file
-//         console.log(file);
-//         if (file) {
-//             const imageUrl = URL.createObjectURL(file); // Create a URL for preview
-//             console.log("File name: " + file.name);
-//             console.log("File path: " + imageUrl);
-//             const reader = new FileReader();
-    
-//             // When the file is successfully read
-//             reader.onload = function() {
-//                 uploadAvatar(playerStats.nickname, file);
-//             };
-//             reader.readAsDataURL(file);
-//         }
-
-//     }
-//     else
-//     {
-//         console.log("No file selected.");
-//     }
-// });
-
-// document.getElementById('fileInput').addEventListener('change', function(event) {
-//     const file = event.target.files[0];
-//     if (file) {
-//         console.log("Selected file:", file);
-
-//         // Example: Display the selected image (optional)
-//         const reader = new FileReader();
-//         reader.onload = function(e) {
-//             const img = document.createElement('img');
-//             img.src = e.target.result;
-//             img.style.maxWidth = "200px";
-//             img.style.border = "1px solid #ccc";
-//             document.body.appendChild(img);
-//         };
-//         reader.readAsDataURL(file);
-//     }
-// });
 
 document.getElementById('perspectiveButton').classList.add('applyBorderOptions');
 document.getElementById('lang1Button').classList.add('applyBorderOptions');
 document.getElementById('color1Button').classList.add('applyBorderOptions');
 
+let askingDeleteAccount = false;
+
+export function isAskingDeleteAccount()
+{
+    return askingDeleteAccount;
+}
+
+function askDeleteProfile()
+{
+    callGameDialog("entityDontLeaveMe", EmotionType.FEAR);
+    askingDeleteAccount = true;
+    deleteProfileConfirm.style.display = 'flex';
+    document.getElementById('buttonCancelDelete').focus();
+}
+
+export function cancelDeleteAccount()
+{
+    askingDeleteAccount = false;
+    deleteProfileConfirm.style.display = 'none';
+}
+
 export function openGameMenu()
 {
-    setTimeout(() => {
-        isMenuOpen = true;
-        menuPanel.classList.add('show');
-    });
+    isMenuOpen = true;
+    menuPanel.classList.add('show');
 }
 
 export function closeGameMenu()
@@ -270,8 +271,16 @@ export function openOrCloseGameMenu()
         document.activeElement.blur();
 }
 
+let miniProfileIsOpen = false;
+
+export function isMiniProfileOpen()
+{
+    return miniProfileIsOpen;
+}
+
 export function openMiniProfile(playerName)
 {
+    miniProfileIsOpen = true;
     getUserByName(playerName)
     .then((target) =>{
         miniNicknameText.textContent = target.username;
@@ -311,16 +320,19 @@ export function openMiniProfile(playerName)
 
     
     miniProfilePanel.style.display = 'flex';
+    closeMiniProfileButton.focus();
     setTimeout(() => {
         miniProfilePanel.classList.add('appear');
     }, 100);
 }
 
-function closeMiniProfile()
+export function closeMiniProfile()
 {
+    miniProfileIsOpen = false;
     miniProfilePanel.classList.remove('appear');
     setTimeout(() => {
         miniProfilePanel.style.display = 'none';
+        mainPlayButton.focus();
     }, 100);
 }
 
@@ -623,45 +635,3 @@ export function isProfileOpen()
 {
     return profileIsOpen;
 }
-
-
-
-
-// add a way to save the image to the DB and check if the format is ok + no sql injection?
-// injec sql -> verifier metadata
-// fileInput.addEventListener('change', (event) => {
-//     const file = event.target.files[0];
-//     if (file)
-//     {
-//         const reader = new FileReader();
-//         reader.onload = (e) => {
-//         profilePicture.src = e.target.result;
-//         // uploadAvatar(playerStats.nickname, e.target.result);
-//         };
-//         reader.readAsDataURL(file);
-//     }
-// });
-
-// document.getElementById('profile-form').addEventListener("submit", function(e) {
-//     e.preventDefault();  // Prevent the default form submission
-    
-//     var formData = new FormData(this);  // Create a FormData object to hold the file and form data
-//     for (var pair of formData.entries()) {
-//         console.log("Pairs: " + pair[0]+ ', ' + pair[1]);
-//     }
-//     fetch('/uploadavatar/', {
-//         method: 'POST',
-//         headers: {
-//             'X-CSRFToken': getCSRFToken()
-//         },
-//         body: formData
-//     })
-//     .then(response => response.json())  // Assuming server responds with JSON
-//     .then(data => {
-//         console.log("Upload successful", data);
-//         // Handle successful upload (e.g., update UI, show a success message)
-//     })
-//     .catch(error => {
-//         console.error("Error uploading file", error);
-//     });
-// });

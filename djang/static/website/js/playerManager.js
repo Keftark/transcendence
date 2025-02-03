@@ -89,13 +89,13 @@ export function editPlayerStats(userData)
     player.isRegistered = true;
     player.status = PlayerStatus.ONLINE;
     player.id = userData.id;
+    player.currentPaddleSkin = userData.preferredPaddle;
 
     // player settings, voir avec autre chose que userData.
     player.language = userData.language;
     player.photoIndex = userData.photoIndex;
     player.colors = userData.colors;
     player.playerController = 1;
-    player.paddleSkins = userData.paddleSkins;
 
     playerStats = player;
     // console.log("Player retrieved: " + player.nickname);

@@ -1,6 +1,9 @@
-import { sendSystemMessage } from "./chat.js";
+import { callGameDialog, sendSystemMessage } from "./chat.js";
+import { closeProfile } from "./menu.js";
 import { editPlayerStats, playerStats } from "./playerManager.js";
+import { clickLogOut } from "./registration.js";
 import { clickCancelSignIn, invalidCredentials } from "./signIn.js";
+import { EmotionType } from "./variables.js";
 
 export function getCSRFToken()
 {
@@ -275,12 +278,46 @@ export async function getUserPaddleSkin(userId) {
         const userData = await response.json();
         if (userData.error)
             console.error(userData.error);
-        // console.log("user data: " + JSON.stringify(userData));
+        // console.log("Paddle data: " + JSON.stringify(userData));
         return userData;
     } catch (error) {
         console.error("An error occurred while fetching the user details:", error);
     }
 }
+
+export async function setUserPaddleSkin(userId, newPaddleSkin) {
+    if (!userId || !newPaddleSkin) {
+        console.error("User id and new paddle skin are required.");
+        return;
+    }
+    try {
+        const response = await fetch(`/user_paddle/${userId}/`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken(),
+            },
+            body: JSON.stringify({
+                preferredPaddle: newPaddleSkin
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to update paddle skin: ${response.status} ${response.statusText}`);
+        }
+
+        const updatedUserData = await response.json();
+
+        if (updatedUserData.error) {
+            console.error(updatedUserData.error);
+        } else {
+            return updatedUserData;  // You can return the updated user data if needed
+        }
+    } catch (error) {
+        console.error("An error occurred while updating the paddle skin:", error);
+    }
+}
+
 
 export async function getFriendsList() {
     try {
@@ -560,6 +597,9 @@ export async function deleteAccount() {
             } else
                 throw new Error(`Network response was not ok. Status: ${response.status}`);
         }
+        callGameDialog("entityDeleteAccount", EmotionType.SAD);
+        clickLogOut(true);
+        closeProfile();
         return response;
     } catch (error) {
         console.error('Error:', error);
