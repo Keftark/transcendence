@@ -2,14 +2,14 @@ from os import path
 from django.conf import settings
 from django.utils.translation import gettext as _
 from django.contrib.auth.models import Group, User
-from django.core.files.uploadedfile import SimpleUploadedFile
 from accounts.models import *
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer, ValidationError
 from django.utils.translation import gettext as _
 from rest_framework.fields import CharField
 from django.contrib.auth import login
-import base64
+from drf_extra_fields.fields import Base64ImageField
+
 
 
 
@@ -24,7 +24,7 @@ import base64
 class AccountSerializer(serializers.ModelSerializer):
 
     username = serializers.ReadOnlyField(source='user.username')
-    avatar = serializers.ImageField(required=False)
+    avatar = serializers.Base64ImageField(required=False)
     status = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
     is42 = serializers.ReadOnlyField()
@@ -109,27 +109,6 @@ class AccountSerializer(serializers.ModelSerializer):
             return None
 
         return user.accountmodel.preferredPaddle
-    
-    def image_to_base64(image) -> str:
-        """Converts image to base64 string"""
-
-        return base64.b64encode(image.read()).decode()
-    
-    def convert_str_to_image(image_data: str):
-        """Converts base 64 string to django image"""
-
-        decoded_data = base64.b64decode(image_data.encode())
-
-        myfile = SimpleUploadedFile.from_dict(
-        {
-            "filename": "logo",
-            "content": decoded_data,
-            "content-type": "'image/jpeg'",
-        }
-        )
-
-        return myfile
-
 
 class UpdateUserSerializer(ModelSerializer):
     class Meta:
