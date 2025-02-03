@@ -346,10 +346,9 @@ class UpdatePasswordView(UpdateAPIView):
         return self.queryset.get(pk=self.request.user.pk)
     
 class UpdateSettingsView(UpdateAPIView):
-    queryset = AccountModel.objects.all()
+    queryset = SettingsModel.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = UpdateSettingsSerializer
 
     def get_object(self):
-        return self.queryset.get(pk=self.request.accountmodel.pk)
-
+        return self.queryset.get(pk=self.request.user.pk)
