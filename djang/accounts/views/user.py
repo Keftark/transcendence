@@ -9,7 +9,7 @@ from django.contrib.auth import logout
 from django.utils.translation import gettext as _
 from django.core.files.uploadedfile import SimpleUploadedFile
 from accounts.models import *
-from ..serializers import UpdateUserSerializer, UpdatePasswordSerializer
+from ..serializers import UpdateUserSerializer, UpdatePasswordSerializer, UpdateSettingsSerializer
 from rest_framework.generics import UpdateAPIView
 from django.shortcuts import get_object_or_404
 from accounts.serializers import AccountSerializer
@@ -330,5 +330,13 @@ class UpdatePasswordView(UpdateAPIView):
 
     def get_object(self):
         return self.queryset.get(pk=self.request.user.pk)
+    
+class UpdateSettingsView(UpdateAPIView):
+    queryset = AccountModel.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UpdateSettingsSerializer
+
+    def get_object(self):
+        return self.queryset.get(pk=self.request.accountmodel.pk)
 
 

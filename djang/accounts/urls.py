@@ -1,6 +1,5 @@
 from django.urls import path
 from .views import user
-#from .views.user import update_profile, update_password
 from django.conf import settings
 from django.conf.urls.static import static
 from .viewsets.AccountViewSet import AccountViewSet
@@ -8,11 +7,8 @@ from .viewsets.MyAccountViewSet import MyAccountViewSet
 from .serializers import AccountSerializer
 from .models import AccountModel
 from .views.blocks import (GetBlocksView, EditBlocksView)
-from .views.friends import (GetFriendsView,
-                            EditFriendView,
-                            GetIncomingFriendRequestView,
-                            GetOutgoingFriendRequestView)
-
+from .views.friends import (GetFriendsView, EditFriendView, GetIncomingFriendRequestView, GetOutgoingFriendRequestView)
+from .views.user import (UpdatePasswordView, UpdateProfileView, UpdateSettingsView)
 
 
 urlpatterns = [
@@ -43,8 +39,8 @@ urlpatterns = [
     path('user/del_user', user.del_user, name='del_user'),
     path('username/<int:user_id>/', user.get_username, name='user_name_only'),
     path("me", MyAccountViewSet.as_view({'get': 'retrieve'}), name="my_account_page"), #My Account page
-    #path("update-profile", update_profile.UpdateProfileView.as_view(), name="update-user"), # update user
-    #path('update_password', update_password.UpdatePasswordView.as_view(), name='update_password'), # update user password
+    path("update-profile", UpdateProfileView.as_view(), name="update-user"), # update user
+    path('update_password', UpdatePasswordView.as_view(), name='update_password'), # update user password
     path("settings", MyAccountViewSet.as_view({'patch': 'partial_update', 'delete': 'delete_avatar'}), name="my_profile_page"), #Update account page
     path("friends", GetFriendsView.as_view(), name="friends_list_page"), # Friends list page
     path("blocked", GetBlocksView.as_view(), name="blocks_list_page"), # Friends list page

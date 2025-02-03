@@ -157,7 +157,7 @@ class UpdatePasswordSerializer(ModelSerializer):
         login(self.context['request'], instance)
         return instance
     
-class UpdateSettingsSerializers(ModelSerializer):
+class UpdateSettingsSerializer(ModelSerializer):
     class Meta:
         model = AccountModel
         fields =['color', 'language', 'view']
