@@ -36,6 +36,7 @@ matchs = []
 lock = threading.Lock()
 lock_a = asyncio.Lock()
 message_queue = []
+parse_queue = []
 
 localhost_pem = pathlib.Path("/etc/certs/cponmamju2.fr_key.pem")
 #loads up ssl crap
@@ -220,16 +221,17 @@ async def send_to_central():
     """Sends all the data from the message queue to the central
     Server.
     """
-    for message in message_queue.copy():
-        if Sockets.CENTRAL_SOCKET is not None:
-            try:
-                await send_server(message)
-                message_queue.remove(message)
-            except Exception as e:
-                Sockets.CENTRAL_SOCKET = None
-                logger.log("", 2, e)
-        else:
-            break
+    with lock:
+        for message in message_queue.copy():
+            if Sockets.CENTRAL_SOCKET is not None:
+                try:
+                    await send_server(message)
+                    message_queue.remove(message)
+                except Exception as e:
+                    Sockets.CENTRAL_SOCKET = None
+                    logger.log("", 2, e)
+            else:
+                break
 
 def add_to_queue(data):
     """Adds a message to the message queue.
@@ -247,6 +249,15 @@ def extend_to_queue(data):
     """
     message_queue.extend(data)
 
+def add_to_parse(data):
+    """_summary_
+
+    Args:
+        data (_type_): _description_
+    """
+    with lock:
+        parse_queue.append(data)
+
 async def loop():
     """Ticker loop.
 
@@ -255,6 +266,7 @@ async def loop():
     """
     logger.log("Ticker thread launched.", 0)
     while Sockets.STOP_FLAG is False:
+        parser()
         #update queue
         found = await queue.tick()
         for found in queue.match_list:
@@ -282,10 +294,23 @@ async def handler(websocket):
     try:
         async for message in websocket:
             event = json.loads(message)
-            if DEBUG is True:
-                logger.log(event, 3)
             if event["type"] == "ping":
-                await send_server(pong())
+                pass #on est content on fait rien
+            add_to_parse(message)
+    except Exception as e:
+        logger.log("", 2, e)
+
+def parser():
+    """Receives and handle incomming messages from websocket.
+
+    Args:
+        websocket (WebSocket): The WS to read from.
+    """
+    with lock:
+        for message in parse_queue:
+            event = json.loads(message)
+            if event["type"] == "ping":
+                pass #on est content on fait rien
             elif event["type"] == "join":
                 logger.log("Join request from client ID ::" + str(event["id"]), 1)
                 if not queue.add_to_queue(event):
@@ -316,7 +341,7 @@ async def handler(websocket):
                         m.remove_spectator(_id)
             elif event["type"] == "unspectate":
                 for m in matchs:
-                    m.remove_spectator(websocket)
+                    m.remove_spectator(event["id"])
             elif event["type"] == "list_all":
                 _id = (int)(event["id"])
                 add_to_queue(dump_all_matchs(_id))
@@ -328,8 +353,7 @@ async def handler(websocket):
                 add_to_queue(dump_everything(_id))
             else:
                 add_to_queue(dump_error("unknown_command", (int)(event["id"])))
-    except Exception as e:
-        logger.log("", 2, e)
+        parse_queue.clear()
 
 async def main():
     """Opens up the server and starts listening on SERVER_PORT (by default 8001)
@@ -348,15 +372,16 @@ async def connection_handler():
     """
     while Sockets.STOP_FLAG is False:
         if Sockets.CENTRAL_SOCKET is None:
-            try:
-                logger.log("Attempting connection to central server.", 1)
-                uri = "wss://172.17.0.1:" + str(CENTRAL_PORT) + "/"
-                Sockets.CENTRAL_SOCKET = await connect(uri, ping_interval=10,
-                                                       ping_timeout=None, ssl=ssl_client)
-                logger.log("Central server connected.", 1)
-            except Exception as e:
-                Sockets.CENTRAL_SOCKET = None
-                logger.log("Couldn't connect to the central server", 2, e)
+            with lock:
+                try:
+                    logger.log("Attempting connection to central server.", 1)
+                    uri = "wss://172.17.0.1:" + str(CENTRAL_PORT) + "/"
+                    Sockets.CENTRAL_SOCKET = await connect(uri, ping_interval=10,
+                                                        ping_timeout=None, ssl=ssl_client)
+                    logger.log("Central server connected.", 1)
+                except Exception as e:
+                    Sockets.CENTRAL_SOCKET = None
+                    logger.log("Couldn't connect to the central server", 2, e)
         else:
             with lock:
                 try:

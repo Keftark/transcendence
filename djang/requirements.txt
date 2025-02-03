@@ -26,3 +26,5 @@ txaio==23.1.1
 typing_extensions==4.12.2
 zope.interface==7.2
 python-dotenv==1.0.1
+standard-imghdr==3.13.0
+drf-extra-fields==3.0.2

@@ -760,4 +760,3 @@ class Match:
     @message_locker.setter
     def message_locker(self, value):
         self._message_locker = value
-

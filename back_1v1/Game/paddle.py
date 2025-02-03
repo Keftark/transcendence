@@ -1,20 +1,18 @@
 """"Paddle"""
 
-PRECISION = 15
+from Game.bouncable import Bouncable
+
 DEFAULT_SPEED = 0.75
 MOVE_UP    = 1
 MOVE_DOWN  = -1
 MOVE_NONE = 0
 
-class Paddle:
+class Paddle(Bouncable):
     """A paddle, the player character.
     """
     def __init__(self, _id, x, _len, board_top_y, board_bottom_y):
+        super().__init__(x, 0, 0.5, _len)
         self._id = _id
-        self._x = x
-        self._y = 0
-        self._width = 0.5
-        self._length = _len
         self._speed = DEFAULT_SPEED
         self._y_max = board_top_y
         self._y_min = board_bottom_y
@@ -40,7 +38,7 @@ class Paddle:
         for data in payload:
             match data:
                 case "length":
-                    self._length = (int)(payload[data])
+                    super()._length = (int)(payload[data])
                 case "power":
                     self._power_bonus = (int)(payload[data])
                 case "speed":
@@ -48,133 +46,17 @@ class Paddle:
                 case "bounce":
                     self._bounce_bonus = (int)(payload[data])
 
-    def upper_bound(self):
-        """Returns the upper bound of the paddle.
-
-        Returns:
-            float: upper y of the paddle.
-        """
-        return self._y + self.length / 2
-
-    def upper_collision(self, ball):
-        """Check wether the ball is colliding with the upper 
-        part of the paddle or not.
-
-        Args:
-            ball (Ball): A ball.
-
-        Returns:
-            bool: `True` if the ball collides, `False` otherwise.
-        """
-        current_y = ball.y
-        next_y = ball.y + ball.velocity_y if ball.is_powered_up is False \
-                else ball.velocity_boosted_y
-        if current_y > next_y:
-            current_y, next_y = next_y, current_y
-        for i in range((int)(current_y * PRECISION), (int)(next_y * PRECISION), 1):
-            if (i / PRECISION >= self.upper_bound()
-                and i / PRECISION <= self.upper_bound() + self._width):
-                return True
-        return False
-
-    def lower_bound(self):
-        """Returns the lower bound of the paddle.
-
-        Returns:
-            float: lower y of the paddle.
-        """
-        return self._y - self.length / 2
-
-    def lower_collision(self, ball):
-        """Check wether the ball is colliding with the lower 
-        part of the paddle or not.
-
-        Args:
-            ball (Ball): A ball.
-
-        Returns:
-            bool: `True` if the ball collides, `False` otherwise.
-        """
-        current_y = ball.y
-        next_y = ball.y + ball.velocity_y if ball.is_powered_up is False \
-                else ball.velocity_boosted_y
-        if current_y > next_y:
-            current_y, next_y = next_y, current_y
-        for i in range((int)(current_y * PRECISION), (int)(next_y * PRECISION), 1):
-            if (i / PRECISION <= self.lower_bound()
-                and i / PRECISION >= self.lower_bound() - self._width):
-                return True
-        return False
-
-    def right_bound(self):
-        """Returns the right bound of the paddle.
-
-        Returns:
-            float: right x of the paddle.
-        """
-        return self._x + self._width
-
-    def right_collision(self, ball):
-        """Check wether the ball is colliding with the right 
-        part of the paddle or not.
-
-        Args:
-            ball (Ball): A ball.
-
-        Returns:
-            bool: `True` if the ball collides, `False` otherwise.
-        """
-        current_x = ball.x
-        next_x = ball.x + ball.velocity_x if ball.is_powered_up is False \
-                else ball.velocity_boosted_x
-        if current_x > next_x:
-            current_x, next_x = next_x, current_x
-        for i in range((int)(current_x * PRECISION), (int)(next_x * PRECISION), 1):
-            if (i / PRECISION >= self.right_bound()
-                and i / PRECISION <= self.right_bound() + self._width):
-                return True
-        return False
-
-    def left_bound(self):
-        """Returns the left bound of the paddle.
-
-        Returns:
-            float: left x of the paddle.
-        """
-        return self._x
-
-    def left_collision(self, ball):
-        """Check wether the ball is colliding with the left 
-        part of the paddle or not.
-
-        Args:
-            ball (Ball): A ball.
-
-        Returns:
-            bool: `True` if the ball collides, `False` otherwise.
-        """
-        current_x = ball.x
-        next_x = ball.x + ball.velocity_x if ball.is_powered_up is False \
-                else ball.velocity_boosted_x
-        if current_x > next_x:
-            current_x, next_x = next_x, current_x
-        for i in range((int)(current_x * PRECISION), (int)(next_x * PRECISION), 1):
-            if (i / PRECISION <= self.left_bound()
-                and i / PRECISION >= self.left_bound() - self._width):
-                return True
-        return False
-
     def move_up(self):
         """Displaces the paddle up.
         """
         if self.upper_bound() < self._y_max:
-            self.y += self._speed + self._speed_bonus
+            self._y += self._speed + self._speed_bonus
 
     def move_down(self):
         """Displaces the paddle down.
         """
         if self.lower_bound() > self._y_min:
-            self.y -= self._speed + self._speed_bonus
+            self._y -= self._speed + self._speed_bonus
 
     def set_move_up(self):
         """Sets the movement of the paddle upwards.
@@ -227,45 +109,45 @@ class Paddle:
             self._power = 0
             self._is_powered_up = True
 
-    #checks if the ball is colliding with the paddle.
-    def collide(self, ball):
-        """Checks wether the paddle collides with the ball or not.
+    def bounce_event_right(self, ball):
+        """Defines what happens when the ball collides on the right
+        part of the bouncable.
 
         Args:
-            ball (Ball): The colliding ball.
+            ball (Ball): Ball to bounce.
         """
-        if self.right_collision(ball): #right side collision
-            for y in range((int)(self.lower_bound() * PRECISION),
-                           (int)(self.upper_bound() * PRECISION), 1):
-                y_pos = y / PRECISION
-                if ball.is_colliding(self.right_bound(), y_pos):
-                    ball.bounce_paddle_left(self._y, self._length, self._bounce_bonus)
-                    self.charge_power(ball)
-                    break
-        elif self.left_collision(ball): #left side collision
-            for y in range((int)(self.lower_bound() * PRECISION),
-                           (int)(self.upper_bound() * PRECISION), 1):
-                y_pos = y / PRECISION
-                if ball.is_colliding(self.left_bound(), y_pos):
-                    ball.bounce_paddle_right(self._y, self._length, self._bounce_bonus)
-                    self.charge_power(ball)
-                    break
-        elif self.upper_collision(ball): #top collision
-            for x in range((int)(self.left_bound() * PRECISION),
-                           (int)(self.right_bound() * PRECISION), 1):
-                x_pos = x / PRECISION
-                if ball.is_colliding(x_pos, self.upper_bound()):
-                    ball.bounce_horizontal()
-                    self.charge_power(ball)
-                    break
-        elif self.lower_collision(ball): #bottom collision
-            for x in range((int)(self.left_bound() * PRECISION),
-                           (int)(self.right_bound() * PRECISION), 1):
-                x_pos = x / PRECISION
-                if ball.is_colliding(x_pos, self.lower_bound()):
-                    ball.bounce_horizontal()
-                    self.charge_power(ball)
-                    break
+        ball.bounce_paddle_left(self._y, self._length, self._bounce_bonus)
+        self.charge_power(ball)
+
+    def bounce_event_left(self, ball):
+        """Defines what happens when the ball collides on the left
+        part of the bouncable.
+
+        Args:
+            ball (Ball): Ball to bounce.
+        """
+        ball.bounce_paddle_right(self._y, self._length, self._bounce_bonus)
+        self.charge_power(ball)
+
+    def bounce_event_top(self, ball):
+        """Defines what happens when the ball collides on the top
+        part of the bouncable.
+
+        Args:
+            ball (Ball): Ball to bounce.
+        """
+        ball.bounce_horizontal()
+        self.charge_power(ball)
+
+    def bounce_event_bottom(self, ball):
+        """Defines what happens when the ball collides on the bottom
+        part of the bouncable.
+
+        Args:
+            ball (Ball): Ball to bounce.
+        """
+        ball.bounce_horizontal()
+        self.charge_power(ball)
 
     def input_move(self, data):
         """Parses the input, and acts
@@ -305,58 +187,6 @@ class Paddle:
     @id.setter
     def id(self, value):
         self._id = value
-
-    @property
-    def x(self):
-        """Returns the x position of the paddle's center.
-
-        Returns:
-            float: x position of the center.
-        """
-        return self._x
-
-    @x.setter
-    def x(self, value):
-        self._x = value
-
-    @property
-    def y(self):
-        """Returns the y position of the paddle's center.
-
-        Returns:
-            float: y position of the center.
-        """
-        return self._y
-
-    @y.setter
-    def y(self, value):
-        self._y = value
-
-    @property
-    def width(self):
-        """Returns the width of the paddle.
-
-        Returns:
-            int: width of the paddle.
-        """
-        return self._width
-
-    @width.setter
-    def width(self, value):
-        self._width = value
-
-    @property
-    def length(self):
-        """Returns the length of the paddle.
-
-        Returns:
-            float: lenght of the paddle.
-        """
-        return self._length
-
-    @length.setter
-    def length(self, value):
-        self._length = value
 
     @property
     def speed(self):

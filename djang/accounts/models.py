@@ -86,7 +86,9 @@ def delete_profile_picture(sender, instance, **kwargs):
 def on_user_created(sender, instance, created, **kwargs):
     if created:
         accountmodel: AccountModel = AccountModel.objects.create(pk=instance.pk, user=instance)
+        settingsmodel: SettingsModel = SettingsModel.objects.create(pk=instance.pk, account=accountmodel)
         accountmodel.save()
+        settingsmodel.save()
         
 
 class FriendModel(Model):
@@ -106,3 +108,9 @@ class FriendRequestModel(Model):
 class BlockModel(Model):
     blocker = ForeignKey(AccountModel, on_delete=CASCADE, related_name='blocker')
     blocked = ForeignKey(AccountModel, on_delete=CASCADE, related_name='blocked')
+
+class SettingsModel(Model):
+    account = ForeignKey(AccountModel, on_delete=CASCADE, null=True, related_name='account')
+    color = models.CharField(max_length=150, default="white")
+    language = models.CharField(max_length=150, default="french")
+    view = models.IntegerField(default=1)

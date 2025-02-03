@@ -7,15 +7,18 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.utils.translation import gettext as _
+from django.core.files.uploadedfile import SimpleUploadedFile
 from accounts.models import *
 from ..serializers import UpdateUserSerializer, UpdatePasswordSerializer
 from rest_framework.generics import UpdateAPIView
 from django.shortcuts import get_object_or_404
+from accounts.serializers import AccountSerializer
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.decorators import login_required
 from dotenv import load_dotenv
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
+import base64
 from django.views.decorators.http import require_http_methods
 
 # Load environment variables from .env file
@@ -264,9 +267,27 @@ def login_user(request):
 
     return JsonResponse({"message": "Invalid request method"}, status=405)
 
+def image_to_base64(image) -> str:
+    """Converts image to base64 string"""
+    return base64.b64encode(image.read()).decode()
+  
+def convert_str_to_image(image_data: str):
+    """Converts base 64 string to django image"""
+    decoded_data = base64.b64decode(image_data.encode())
+    myfile = SimpleUploadedFile.from_dict(
+    {
+        "filename": "logo",
+        "content": decoded_data,
+        "content-type": "'image/jpeg'",
+    }
+    )
+    return myfile
+
+
 def upload_image(request):
     if request.method == 'POST' and request.FILES.get('image'):
-        image = request.FILES['image']
+        image = image_to_base64(request.FILES['image'])
+        
         fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
         filename = fs.save(image.name, image)
