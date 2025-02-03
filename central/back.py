@@ -332,6 +332,8 @@ async def handler(websocket):
     try:
         async for message in websocket:
             event = json.loads(message)
+            if DEBUG is True:
+                logger.log(event, 3)
             if event["type"] == "pong":
                 pass
             elif event["type"] == "log":
