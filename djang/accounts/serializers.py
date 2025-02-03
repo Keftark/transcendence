@@ -33,11 +33,14 @@ class AccountSerializer(serializers.ModelSerializer):
     has_incoming_request = serializers.SerializerMethodField()
     has_outgoing_request = serializers.SerializerMethodField()
     preferredPaddle = serializers.SerializerMethodField()
+    color = serializers.SerializerMethodField()
+    language = serializers.SerializerMethodField()
+    view = serializers.SerializerMethodField()
 
     class Meta:
         model = AccountModel
         fields = ["username", "avatar", "id", 'status', 'description', 'is42', 'is_friend', 'is_blocked',
-                  'has_outgoing_request', 'has_incoming_request', 'preferredPaddle']
+                  'has_outgoing_request', 'has_incoming_request', 'preferredPaddle', 'color', 'language', 'view']
 
     def get_status(self, obj: AccountModel):
         from notifications.consumers import notification_manager
