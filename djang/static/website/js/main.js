@@ -93,7 +93,7 @@ export function checkEscapeKey()
 
 function changeCursors()
 {
-    const buttons = document.querySelectorAll('button, input[type="checkbox"], .arena, #showPasswordButton, #showConfirmPasswordButton, #header-title, a, #askSignIn, #askRegister, #friendsHeader, .headerProfileButton');
+    const buttons = document.querySelectorAll('button, input[type="color"], input[type="checkbox"], .arena, #showPasswordButton, #showConfirmPasswordButton, #header-title, a, #askSignIn, #askRegister, #friendsHeader, .headerProfileButton');
     buttons.forEach(button => {
         button.style.cursor = "url('./static/icons/cursor-button.webp'), pointer";
     });
@@ -123,7 +123,6 @@ export function addDisableButtonEffect(button) {
     button.classList.add('disabledButtonHover');
 }
 
-// Function to remove the hover effect
 export function removeDisableButtonEffect(button) {
     button.classList.remove('disabledButtonHover');
 }
@@ -154,27 +153,24 @@ export function getListener()
 
 export function closeSocket()
 {
+    if (socket === null)
+        return;
     socket.close();
+    socket = null;
 }
 
 export function closeListener()
 {
+    if (listener === null)
+        return;
     listener.close();
+    listener = null;
 }
 
 export function openSocket()
 {
-    // pour le docker
     socket = new WebSocket(`wss://${ip_address}:7777/`);
     listener = new WebSocket(`wss://${ip_address}:7777/`);
-
-    // cluster lumineux
-    // socket = new WebSocket('ws://10.11.200.72:7777/ws/');
-    // listener = new WebSocket('ws://10.11.200.72:7777/ws/');
-
-    // cluster sombre
-    // socket = new WebSocket(`ws://10.12.200.194:7777/ws/`);
-    // listener = new WebSocket(`ws://10.12.200.194:7777/ws/`);
     
     socket.onopen = function() {
         console.log("WebSocket connected");
@@ -203,16 +199,11 @@ export function openSocket()
     listener.onerror = (error) => console.log("Websocket Listener Error:", error);
     
     addSocketListener(); 
-    // setTimeout(() => {
-    //     connectToServerInput();
-    //     connectToServerOutput();
-    // }, 150);
 }
 
 changeCursors();
 addMainEvents();
 initTranslation();
-// setButtonsColors();
 setLanguageButtons();
 
 focusOldButton();
@@ -221,7 +212,6 @@ document.addEventListener("DOMContentLoaded", function() {
     getAddress()
         .then(data => {
             ip_address = data;
-            // openSocket(data);
         })
         .catch(error => {
             console.error('Error getting address:', error);

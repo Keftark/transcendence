@@ -1,8 +1,7 @@
 import { sendMatch } from "./apiFunctions.js";
-import { fakeDatabase } from "./database.js";
 import { changeTextsColor } from "./menu.js";
 import { getRandomNumberBetween } from "./objects.js";
-import { changeLanguage, getTranslation } from "./translate.js";
+import { getTranslation } from "./translate.js";
 import { PlayerStatus, VictoryType } from "./variables.js";
 
 const inputNick = document.getElementById('inputName');
@@ -45,10 +44,6 @@ export function addMatchToHistory(victoryType, playerScore, opponentScore, oppon
     console.log("Adding match to history:\nplayer score: " + playerScore + "\nOpponent score: " + opponentScore + "\nOpponent name: " + opponentName);
     if (victoryType === VictoryType.VICTORY)
         sendMatch(playerStats.nickname, opponentName, playerScore, opponentScore, matchTime);
-    // setTimeout(() => {
-    //     playerStats.matches.push(new MatchResult(victoryType, playerScore, opponentScore, opponentName, matchTime));
-    // }, 50);
-    // prendre le joueur depuis la base de donnees et inserer le nouveau score
 }
 
 export async function createNewPlayer()
@@ -59,7 +54,6 @@ export async function createNewPlayer()
     player.lastName = inputLastName.value;
     player.mail = inputMail.value;
     player.password = inputPassword.value;
-    // faire en sorte de reprendre les preference du joueur avant qu'il ne se soit enregistre ?
     player.language = playerStats.language;
     player.photoIndex = 0;
     player.room_id = -1;
@@ -70,10 +64,7 @@ export async function createNewPlayer()
     player.status = PlayerStatus.ONLINE;
     const userData = await getUserInfos(inputNick.value);
     player.id = userData.id;
-    
-    fakeDatabase.push(player);
     playerStats = player;
-    // playerStats.friends.push("Other");
 }
 
 export function editPlayerStats(userData)
@@ -101,22 +92,24 @@ export function editPlayerStats(userData)
 
 export function resetPlayerStats()
 {
-    playerStats.nickname = getTranslation('guest');
-    playerStats.id = 0;
-    playerStats.firstName = "";
-    playerStats.lastName = "";
-    playerStats.mail = "";
-    playerStats.password = "";
-    playerStats.language = "en";
-    playerStats.photoIndex = 0;
-    playerStats.room_id = -1;
-    playerStats.colors = "white";
-    playerStats.matches = [];
-    playerStats.friends = [];
-    playerStats.isRegistered = false;
-    playerStats.playerController = 1;
-    playerStats.currentPaddleSkin = 1;
-    playerStats.status = PlayerStatus.ONLINE;
+    // playerStats.nickname = getTranslation('guest');
+    // playerStats.id = 0;
+    // playerStats.firstName = "";
+    // playerStats.lastName = "";
+    // playerStats.mail = "";
+    // playerStats.password = "";
+    // playerStats.language = "en";
+    // playerStats.photoIndex = 0;
+    // playerStats.room_id = -1;
+    // playerStats.colors = "white";
+    // playerStats.matches = [];
+    // playerStats.friends = [];
+    // playerStats.isRegistered = false;
+    // playerStats.playerController = 1;
+    // playerStats.currentPaddleSkin = 1;
+    // playerStats.status = PlayerStatus.ONLINE;
+    playerStats = createPlayerStats();
+    loadPlayerConfig();
 }
 
 // on laisse le joueur choisir une image parmi une selection
@@ -133,10 +126,10 @@ export function changePlayerName(playerStats)
 
 export function loadPlayerConfig()
 {
-    // changeLanguage(playerStats.language);
     let buttonLang = document.querySelector(`button[data-language=${playerStats.language}]`);  
     buttonLang.click();
     document.getElementById('cameraType').children[Number(playerStats.cameraOrthographic)].click();
+    document.getElementById('colorPickerReplacer').style.backgroundColor = playerStats.colors
     changeTextsColor(playerStats.colors);
 }
 

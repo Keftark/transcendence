@@ -172,7 +172,6 @@ function checkFields()
     }
     else
         registerErrorMail.innerText = "";
-    // checks if the mail is in the database and returns false if it's in
     inputValue = inputPassword.value;
     if (inputValue.trim() === "")
     {
@@ -213,7 +212,6 @@ export async function welcomeBackUser()
 
 export function logInUserUI()
 {
-    // socketJoinChat();
     openSocket();
     replaceLogInButtons();
     removeDisableButtonEffect(profileButton);
@@ -252,11 +250,10 @@ function replaceLogOutButtons()
 
 export function clickLogOut(isAlreadyLoggedOut = false)
 {
-    if (getSocket() === null || getListener() === null)
+    if (!playerStats.isRegistered)
         return;
     closeSocket();
     closeListener();
-    // socketQuitChat();
     if (!isAlreadyLoggedOut)
         logoutUser();
     replaceLogOutButtons();

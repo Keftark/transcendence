@@ -629,3 +629,29 @@ export async function updateSettingsInDatabase() {
         console.error('Error:', error);
     }
 }
+
+document.getElementById('uploadForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const file = fileInput.files[0];
+    if (file) {
+        const formData = new FormData();
+        formData.append('image', file);
+        fetch('/upload/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCSRFToken()
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success)
+            {
+                profilePicture.src = "/media/" + data.url;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+});

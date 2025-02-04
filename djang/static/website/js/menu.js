@@ -1,4 +1,4 @@
-import { deleteAccount, getCSRFToken, getMatchsLittleData, getUserAvatar, getUserByName, updateSettingsInDatabase } from './apiFunctions.js';
+import { deleteAccount, getMatchsLittleData, getUserAvatar, getUserByName, updateSettingsInDatabase } from './apiFunctions.js';
 import { callGameDialog } from './chat.js';
 import { clickChoosePaddleButton } from './customizeSkins.js';
 import { addMainEvents } from './eventsListener.js';
@@ -27,7 +27,6 @@ const mainCustomizeDiv = document.getElementById('mainCustomizeDiv');
 const mainSettingsDiv = document.getElementById('mainSettingsDiv');
 const menuPanel = document.getElementById('gameMenuPanel');
 const hoverImage = document.getElementById('homeImg');
-// const buttonsColors = document.querySelectorAll('.colorize-btn');
 const logInButtons = document.getElementById('loginbuttons');
 const logOutButtons = document.getElementById('logoutbuttons');
 const mainPanel = document.getElementById('mainPanel');
@@ -193,35 +192,8 @@ document.getElementById('uploadForm').addEventListener('change', function(event)
         document.getElementById('submitButton').click();
 });
 
-document.getElementById('uploadForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const file = fileInput.files[0];
-    if (file) {
-        const formData = new FormData();
-        formData.append('image', file);
-        fetch('/upload/', {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCSRFToken()
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success)
-            {
-                profilePicture.src = "/media/" + data.url;
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
-});
-
 document.getElementById('perspectiveButton').classList.add('applyBorderOptions');
 document.getElementById('lang1Button').classList.add('applyBorderOptions');
-// document.getElementById('color1Button').classList.add('applyBorderOptions');
 
 let askingDeleteAccount = false;
 
@@ -306,18 +278,6 @@ export function openMiniProfile(playerName)
     .catch((error) => {
         console.error("Failed to get user by name:", error);
     });
-    // getUserScores(playerName)
-    //     .then((target) => {
-    //         miniProfilePicture.src = target.avatar;
-    //     })
-    //     .catch((error) => {
-    //         console.error("Failed to get user by name:", error);
-    // });
-
-    // ca va dans la requete des scores.
-    // matchsPlayedMiniProfileValue.innerHTML = "2";
-    // winsMiniProfileValue.innerHTML = "1";
-
     
     miniProfilePanel.style.display = 'flex';
     closeMiniProfileButton.focus();
@@ -440,34 +400,16 @@ export function closeSettings()
     }, 100);
 }
 
-// function changeOutlineColors(newIndex)
-// {
-//     if (currentColorIndex === newIndex)
-//         return;
-//     if (currentColorIndex != -1)
-//         buttonsColors[currentColorIndex].classList.remove('applyBorderOptions');
-//     currentColorIndex = newIndex;
-//     buttonsColors[currentColorIndex].classList.add('applyBorderOptions');
-// }
-
-// export function setButtonsColors()
-// {
-//     buttonsColors.forEach(button => {
-//         const color = button.getAttribute('data-color');
-//         button.style.backgroundColor = color;
-//         button.addEventListener('click', function() {
-//             // changeOutlineColors(parseInt(this.getAttribute('data-index'), 10));
-//             changeTextsColor(this.getAttribute('data-color'));
-//             updateSettingsInDatabase();
-//         });
-//     });
-// }
-
 document.getElementById('colorPicker').addEventListener('input', function() {
-    // console.log('Selected color:', colorInput.value);
     changeTextsColor(document.getElementById('colorPicker').value);
+    document.getElementById('colorPickerReplacer').style.backgroundColor = document.getElementById('colorPicker').value;
     updateSettingsInDatabase();
-  });
+});
+
+document.getElementById('colorPickerReplacer').addEventListener('click', function() {
+    document.getElementById('colorPicker').click();
+});
+
 
 export function changeTextsColor(newColor)
 {
