@@ -1,9 +1,9 @@
-import { deleteAccount, getCSRFToken, getMatchsLittleData, getUserAvatar, getUserByName } from './apiFunctions.js';
+import { deleteAccount, getMatchsLittleData, getUserAvatar, getUserByName, updateSettingsInDatabase } from './apiFunctions.js';
 import { callGameDialog } from './chat.js';
 import { clickChoosePaddleButton } from './customizeSkins.js';
 import { addMainEvents } from './eventsListener.js';
 import { isInGame, reinitLevelFunction, setCameraType, StartLevel } from './levelLocal.js';
-import { setLevelState } from './main.js';
+import { addDisableButtonEffect, removeDisableButtonEffect, setLevelState } from './main.js';
 import { clickBackButtonMenu, showModeChoice } from './modesSelection.js';
 import { getCurrentView, navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
@@ -27,7 +27,6 @@ const mainCustomizeDiv = document.getElementById('mainCustomizeDiv');
 const mainSettingsDiv = document.getElementById('mainSettingsDiv');
 const menuPanel = document.getElementById('gameMenuPanel');
 const hoverImage = document.getElementById('homeImg');
-const buttonsColors = document.querySelectorAll('.colorize-btn');
 const logInButtons = document.getElementById('loginbuttons');
 const logOutButtons = document.getElementById('logoutbuttons');
 const mainPanel = document.getElementById('mainPanel');
@@ -52,6 +51,14 @@ const headerMainProfileButton = document.getElementById('headerMainProfileButton
 const headerMatchsProfileButton = document.getElementById('headerMatchsProfileButton');
 const profileInfos = document.getElementById('profileInfos');
 const deleteProfileConfirm = document.getElementById('deleteProfileConfirm');
+const changePasswordPanel = document.getElementById('changePasswordProfileConfirm');
+const buttonAcceptChangePassword = document.getElementById('buttonAcceptChangePassword');
+const inputCurrentPassword = document.getElementById('inputCurrentPassword');
+const inputNewPassword = document.getElementById('inputNewPassword');
+const inputConfirmNewPassword = document.getElementById('inputConfirmNewPassword');
+const showCurrentPasswordButton = document.getElementById('showCurrentPasswordButton');
+const showNewPasswordButton = document.getElementById('showNewPasswordButton');
+const showConfirmNewPasswordButton = document.getElementById('showConfirmNewPasswordButton');
 
 const buttonsLanguage = document.querySelectorAll('.language');
 const imageSources = {
@@ -67,6 +74,18 @@ let settingsIsOpen = false;
 let profileIsOpen = false;
 let oldButton = mainPlayButton;
 export let isMenuOpen = false;
+
+document.getElementById('changePasswordButton').addEventListener('click', () => {
+    openChangePassword();
+});
+
+document.getElementById('buttonCancelChangePassword').addEventListener('click', () => {
+    closeChangePassword();
+});
+
+buttonAcceptChangePassword.addEventListener('click', () => {
+    acceptChangePassword();
+});
 
 document.getElementById('customButtonChangePicture').addEventListener('click', () => {
     fileInput.click();
@@ -193,35 +212,8 @@ document.getElementById('uploadForm').addEventListener('change', function(event)
         document.getElementById('submitButton').click();
 });
 
-document.getElementById('uploadForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const file = fileInput.files[0];
-    if (file) {
-        const formData = new FormData();
-        formData.append('image', file);
-        fetch('/upload/', {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCSRFToken()
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success)
-            {
-                profilePicture.src = "/media/" + data.url;
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
-});
-
 document.getElementById('perspectiveButton').classList.add('applyBorderOptions');
 document.getElementById('lang1Button').classList.add('applyBorderOptions');
-document.getElementById('color1Button').classList.add('applyBorderOptions');
 
 let askingDeleteAccount = false;
 
@@ -306,18 +298,6 @@ export function openMiniProfile(playerName)
     .catch((error) => {
         console.error("Failed to get user by name:", error);
     });
-    // getUserScores(playerName)
-    //     .then((target) => {
-    //         miniProfilePicture.src = target.avatar;
-    //     })
-    //     .catch((error) => {
-    //         console.error("Failed to get user by name:", error);
-    // });
-
-    // ca va dans la requete des scores.
-    // matchsPlayedMiniProfileValue.innerHTML = "2";
-    // winsMiniProfileValue.innerHTML = "1";
-
     
     miniProfilePanel.style.display = 'flex';
     closeMiniProfileButton.focus();
@@ -440,27 +420,16 @@ export function closeSettings()
     }, 100);
 }
 
-function changeOutlineColors(newIndex)
-{
-    if (currentColorIndex === newIndex)
-        return;
-    if (currentColorIndex != -1)
-        buttonsColors[currentColorIndex].classList.remove('applyBorderOptions');
-    currentColorIndex = newIndex;
-    buttonsColors[currentColorIndex].classList.add('applyBorderOptions');
-}
+document.getElementById('colorPicker').addEventListener('input', function() {
+    changeTextsColor(document.getElementById('colorPicker').value);
+    document.getElementById('colorPickerReplacer').style.backgroundColor = document.getElementById('colorPicker').value;
+    updateSettingsInDatabase();
+});
 
-export function setButtonsColors()
-{
-    buttonsColors.forEach(button => {
-        const color = button.getAttribute('data-color');
-        button.style.backgroundColor = color;
-        button.addEventListener('click', function() {
-            changeOutlineColors(parseInt(this.getAttribute('data-index'), 10));
-            changeTextsColor(this.getAttribute('data-color'));
-        });
-    });
-}
+document.getElementById('colorPickerReplacer').addEventListener('click', function() {
+    document.getElementById('colorPicker').click();
+});
+
 
 export function changeTextsColor(newColor)
 {
@@ -489,6 +458,7 @@ export function setLanguageButtons()
         button.addEventListener('click', function() {
             changeOutlineLanguage(parseInt(this.getAttribute('data-lang'), 10));
             changeLanguage(this.getAttribute('data-language'));
+            updateSettingsInDatabase();
         });
     });
 }
@@ -563,6 +533,7 @@ export function toggleCameraType(cameraType)
     }
     if (isInGame === true)
         setCameraType();
+    updateSettingsInDatabase();
 }
 
 function showImage(buttonId) {
@@ -634,4 +605,61 @@ export function isSettingsOpen()
 export function isProfileOpen()
 {
     return profileIsOpen;
+}
+
+
+function resetChangePasswordFields()
+{
+    inputConfirmNewPassword.value = inputNewPassword.value = inputCurrentPassword.value = "";
+    showConfirmNewPasswordButton.src = showNewPasswordButton.src = showCurrentPasswordButton.src = 'static/icons/eyeOpen.webp';
+    showConfirmNewPasswordButton.type = showNewPasswordButton.type = showCurrentPasswordButton.type = "password";
+}
+
+let changePasswordIsOpen = false;
+
+export function isChangePasswordOpen()
+{
+    return changePasswordIsOpen;
+}
+
+function openChangePassword()
+{
+    changePasswordIsOpen = true;
+    changePasswordPanel.style.display = 'flex';
+    inputCurrentPassword.focus();
+}
+
+export function closeChangePassword()
+{
+    changePasswordIsOpen = false;
+    changePasswordPanel.style.display = 'none';
+    resetChangePasswordFields();
+    document.getElementById('changePasswordButton').focus();
+    addDisableButtonEffect(buttonAcceptChangePassword);
+}
+
+inputNewPassword.addEventListener('input', function(event) {
+    checkNewPassword();
+});
+inputConfirmNewPassword.addEventListener('input', function(event) {
+    checkNewPassword();
+});
+
+function checkNewPassword()
+{
+    let isOk = false;
+    // on verifie les trois champs et on active ou non le bouton confirm
+    // verifier que le password est assez complexe ou long
+
+    isOk = inputNewPassword.value === inputConfirmNewPassword.value ? true : false;
+    if (isOk)
+        removeDisableButtonEffect(buttonAcceptChangePassword);
+    else
+        addDisableButtonEffect(buttonAcceptChangePassword);
+}
+
+function acceptChangePassword()
+{
+    // requete back then
+    closeChangePassword();
 }

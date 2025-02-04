@@ -52,6 +52,5 @@ urlpatterns = [
     path("send_friend_request/<str:username>", EditFriendView.as_view(), name='send_friend_request'),
     path("incoming_friend_requests", GetIncomingFriendRequestView.as_view(), name="incoming_friend_requests"), #list of incoming friends requests
     path("outgoing_friend_requests", GetOutgoingFriendRequestView.as_view(), name="outgoing_friend_requests"), #list of outgoing friends requests
-    path("set_settings/<int:user_id>/", GetOutgoingFriendRequestView.as_view(), name="outgoing_friend_requests"), #list of outgoing friends requests
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

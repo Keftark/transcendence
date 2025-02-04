@@ -149,7 +149,7 @@
     text-shadow: 0 0 2px rgb(0, 0, 0);
 }
 
-#passwordDiv, #confirmPasswordDiv, #passwordSignInDiv
+#passwordDiv, #confirmPasswordDiv, #passwordSignInDiv, #currentPasswordDiv, #newPasswordDiv, #confirmNewPasswordDiv
 {
     display: flex;
     flex-direction: row;
@@ -157,7 +157,12 @@
     justify-content: center;
 }
 
-#showPasswordButton, #showConfirmPasswordButton, #showSignInPasswordButton
+#currentPasswordDiv, #newPasswordDiv, #confirmNewPasswordDiv
+{
+    position: relative;
+}
+
+#showPasswordButton, #showConfirmPasswordButton, #showSignInPasswordButton, #showCurrentPasswordButton, #showNewPasswordButton, #showConfirmNewPasswordButton
 {
     position: absolute;
     right: 4px;

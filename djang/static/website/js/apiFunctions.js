@@ -606,18 +606,20 @@ export async function deleteAccount() {
     }
 }
 
-export async function setSettingsInDatabase(id, newColor, newLanguage, newView) {
+export async function updateSettingsInDatabase() {
+    if (!playerStats.isRegistered)
+        return;
     try {
-        const response = await fetch(`/set_settings/${id}`, {
-            method: 'POST',
+        const response = await fetch(`/update_settings`, {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': getCSRFToken()
             },
             body: JSON.stringify({
-                color: newColor,
-                language: newLanguage,
-                view: newView
+                color: playerStats.colors,
+                language: playerStats.language,
+                view: Number(playerStats.cameraOrthographic)
             })
         });
         if (!response.ok)
@@ -627,3 +629,29 @@ export async function setSettingsInDatabase(id, newColor, newLanguage, newView) 
         console.error('Error:', error);
     }
 }
+
+document.getElementById('uploadForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const file = fileInput.files[0];
+    if (file) {
+        const formData = new FormData();
+        formData.append('image', file);
+        fetch('/upload/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCSRFToken()
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success)
+            {
+                profilePicture.src = "/media/" + data.url;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+});
