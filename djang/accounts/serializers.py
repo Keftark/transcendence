@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 from django.http import JsonResponse
 from accounts.models import *
 from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer, ValidationError
+from rest_framework.serializers import ModelSerializer
 from django.utils.translation import gettext as _
 from rest_framework.fields import CharField
 from django.contrib.auth import login
@@ -152,11 +152,14 @@ class UpdatePasswordSerializer(ModelSerializer):
             raise ValidationError({'authorize': _('You dont have permission for this user.')})
 
         try:
+            # Validate password
             validate_password(validated_data['new_password'], user)
         except ValidationError as e:
-            return JsonResponse({'success': False, 'error': e}, status=400)
+            # Handle specific validation errors
+            error_messages = e.messages  # e.messages contains the list of validation errors
+            raise ValidationError({'new_password': error_messages})
+        
         instance.set_password(validated_data['new_password'])
-
         instance.save()
         login(self.context['request'], instance)
         return instance

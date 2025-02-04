@@ -670,15 +670,36 @@ export async function updatePasswordInDatabase(curPass, newPass, confirmPass) {
                 new_password2: confirmPass
             })
         });
-        if (!response.ok)
-        {
-            if(response.status === 400)
-            {
-                // invalid (first) password
+
+        const responseText = await response.text(); // Read raw response as text
+        console.log('Raw response:', responseText);  // Log the raw response for debugging
+
+        if (!response.ok) {
+            try {
+                const errorData = JSON.parse(responseText);  // Try parsing it as JSON
+                console.log('Error Data:', errorData);
+
+                // Access the errors from the 'new_password' field
+                const newPasswordErrors = errorData.new_password;
+
+                if (newPasswordErrors) {
+                    // Loop through and display each error message
+                    newPasswordErrors.forEach(errorMessage => {
+                        console.error(errorMessage);  // Handle the error in your UI as needed
+                    });
+                }
+            } catch (jsonError) {
+                console.error('Failed to parse JSON:', jsonError);
+                console.log('Raw response body:', responseText);  // Display raw response if parsing fails
+            }
+
+            if(response.status === 400 || response.status === 500) {
                 return response;
             }
+        } else {
+            // Handle success (e.g., inform the user that the password has been updated)
+            console.log('Password updated successfully!');
         }
-        // throw new Error('Network response was not ok');
         return response;
     } catch (error) {
         console.error('Error:', error);
