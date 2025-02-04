@@ -2,6 +2,9 @@ from os import path
 from django.conf import settings
 from django.utils.translation import gettext as _
 from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+from django.http import JsonResponse
 from accounts.models import *
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer, ValidationError
@@ -148,6 +151,10 @@ class UpdatePasswordSerializer(ModelSerializer):
         if user.pk != instance.pk:
             raise ValidationError({'authorize': _('You dont have permission for this user.')})
 
+        try:
+            validate_password(validated_data['new_password'], user)
+        except ValidationError as e:
+            return JsonResponse({'success': False, 'error': e}, status=400)
         instance.set_password(validated_data['new_password'])
 
         instance.save()

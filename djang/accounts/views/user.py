@@ -8,6 +8,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.utils.translation import gettext as _
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from accounts.models import *
 from ..serializers import UpdateUserSerializer, UpdatePasswordSerializer, UpdateSettingsSerializer
 from rest_framework.generics import UpdateAPIView
@@ -95,6 +97,11 @@ def register_user(request):
             if User.objects.filter(email=email).exists():
                 return JsonResponse({'success': False, 'error': 'Email is already registered.'}, status=400)
 
+            try:
+                validate_password(password, user)
+            except ValidationError as e:
+                return JsonResponse({'success': False, 'error': e}, status=400)
+            
             user = User.objects.create_user(
                 username=name,
                 first_name=first_name,
