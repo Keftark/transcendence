@@ -606,29 +606,9 @@ export async function deleteAccount() {
     }
 }
 
-export async function setSettingsInDatabase(id, newColor, newLanguage, newView) {
-    try {
-        const response = await fetch(`/set_settings/${id}/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCSRFToken()
-            },
-            body: JSON.stringify({
-                color: newColor,
-                language: newLanguage,
-                view: newView
-            })
-        });
-        if (!response.ok)
-            throw new Error('Network response was not ok');
-        return response;
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
-
-export async function updateSettingsInDatabase(newColor, newLanguage, newView) {
+export async function updateSettingsInDatabase() {
+    if (!playerStats.isRegistered)
+        return;
     try {
         const response = await fetch(`/update_settings`, {
             method: 'PUT',
@@ -637,9 +617,9 @@ export async function updateSettingsInDatabase(newColor, newLanguage, newView) {
                 'X-CSRFToken': getCSRFToken()
             },
             body: JSON.stringify({
-                color: newColor,
-                language: newLanguage,
-                view: Number(newView)
+                color: playerStats.colors,
+                language: playerStats.language,
+                view: Number(playerStats.cameraOrthographic)
             })
         });
         if (!response.ok)

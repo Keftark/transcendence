@@ -168,7 +168,9 @@ class UpdateSettingsSerializer(ModelSerializer):
         if settings.pk != instance.pk:
             raise ValidationError({'authorize': _('You dont have permission for this user.')})
 
-        instance.username = validated_data.get('username', instance.username)
+        instance.color = validated_data.get('color', instance.color)
+        instance.language = validated_data.get('language', instance.language)
+        instance.view = validated_data.get('view', instance.view)
 
         instance.save()
         return instance

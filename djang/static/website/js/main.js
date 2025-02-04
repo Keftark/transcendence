@@ -1,4 +1,4 @@
-import { setButtonsColors, closeProfile, closeSettings, focusOldButton, isProfileOpen, isSettingsOpen, openOrCloseGameMenu, setLanguageButtons, isAskingDeleteAccount, cancelDeleteAccount, isMiniProfileOpen, closeMiniProfile } from './menu.js';
+import { closeProfile, closeSettings, focusOldButton, isProfileOpen, isSettingsOpen, openOrCloseGameMenu, setLanguageButtons, isAskingDeleteAccount, cancelDeleteAccount, isMiniProfileOpen, closeMiniProfile } from './menu.js';
 import { initTranslation } from './translate.js';
 import { addMainEvents } from './eventsListener.js';
 import { LevelMode } from './variables.js';
@@ -212,7 +212,7 @@ export function openSocket()
 changeCursors();
 addMainEvents();
 initTranslation();
-setButtonsColors();
+// setButtonsColors();
 setLanguageButtons();
 
 focusOldButton();

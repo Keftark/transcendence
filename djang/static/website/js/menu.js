@@ -1,4 +1,4 @@
-import { deleteAccount, getCSRFToken, getMatchsLittleData, getUserAvatar, getUserByName } from './apiFunctions.js';
+import { deleteAccount, getCSRFToken, getMatchsLittleData, getUserAvatar, getUserByName, updateSettingsInDatabase } from './apiFunctions.js';
 import { callGameDialog } from './chat.js';
 import { clickChoosePaddleButton } from './customizeSkins.js';
 import { addMainEvents } from './eventsListener.js';
@@ -27,7 +27,7 @@ const mainCustomizeDiv = document.getElementById('mainCustomizeDiv');
 const mainSettingsDiv = document.getElementById('mainSettingsDiv');
 const menuPanel = document.getElementById('gameMenuPanel');
 const hoverImage = document.getElementById('homeImg');
-const buttonsColors = document.querySelectorAll('.colorize-btn');
+// const buttonsColors = document.querySelectorAll('.colorize-btn');
 const logInButtons = document.getElementById('loginbuttons');
 const logOutButtons = document.getElementById('logoutbuttons');
 const mainPanel = document.getElementById('mainPanel');
@@ -221,7 +221,7 @@ document.getElementById('uploadForm').addEventListener('submit', function(event)
 
 document.getElementById('perspectiveButton').classList.add('applyBorderOptions');
 document.getElementById('lang1Button').classList.add('applyBorderOptions');
-document.getElementById('color1Button').classList.add('applyBorderOptions');
+// document.getElementById('color1Button').classList.add('applyBorderOptions');
 
 let askingDeleteAccount = false;
 
@@ -440,27 +440,34 @@ export function closeSettings()
     }, 100);
 }
 
-function changeOutlineColors(newIndex)
-{
-    if (currentColorIndex === newIndex)
-        return;
-    if (currentColorIndex != -1)
-        buttonsColors[currentColorIndex].classList.remove('applyBorderOptions');
-    currentColorIndex = newIndex;
-    buttonsColors[currentColorIndex].classList.add('applyBorderOptions');
-}
+// function changeOutlineColors(newIndex)
+// {
+//     if (currentColorIndex === newIndex)
+//         return;
+//     if (currentColorIndex != -1)
+//         buttonsColors[currentColorIndex].classList.remove('applyBorderOptions');
+//     currentColorIndex = newIndex;
+//     buttonsColors[currentColorIndex].classList.add('applyBorderOptions');
+// }
 
-export function setButtonsColors()
-{
-    buttonsColors.forEach(button => {
-        const color = button.getAttribute('data-color');
-        button.style.backgroundColor = color;
-        button.addEventListener('click', function() {
-            changeOutlineColors(parseInt(this.getAttribute('data-index'), 10));
-            changeTextsColor(this.getAttribute('data-color'));
-        });
-    });
-}
+// export function setButtonsColors()
+// {
+//     buttonsColors.forEach(button => {
+//         const color = button.getAttribute('data-color');
+//         button.style.backgroundColor = color;
+//         button.addEventListener('click', function() {
+//             // changeOutlineColors(parseInt(this.getAttribute('data-index'), 10));
+//             changeTextsColor(this.getAttribute('data-color'));
+//             updateSettingsInDatabase();
+//         });
+//     });
+// }
+
+document.getElementById('colorPicker').addEventListener('input', function() {
+    // console.log('Selected color:', colorInput.value);
+    changeTextsColor(document.getElementById('colorPicker').value);
+    updateSettingsInDatabase();
+  });
 
 export function changeTextsColor(newColor)
 {
@@ -489,6 +496,7 @@ export function setLanguageButtons()
         button.addEventListener('click', function() {
             changeOutlineLanguage(parseInt(this.getAttribute('data-lang'), 10));
             changeLanguage(this.getAttribute('data-language'));
+            updateSettingsInDatabase();
         });
     });
 }
@@ -563,6 +571,7 @@ export function toggleCameraType(cameraType)
     }
     if (isInGame === true)
         setCameraType();
+    updateSettingsInDatabase();
 }
 
 function showImage(buttonId) {

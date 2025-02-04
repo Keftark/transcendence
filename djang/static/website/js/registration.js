@@ -4,7 +4,7 @@ import { getTranslation } from "./translate.js";
 import { navigateTo } from "./pages.js";
 import { addDisableButtonEffect, closeListener, closeSocket, getListener, getSocket, listener, openSocket, removeDisableButtonEffect, socket } from "./main.js";
 import { callGameDialog, checkAccessToChat } from "./chat.js";
-import { getLoggedInUser, logoutUser, registerUser, setSettingsInDatabase, updateSettingsInDatabase } from "./apiFunctions.js";
+import { getLoggedInUser, logoutUser, registerUser, updateSettingsInDatabase } from "./apiFunctions.js";
 import { deleteAllFriendRequests, showFriendsBox } from "./friends.js";
 import { EmotionType } from "./variables.js";
 
@@ -235,8 +235,7 @@ async function acceptRegistration()
     callGameDialog("entityRegister", EmotionType.NORMAL);
     clickCancelRegister();
     logInUserUI();
-    console.log("Language: " + playerStats.language);
-    updateSettingsInDatabase(playerStats.colors, playerStats.language, playerStats.cameraOrthographic)
+    updateSettingsInDatabase();
 }
 
 function replaceLogInButtons()

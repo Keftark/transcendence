@@ -166,6 +166,7 @@ function updateChat()
 
 export async function changeLanguage(lang)
 {
+	playerStats.language = lang;
 	try
 	{
 		translations = await fetchTranslations(lang);

@@ -248,6 +248,7 @@ def login_user(request):
         password = request.POST.get('password')
 
         user = authenticate(request, username=username, password=password)
+        settings = SettingsModel.objects.get(pk=user.id)
         if user is not None:
             login(request, user)
             user_data = {
@@ -256,7 +257,10 @@ def login_user(request):
                 "email": user.email,
                 "first_name": user.first_name,
                 "last_name": user.last_name,
-                "preferredPaddle": user.accountmodel.preferredPaddle
+                "preferredPaddle": user.accountmodel.preferredPaddle,
+                "color": settings.color,
+                "language": settings.language,
+                "orthographicView": settings.view
             }
             return JsonResponse({
                 "message": "Login successful",
@@ -313,23 +317,7 @@ def del_user(request):
         return render(request, 'index.html')
 
     return render(request, 'index.html') 
-
-def set_settings(request, user_id):
-    try:
-        user = User.objects.get(id=user_id)
-        data = json.loads(request.body)
-        user.settingsmodel.language = data.language
-        user.settingsmodel.color = data.color
-        user.settingsmodel.view = data.view
-        user.settingsmodel.save()
-        JsonResponse({'success': True, 'message':'The user is deleted'})         
-
-    except User.DoesNotExist:
-        JsonResponse({'success': False, 'message':'The user does not exists'})   
-        return render(request, 'index.html')
-
-    return render(request, 'index.html') 
-      
+   
 class UpdateProfileView(UpdateAPIView):
 
     queryset = User.objects.all()

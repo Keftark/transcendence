@@ -36,6 +36,14 @@
     z-index: -1;
 } */
 
+#colorPicker
+{
+    border: none;
+    background: transparent;
+    width: 32px;
+    height: 32px;
+}
+
 #optionsLanguages, #optionsColors, #cameraType
 {
     display: flex;
@@ -51,7 +59,7 @@
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.815);
 }
 
-.colorize-btn {
+/* .colorize-btn {
     width: calc(1.5vh + 1.5vw);
     height: calc(1.5vh + 1.5vw);
     min-height: 18px;
@@ -59,9 +67,9 @@
     border: none;
     position: relative;
     transition: none;
-}
+} */
 
-.colorize-btn:hover::after,
+/* .colorize-btn:hover::after, */
 .cameraTypeSettings:hover::after,
 .language:hover::after
 {

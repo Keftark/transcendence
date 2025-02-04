@@ -2,8 +2,7 @@ import { sendMatch } from "./apiFunctions.js";
 import { fakeDatabase } from "./database.js";
 import { changeTextsColor } from "./menu.js";
 import { getRandomNumberBetween } from "./objects.js";
-import { MatchResult } from "./scoreManager.js";
-import { getTranslation } from "./translate.js";
+import { changeLanguage, getTranslation } from "./translate.js";
 import { PlayerStatus, VictoryType } from "./variables.js";
 
 const inputNick = document.getElementById('inputName');
@@ -61,13 +60,12 @@ export async function createNewPlayer()
     player.mail = inputMail.value;
     player.password = inputPassword.value;
     // faire en sorte de reprendre les preference du joueur avant qu'il ne se soit enregistre ?
-    player.language = "en";
+    player.language = playerStats.language;
     player.photoIndex = 0;
     player.room_id = -1;
-    player.colors = "white";
+    player.colors = playerStats.colors;
     player.isRegistered = true;
-    player.friends.push("ProGamer");
-    player.paddleSkins.push(0);
+    player.cameraOrthographic = playerStats.cameraOrthographic;
     player.playerController = 1;
     player.status = PlayerStatus.ONLINE;
     const userData = await getUserInfos(inputNick.value);
@@ -91,14 +89,14 @@ export function editPlayerStats(userData)
     player.id = userData.id;
     player.currentPaddleSkin = userData.preferredPaddle;
 
-    // player settings, voir avec autre chose que userData.
     player.language = userData.language;
     player.photoIndex = userData.photoIndex;
-    player.colors = userData.colors;
+    player.colors = userData.color;
+    player.cameraOrthographic = Boolean(userData.orthographicView);
     player.playerController = 1;
 
     playerStats = player;
-    // console.log("Player retrieved: " + player.nickname);
+    loadPlayerConfig();
 }
 
 export function resetPlayerStats()
@@ -133,9 +131,12 @@ export function changePlayerName(playerStats)
     // on change le nom dans la base de donnees et sur le profil.
 }
 
-export function loadPlayerConfig(playerStats)
+export function loadPlayerConfig()
 {
-    changeLanguage(playerStats.language);
+    // changeLanguage(playerStats.language);
+    let buttonLang = document.querySelector(`button[data-language=${playerStats.language}]`);  
+    buttonLang.click();
+    document.getElementById('cameraType').children[Number(playerStats.cameraOrthographic)].click();
     changeTextsColor(playerStats.colors);
 }
 
