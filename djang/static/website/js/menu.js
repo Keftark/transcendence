@@ -1,4 +1,4 @@
-import { deleteAccount, getMatchsLittleData, getUserAvatar, getUserByName, updateSettingsInDatabase } from './apiFunctions.js';
+import { deleteAccount, getMatchsLittleData, getUserAvatar, getUserByName, updatePasswordInDatabase, updateSettingsInDatabase } from './apiFunctions.js';
 import { callGameDialog } from './chat.js';
 import { clickChoosePaddleButton } from './customizeSkins.js';
 import { addMainEvents } from './eventsListener.js';
@@ -650,7 +650,6 @@ function checkNewPassword()
     let isOk = false;
     // on verifie les trois champs et on active ou non le bouton confirm
     // verifier que le password est assez complexe ou long
-
     isOk = inputNewPassword.value === inputConfirmNewPassword.value ? true : false;
     if (isOk)
         removeDisableButtonEffect(buttonAcceptChangePassword);
@@ -661,5 +660,12 @@ function checkNewPassword()
 function acceptChangePassword()
 {
     // requete back then
+    updatePasswordInDatabase(inputCurrentPassword.value, inputNewPassword.value, inputConfirmNewPassword.value)
+    .then((result) => {
+        console.log(result);
+    })
+    .catch((error) => {
+        console.error("Failed to update password:", error);
+    });
     closeChangePassword();
 }

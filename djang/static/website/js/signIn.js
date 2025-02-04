@@ -99,8 +99,13 @@ async function clickConfirmSignIn()
     const username = inputNick.value;
     const password = inputPassword.value;
 
-    await logInPlayer(username, password);
-    callGameDialog("entityLogIn", EmotionType.NORMAL);
+    await logInPlayer(username, password)
+    .then(() => {
+        callGameDialog("entityLogIn", EmotionType.NORMAL);
+    })
+    .catch((error) => {
+        console.error("Failed to log in:", error);
+    });
 }
 
 export function clickCancelSignIn(login = false)

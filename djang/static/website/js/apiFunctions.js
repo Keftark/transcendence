@@ -29,17 +29,15 @@ export async function logInPlayer(username, password)
             }
         });
         if (!response.ok) {
-            if (response.status === 400)
+            if (response.status === 400 || response.status === 500)
             {
                 invalidCredentials();
                 return;
             }
             const errorResult = await response.json();
             console.error('Login failed:', errorResult.message);
-            alert(errorResult.message);
         } else {
             const result = await response.json();
-            // console.log(result.message);
             editPlayerStats(result.user);
             clickCancelSignIn(true);
         }
@@ -655,3 +653,34 @@ document.getElementById('uploadForm').addEventListener('submit', function(event)
         });
     }
 });
+
+export async function updatePasswordInDatabase(curPass, newPass, confirmPass) {
+    if (!playerStats.isRegistered)
+        return;
+    try {
+        const response = await fetch(`/update_password`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            },
+            body: JSON.stringify({
+                current_password: curPass,
+                new_password: newPass,
+                new_password2: confirmPass
+            })
+        });
+        if (!response.ok)
+        {
+            if(response.status === 400)
+            {
+                // invalid (first) password
+                return response;
+            }
+        }
+        // throw new Error('Network response was not ok');
+        return response;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
