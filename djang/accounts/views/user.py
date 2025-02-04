@@ -287,13 +287,15 @@ def convert_str_to_image(image_data: str):
 def upload_image(request):
     if request.method == 'POST' and request.FILES.get('image'):
         image = image_to_base64(request.FILES['image'])
-        
+        ##data = request.data
+        ##serializer = AccountSerializer(data=data)
         fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
         filename = fs.save(image.name, image)
         
         user = request.user
         user.accountmodel.avatar = filename
+        ##serializer.save()
         user.accountmodel.save()
 
         return JsonResponse({'success': True, 'url': filename})

@@ -10,9 +10,6 @@ from rest_framework.fields import CharField
 from django.contrib.auth import login
 from drf_extra_fields.fields import Base64ImageField
 
-
-
-
 #class AccountSerializer(serializers.HyperlinkedModelSerializer):
 #    username = serializers.ReadOnlyField(source='user.username')
 #    avatar = serializers.ImageField(required=False)
@@ -174,4 +171,3 @@ class UpdateSettingsSerializer(ModelSerializer):
 
         instance.save()
         return instance
-
