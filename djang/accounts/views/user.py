@@ -8,9 +8,12 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.utils.translation import gettext as _
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from accounts.models import *
 from ..serializers import UpdateUserSerializer, UpdatePasswordSerializer, UpdateSettingsSerializer
 from rest_framework.generics import UpdateAPIView
+from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from accounts.serializers import AccountSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -94,6 +97,11 @@ def register_user(request):
             if User.objects.filter(email=email).exists():
                 return JsonResponse({'success': False, 'error': 'Email is already registered.'}, status=400)
 
+            try:
+                validate_password(password, user)
+            except ValidationError as e:
+                return JsonResponse({'success': False, 'error': e}, status=400)
+            
             user = User.objects.create_user(
                 username=name,
                 first_name=first_name,
@@ -287,15 +295,23 @@ def convert_str_to_image(image_data: str):
     )
     return myfile
 
+def upload_base64image(request):
+    if request.method == "POST":
+        data = request.data
+        serializer = AccountSerializer(data=data)
+
+        if serializer.is_valid():
+            account = serializer.save()
+            data = serializer.data
+            return Response(data=data)
+        return Response(serializer.errors, status=400)
 
 def upload_image(request):
     if request.method == 'POST' and request.FILES.get('image'):
         image = image_to_base64(request.FILES['image'])
         
         fs = FileSystemStorage(location=settings.MEDIA_ROOT)
-
         filename = fs.save(image.name, image)
-        
         user = request.user
         user.accountmodel.avatar = filename
         user.accountmodel.save()
@@ -342,4 +358,3 @@ class UpdateSettingsView(UpdateAPIView):
 
     def get_object(self):
         return self.queryset.get(pk=self.request.user.pk)
-
