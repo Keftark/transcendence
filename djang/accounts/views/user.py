@@ -11,6 +11,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from accounts.models import *
 from ..serializers import UpdateUserSerializer, UpdatePasswordSerializer, UpdateSettingsSerializer
 from rest_framework.generics import UpdateAPIView
+from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from accounts.serializers import AccountSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -287,6 +288,16 @@ def convert_str_to_image(image_data: str):
     )
     return myfile
 
+def upload_base64image(request):
+    if request.method == "POST":
+        data = request.data
+        serializer = AccountSerializer(data=data)
+
+        if serializer.is_valid():
+            account = serializer.save()
+            data = serializer.data
+            return Response(data=data)
+        return Response(serializer.errors, status=400)
 
 def upload_image(request):
     if request.method == 'POST' and request.FILES.get('image'):
@@ -294,9 +305,7 @@ def upload_image(request):
         ##data = request.data
         ##serializer = AccountSerializer(data=data)
         fs = FileSystemStorage(location=settings.MEDIA_ROOT)
-
         filename = fs.save(image.name, image)
-        
         user = request.user
         user.accountmodel.avatar = filename
         ##serializer.save()
@@ -344,4 +353,3 @@ class UpdateSettingsView(UpdateAPIView):
 
     def get_object(self):
         return self.queryset.get(pk=self.request.user.pk)
-
