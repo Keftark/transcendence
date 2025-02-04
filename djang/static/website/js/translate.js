@@ -133,9 +133,17 @@ export function updateHTML(translations)
 	document.getElementById('headerMatchsProfileButton').innerText = translations.headerMatchsProfileButton;
 	document.getElementById('buttonAcceptDelete').innerText = translations.confirm;
 	document.getElementById('buttonCancelDelete').innerText = translations.cancel;
+	document.getElementById('buttonAcceptChangePassword').innerText = translations.confirm;
+	document.getElementById('buttonCancelChangePassword').innerText = translations.cancel;
 	document.getElementById('deleteProfileAskText').innerText = translations.deleteProfileAskText;
+	document.getElementById('changePasswordProfileAskText').innerText = translations.changePasswordProfileAskText;
 	document.getElementById('customButtonChangePicture').innerText = translations.customButtonChangePicture;
+	document.getElementById('changePasswordButton').innerText = translations.changePasswordButton;
+	document.getElementById('currentPassword').innerText = translations.currentPassword;
+	document.getElementById('newPassword').innerText = translations.newPassword;
+	document.getElementById('confirmNewPassword').innerText = translations.confirmNewPassword;
 	
+
 	
     document.querySelector('.gdpr').addEventListener('click', function(event) {
 		event.preventDefault();

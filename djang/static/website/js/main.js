@@ -1,4 +1,4 @@
-import { closeProfile, closeSettings, focusOldButton, isProfileOpen, isSettingsOpen, openOrCloseGameMenu, setLanguageButtons, isAskingDeleteAccount, cancelDeleteAccount, isMiniProfileOpen, closeMiniProfile } from './menu.js';
+import { closeProfile, closeSettings, focusOldButton, isProfileOpen, isSettingsOpen, openOrCloseGameMenu, setLanguageButtons, isAskingDeleteAccount, cancelDeleteAccount, isMiniProfileOpen, closeMiniProfile, isChangePasswordOpen, closeChangePassword } from './menu.js';
 import { initTranslation } from './translate.js';
 import { addMainEvents } from './eventsListener.js';
 import { LevelMode } from './variables.js';
@@ -50,6 +50,8 @@ export function checkEscapeKey()
     const currentView = getCurrentView();
     if (isGdprOpen())
         closeGdprPanel();
+    else if (isChangePasswordOpen())
+        closeChangePassword();
     else if (isAskingDeleteAccount())
         cancelDeleteAccount();
     else if (isMiniProfileOpen())
@@ -93,7 +95,7 @@ export function checkEscapeKey()
 
 function changeCursors()
 {
-    const buttons = document.querySelectorAll('button, input[type="color"], input[type="checkbox"], .arena, #showPasswordButton, #showConfirmPasswordButton, #header-title, a, #askSignIn, #askRegister, #friendsHeader, .headerProfileButton');
+    const buttons = document.querySelectorAll('button, input[type="color"], input[type="checkbox"], .arena, #inputSignInPassword, #showCurrentPasswordButton, #showNewPasswordButton, #showConfirmNewPasswordButton, #showPasswordButton, #showConfirmPasswordButton, #header-title, a, #askSignIn, #askRegister, #friendsHeader, .headerProfileButton');
     buttons.forEach(button => {
         button.style.cursor = "url('./static/icons/cursor-button.webp'), pointer";
     });

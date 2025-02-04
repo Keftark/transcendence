@@ -171,17 +171,34 @@
     align-items: center;
 }
 
-#mailImg
+#changePasswordButton
 {
     display: flex;
-    padding: 4px;
+    text-align: center;
 }
 
-#mailImg
+.profileField
 {
-    width: calc(1.5vw + 1.5vh);
-    height: calc(1.5vw + 1.5vh);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
 }
+
+.editButtonProfile
+{
+    width: 20px;
+    height: 20px;
+    border: none;
+    background-color: transparent;
+}
+
+.editButtonProfile img
+{
+    width: 20px;
+    height: 20px;
+}
+
 
 /* .profilePictureChangeButton
 {
@@ -286,9 +303,18 @@
 
 }
 
-#deleteProfileButton img
+#changePasswordButton
 {
-    height: 2rem;
+    border: 3px solid #dbfbfd47;
+    background-color: #dbfbfd00;
+    border-radius: 4px;
+}
+
+#changePasswordButton:hover
+{
+    border: 3px solid #00eeff69;
+    background-color: #00eeff34;
+
 }
 
 #headerButtonsProfile
@@ -345,12 +371,12 @@
     background-color: #009106;
 }
 
-#deleteProfileConfirm
+#deleteProfileConfirm, #changePasswordProfileConfirm
 {
+    display: none;
     position: fixed;
     height: 100%;
     width: 100%;
-    display: none;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -361,7 +387,7 @@
     background-color: rgba(0, 0, 0, 0.7);
 }
 
-#buttonsAskDelete
+#buttonsAskDelete, #buttonsAskChangePassword
 {
     display: flex;
     flex-direction: row;
@@ -369,11 +395,16 @@
     gap: 1rem;
 }
 
-#buttonAcceptDelete, #buttonCancelDelete
+#buttonAcceptDelete, #buttonCancelDelete, #buttonAcceptChangePassword, #buttonCancelChangePassword
 {
     position: inherit;
     margin: 0;
     transform: none;
+}
+
+#buttonAcceptChangePassword, #buttonCancelChangePassword
+{
+    margin-top: 32px;
 }
 
 #buttonAcceptDelete

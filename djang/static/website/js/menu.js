@@ -3,7 +3,7 @@ import { callGameDialog } from './chat.js';
 import { clickChoosePaddleButton } from './customizeSkins.js';
 import { addMainEvents } from './eventsListener.js';
 import { isInGame, reinitLevelFunction, setCameraType, StartLevel } from './levelLocal.js';
-import { setLevelState } from './main.js';
+import { addDisableButtonEffect, removeDisableButtonEffect, setLevelState } from './main.js';
 import { clickBackButtonMenu, showModeChoice } from './modesSelection.js';
 import { getCurrentView, navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
@@ -51,6 +51,14 @@ const headerMainProfileButton = document.getElementById('headerMainProfileButton
 const headerMatchsProfileButton = document.getElementById('headerMatchsProfileButton');
 const profileInfos = document.getElementById('profileInfos');
 const deleteProfileConfirm = document.getElementById('deleteProfileConfirm');
+const changePasswordPanel = document.getElementById('changePasswordProfileConfirm');
+const buttonAcceptChangePassword = document.getElementById('buttonAcceptChangePassword');
+const inputCurrentPassword = document.getElementById('inputCurrentPassword');
+const inputNewPassword = document.getElementById('inputNewPassword');
+const inputConfirmNewPassword = document.getElementById('inputConfirmNewPassword');
+const showCurrentPasswordButton = document.getElementById('showCurrentPasswordButton');
+const showNewPasswordButton = document.getElementById('showNewPasswordButton');
+const showConfirmNewPasswordButton = document.getElementById('showConfirmNewPasswordButton');
 
 const buttonsLanguage = document.querySelectorAll('.language');
 const imageSources = {
@@ -66,6 +74,18 @@ let settingsIsOpen = false;
 let profileIsOpen = false;
 let oldButton = mainPlayButton;
 export let isMenuOpen = false;
+
+document.getElementById('changePasswordButton').addEventListener('click', () => {
+    openChangePassword();
+});
+
+document.getElementById('buttonCancelChangePassword').addEventListener('click', () => {
+    closeChangePassword();
+});
+
+buttonAcceptChangePassword.addEventListener('click', () => {
+    acceptChangePassword();
+});
 
 document.getElementById('customButtonChangePicture').addEventListener('click', () => {
     fileInput.click();
@@ -585,4 +605,61 @@ export function isSettingsOpen()
 export function isProfileOpen()
 {
     return profileIsOpen;
+}
+
+
+function resetChangePasswordFields()
+{
+    inputConfirmNewPassword.value = inputNewPassword.value = inputCurrentPassword.value = "";
+    showConfirmNewPasswordButton.src = showNewPasswordButton.src = showCurrentPasswordButton.src = 'static/icons/eyeOpen.webp';
+    showConfirmNewPasswordButton.type = showNewPasswordButton.type = showCurrentPasswordButton.type = "password";
+}
+
+let changePasswordIsOpen = false;
+
+export function isChangePasswordOpen()
+{
+    return changePasswordIsOpen;
+}
+
+function openChangePassword()
+{
+    changePasswordIsOpen = true;
+    changePasswordPanel.style.display = 'flex';
+    inputCurrentPassword.focus();
+}
+
+export function closeChangePassword()
+{
+    changePasswordIsOpen = false;
+    changePasswordPanel.style.display = 'none';
+    resetChangePasswordFields();
+    document.getElementById('changePasswordButton').focus();
+    addDisableButtonEffect(buttonAcceptChangePassword);
+}
+
+inputNewPassword.addEventListener('input', function(event) {
+    checkNewPassword();
+});
+inputConfirmNewPassword.addEventListener('input', function(event) {
+    checkNewPassword();
+});
+
+function checkNewPassword()
+{
+    let isOk = false;
+    // on verifie les trois champs et on active ou non le bouton confirm
+    // verifier que le password est assez complexe ou long
+
+    isOk = inputNewPassword.value === inputConfirmNewPassword.value ? true : false;
+    if (isOk)
+        removeDisableButtonEffect(buttonAcceptChangePassword);
+    else
+        addDisableButtonEffect(buttonAcceptChangePassword);
+}
+
+function acceptChangePassword()
+{
+    // requete back then
+    closeChangePassword();
 }
