@@ -18,7 +18,7 @@ class Match:
         self._formatted_queue = []
         self._player_1_score = 0
         self._player_2_score = 0
-        self._point_to_win = 5
+        self._point_to_win = 3
         self._awaited_player_id = 0
         self._timer_count = 0
         self._quitter = 0
@@ -172,7 +172,6 @@ class Match:
                     self._message_queue.append(self.dump_waiting_start())
             elif self._paddle_1.ready is True and self._paddle_2.ready is True:
                 self.restart_time()
-                self.check_victory()
                 self._paddle_1.tick()
                 self._paddle_2.tick()
                 self._ball.update_position()
@@ -192,6 +191,7 @@ class Match:
                 self._message_queue.append(self.dump_variables())
             else:
                 self._message_queue.append(self.dump_waiting())
+            self.check_victory()
         self.format()
 
     def format(self):
