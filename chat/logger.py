@@ -71,6 +71,11 @@ class Logger:
         """
         val = round(val, 4)
         string = str(val)
+        point = string.find(".")
+        if point < 0:
+            string = string + ".00"
+        if len(string[point + 1:]) < 2:
+            string = string + "0"
         while len(string) < max_len:
             string = sep + string
         if len(string) > 10:
