@@ -423,3 +423,21 @@
     background-color: #00807a;
     box-shadow: 0 0 24px rgb(0, 255, 255);
 }
+
+#errorPanel
+{
+    display: none;
+    position: absolute;
+    bottom: 0;
+    border: 2px solid red;
+    background-color: rgb(73, 0, 0);
+    z-index: 10;
+    padding: 8px;
+    text-align: center;
+}
+
+#errorPanel p
+{
+    color: red;
+    margin: 0;
+}

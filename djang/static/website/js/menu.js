@@ -87,6 +87,10 @@ buttonCancelChangeField.addEventListener('click', () => {
     closeEditProfileField();
 });
 
+document.getElementById('showConfirmNewPasswordButton').addEventListener('click', () => {
+    toggleShowPasswordConfirm();
+});
+
 document.getElementById('editName').addEventListener('click', () => {
     openEditProfileField(0);
 });
@@ -653,6 +657,7 @@ function openChangePassword()
 
 export function closeChangePassword()
 {
+    document.getElementById('errorPanel').style.display = 'none';
     changePasswordIsOpen = false;
     changePasswordPanel.style.display = 'none';
     resetChangePasswordFields();
@@ -679,17 +684,29 @@ function checkNewPassword()
         addDisableButtonEffect(buttonAcceptChangePassword);
 }
 
+function displayErrors(errors) {
+    const errorContainer = document.getElementById('errorText');
+    errorContainer.innerHTML = "";
+    errors.forEach((error) => {
+        errorContainer.innerHTML += error + "<br>";
+    });
+    document.getElementById('errorPanel').style.display = 'flex';
+}
+
 function acceptChangePassword()
 {
-    // requete back then
     updatePasswordInDatabase(inputCurrentPassword.value, inputNewPassword.value, inputConfirmNewPassword.value)
     .then((result) => {
-        console.log(result);
+        if (result.success === false) {
+            displayErrors(result.errors);
+            return;
+        }
+        document.getElementById('errorPanel').style.display = 'none';
+        closeChangePassword();
     })
     .catch((error) => {
         console.error("Failed to update password:", error);
     });
-    closeChangePassword();
 }
 
 let currentEditMode = 0;
@@ -728,9 +745,27 @@ function acceptEditProfileField()
 
 export function closeEditProfileField()
 {
+    document.getElementById('errorPanel').style.display = 'none';
     editProfileIsOpen = false;
     changeFieldProfileConfirm.style.display = 'none';
     resetEditProfileFields();
 }
 
-changeFieldProfileConfirm.style.display = 'flex';
+const passwordConfirmImg = document.getElementById('showConfirmNewPasswordButton');
+let showPassConfirm = false;
+function toggleShowPasswordConfirm()
+{
+    showPassConfirm = !showPassConfirm;
+    if (showPassConfirm)
+    {
+        passwordConfirmImg.src = 'static/icons/eyeClose.webp';
+        inputConfirmNewPassword.type = "text";
+    }
+    else
+    {
+        passwordConfirmImg.src = 'static/icons/eyeOpen.webp';
+        inputConfirmNewPassword.type = "password";
+    }
+}
+
+// changeFieldProfileConfirm.style.display = 'flex';

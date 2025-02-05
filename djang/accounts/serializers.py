@@ -5,6 +5,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.http import JsonResponse
+from rest_framework.response import Response
+from rest_framework import status
+import json
 from accounts.models import *
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
@@ -147,22 +150,26 @@ class UpdatePasswordSerializer(ModelSerializer):
 
     def update(self, instance, validated_data):
         user = self.context['request'].user
+        # Directly use the request's data instead of body
+        data = self.context['request'].data
 
+        # Extract fields
+        password = data.get('new_password', '').strip()
         if user.pk != instance.pk:
             raise ValidationError({'authorize': _('You dont have permission for this user.')})
 
         try:
-            # Validate password
-            validate_password(validated_data['new_password'], user)
+            validate_password(password)  # User not needed here
         except ValidationError as e:
-            # Handle specific validation errors
-            error_messages = e.messages  # e.messages contains the list of validation errors
-            raise ValidationError({'new_password': error_messages})
-        
-        instance.set_password(validated_data['new_password'])
+            raise ValidationError({'new_password': e.messages})
+            
+        instance.set_password(password)
         instance.save()
-        login(self.context['request'], instance)
-        return instance
+        # login(self.context['request'], instance)
+
+        # Return the serialized instance with status 200
+        serializer = self.__class__(instance)  # Re-serialize the updated instance
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
 class UpdateSettingsSerializer(ModelSerializer):
     class Meta:

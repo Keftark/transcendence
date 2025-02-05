@@ -338,11 +338,60 @@ def del_user(request):
         JsonResponse({'success': True, 'message':'The user is deleted'})         
 
     except User.DoesNotExist:
-        JsonResponse({'success': False, 'message':'The user does not exists'})   
+        JsonResponse({'success': False, 'message':'The user does not exists'})
         return render(request, 'index.html')
 
     return render(request, 'index.html') 
-   
+
+def change_user_password(request):
+    if request.method == 'PUT':  # Ensure it's a PUT request
+        try:
+            # Parse JSON data from the request body
+            data = json.loads(request.body)
+            current_password = data.get("current_password")
+            new_password = data.get("new_password")
+            confirm_password = data.get("new_password2")
+
+            # Ensure all required fields are provided
+            if not current_password or not new_password or not confirm_password:
+                return JsonResponse(
+                    {"success": False, "message": "All fields are required."}, status=400
+                )
+
+            if new_password != confirm_password:
+                return JsonResponse(
+                    {"success": False, "message": "New passwords do not match."}, status=400
+                )
+
+            # Get the logged-in user (assuming session-based authentication)
+            if not request.user.is_authenticated:
+                return JsonResponse({"success": False, "message": "Unauthorized."}, status=401)
+
+            user = request.user
+
+            # Check if the current password is correct
+            if not user.check_password(current_password):
+                return JsonResponse(
+                    {"success": False, "message": "Current password is incorrect."}, status=400
+                )
+
+            # Validate the new password
+            try:
+                validate_password(new_password, user)
+            except ValidationError as e:
+                return JsonResponse({"success": False, "errors": list(e.messages)}, status=400)
+
+            # Update the password
+            user.set_password(new_password)
+            user.save()
+
+            return JsonResponse({"success": True, "message": "Password updated successfully!"}, status=200)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"success": False, "message": "Invalid JSON data."}, status=400)
+
+    return JsonResponse({"success": False, "message": "Invalid request method."}, status=405)
+
 class UpdateProfileView(UpdateAPIView):
 
     queryset = User.objects.all()
