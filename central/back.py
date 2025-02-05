@@ -26,8 +26,9 @@ logList = []
 
 SERVER_PORT         = os.environ.get("PORT_CENTRAL", 7777)
 PORT_1V1_CLASSIC    = os.environ.get("PORT_1V1_CLASSIC", 8001)
+PORT_2V2_CLASSIC    = os.environ.get("PORT_2V2_CLASSIC", 8003)
 PORT_CHAT           = os.environ.get("PORT_CHAT", 7878)
-DEBUG               = (bool)(os.environ.get("DEBUG", False))
+DEBUG               = bool(os.environ.get("DEBUG", False))
 
 
 @dataclass
@@ -36,6 +37,7 @@ class SocketData:
     """
     SOCKET_CHAT = None
     SOCKET_1V1 = None
+    SOCKET_2V2 = None
     STOP_FLAG = False
 
 Sockets = SocketData
@@ -53,8 +55,8 @@ ssl_client.load_verify_locations(localhost_pem)
 def dump_health():
     """Dumps the status of the subprocesses sockets."""
     event = {
-        "chat_server": True if Sockets.SOCKET_CHAT is not None else False,
-        "1v1_classic_server": True if Sockets.SOCKET_1V1 is not None else False,
+        "chat_server": Sockets.SOCKET_CHAT is not None,
+        "1v1_classic_server": Sockets.SOCKET_1V1 is not None,
     }
     return event
 
@@ -132,51 +134,95 @@ def key_check(_id, key):
             return False
     return False
 
+async def handler_1v1(event):
+    """Handles 1v1 game answers.
+
+    Args:
+        event (dict): A list containing the query's data.
+    """
+    for id_f in event["ids"]:
+        _id = (int)(id_f)
+        data = event["data"]
+        for user in userList:
+            if user.id == _id:
+                try:
+                    if event["type"] == "list_all":
+                        await user.send(json.dumps(event))
+                    else:
+                        await user.send(json.dumps(data))
+                except Exception as e:
+                    logger.log("Error while sending answer to user", 2, e)
+                if data["type"] == "join_queue":
+                    user.game = "1v1_classic"
+                    user.status = "queue"
+                    user.room = -1
+                elif data["type"] == "exit_queue":
+                    user.game = "none"
+                    user.status = "here"
+                    user.room = -1
+                elif data["type"] == "match_init":
+                    user.status = "playing"
+                    user.room = int(data["room_id"])
+                elif data["type"] == "match_start":
+                    user.status = "playing"
+                    user.room = int(data["room_id"])
+                elif data["type"] == "victory":
+                    user.game = "none"
+                    user.status = "here"
+                    user.room = -1
+
+async def handler_2v2(event):
+    """Handles 2v2 game answers.
+
+    Args:
+        event (dict): A list containing the query's data.
+    """
+    for id_f in event["ids"]:
+        _id = (int)(id_f)
+        data = event["data"]
+        for user in userList:
+            if user.id == _id:
+                try:
+                    if event["type"] == "list_all":
+                        await user.send(json.dumps(event))
+                    else:
+                        await user.send(json.dumps(data))
+                except Exception as e:
+                    logger.log("Error while sending answer to user", 2, e)
+                if data["type"] == "join_queue":
+                    user.game = "2v2_classic"
+                    user.status = "queue"
+                    user.room = -1
+                elif data["type"] == "exit_queue":
+                    user.game = "none"
+                    user.status = "here"
+                    user.room = -1
+                elif data["type"] == "match_init":
+                    user.status = "playing"
+                    user.room = int(data["room_id"])
+                elif data["type"] == "match_start":
+                    user.status = "playing"
+                    user.room = int(data["room_id"])
+                elif data["type"] == "victory":
+                    user.game = "none"
+                    user.status = "here"
+                    user.room = -1
+
 # Transfere la reponse du serveur au client
 async def handle_answers(event):
     """Handles an answer; a query from a subprocess for a user.
 
     Args:
-        event (List): A list containing the query's data.
+        event (dict): A list containing the query's data.
     """
     _type = event["type"]
     if _type != "match_data":
         print("answers", event)
     _server = event["server"]
     if _server == "1v1_classic":
-        for id_f in event["ids"]:
-            _id = (int)(id_f)
-            data = event["data"]
-            for user in userList:
-                if user.id == _id:
-                    if event["type"] == "list_all":
-                        try:
-                            await user.send(json.dumps(event))
-                        except Exception as e:
-                            logger.log("", 2, e)
-                        continue
-                    try:
-                        await user.send(json.dumps(data))
-                    except Exception as e:
-                        logger.log("", 2, e)
-                    if data["type"] == "join_queue":
-                        user.game = "1v1_classic"
-                        user.status = "queue"
-                        user.room = -1
-                    elif data["type"] == "exit_queue":
-                        user.game = "none"
-                        user.status = "here"
-                        user.room = -1
-                    elif data["type"] == "match_init":
-                        user.status = "playing"
-                        user.room = int(data["room_id"])
-                    elif data["type"] == "match_start":
-                        user.status = "playing"
-                        user.room = int(data["room_id"])
-                    elif data["type"] == "victory":
-                        user.game = "none"
-                        user.status = "here"
-                        user.room = -1
+        await handler_1v1(event)
+    elif _server == "2v2_classic":
+        await handler_2v2(event)
     elif _type == "message" or _type == "sticker":
         _id = (int)(event["id"])
         for user in userList:
@@ -184,7 +230,6 @@ async def handle_answers(event):
                 await user.send(json.dumps(event))
     elif _type == "salon_message" or _type == "salon_sticker":
         _id = (int)(event["id"])
-        print("Coucouille")
         for user in userList:
             if user.game == event["game"] \
                         and user.room == (int)(event["room_id"]):
@@ -224,20 +269,26 @@ async def handle_transfer(event):
     if _server == "chat":
         for user in userList:
             if user.id == _id:
-                print("uwu :", user.room)
                 event["room_id"] = int(user.room)
                 event["game"] = user.game
-                print("Galanga ::", event)
         try:
             await Sockets.SOCKET_CHAT.send(json.dumps(event))
         except Exception as e:
-            logger.log("", 2, e)
+            logger.log("Error while sending to chat socket", 2, e)
             Sockets.SOCKET_CHAT = None
+
     elif _server == "1v1_classic":
         try:
             await Sockets.SOCKET_1V1.send(json.dumps(event))
         except Exception as e:
-            logger.log("", 2, e)
+            logger.log("Error while sending to 1v1 Socket", 2, e)
+            Sockets.SOCKET_1V1 = None
+
+    elif _server == "2v2_classic":
+        try:
+            await Sockets.SOCKET_2V2.send(json.dumps(event))
+        except Exception as e:
+            logger.log("Error while sending to 2v2 Socket", 2, e)
             Sockets.SOCKET_1V1 = None
 
 async def handle_log(websocket, event):
@@ -291,9 +342,7 @@ async def disconnect_user(websocket):
         websocket (WebSocket): the closed websocket.
     """
     for user in userList.copy():
-        print("Conparing ::", websocket)
-        print("To those two :\n", user.sock_input, "\n", user.sock_output)
-        if user.sock_input == websocket or user.sock_output == websocket:
+        if websocket in [user.sock_input, user.sock_output]:
             logger.log("User " + str(user.name) + " (ID :" + str(user.id) \
                        +") has disconnected.", 1)
             if user.game == "1v1_classic":
@@ -371,6 +420,7 @@ async def connection_loop():
     sockets to the subprocesses server. Should a connection fail,
     the loop will reconnect the subprocess.
     """
+    displayed_welcome = False
     while Sockets.STOP_FLAG is False:
         if Sockets.SOCKET_CHAT is None:
             try:
@@ -388,6 +438,7 @@ async def connection_loop():
             except Exception as e:
                 logger.log("", 2, e)
                 Sockets.SOCKET_CHAT = None
+
         if Sockets.SOCKET_1V1 is None:
             try:
                 logger.log("Attempting connection to Game (1v1 Classical) server.", 1)
@@ -404,7 +455,27 @@ async def connection_loop():
             except Exception as e:
                 logger.log("", 2, e)
                 Sockets.SOCKET_1V1 = None
-        await asyncio.sleep(5)
+
+        if Sockets.SOCKET_2V2 is None:
+            try:
+                logger.log("Attempting connection to Game (2v2 Classical) server.", 1)
+                uri = "wss://172.17.0.1:" + str(PORT_2V2_CLASSIC) + "/"
+                Sockets.SOCKET_2V2 = await connect(uri, ping_interval=10, \
+                                            ping_timeout=None, ssl=ssl_client)
+                logger.log("Game (2v2 Classical) server connected.", 0)
+            except Exception as e:
+                Sockets.SOCKET_2V2 = None
+                logger.log("Couldn't connect to the game (2v2 Classical) server.", 2, e)
+        else:
+            try:
+                await Sockets.SOCKET_2V2.send(json.dumps(ping()))
+            except Exception as e:
+                logger.log("", 2, e)
+                Sockets.SOCKET_2V2 = None
+        await asyncio.sleep(3)
+        if displayed_welcome is False:
+            displayed_welcome = True
+            logger.welcome()
 
 async def server_listener():
     """Server functions. Listens for incomming connections through

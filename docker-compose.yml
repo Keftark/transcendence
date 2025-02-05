@@ -21,21 +21,9 @@ services:
     build: ./djang/
     container_name: django
     ports:
-      - "8000:8000"
+      - "${PORT_DJANGO}:${PORT_DJANGO}"
     depends_on:
       - db
-    environment:
-      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
-      DEBUG: ${DEBUG}
-      DJANGO_LOGLEVEL: ${DJANGO_LOGLEVEL}
-      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS}
-      DATABASE_ENGINE: ${DATABASE_ENGINE}
-      DATABASE_NAME: ${DATABASE_NAME}
-      DATABASE_USERNAME: ${DATABASE_USERNAME}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-      DATABASE_HOST: ${DATABASE_HOST}
-      DATABASE_PORT: ${DATABASE_PORT}
-      HOST_ADDRESS: ${HOST_ADDRESS}
     env_file:
       - .env
     networks:
@@ -59,7 +47,7 @@ services:
     container_name: central
     restart: always
     ports:
-      - "7777:7777"
+      - "${PORT_CENTRAL}:${PORT_CENTRAL}"
     networks:
       - app-network
     volumes:
@@ -74,7 +62,7 @@ services:
     depends_on:
       - central
     ports:
-      - "7878:7878"
+      - "${PORT_CHAT}:${PORT_CHAT}"
     networks:
       - app-network
     volumes:
@@ -89,7 +77,22 @@ services:
     depends_on:
       - central
     ports:
-      - "8001:8001"
+      - "${PORT_1V1_CLASSIC}:${PORT_1V1_CLASSIC}"
+    networks:
+      - app-network
+    volumes:
+      - ./certs:/etc/certs:ro
+    env_file:
+      - .env
+  
+  2v2_classic:
+    container_name: 2v2_classic
+    build: ./back_2v2/
+    restart: always
+    depends_on:
+      - central
+    ports:
+      - "${PORT_2V2_CLASSIC}:${PORT_2V2_CLASSIC}"
     networks:
       - app-network
     volumes:

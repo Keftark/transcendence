@@ -134,7 +134,6 @@ DATABASES = {
 }
 
 WEBSOCKET_URL = os.getenv("HOST_ADDRESS", "0")
-print("Coucou ", WEBSOCKET_URL)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

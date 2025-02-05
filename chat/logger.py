@@ -2,6 +2,7 @@
 
 import time
 import threading
+import os
 
 CEND      = '\33[0m'
 CBOLD     = '\33[1m'
@@ -55,14 +56,40 @@ class Logger:
         self._start = time.time()
         self._lock = threading.Lock()
 
+    def format(self, val, max_len = 10, sep = " "):
+        """Formats the time value.
+
+        Args:
+            val (float): Value to format.
+            max_len (int, optional): Max amount of characters to
+            pad. Defaults to 10.
+            sep (string, optionnal): Character to pad
+            with. Defaults to " "
+
+        Returns:
+            string: Formatted time value.
+        """
+        val = round(val, 4)
+        string = str(val)
+        point = string.find(".")
+        if point < 0:
+            string = string + ".00"
+        if len(string[point + 1:]) < 2:
+            string = string + "0"
+        while len(string) < max_len:
+            string = sep + string
+        if len(string) > 10:
+            string = "..." + string[len(string) - 7:]
+        return str(string)
+
     def tick(self):
         """Creates a string object containing the formated timer.
 
         Returns:
             string: a formatted timer.
         """
-        t = str(round(time.time() - self._start, 2))
-        return CWHITE + "[" + CBLUE + t + CWHITE + "]"
+        t = round(time.time() - self._start, 2)
+        return CWHITE + "[" + CBEIGE2 + self.format(t) + CWHITE + "]"
 
     def warning_level(self, level = 0):
         """Creates a string object containing the level of the log.
@@ -79,13 +106,13 @@ class Logger:
             string: a formatted log header.
         """
         if level == 0:
-            return CWHITE + "[" + CGREEN + " OK " + CWHITE + "]\t::"
+            return CWHITE + "[" + CGREEN + "   OK" + CWHITE + "] ::"
         if level == 1:
-            return CWHITE + "[" + CYELLOW + " LOG " + CWHITE + "]\t::"
+            return CWHITE + "[" + CYELLOW + "  LOG" + CWHITE + "] ::"
         if level == 2:
-            return CWHITE + "[" + CRED + CBLINK + "ERROR" + CEND + CWHITE + "]\t::"
+            return CWHITE + "[" + CRED + CBLINK + "ERROR" + CEND + CWHITE + "] ::"
         if level == 3:
-            return CWHITE + "[" + CBLUE + "DEBUG" + CWHITE + "]\t::"
+            return CWHITE + "[" + CBEIGE2 + "DEBUG" + CWHITE + "] ::"
         return ""
 
     def error_format(self, error):
@@ -112,6 +139,13 @@ class Logger:
                 print(self.tick(), self.warning_level(level), message, self.error_format(error))
             else:
                 print(self.tick(), self.warning_level(level), message)
+
+    def welcome(self):
+        """Displays a welcoming message.
+        """
+        txt = "[" + CGREEN + CBOLD + "WELCOME" + CEND + "] Transcendance awaits you at : "
+        txt += CBOLD + CVIOLET + "https://" + os.environ.get("HOST_ADDRESS", "localhost") + CEND
+        print(txt)
 
     @property
     def start(self):
