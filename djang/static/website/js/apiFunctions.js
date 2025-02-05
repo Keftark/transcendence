@@ -47,8 +47,7 @@ export async function logInPlayer(username, password)
     }
 }
 
-export async function registerUser(nameValue, firstNameValue, lastNameValue, emailValue, passwordValue)
-{
+export async function registerUser(nameValue, firstNameValue, lastNameValue, emailValue, passwordValue) {
     const data = {
         name: nameValue,
         first_name: firstNameValue,
@@ -56,9 +55,8 @@ export async function registerUser(nameValue, firstNameValue, lastNameValue, ema
         email: emailValue,
         password: passwordValue
     };
-    // console.log(data);
-    try
-    {
+
+    try {
         const response = await fetch('/register', {
             method: 'POST',
             headers: {
@@ -68,21 +66,27 @@ export async function registerUser(nameValue, firstNameValue, lastNameValue, ema
             body: JSON.stringify(data)
         });
 
-        if (!response.ok)
-            throw new Error(`HTTP error! Status: ${response.status}`);
+        if (!response.ok) {
+            const errorData = await response.json();
+            return { success: false, errors: errorData.errors || ["Unknown error"] };
+        }
+
         const responseData = await response.json();
 
-        if (responseData.success)
-            return true;
-        else {
-            console.error('Registration error:', responseData.error);
-            return false;
+        // If registration is successful
+        if (responseData.success) {
+            return { success: true, message: responseData.message };
         }
+
+        // Return any errors received from the backend
+        return { success: false, errors: responseData.errors || ["Unknown error"] };
+
     } catch (error) {
-        console.error('Error sending data to backend:', error);
-        return false;
+        console.error("Error registering user:", error);
+        return { success: false, errors: [error.message || "Unknown error"] };  // Ensure we always return an error object
     }
 }
+
 
 export async function logoutUser()
 {

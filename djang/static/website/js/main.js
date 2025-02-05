@@ -1,4 +1,4 @@
-import { closeProfile, closeSettings, focusOldButton, isProfileOpen, isSettingsOpen, openOrCloseGameMenu, setLanguageButtons, isAskingDeleteAccount, cancelDeleteAccount, isMiniProfileOpen, closeMiniProfile, isChangePasswordOpen, closeChangePassword } from './menu.js';
+import { closeProfile, closeSettings, focusOldButton, isProfileOpen, isSettingsOpen, openOrCloseGameMenu, setLanguageButtons, isAskingDeleteAccount, cancelDeleteAccount, isMiniProfileOpen, closeMiniProfile, isChangePasswordOpen, closeChangePassword, isEditProfileOpen, closeEditProfileField } from './menu.js';
 import { initTranslation } from './translate.js';
 import { addMainEvents } from './eventsListener.js';
 import { LevelMode } from './variables.js';
@@ -50,6 +50,8 @@ export function checkEscapeKey()
     const currentView = getCurrentView();
     if (isGdprOpen())
         closeGdprPanel();
+    else if (isEditProfileOpen())
+        closeEditProfileField();
     else if (isChangePasswordOpen())
         closeChangePassword();
     else if (isAskingDeleteAccount())

@@ -67,18 +67,7 @@ export function socketConnectToDuel()
         id: playerStats.id,
         blacklist: playerStats.blacklist, // mettre les id au lieu des noms
         private: "none", // 
-        invited_by: 8, // utile seulement si private n'est pas none
-        payload: { //Regles de configuration du match, TOUS doivent etre integres !
-            id_p1: 8,
-            id_p2: 5, //id du joueur a inviter
-            point: 5,
-            board_x: 40,
-            board_y: 25,
-            ball_radius: 0.8,
-            ball_speed: 0.5,
-            ball_increment: 0.05,
-            max_time: 300
-        }
+        invited_by: 8
     };
     listener.send(JSON.stringify(event));
 }
@@ -301,18 +290,7 @@ export function socketCreateDuelInvit(targetMsg) {
                     blacklist: playerStats.blacklist, // mettre les id au lieu des noms
                     private: "invite", // 
                     invited: target.id,
-                    invited_by: playerStats.id, // utile seulement si private n'est pas none
-                    payload: { //Regles de configuration du match, TOUS doivent etre integres !
-                        id_p1: 8,
-                        id_p2: 5, //id du joueur a inviter
-                        point: 5,
-                        board_x: 40,
-                        board_y: 25,
-                        ball_radius: 0.8,
-                        ball_speed: 0.5,
-                        ball_increment: 0.05,
-                        max_time: 300
-                    }
+                    invited_by: playerStats.id
                 };
                 console.log("Sending an invitation to: " + targetMsg);
                 listener.send(JSON.stringify(event));
@@ -389,6 +367,7 @@ export function socketSendSalonSticker(stickerName)
 {
     if (!listener || listener.readyState !== WebSocket.OPEN)
         return;
+    console.log("Sending salon sticker");
     const event = {
         key: keySocket,
         type: "salon_sticker",
@@ -492,9 +471,7 @@ export function addSocketListener()
             break;
         case "salon_sticker":
             if (event.room_id === playerStats.room_id)
-            {
                 receiveGameSticker(event.id, event.img);
-            }
             break;
         case "sticker":
             if (event.id != playerStats.id)

@@ -218,17 +218,24 @@ export function logInUserUI()
     checkAccessIfRegistered();
 }
 
-async function acceptRegistration()
-{
+function displayErrors(errors) {
+    const errorContainer = document.getElementById('registerErrorPassword');
+    errorContainer.textContent = "";
+    errors.forEach((error) => {
+        errorContainer.innerHTML += error + "\n";
+    });
+}
+
+async function acceptRegistration() {
     if (checkFields() === false)
         return;
     if (registerConfirm.classList.contains('disabledButtonHover'))
         return;
-
     const result = await registerUser(inputName.value, inputFirstName.value, inputLastName.value, inputMail.value, inputPassword.value);
-    if (!result)
+    if (result.success === false) {
+        displayErrors(result.errors);
         return;
-    
+    }
     await createNewPlayer();
     callGameDialog("entityRegister", EmotionType.NORMAL);
     clickCancelRegister();

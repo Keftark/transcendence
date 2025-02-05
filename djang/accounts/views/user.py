@@ -80,28 +80,33 @@ def get_address(request):
 def register_user(request):
     if request.method == 'POST':
         try:
+            # Parse the JSON body
             data = json.loads(request.body)
 
-            name = data.get('name', '')
-            first_name = data.get('first_name', '')
-            last_name = data.get('last_name', '')
-            email = data.get('email', '')
-            password = data.get('password', '')
+            # Extract fields
+            name = data.get('name', '').strip()
+            first_name = data.get('first_name', '').strip()
+            last_name = data.get('last_name', '').strip()
+            email = data.get('email', '').strip()
+            password = data.get('password', '').strip()
 
+            # Check required fields
             if not name or not email or not password:
-                return JsonResponse({'success': False, 'error': 'Missing required fields.'}, status=400)
+                return JsonResponse({'success': False, 'errors': ['Missing required fields.']}, status=400)
 
+            # Check for existing username or email
             if User.objects.filter(username=name).exists():
-                return JsonResponse({'success': False, 'error': 'User with this name is already registered.'}, status=400)
-
+                return JsonResponse({'success': False, 'errors': ['User with this name is already registered.']}, status=400)
             if User.objects.filter(email=email).exists():
-                return JsonResponse({'success': False, 'error': 'Email is already registered.'}, status=400)
+                return JsonResponse({'success': False, 'errors': ['Email is already registered.']}, status=400)
 
-            # try:
-            #     validate_password(password, user)
-            # except ValidationError as e:
-            #     return JsonResponse({'success': False, 'error': e}, status=400)
-            
+            # Validate password
+            try:
+                validate_password(password)  # User not needed here
+            except ValidationError as e:
+                return JsonResponse({'success': False, 'errors': e.messages}, status=400)
+
+            # Create and save the user
             user = User.objects.create_user(
                 username=name,
                 first_name=first_name,
@@ -110,17 +115,21 @@ def register_user(request):
                 password=password,
             )
             user.save()
+
+            # Log the user in
             login(request, user)
 
+            # Return success response
             return JsonResponse({'success': True, 'message': 'User registered and logged in successfully.'})
 
         except json.JSONDecodeError:
-            return JsonResponse({'success': False, 'error': 'Invalid JSON.'}, status=400)
+            return JsonResponse({'success': False, 'errors': ['Invalid JSON.']}, status=400)
         except Exception as e:
-            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+            return JsonResponse({'success': False, 'errors': [str(e)]}, status=500)
 
-    return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
-
+    # Invalid request method
+    return JsonResponse({'success': False, 'errors': ['Invalid request method.']}, status=405)
+    
 def logout_user(request):
     if request.method == 'POST':
         logout(request)

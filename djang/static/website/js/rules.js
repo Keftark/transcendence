@@ -60,7 +60,7 @@ buttonStart.addEventListener('click', () => {
 
 let rules =
 {
-    pointsToWin: 5,
+    pointsToWin: 3,
     arena: ArenaType.CAVE,
     maxTime: 0,
     nbrPlayers: 0,
@@ -69,7 +69,7 @@ let rules =
 
 export function setDefaultRules()
 {
-    rules.pointsToWin = 5;
+    rules.pointsToWin = 3;
     rules.arena = ArenaType.CAVE; // faire un random ?
     rules.maxTime = 0;
     rules.nbrPlayers = 0;

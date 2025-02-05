@@ -4,11 +4,12 @@
     display: flex;
     width: 98%;
     height: 3rem;
-    min-height: 32px;
+    /* min-height: 32px; */
     flex-direction: row;
     justify-content: space-between;
     border: 2px solid #002627;
-    max-height: 40rem;
+    box-sizing: border-box;
+    /* max-height: 40rem; */
 }
 
 .score-left
