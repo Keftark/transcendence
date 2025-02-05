@@ -66,20 +66,32 @@ class Bouncable():
         Args:
             ball (Ball): The colliding ball.
         """
-        left, right, top, bottom = self.bounds()
-        next_x = ball.x + ball.velocity_x
-        next_y = ball.y + ball.velocity_y
 
-        if next_x + ball.radius > left and next_x - ball.radius < right and \
-           next_y + ball.radius > bottom and next_y - ball.radius < top:
-            if ball.x < left <= next_x + ball.radius:
-                self.bounce_event_left(ball)
-            elif ball.x > right >= next_x - ball.radius:
-                self.bounce_event_right(ball)
-            elif ball.y > top >= next_y - ball.radius:
-                self.bounce_event_top(ball)
-            elif ball.y < bottom <= next_y + ball.radius:
-                self.bounce_event_bottom(ball)
+        left, right, top, bottom = self.bounds()
+        if ball.is_powered_up:
+            steps = int(max(abs(ball.velocity_boosted_x),
+                            abs(ball.velocity_boosted_y)) / ball.radius) + 1
+            step_x = ball.velocity_boosted_x / steps
+            step_y = ball.velocity_boosted_y / steps
+        else:
+            steps = int(max(abs(ball.velocity_x), abs(ball.velocity_y)) / ball.radius) + 1
+            step_x = ball.velocity_x / steps
+            step_y = ball.velocity_y / steps
+
+        for step in range(steps):
+            next_x = ball.x + step_x * step
+            next_y = ball.y + step_y * step
+
+            if next_x + ball.radius > left and next_x - ball.radius < right and \
+            next_y + ball.radius > bottom and next_y - ball.radius < top:
+                if ball.x < left <= next_x + ball.radius:
+                    self.bounce_event_left(ball)
+                elif ball.x > right >= next_x - ball.radius:
+                    self.bounce_event_right(ball)
+                elif ball.y > top >= next_y - ball.radius:
+                    self.bounce_event_top(ball)
+                elif ball.y < bottom <= next_y + ball.radius:
+                    self.bounce_event_bottom(ball)
 
     @property
     def x(self):
