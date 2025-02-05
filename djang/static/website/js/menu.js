@@ -59,6 +59,12 @@ const inputConfirmNewPassword = document.getElementById('inputConfirmNewPassword
 const showCurrentPasswordButton = document.getElementById('showCurrentPasswordButton');
 const showNewPasswordButton = document.getElementById('showNewPasswordButton');
 const showConfirmNewPasswordButton = document.getElementById('showConfirmNewPasswordButton');
+const buttonAcceptChangeField = document.getElementById('buttonAcceptChangeField');
+const buttonCancelChangeField = document.getElementById('buttonCancelChangeField');
+const changeFieldProfileConfirm = document.getElementById('changeFieldProfileConfirm');
+const changeFieldProfileAskText = document.getElementById('changeFieldProfileAskText');
+const inputChangeField = document.getElementById('inputChangeField');
+
 
 const buttonsLanguage = document.querySelectorAll('.language');
 const imageSources = {
@@ -67,13 +73,29 @@ const imageSources = {
   mainCustomizeButton: 'static/images/customizeImage.webp',
   mainSettingsButton: 'static/images/settingsImage.webp',
 };
-let currentColorIndex = 0;
 let currentLangIndex = 0;
 let currentCameraType = 0;
 let settingsIsOpen = false;
 let profileIsOpen = false;
 let oldButton = mainPlayButton;
 export let isMenuOpen = false;
+
+buttonAcceptChangeField.addEventListener('click', () => {
+    acceptEditProfileField();
+});
+buttonCancelChangeField.addEventListener('click', () => {
+    closeEditProfileField();
+});
+
+document.getElementById('editName').addEventListener('click', () => {
+    openEditProfileField(0);
+});
+document.getElementById('editFirstName').addEventListener('click', () => {
+    openEditProfileField(1);
+});
+document.getElementById('editLastName').addEventListener('click', () => {
+    openEditProfileField(2);
+});
 
 document.getElementById('changePasswordButton').addEventListener('click', () => {
     openChangePassword();
@@ -434,7 +456,7 @@ document.getElementById('colorPickerReplacer').addEventListener('click', functio
 export function changeTextsColor(newColor)
 {
     const textElements = document.querySelectorAll(' \
-        h1, h2, div, h3, p, button, #header-title, #menu-label span, #pressplay, #play, #score-left, #score-right, .score-timer, #playername-left, \
+        h1, h2, div:not(#dialogText), h3, p, button, #header-title, #menu-label span, #pressplay, #play, #score-left, #score-right, .score-timer, #playername-left, \
         #playername-right, #inputChat, input, label, #spectateList, .headerProfileButton');
     textElements.forEach(element => {
         element.style.color = newColor;
@@ -671,18 +693,44 @@ function acceptChangePassword()
 }
 
 let currentEditMode = 0;
+let editProfileIsOpen = false;
+
+export function isEditProfileOpen()
+{
+    return editProfileIsOpen;
+}
+
 function openEditProfileField(fieldNbr)
 {
+    editProfileIsOpen = true;
     currentEditMode = fieldNbr;
-    // pour les traductions
-    // enterNewNickname
-    // enterNewFirstname
-    // enterNewLastname
+    if (currentEditMode === 0)
+        changeFieldProfileAskText.innerText = getTranslation('enterNewNickname');
+    else if (currentEditMode === 1)
+        changeFieldProfileAskText.innerText = getTranslation('enterNewFirstname');
+    else if (currentEditMode === 2)
+        changeFieldProfileAskText.innerText = getTranslation('enterNewLastname');
+    changeFieldProfileConfirm.style.display = 'flex';
+    inputChangeField.focus();
 }
 
-function closeEditProfileField()
+function resetEditProfileFields()
 {
-
+    inputChangeField.value = "";
 }
 
-// document.getElementById('changeFieldProfileConfirm').style.display = 'flex';
+function acceptEditProfileField()
+{
+    // trucs
+    // check le currentEditMode et envoi de la requete correspondante
+    closeEditProfileField();
+}
+
+export function closeEditProfileField()
+{
+    editProfileIsOpen = false;
+    changeFieldProfileConfirm.style.display = 'none';
+    resetEditProfileFields();
+}
+
+changeFieldProfileConfirm.style.display = 'flex';

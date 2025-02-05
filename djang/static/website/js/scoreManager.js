@@ -1,8 +1,10 @@
 import { getMatchsFullData } from "./apiFunctions.js";
 import { endMatch } from "./levelLocal.js";
+import { getLevelState } from "./main.js";
 import { getPlayerVictories, playerStats } from "./playerManager.js";
 import { checkPoints } from "./rules.js";
 import { formatTime } from "./timer.js";
+import { LevelMode } from "./variables.js";
 
 const scores = document.getElementById('scores');
 const scoreRight = document.getElementById('score-right');
@@ -49,7 +51,8 @@ export function addScore(playerNbr)
         player1Score += 1;
         animateScoreChange(scoreLeft, player1Score);
     }
-    checkPoints(player1Score, player2Score);
+    if (getLevelState() !== LevelMode.ONLINE)
+        checkPoints(player1Score, player2Score);
 }
 
 export function setScores(player1score, player2score)

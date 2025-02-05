@@ -3,7 +3,7 @@ import { askAddFriend, deleteFriend, getAccountUser, getIncomingFriendRequests, 
 import { cheatCodes } from "./cheats.js";
 import { getDuelTargetPlayer, joinDuel } from "./duelPanel.js";
 import { addFriend, addFriendDiv, addFriendRequest, addOutgoingFriendRequest, blockUser, checkAndRemoveFriend } from "./friends.js";
-import { getPlayerPosition, id_players, isInGame } from "./levelLocal.js";
+import { getCamera, getPlayerPosition, getRenderer, id_players, isInGame } from "./levelLocal.js";
 import { openMiniProfile } from "./menu.js";
 import { getPlayerName, playerStats } from "./playerManager.js";
 import { getRules, resetInputfieldsRules } from "./rules.js";
@@ -792,26 +792,30 @@ function convert3DTo2DScreenSpace(threejsPosition, camera, renderer) {
     const width = renderer.domElement.width;
     const height = renderer.domElement.height;
     const x = (vector.x * 0.5 + 0.5) * width;
-    const y = -(vector.y * 0.5 + 0.5) * height;
+    const y = (0.5 - vector.y * 0.5) * height;
 
     return { x, y };
 }
 
-
 export function receiveGameSticker(playerId, stickerName)
 {
     let stickerPosition;
-    if (id_players[0] === playerStats.id)
-        stickerPosition = convert3DTo2DScreenSpace(getPlayerPosition(1));
-    else if (id_players[1] === playerStats.id) // le joueur est a droite
-        stickerPosition = convert3DTo2DScreenSpace(getPlayerPosition(2));
+    if (id_players[0] === playerId)
+        stickerPosition = convert3DTo2DScreenSpace(getPlayerPosition(1), getCamera(), getRenderer());
+    else if (id_players[1] === playerId)
+        stickerPosition = convert3DTo2DScreenSpace(getPlayerPosition(2), getCamera(), getRenderer());
     const imgDiv = document.createElement('img');
     imgDiv.src = `static/stickers/${stickerName}.webp`;
-    imgDiv.style.position = 'absolute';
-    imgDiv.style.pointerEvents = 'none';
-    imgDiv.style.width = '32px';
-    imgDiv.style.height = '32px';
-    imgDiv.style.left = `${stickerPosition.x - imgDiv.offsetWidth / 2}px`;
+    imgDiv.classList.add('sticker-disappear');
+    imgDiv.addEventListener('animationend', () => {
+        imgDiv.remove();
+    });
+    let finalPosX = stickerPosition.x - imgDiv.offsetWidth / 2;
+    if (finalPosX < 0)
+        finalPosX = 0;
+    else if (finalPosX > window.innerWidth - 30)
+        finalPosX = window.innerWidth - 50;
+    imgDiv.style.left = `${finalPosX}px`;
     imgDiv.style.top = `${stickerPosition.y - imgDiv.offsetHeight / 2}px`;
     document.body.appendChild(imgDiv);
 }

@@ -427,3 +427,23 @@ button:hover {
         0 0 20px var(--glow-color),
         0 0 40px var(--glow-color);
 }
+
+.sticker-disappear
+{
+    position: 'absolute';
+    pointer-events: 'none';
+    width: '32px';
+    height: '32px';
+    animation: moveUpAndDisappear 3s forwards;
+}
+
+@keyframes moveUpAndDisappear {
+    0% {
+        transform: translateY(0); /* Start at normal position */
+        opacity: 1;               /* Fully visible */
+    }
+    100% {
+        transform: translateY(-100px); /* Move 100px up */
+        opacity: 0;                   /* Fade out */
+    }
+}

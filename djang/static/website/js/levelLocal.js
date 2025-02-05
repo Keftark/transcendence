@@ -86,6 +86,16 @@ let playersId = [0, 0, 0, 0];
 let playerProfile1;
 let playerProfile2;
 
+export function getCamera()
+{
+    return camera;
+}
+
+export function getRenderer()
+{
+    return renderer;
+}
+
 export function setPlayersIds(player1Id, player2Id)
 {
     playersId[0] = player1Id;
