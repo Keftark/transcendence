@@ -29,17 +29,15 @@ export async function logInPlayer(username, password)
             }
         });
         if (!response.ok) {
-            if (response.status === 400)
+            if (response.status === 400 || response.status === 500)
             {
                 invalidCredentials();
                 return;
             }
             const errorResult = await response.json();
             console.error('Login failed:', errorResult.message);
-            alert(errorResult.message);
         } else {
             const result = await response.json();
-            // console.log(result.message);
             editPlayerStats(result.user);
             clickCancelSignIn(true);
         }
@@ -606,22 +604,102 @@ export async function deleteAccount() {
     }
 }
 
-export async function setSettingsInDatabase(id, newColor, newLanguage, newView) {
+export async function updateSettingsInDatabase() {
+    if (!playerStats.isRegistered)
+        return;
     try {
-        const response = await fetch(`/set_settings/${id}`, {
-            method: 'POST',
+        const response = await fetch(`/update_settings`, {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': getCSRFToken()
             },
             body: JSON.stringify({
-                color: newColor,
-                language: newLanguage,
-                view: newView
+                color: playerStats.colors,
+                language: playerStats.language,
+                view: Number(playerStats.cameraOrthographic)
             })
         });
         if (!response.ok)
             throw new Error('Network response was not ok');
+        return response;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+document.getElementById('uploadForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const file = fileInput.files[0];
+    if (file) {
+        const formData = new FormData();
+        formData.append('image', file);
+        fetch('/upload/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCSRFToken()
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success)
+            {
+                profilePicture.src = "/media/" + data.url;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+});
+
+export async function updatePasswordInDatabase(curPass, newPass, confirmPass) {
+    if (!playerStats.isRegistered)
+        return;
+    try {
+        const response = await fetch(`/update_password`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            },
+            body: JSON.stringify({
+                current_password: curPass,
+                new_password: newPass,
+                new_password2: confirmPass
+            })
+        });
+
+        const responseText = await response.text(); // Read raw response as text
+        console.log('Raw response:', responseText);  // Log the raw response for debugging
+
+        if (!response.ok) {
+            try {
+                const errorData = JSON.parse(responseText);  // Try parsing it as JSON
+                console.log('Error Data:', errorData);
+
+                // Access the errors from the 'new_password' field
+                const newPasswordErrors = errorData.new_password;
+
+                if (newPasswordErrors) {
+                    // Loop through and display each error message
+                    newPasswordErrors.forEach(errorMessage => {
+                        console.error(errorMessage);  // Handle the error in your UI as needed
+                    });
+                }
+            } catch (jsonError) {
+                console.error('Failed to parse JSON:', jsonError);
+                console.log('Raw response body:', responseText);  // Display raw response if parsing fails
+            }
+
+            if(response.status === 400 || response.status === 500) {
+                return response;
+            }
+        } else {
+            // Handle success (e.g., inform the user that the password has been updated)
+            console.log('Password updated successfully!');
+        }
         return response;
     } catch (error) {
         console.error('Error:', error);

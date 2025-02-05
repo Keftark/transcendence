@@ -1,7 +1,7 @@
 import { checkEscapeKey, isElementVisible } from "./main.js";
 import { gameEventsListener, isInGame } from "./levelLocal.js";
 import { chatIsFocused } from "./chat.js";
-import { isAskingDeleteAccount, isMiniProfileOpen, isProfileOpen, isSettingsOpen } from "./menu.js";
+import { isAskingDeleteAccount, isChangePasswordOpen, isMiniProfileOpen, isProfileOpen, isSettingsOpen } from "./menu.js";
 import { isGdprOpen, isRegistrationOpen } from "./registration.js";
 import { isMatchListOpen } from "./modesSelection.js";
 import { isSigninOpen } from "./signIn.js";
@@ -12,6 +12,8 @@ function getFocusableElements()
 {
     if (isGdprOpen())
         return [document.getElementById('gdprBack')];
+    else if (isChangePasswordOpen())
+        return document.getElementById('changePasswordProfileConfirm').querySelectorAll('button, input');
     else if (isAskingDeleteAccount())
         return document.getElementById('buttonsAskDelete').querySelectorAll('button');
     else if (isMiniProfileOpen())

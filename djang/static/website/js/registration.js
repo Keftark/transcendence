@@ -4,7 +4,7 @@ import { getTranslation } from "./translate.js";
 import { navigateTo } from "./pages.js";
 import { addDisableButtonEffect, closeListener, closeSocket, getListener, getSocket, listener, openSocket, removeDisableButtonEffect, socket } from "./main.js";
 import { callGameDialog, checkAccessToChat } from "./chat.js";
-import { getLoggedInUser, logoutUser, registerUser } from "./apiFunctions.js";
+import { getLoggedInUser, logoutUser, registerUser, updateSettingsInDatabase } from "./apiFunctions.js";
 import { deleteAllFriendRequests, showFriendsBox } from "./friends.js";
 import { EmotionType } from "./variables.js";
 
@@ -172,7 +172,6 @@ function checkFields()
     }
     else
         registerErrorMail.innerText = "";
-    // checks if the mail is in the database and returns false if it's in
     inputValue = inputPassword.value;
     if (inputValue.trim() === "")
     {
@@ -213,7 +212,6 @@ export async function welcomeBackUser()
 
 export function logInUserUI()
 {
-    // socketJoinChat();
     openSocket();
     replaceLogInButtons();
     removeDisableButtonEffect(profileButton);
@@ -235,6 +233,7 @@ async function acceptRegistration()
     callGameDialog("entityRegister", EmotionType.NORMAL);
     clickCancelRegister();
     logInUserUI();
+    updateSettingsInDatabase();
 }
 
 function replaceLogInButtons()
@@ -251,11 +250,10 @@ function replaceLogOutButtons()
 
 export function clickLogOut(isAlreadyLoggedOut = false)
 {
-    if (getSocket() === null || getListener() === null)
+    if (!playerStats.isRegistered)
         return;
     closeSocket();
     closeListener();
-    // socketQuitChat();
     if (!isAlreadyLoggedOut)
         logoutUser();
     replaceLogOutButtons();

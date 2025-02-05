@@ -2,16 +2,16 @@ from os import path
 from django.conf import settings
 from django.utils.translation import gettext as _
 from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+from django.http import JsonResponse
 from accounts.models import *
 from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer, ValidationError
+from rest_framework.serializers import ModelSerializer
 from django.utils.translation import gettext as _
 from rest_framework.fields import CharField
 from django.contrib.auth import login
 from drf_extra_fields.fields import Base64ImageField
-
-
-
 
 #class AccountSerializer(serializers.HyperlinkedModelSerializer):
 #    username = serializers.ReadOnlyField(source='user.username')
@@ -151,25 +151,33 @@ class UpdatePasswordSerializer(ModelSerializer):
         if user.pk != instance.pk:
             raise ValidationError({'authorize': _('You dont have permission for this user.')})
 
+        try:
+            # Validate password
+            validate_password(validated_data['new_password'], user)
+        except ValidationError as e:
+            # Handle specific validation errors
+            error_messages = e.messages  # e.messages contains the list of validation errors
+            raise ValidationError({'new_password': error_messages})
+        
         instance.set_password(validated_data['new_password'])
-
         instance.save()
         login(self.context['request'], instance)
         return instance
     
 class UpdateSettingsSerializer(ModelSerializer):
     class Meta:
-        model = AccountModel
+        model = SettingsModel
         fields =['color', 'language', 'view']
 
     def update(self, instance, validated_data):
-        account = self.context['request'].user
+        settings = self.context['request'].user
 
-        if account.pk != instance.pk:
+        if settings.pk != instance.pk:
             raise ValidationError({'authorize': _('You dont have permission for this user.')})
 
-        instance.username = validated_data.get('username', instance.username)
+        instance.color = validated_data.get('color', instance.color)
+        instance.language = validated_data.get('language', instance.language)
+        instance.view = validated_data.get('view', instance.view)
 
         instance.save()
         return instance
-

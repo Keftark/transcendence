@@ -386,15 +386,28 @@
                         <button id="submitButton" type="submit"></button>
                     </form>
                 </div>
-                <h2 id="nameProfile"></h2>
+                <div id="nameDiv" class="profileField">
+                    <button id="editName" class="editButtonProfile">
+                        <img src="{% static 'icons/edit.webp' %}" alt="">
+                    </button>
+                    <h2 id="nameProfile"></h2>
+                </div>
             </div>
             <div id="mainProfileInfos">
-                <p id="firstNameProfile"></p>
-                <p id="lastNameProfile"></p>
-                <div id="profileContainer">
-                    <img id="mailImg" src="{% static 'icons/mail.webp' %}">
-                    <p id="mailProfile"></p>
+                <div id="firstNameDiv" class="profileField">
+                    <button id="editFirstName" class="editButtonProfile">
+                        <img src="{% static 'icons/edit.webp' %}" alt="">
+                    </button>
+                    <p id="firstNameProfile"></p>
                 </div>
+                <div id="lastNameDiv" class="profileField">
+                    <button id="editLastName" class="editButtonProfile">
+                        <img src="{% static 'icons/edit.webp' %}" alt="">
+                    </button>
+                    <p id="lastNameProfile"></p>
+                </div>
+                <p id="mailProfile"></p>
+                <button id="changePasswordButton"></button>
             </div>
             <div id="deleteProfile">
                 <button id="deleteProfileButton"></button>
@@ -423,18 +436,43 @@
             <button class="buttonCancel" id="buttonCancelDelete"></button>
         </div>
     </div>
+    <div id="changePasswordProfileConfirm">
+        <h2 id="changePasswordProfileAskText"></h2>
+        <div id="currentPasswordChangeDiv">
+            <p id="currentPassword"></p>
+            <div id="currentPasswordDiv">
+                <input type="password" class="inputfield" id="inputCurrentPassword" maxlength="20" placeholder="...">
+                <img id="showCurrentPasswordButton" src="{% static 'icons/eyeOpen.webp' %}" alt="">
+            </div>
+        </div>
+        <div id="newPasswordChangeDiv">
+            <p id="newPassword"></p>
+            <div id="newPasswordDiv">
+                <input type="password" class="inputfield" id="inputNewPassword" maxlength="20" placeholder="...">
+                <img id="showNewPasswordButton" src="{% static 'icons/eyeOpen.webp' %}" alt="">
+            </div>
+        </div>
+        <div id="confirmNewPasswordChangeDiv">
+            <p id="confirmNewPassword"></p>
+            <div id="confirmNewPasswordDiv">
+                <input type="password" class="inputfield" id="inputConfirmNewPassword" maxlength="20" placeholder="...">
+                <img id="showConfirmNewPasswordButton" src="{% static 'icons/eyeOpen.webp' %}" alt="">
+            </div>
+        </div>
+        <div id="buttonsAskChangePassword">
+            <button class="buttonAccept" id="buttonAcceptChangePassword"></button>
+            <button class="buttonCancel" id="buttonCancelChangePassword"></button>
+        </div>
+    </div>
 
     <!------------------------------ Settings Panel ------------------------------>
     <div id="settingsPanel">
         <h2 id="settingsHeader"></h2>
         <p id="colors"></p>
         <div id="optionsColors">
-            <button class="colorize-btn" id="color1Button" data-color="white" data-index="0"></button>
-            <button class="colorize-btn" id="color2Button" data-color="#ff00ff" data-index="1"></button>
-            <button class="colorize-btn" id="color3Button" data-color="#ffbb00" data-index="2"></button>
-            <button class="colorize-btn" id="color4Button" data-color="#ff0000" data-index="3"></button>
-            <button class="colorize-btn" id="color5Button" data-color="#08ec00" data-index="4"></button>
-            <button class="colorize-btn" id="color6Button" data-color="#003fff" data-index="5"></button>
+            <img id="colorPickerImage" src="{% static 'icons/colorPicker.webp' %}" alt="">
+            <input type="color" id="colorPicker" name="color" value="#ff0000">
+            <button id="colorPickerReplacer"></button>
         </div>
         <p id="language"></p>
         <div id="optionsLanguages">

@@ -8,9 +8,12 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.utils.translation import gettext as _
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from accounts.models import *
 from ..serializers import UpdateUserSerializer, UpdatePasswordSerializer, UpdateSettingsSerializer
 from rest_framework.generics import UpdateAPIView
+from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from accounts.serializers import AccountSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -94,6 +97,11 @@ def register_user(request):
             if User.objects.filter(email=email).exists():
                 return JsonResponse({'success': False, 'error': 'Email is already registered.'}, status=400)
 
+            try:
+                validate_password(password, user)
+            except ValidationError as e:
+                return JsonResponse({'success': False, 'error': e}, status=400)
+            
             user = User.objects.create_user(
                 username=name,
                 first_name=first_name,
@@ -249,6 +257,7 @@ def login_user(request):
 
         user = authenticate(request, username=username, password=password)
         if user is not None:
+            settings = SettingsModel.objects.get(pk=user.id)
             login(request, user)
             user_data = {
                 "id": user.id,
@@ -256,7 +265,10 @@ def login_user(request):
                 "email": user.email,
                 "first_name": user.first_name,
                 "last_name": user.last_name,
-                "preferredPaddle": user.accountmodel.preferredPaddle
+                "preferredPaddle": user.accountmodel.preferredPaddle,
+                "color": settings.color,
+                "language": settings.language,
+                "orthographicView": settings.view
             }
             return JsonResponse({
                 "message": "Login successful",
@@ -283,15 +295,23 @@ def convert_str_to_image(image_data: str):
     )
     return myfile
 
+def upload_base64image(request):
+    if request.method == "POST":
+        data = request.data
+        serializer = AccountSerializer(data=data)
+
+        if serializer.is_valid():
+            account = serializer.save()
+            data = serializer.data
+            return Response(data=data)
+        return Response(serializer.errors, status=400)
 
 def upload_image(request):
     if request.method == 'POST' and request.FILES.get('image'):
         image = image_to_base64(request.FILES['image'])
         
         fs = FileSystemStorage(location=settings.MEDIA_ROOT)
-
         filename = fs.save(image.name, image)
-        
         user = request.user
         user.accountmodel.avatar = filename
         user.accountmodel.save()
@@ -313,21 +333,7 @@ def del_user(request):
         return render(request, 'index.html')
 
     return render(request, 'index.html') 
-
-def set_settings(request, user_id):
-    try:
-        user = User.objects.get(id=user_id)
-        data = json.loads(request.body)
-        user.accountmodel.settings.language = data.language
-        user.accountmodel.settings.color = data.color
-        JsonResponse({'success': True, 'message':'The user is deleted'})         
-
-    except User.DoesNotExist:
-        JsonResponse({'success': False, 'message':'The user does not exists'})   
-        return render(request, 'index.html')
-
-    return render(request, 'index.html') 
-      
+   
 class UpdateProfileView(UpdateAPIView):
 
     queryset = User.objects.all()
@@ -346,10 +352,9 @@ class UpdatePasswordView(UpdateAPIView):
         return self.queryset.get(pk=self.request.user.pk)
     
 class UpdateSettingsView(UpdateAPIView):
-    queryset = AccountModel.objects.all()
+    queryset = SettingsModel.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = UpdateSettingsSerializer
 
     def get_object(self):
-        return self.queryset.get(pk=self.request.accountmodel.pk)
-
+        return self.queryset.get(pk=self.request.user.pk)
