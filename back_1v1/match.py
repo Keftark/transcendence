@@ -108,14 +108,14 @@ class Match:
             self._message_queue.append(self.dump_victory(self._paddle_1.id, "points"))
         elif self._player_2_score >= self._point_to_win:
             self._ended = True
-            self._message_queue.append(self._paddle_2.id, "points")
+            self._message_queue.append(self.dump_victory(self._paddle_2.id, "points"))
         elif self._max_time_seconds > 0 and self._timer_count >= self._max_time_seconds:
             if self._player_1_score > self._player_2_score:
                 self._ended = True
-                self._message_queue.append(self._paddle_1.id, "timer")
+                self._message_queue.append(self.dump_victory(self._paddle_1.id, "timer"))
             elif self._player_1_score < self._player_2_score:
                 self._ended = True
-                self._message_queue.append(self._paddle_2.id, "timer")
+                self._message_queue.append(self.dump_victory(self._paddle_2.id, "timer"))
             else:
                 self._ended = True
                 self._message_queue.append(self.dump_victory(0, "equal"))
