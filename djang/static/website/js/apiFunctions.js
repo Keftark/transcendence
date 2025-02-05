@@ -678,3 +678,78 @@ export async function updatePasswordInDatabase(curPass, newPass, confirmPass) {
         console.error('Error:', error);
     }
 }
+
+export async function updateUsernameInDatabase(newUsername) {
+    if (!playerStats.isRegistered)
+        return;
+    try {
+        const response = await fetch(`/update_username`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            },
+            body: JSON.stringify({
+                new_username: newUsername
+            })
+        });
+
+        const responseData = await response.json();
+        if (responseData.success) {
+            return { success: true, message: responseData.message };
+        }
+        return { success: false, errors: responseData.errors || ["Unknown error"] };
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+export async function updateFirstnameInDatabase(newFirstname) {
+    if (!playerStats.isRegistered)
+        return;
+    try {
+        const response = await fetch(`/update_firstname`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            },
+            body: JSON.stringify({
+                new_firstname: newFirstname
+            })
+        });
+
+        const responseData = await response.json();
+        if (responseData.success) {
+            return { success: true, message: responseData.message };
+        }
+        return { success: false, errors: responseData.errors || ["Unknown error"] };
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+export async function updateLastnameInDatabase(newLastname) {
+    if (!playerStats.isRegistered)
+        return;
+    try {
+        const response = await fetch(`/update_lastname`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            },
+            body: JSON.stringify({
+                new_lastname: newLastname
+            })
+        });
+
+        const responseData = await response.json();
+        if (responseData.success) {
+            return { success: true, message: responseData.message };
+        }
+        return { success: false, errors: responseData.errors || ["Unknown error"] };
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}

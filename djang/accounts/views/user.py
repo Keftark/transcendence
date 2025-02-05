@@ -23,6 +23,7 @@ from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 import base64
 from django.views.decorators.http import require_http_methods
+from django.contrib.auth.hashers import check_password
 
 # Load environment variables from .env file
 load_dotenv()
@@ -344,53 +345,83 @@ def del_user(request):
     return render(request, 'index.html') 
 
 def change_user_password(request):
-    if request.method == 'PUT':  # Ensure it's a PUT request
+    if request.method == 'PUT':
         try:
-            # Parse JSON data from the request body
             data = json.loads(request.body)
             current_password = data.get("current_password")
             new_password = data.get("new_password")
             confirm_password = data.get("new_password2")
-
-            # Ensure all required fields are provided
             if not current_password or not new_password or not confirm_password:
-                return JsonResponse(
-                    {"success": False, "message": "All fields are required."}, status=400
-                )
-
+                return JsonResponse({"success": False, "errors": ["All fields are required."]}, status=400)
             if new_password != confirm_password:
-                return JsonResponse(
-                    {"success": False, "message": "New passwords do not match."}, status=400
-                )
-
-            # Get the logged-in user (assuming session-based authentication)
+                return JsonResponse({"success": False, "errors": ["New passwords do not match."]}, status=400)
             if not request.user.is_authenticated:
-                return JsonResponse({"success": False, "message": "Unauthorized."}, status=401)
-
+                return JsonResponse({"success": False, "errors": ["Unauthorized."]}, status=401)
             user = request.user
-
-            # Check if the current password is correct
-            if not user.check_password(current_password):
-                return JsonResponse(
-                    {"success": False, "message": "Current password is incorrect."}, status=400
-                )
-
-            # Validate the new password
+            if not check_password(current_password, user.password):
+                return JsonResponse({"success": False, "errors": ["Current password is incorrect."]}, status=400)
             try:
                 validate_password(new_password, user)
             except ValidationError as e:
                 return JsonResponse({"success": False, "errors": list(e.messages)}, status=400)
-
-            # Update the password
             user.set_password(new_password)
             user.save()
-
             return JsonResponse({"success": True, "message": "Password updated successfully!"}, status=200)
 
         except json.JSONDecodeError:
-            return JsonResponse({"success": False, "message": "Invalid JSON data."}, status=400)
+            return JsonResponse({"success": False, "errors": ["Invalid JSON data."]}, status=400)
 
-    return JsonResponse({"success": False, "message": "Invalid request method."}, status=405)
+    return JsonResponse({"success": False, "errors": ["Invalid request method."]}, status=405)
+
+def change_username(request):
+    if request.method == 'PUT':
+        try:
+            data = json.loads(request.body)
+            new_username = data.get("new_username")
+            if not request.user.is_authenticated:
+                return JsonResponse({"success": False, "errors": ["Unauthorized."]}, status=401)
+            if User.objects.filter(username=new_username).exists():
+                return JsonResponse({"success": False, "errors": ["Username is already taken."]}, status=400)
+            request.user.username = new_username
+            request.user.save()
+            return JsonResponse({"success": True, "message": "Username updated successfully!"}, status=200)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"success": False, "errors": ["Invalid JSON data."]}, status=400)
+
+    return JsonResponse({"success": False, "errors": ["Invalid request method."]}, status=405)
+
+def change_firstname(request):
+    if request.method == 'PUT':
+        try:
+            data = json.loads(request.body)
+            new_firstname = data.get("new_firstname")
+            if not request.user.is_authenticated:
+                return JsonResponse({"success": False, "errors": ["Unauthorized."]}, status=401)
+            request.user.first_name = new_firstname
+            request.user.save()
+            return JsonResponse({"success": True, "message": "First name updated successfully!"}, status=200)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"success": False, "errors": ["Invalid JSON data."]}, status=400)
+
+    return JsonResponse({"success": False, "errors": ["Invalid request method."]}, status=405)
+
+def change_lastname(request):
+    if request.method == 'PUT':
+        try:
+            data = json.loads(request.body)
+            new_lastname = data.get("new_lastname")
+            if not request.user.is_authenticated:
+                return JsonResponse({"success": False, "errors": ["Unauthorized."]}, status=401)
+            request.user.last_name = new_lastname
+            request.user.save()
+            return JsonResponse({"success": True, "message": "Last name updated successfully!"}, status=200)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"success": False, "errors": ["Invalid JSON data."]}, status=400)
+
+    return JsonResponse({"success": False, "errors": ["Invalid request method."]}, status=405)
 
 class UpdateProfileView(UpdateAPIView):
 

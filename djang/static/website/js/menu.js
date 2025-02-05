@@ -1,4 +1,4 @@
-import { deleteAccount, getMatchsLittleData, getUserAvatar, getUserByName, updatePasswordInDatabase, updateSettingsInDatabase } from './apiFunctions.js';
+import { deleteAccount, getMatchsLittleData, getUserAvatar, getUserByName, updateFirstnameInDatabase, updateLastnameInDatabase, updatePasswordInDatabase, updateSettingsInDatabase, updateUsernameInDatabase } from './apiFunctions.js';
 import { callGameDialog } from './chat.js';
 import { clickChoosePaddleButton } from './customizeSkins.js';
 import { addMainEvents } from './eventsListener.js';
@@ -90,6 +90,14 @@ buttonCancelChangeField.addEventListener('click', () => {
 document.getElementById('showConfirmNewPasswordButton').addEventListener('click', () => {
     toggleShowPasswordConfirm();
 });
+document.getElementById('showNewPasswordButton').addEventListener('click', () => {
+    toggleShowPassword();
+});
+
+document.getElementById('showCurrentPasswordButton').addEventListener('click', () => {
+    toggleShowCurrentPassword();
+});
+
 
 document.getElementById('editName').addEventListener('click', () => {
     openEditProfileField(0);
@@ -365,7 +373,7 @@ export function openProfile(player = playerStats)
     profileIsOpen = true;
     getUserAvatar(player.nickname)
         .then((target) => {
-            console.log(target);
+            // console.log(target);
             profilePicture.src = target.avatar_url;
         })
         .catch((error) => {
@@ -639,6 +647,9 @@ function resetChangePasswordFields()
     inputConfirmNewPassword.value = inputNewPassword.value = inputCurrentPassword.value = "";
     showConfirmNewPasswordButton.src = showNewPasswordButton.src = showCurrentPasswordButton.src = 'static/icons/eyeOpen.webp';
     showConfirmNewPasswordButton.type = showNewPasswordButton.type = showCurrentPasswordButton.type = "password";
+    showPassCurrent = showPassConfirm = showPass = false;
+    passwordCurrentImg.src = passwordConfirmImg.src = passwordImg.src = 'static/icons/eyeOpen.webp';
+    inputConfirmNewPassword.type = inputCurrentPassword.type = inputNewPassword.type = "password";
 }
 
 let changePasswordIsOpen = false;
@@ -736,11 +747,67 @@ function resetEditProfileFields()
     inputChangeField.value = "";
 }
 
+function updateNicknameInterface()
+{
+    document.getElementById('nameProfile').innerText = playerStats.nickname;
+}
+
+function updateFirstNameInterface()
+{
+    document.getElementById('firstNameProfile').innerText = playerStats.firstName;
+}
+
+function updateLastnameInterface()
+{
+    document.getElementById('lastNameProfile').innerText = playerStats.lastName;
+}
+
 function acceptEditProfileField()
 {
     // trucs
-    // check le currentEditMode et envoi de la requete correspondante
-    closeEditProfileField();
+    if (currentEditMode === 0)
+    {
+        updateUsernameInDatabase(inputChangeField.value)
+        .then((result) => {
+        if (result.success === false) {
+            displayErrors(result.errors);
+            return;
+        }
+        playerStats.nickname = inputChangeField.value;
+        document.getElementById('errorPanel').style.display = 'none';
+        updateNicknameInterface();
+        closeEditProfileField();
+        })
+    }
+    else if (currentEditMode === 1)
+    {
+        updateFirstnameInDatabase(inputChangeField.value)
+        .then((result) => {
+            if (result.success === false) {
+                displayErrors(result.errors);
+                return;
+            }
+            playerStats.firstName = inputChangeField.value;
+            document.getElementById('errorPanel').style.display = 'none';
+            updateFirstNameInterface();
+            closeEditProfileField();
+        })
+    }
+    else if (currentEditMode === 2)
+    {
+        updateLastnameInDatabase(inputChangeField.value)
+        .then((result) => {
+        if (result.success === false) {
+            displayErrors(result.errors);
+            return;
+        }
+        playerStats.lastName = inputChangeField.value;
+        document.getElementById('errorPanel').style.display = 'none';
+        updateLastnameInterface();
+        closeEditProfileField();
+        })
+    }
+
 }
 
 export function closeEditProfileField()
@@ -751,8 +818,8 @@ export function closeEditProfileField()
     resetEditProfileFields();
 }
 
-const passwordConfirmImg = document.getElementById('showConfirmNewPasswordButton');
 let showPassConfirm = false;
+const passwordConfirmImg = document.getElementById('showConfirmNewPasswordButton');
 function toggleShowPasswordConfirm()
 {
     showPassConfirm = !showPassConfirm;
@@ -765,6 +832,40 @@ function toggleShowPasswordConfirm()
     {
         passwordConfirmImg.src = 'static/icons/eyeOpen.webp';
         inputConfirmNewPassword.type = "password";
+    }
+}
+
+let showPass = false;
+const passwordImg = document.getElementById('showConfirmNewPasswordButton');
+function toggleShowPassword()
+{
+    showPass = !showPass;
+    if (showPass)
+    {
+        passwordImg.src = 'static/icons/eyeClose.webp';
+        inputNewPassword.type = "text";
+    }
+    else
+    {
+        passwordImg.src = 'static/icons/eyeOpen.webp';
+        inputNewPassword.type = "password";
+    }
+}
+
+let showPassCurrent = false;
+const passwordCurrentImg = document.getElementById('showConfirmNewPasswordButton');
+function toggleShowCurrentPassword()
+{
+    showPassCurrent = !showPassCurrent;
+    if (showPassCurrent)
+    {
+        passwordCurrentImg.src = 'static/icons/eyeClose.webp';
+        inputCurrentPassword.type = "text";
+    }
+    else
+    {
+        passwordCurrentImg.src = 'static/icons/eyeOpen.webp';
+        inputCurrentPassword.type = "password";
     }
 }
 
