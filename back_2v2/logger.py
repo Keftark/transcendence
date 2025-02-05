@@ -78,7 +78,7 @@ class Logger:
             string = string + "0"
         while len(string) < max_len:
             string = sep + string
-        if len(string) > 10:
+        if len(string) > max_len:
             string = "..." + string[len(string) - 7:]
         return str(string)
 
