@@ -28,7 +28,10 @@ class Board:
         return True
 
     def can_place(self, brick):
-        pass
+        """Checks wether a brick or not can be place"""
+        if brick:
+            return True
+        return False
 
     @DeprecationWarning
     def place(self, brick):
