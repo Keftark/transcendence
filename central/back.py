@@ -420,6 +420,7 @@ async def connection_loop():
     sockets to the subprocesses server. Should a connection fail,
     the loop will reconnect the subprocess.
     """
+    displayed_welcome = False
     while Sockets.STOP_FLAG is False:
         if Sockets.SOCKET_CHAT is None:
             try:
@@ -471,7 +472,10 @@ async def connection_loop():
             except Exception as e:
                 logger.log("", 2, e)
                 Sockets.SOCKET_2V2 = None
-        await asyncio.sleep(5)
+        await asyncio.sleep(3)
+        if displayed_welcome is False:
+            displayed_welcome = True
+            logger.welcome()
 
 async def server_listener():
     """Server functions. Listens for incomming connections through

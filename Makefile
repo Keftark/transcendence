@@ -105,6 +105,7 @@ update:
 	cp logger.py central/
 	cp logger.py back_1v1/
 	cp logger.py chat/
+	cp logger.py back_2v2/
 
 #Print docker's statuses
 status:

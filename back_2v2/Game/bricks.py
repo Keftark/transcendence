@@ -1,7 +1,7 @@
 """BRICKS"""
 
 import random
-from obstacle import Obstacle
+from Game.obstacle import Obstacle
 
 class Brick():
     """A simple abstract brick.
