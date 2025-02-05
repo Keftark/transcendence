@@ -70,17 +70,11 @@ export async function registerUser(nameValue, firstNameValue, lastNameValue, ema
             const errorData = await response.json();
             return { success: false, errors: errorData.errors || ["Unknown error"] };
         }
-
         const responseData = await response.json();
-
-        // If registration is successful
         if (responseData.success) {
             return { success: true, message: responseData.message };
         }
-
-        // Return any errors received from the backend
         return { success: false, errors: responseData.errors || ["Unknown error"] };
-
     } catch (error) {
         console.error("Error registering user:", error);
         return { success: false, errors: [error.message || "Unknown error"] };  // Ensure we always return an error object
@@ -675,36 +669,11 @@ export async function updatePasswordInDatabase(curPass, newPass, confirmPass) {
             })
         });
 
-        const responseText = await response.text(); // Read raw response as text
-        console.log('Raw response:', responseText);  // Log the raw response for debugging
-
-        if (!response.ok) {
-            try {
-                const errorData = JSON.parse(responseText);  // Try parsing it as JSON
-                console.log('Error Data:', errorData);
-
-                // Access the errors from the 'new_password' field
-                const newPasswordErrors = errorData.new_password;
-
-                if (newPasswordErrors) {
-                    // Loop through and display each error message
-                    newPasswordErrors.forEach(errorMessage => {
-                        console.error(errorMessage);  // Handle the error in your UI as needed
-                    });
-                }
-            } catch (jsonError) {
-                console.error('Failed to parse JSON:', jsonError);
-                console.log('Raw response body:', responseText);  // Display raw response if parsing fails
-            }
-
-            if(response.status === 400 || response.status === 500) {
-                return response;
-            }
-        } else {
-            // Handle success (e.g., inform the user that the password has been updated)
-            console.log('Password updated successfully!');
+        const responseData = await response.json();
+        if (responseData.success) {
+            return { success: true, message: responseData.message };
         }
-        return response;
+        return { success: false, errors: responseData.errors || ["Unknown error"] };
     } catch (error) {
         console.error('Error:', error);
     }
