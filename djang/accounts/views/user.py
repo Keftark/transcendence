@@ -97,10 +97,10 @@ def register_user(request):
             if User.objects.filter(email=email).exists():
                 return JsonResponse({'success': False, 'error': 'Email is already registered.'}, status=400)
 
-            try:
-                validate_password(password, user)
-            except ValidationError as e:
-                return JsonResponse({'success': False, 'error': e}, status=400)
+            # try:
+            #     validate_password(password, user)
+            # except ValidationError as e:
+            #     return JsonResponse({'success': False, 'error': e}, status=400)
             
             user = User.objects.create_user(
                 username=name,

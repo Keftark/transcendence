@@ -371,7 +371,7 @@
     background-color: #009106;
 }
 
-#deleteProfileConfirm, #changePasswordProfileConfirm
+#deleteProfileConfirm, #changePasswordProfileConfirm, #changeFieldProfileConfirm
 {
     display: none;
     position: fixed;
@@ -387,7 +387,7 @@
     background-color: rgba(0, 0, 0, 0.7);
 }
 
-#buttonsAskDelete, #buttonsAskChangePassword
+#buttonsAskDelete, #buttonsAskChangePassword, #buttonsAskChangeField, #buttonsAskChangeField
 {
     display: flex;
     flex-direction: row;

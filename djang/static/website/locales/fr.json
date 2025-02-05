@@ -137,7 +137,9 @@
     "currentPassword": "Entrez votre mot de passe actuel",
     "newPassword": "Entrez un nouveau mot de passe",
     "confirmNewPassword": "Confirmez le nouveau mot de passe",
-
+    "enterNewNickname": "Entrez votre nouveau pseudonyme",
+    "enterNewFirstname": "Entrez votre nouveau prénom",
+    "enterNewLastname": "Entrez votre nouveau nom",
 
     "entityDontLeaveMe": "Non... S'il vous plaît... J'ai besoin de vous...",
     "entityRegister": "Ah ! Un nouveau joueur... C'est délicieux !",

@@ -142,8 +142,9 @@ export function updateHTML(translations)
 	document.getElementById('currentPassword').innerText = translations.currentPassword;
 	document.getElementById('newPassword').innerText = translations.newPassword;
 	document.getElementById('confirmNewPassword').innerText = translations.confirmNewPassword;
+	document.getElementById('buttonAcceptChangeField').innerText = translations.confirm;
+	document.getElementById('buttonCancelChangeField').innerText = translations.cancel;
 	
-
 	
     document.querySelector('.gdpr').addEventListener('click', function(event) {
 		event.preventDefault();

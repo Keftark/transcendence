@@ -2,7 +2,6 @@ import { endMatch } from "./levelLocal.js";
 import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
 import { clickPlayGame, showModeChoice } from "./modesSelection.js";
 import { navigateTo } from "./pages.js";
-import { playerStats } from "./playerManager.js";
 import { endOfMatch } from "./scoreManager.js";
 import { ArenaType } from "./variables.js";
 
@@ -61,7 +60,7 @@ buttonStart.addEventListener('click', () => {
 
 let rules =
 {
-    pointsToWin: 3,
+    pointsToWin: 5,
     arena: ArenaType.CAVE,
     maxTime: 0,
     nbrPlayers: 0,
@@ -70,7 +69,7 @@ let rules =
 
 export function setDefaultRules()
 {
-    rules.pointsToWin = 3;
+    rules.pointsToWin = 5;
     rules.arena = ArenaType.CAVE; // faire un random ?
     rules.maxTime = 0;
     rules.nbrPlayers = 0;
@@ -101,7 +100,7 @@ export function resetInputfieldsRules()
 {
     arenas[selectedArena].classList.remove('applyBorder');
     arenas[0].classList.add('applyBorder');
-    nbrPointsInput.value = '3';
+    nbrPointsInput.value = rules.pointsToWin;
     selectedArena = 0;
     timerInput.value = '0';
     nbrOfPlayersInput.value = '0';

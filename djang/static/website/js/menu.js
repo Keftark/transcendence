@@ -669,3 +669,20 @@ function acceptChangePassword()
     });
     closeChangePassword();
 }
+
+let currentEditMode = 0;
+function openEditProfileField(fieldNbr)
+{
+    currentEditMode = fieldNbr;
+    // pour les traductions
+    // enterNewNickname
+    // enterNewFirstname
+    // enterNewLastname
+}
+
+function closeEditProfileField()
+{
+
+}
+
+// document.getElementById('changeFieldProfileConfirm').style.display = 'flex';

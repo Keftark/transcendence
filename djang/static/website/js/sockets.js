@@ -71,7 +71,7 @@ export function socketConnectToDuel()
         payload: { //Regles de configuration du match, TOUS doivent etre integres !
             id_p1: 8,
             id_p2: 5, //id du joueur a inviter
-            point: 3,
+            point: 5,
             board_x: 40,
             board_y: 25,
             ball_radius: 0.8,
@@ -305,7 +305,7 @@ export function socketCreateDuelInvit(targetMsg) {
                     payload: { //Regles de configuration du match, TOUS doivent etre integres !
                         id_p1: 8,
                         id_p2: 5, //id du joueur a inviter
-                        point: 3,
+                        point: 5,
                         board_x: 40,
                         board_y: 25,
                         ball_radius: 0.8,
@@ -560,6 +560,7 @@ export function addSocketListener()
                 spawnSparksFunction(getBallPosition(), event.ball_speed * 20);
             break; }
         case "victory": // end of match, dans le lobby ou dans le match
+            console.log("Victory: " + event);
             if (event.room_id != playerStats.room_id)
                 return;
             // console.log(data);
