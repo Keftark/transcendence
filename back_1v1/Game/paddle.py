@@ -86,6 +86,7 @@ class Paddle(Bouncable):
         """
         self._ready = False
         self._vertical = MOVE_NONE
+        self._power = 0
         self._y = 0
 
     def charge_power(self, ball):
@@ -99,8 +100,8 @@ class Paddle(Bouncable):
         if self._power > 100:
             self._power = 100
         if self._is_powered_up is True:
-            self._is_powered_up = False
             ball.activate_power_up(self._power_multiplier + self._power_bonus)
+            self._is_powered_up = False
 
     def boosto(self):
         """Activates the power-up.

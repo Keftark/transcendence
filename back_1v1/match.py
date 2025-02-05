@@ -98,7 +98,6 @@ class Match:
         self._paddle_1.reset()
         self._paddle_2.reset()
         self._timer_pause = True
-        self.check_victory()
 
     def check_victory(self):
         """Checks wether or not the victory has been attained.
@@ -137,7 +136,6 @@ class Match:
             if change >= 1:
                 self._timer_count += (int)(change)
                 self._timer = time.time()
-            self.check_victory()
 
     def tick(self):
         """Ticks the match, updating the ball and players positions.
@@ -148,6 +146,7 @@ class Match:
                 return
             if self._ended is True:
                 self._concluded = True
+                print("Hewwo")
                 if self._abandonned is True :
                     if self._quitter == self._paddle_1.id:
                         self._message_queue.append(self.dump_abandon(self._paddle_1.id))
@@ -173,6 +172,7 @@ class Match:
                     self._message_queue.append(self.dump_waiting_start())
             elif self._paddle_1.ready is True and self._paddle_2.ready is True:
                 self.restart_time()
+                self.check_victory()
                 self._paddle_1.tick()
                 self._paddle_2.tick()
                 self._ball.update_position()

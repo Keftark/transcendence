@@ -85,7 +85,7 @@ class Logger:
         if level == 2:
             return CWHITE + "[" + CRED + CBLINK + "ERROR" + CEND + CWHITE + "]\t::"
         if level == 3:
-            return CWHITE + "[" + CBLUE + " DEBUG " + CWHITE + "]\t::"
+            return CWHITE + "[" + CBLUE + "DEBUG" + CWHITE + "]\t::"
         return ""
 
     def error_format(self, error):

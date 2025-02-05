@@ -1,8 +1,8 @@
 """OBSTACLE"""
 
-PRECISION = 10
-
 from Game.bouncable import Bouncable
+
+PRECISION = 10
 
 class Obstacle(Bouncable):
     """Defines an obstacle.

@@ -21,6 +21,9 @@ SERVER_PORT         = os.environ.get("PORT_1V1_CLASSIC", 8001)
 CENTRAL_PORT        = os.environ.get("PORT_CENTRAL", 7777)
 DEBUG               = (bool)(os.environ.get("DEBUG", False))
 
+#import logging
+#logging.basicConfig(level=logging.DEBUG)
+
 @dataclass
 class SocketData:
     """Dataclass for sockets.
@@ -279,6 +282,7 @@ async def loop():
             m.tick()
             extend_to_queue(m.formatted_queue)
             m.formatted_queue.clear()
+            print("Match status :", m.ended)
             if m.ended is True:
                 logger.log("Match with room id " + str(m.room_id) + " has concluded.", 1)
                 matchs.remove(m)
