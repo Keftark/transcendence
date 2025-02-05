@@ -10,7 +10,7 @@ class Queue:
     def __init__(self, logger):
         self._liste = []
         self._private = []
-        self._room_id = -1
+        self._room_id = 0
         self._logger = logger
         self._message_queue = []
         self._match_list = []

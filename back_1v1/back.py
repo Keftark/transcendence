@@ -282,7 +282,6 @@ async def loop():
             m.tick()
             extend_to_queue(m.formatted_queue)
             m.formatted_queue.clear()
-            print("Match status :", m.ended)
             if m.ended is True:
                 logger.log("Match with room id " + str(m.room_id) + " has concluded.", 1)
                 matchs.remove(m)
@@ -375,8 +374,8 @@ async def connection_handler():
     connected, attempts to connect instead.
     """
     while Sockets.STOP_FLAG is False:
-        if Sockets.CENTRAL_SOCKET is None:
-            with lock:
+        with lock:
+            if Sockets.CENTRAL_SOCKET is None:
                 try:
                     logger.log("Attempting connection to central server.", 1)
                     uri = "wss://172.17.0.1:" + str(CENTRAL_PORT) + "/"
@@ -386,8 +385,7 @@ async def connection_handler():
                 except Exception as e:
                     Sockets.CENTRAL_SOCKET = None
                     logger.log("Couldn't connect to the central server", 2, e)
-        else:
-            with lock:
+            else:
                 try:
                     await Sockets.CENTRAL_SOCKET.send(json.dumps(pong()))
                 except Exception as e:

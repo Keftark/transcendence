@@ -146,7 +146,6 @@ class Match:
                 return
             if self._ended is True:
                 self._concluded = True
-                print("Hewwo")
                 if self._abandonned is True :
                     if self._quitter == self._paddle_1.id:
                         self._message_queue.append(self.dump_abandon(self._paddle_1.id))

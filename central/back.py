@@ -140,6 +140,8 @@ async def handle_answers(event):
         event (List): A list containing the query's data.
     """
     _type = event["type"]
+    if _type != "match_data":
+        print("answers", event)
     _server = event["server"]
     if _server == "1v1_classic":
         for id_f in event["ids"]:
@@ -160,27 +162,31 @@ async def handle_answers(event):
                     if data["type"] == "join_queue":
                         user.game = "1v1_classic"
                         user.status = "queue"
-                        user.room_id = -1
+                        user.room = -1
                     elif data["type"] == "exit_queue":
                         user.game = "none"
                         user.status = "here"
-                        user.room_id = -1
+                        user.room = -1
                     elif data["type"] == "match_init":
                         user.status = "playing"
-                        user.room_id = (int)(data["room_id"])
+                        user.room = int(data["room_id"])
+                    elif data["type"] == "match_start":
+                        user.status = "playing"
+                        user.room = int(data["room_id"])
                     elif data["type"] == "victory":
                         user.game = "none"
                         user.status = "here"
-                        user.room_id = -1
+                        user.room = -1
     elif _type == "message" or _type == "sticker":
         _id = (int)(event["id"])
         for user in userList:
             if user.id != _id and user.is_blacklisted(_id) is False:
                 await user.send(json.dumps(event))
-    elif _type == "room_message" or _type == "room_sticker":
+    elif _type == "salon_message" or _type == "salon_sticker":
         _id = (int)(event["id"])
+        print("Coucouille")
         for user in userList:
-            if user.id != _id and user.status == event["game"] \
+            if user.game == event["game"] \
                         and user.room == (int)(event["room_id"]):
                 await user.send(json.dumps(event))
     elif _type in ["private_message", "private_sticker"]:
@@ -208,7 +214,6 @@ async def handle_transfer(event):
     print("Ah ::", event)
     _id = (int)(event["id"])
     _server = event["server"]
-    _type = event["type"]
 
     for user in userList:
         if user.id == _id:
@@ -219,8 +224,10 @@ async def handle_transfer(event):
     if _server == "chat":
         for user in userList:
             if user.id == _id:
-                event["room_id"] = user.room
+                print("uwu :", user.room)
+                event["room_id"] = int(user.room)
                 event["game"] = user.game
+                print("Galanga ::", event)
         try:
             await Sockets.SOCKET_CHAT.send(json.dumps(event))
         except Exception as e:
@@ -332,8 +339,6 @@ async def handler(websocket):
     try:
         async for message in websocket:
             event = json.loads(message)
-            if DEBUG is True:
-                logger.log(event, 3)
             if event["type"] == "pong":
                 pass
             elif event["type"] == "log":

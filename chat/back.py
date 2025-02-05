@@ -64,13 +64,12 @@ def is_user(_id):
     """Returns wether the client is in the chat or not.
 
     Args:
-        _id (int): ID of the user.
+        _id int: ID of the user.
 
     Returns:
         bool: `True` if the user is logged to the chat, `False` otherwise.
     """
     for user in Users:
-        print("Checking user with ID =", user.id)
         if user.id == _id:
             return True
     return False
@@ -94,10 +93,9 @@ async def message_handler(event):
         event (dict): Dict containing the data of the
         message.
     """
-    _id = (int)(event["id"])
+    _id = int(event["id"])
     if is_user(_id) is True:
         for user in Users:
-            print("Testing user with ID", user.id)
             if user.id == _id:
                 if event["type"] == "sticker":
                     await send_server(dumps.sticker(user, event["img"]))
@@ -112,8 +110,8 @@ async def private_handler(event):
         event (dict): Dict containing the data of the
         message.
     """
-    _id = (int)(event["id"])
-    target = (int)(event["target"])
+    _id = int(event["id"])
+    target = int(event["target"])
     if is_user(id) is True and is_user(target) is True:
         for user in Users:
             if user.id == _id:
@@ -134,15 +132,15 @@ async def salon_handler(event):
         event (dict): Dict containing the data of the
         message.
     """
-    _id = (int)(event["id"])
-    if is_user(id) is True:
+    _id = int(event["id"])
+    if is_user(_id) is True:
         for user in Users:
             if user.id == _id:
                 if event["type"] == "salon_message":
-                    await send_server(dumps.msg_room(user, (int)(event["room_id"])
+                    await send_server(dumps.msg_room(user, int(event["room_id"])
                                                 , event["game"], event["content"]))
                 else:
-                    await send_server(dumps.msg_room_sticker(user, (int)(event["room_id"])
+                    await send_server(dumps.msg_room_sticker(user, int(event["room_id"])
                                                         , event["game"], event["img"]))
                 break
 
@@ -153,8 +151,8 @@ async def friends_handler(event):
         event (dict): Dict containing the data of the
         message.
     """
-    _id = (int)(event["id"])
-    target = (int)(event["target"])
+    _id = int(event["id"])
+    target = int(event["target"])
     if is_user(id) is True and is_user(target) is True:
         for user in Users:
             if user.id == _id:
@@ -176,15 +174,17 @@ async def chat_handler(event):
         message.
     """
     if event["type"] == "join_chat":
-        _id = (int)(event["id"])
+        _id = int(event["id"])
         if is_user(id) is False:
             sock = UserSocket(_id, event["name"])
             Users.append(sock)
+            logger.log("User with ID :: " + str(_id) + " has joined the chat.", 1)
     elif event["type"] == "quit_chat":
-        _id = (int)(event["id"])
+        _id = int(event["id"])
         for user in Users.copy():
             if user.id == _id:
                 Users.remove(user)
+                logger.log("User with ID :: " + str(_id) + " has left the chat.", 1)
                 break
 
 async def handler(websocket):

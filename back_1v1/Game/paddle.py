@@ -97,8 +97,7 @@ class Paddle(Bouncable):
             ball (Ball): ball to charge up.
         """
         self._power += self._power_per_bounce
-        if self._power > 100:
-            self._power = 100
+        self._power = min(self._power, 100)
         if self._is_powered_up is True:
             ball.activate_power_up(self._power_multiplier + self._power_bonus)
             self._is_powered_up = False

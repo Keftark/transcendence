@@ -4,6 +4,7 @@ import math
 import random
 
 MAX_BOUNCE_ANGLE = math.radians(60)
+MAX_SPEED = 30
 PRECISION = 5
 
 class Ball:
@@ -95,6 +96,7 @@ class Ball:
         norm = offset / (size / 2)
         bounce_angle = norm * MAX_BOUNCE_ANGLE
         self._speed *= self._speed_increment
+        self.speed = min(self.speed, MAX_SPEED)
         self._velocity_x = (self._speed * bonus) * math.cos(bounce_angle) * right
         self._velocity_y = (self._speed * bonus) * math.sin(bounce_angle)
         self._velocity_boosted_x = (self._speed * bonus) * \
