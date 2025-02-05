@@ -135,53 +135,94 @@ def key_check(_id, key):
     return False
 
 async def handler_1v1(event):
-    pass
+    """Handles 1v1 game answers.
+
+    Args:
+        event (dict): A list containing the query's data.
+    """
+    for id_f in event["ids"]:
+        _id = (int)(id_f)
+        data = event["data"]
+        for user in userList:
+            if user.id == _id:
+                try:
+                    if event["type"] == "list_all":
+                        await user.send(json.dumps(event))
+                    else:
+                        await user.send(json.dumps(data))
+                except Exception as e:
+                    logger.log("Error while sending answer to user", 2, e)
+                if data["type"] == "join_queue":
+                    user.game = "1v1_classic"
+                    user.status = "queue"
+                    user.room = -1
+                elif data["type"] == "exit_queue":
+                    user.game = "none"
+                    user.status = "here"
+                    user.room = -1
+                elif data["type"] == "match_init":
+                    user.status = "playing"
+                    user.room = int(data["room_id"])
+                elif data["type"] == "match_start":
+                    user.status = "playing"
+                    user.room = int(data["room_id"])
+                elif data["type"] == "victory":
+                    user.game = "none"
+                    user.status = "here"
+                    user.room = -1
+
+async def handler_2v2(event):
+    """Handles 2v2 game answers.
+
+    Args:
+        event (dict): A list containing the query's data.
+    """
+    for id_f in event["ids"]:
+        _id = (int)(id_f)
+        data = event["data"]
+        for user in userList:
+            if user.id == _id:
+                try:
+                    if event["type"] == "list_all":
+                        await user.send(json.dumps(event))
+                    else:
+                        await user.send(json.dumps(data))
+                except Exception as e:
+                    logger.log("Error while sending answer to user", 2, e)
+                if data["type"] == "join_queue":
+                    user.game = "2v2_classic"
+                    user.status = "queue"
+                    user.room = -1
+                elif data["type"] == "exit_queue":
+                    user.game = "none"
+                    user.status = "here"
+                    user.room = -1
+                elif data["type"] == "match_init":
+                    user.status = "playing"
+                    user.room = int(data["room_id"])
+                elif data["type"] == "match_start":
+                    user.status = "playing"
+                    user.room = int(data["room_id"])
+                elif data["type"] == "victory":
+                    user.game = "none"
+                    user.status = "here"
+                    user.room = -1
 
 # Transfere la reponse du serveur au client
 async def handle_answers(event):
     """Handles an answer; a query from a subprocess for a user.
 
     Args:
-        event (List): A list containing the query's data.
+        event (dict): A list containing the query's data.
     """
     _type = event["type"]
     if _type != "match_data":
         print("answers", event)
     _server = event["server"]
     if _server == "1v1_classic":
-        for id_f in event["ids"]:
-            _id = (int)(id_f)
-            data = event["data"]
-            for user in userList:
-                if user.id == _id:
-                    if event["type"] == "list_all":
-                        try:
-                            await user.send(json.dumps(event))
-                        except Exception as e:
-                            logger.log("", 2, e)
-                        continue
-                    try:
-                        await user.send(json.dumps(data))
-                    except Exception as e:
-                        logger.log("", 2, e)
-                    if data["type"] == "join_queue":
-                        user.game = "1v1_classic"
-                        user.status = "queue"
-                        user.room = -1
-                    elif data["type"] == "exit_queue":
-                        user.game = "none"
-                        user.status = "here"
-                        user.room = -1
-                    elif data["type"] == "match_init":
-                        user.status = "playing"
-                        user.room = int(data["room_id"])
-                    elif data["type"] == "match_start":
-                        user.status = "playing"
-                        user.room = int(data["room_id"])
-                    elif data["type"] == "victory":
-                        user.game = "none"
-                        user.status = "here"
-                        user.room = -1
+        await handler_1v1(event)
+    elif _server == "2v2_classic":
+        await handler_2v2(event)
     elif _type == "message" or _type == "sticker":
         _id = (int)(event["id"])
         for user in userList:
@@ -233,13 +274,21 @@ async def handle_transfer(event):
         try:
             await Sockets.SOCKET_CHAT.send(json.dumps(event))
         except Exception as e:
-            logger.log("", 2, e)
+            logger.log("Error while sending to chat socket", 2, e)
             Sockets.SOCKET_CHAT = None
+
     elif _server == "1v1_classic":
         try:
             await Sockets.SOCKET_1V1.send(json.dumps(event))
         except Exception as e:
-            logger.log("", 2, e)
+            logger.log("Error while sending to 1v1 Socket", 2, e)
+            Sockets.SOCKET_1V1 = None
+
+    elif _server == "2v2_classic":
+        try:
+            await Sockets.SOCKET_2V2.send(json.dumps(event))
+        except Exception as e:
+            logger.log("Error while sending to 2v2 Socket", 2, e)
             Sockets.SOCKET_1V1 = None
 
 async def handle_log(websocket, event):
