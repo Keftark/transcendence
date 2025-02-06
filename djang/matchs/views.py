@@ -170,6 +170,10 @@ class TournamentViewSet(viewsets.ModelViewSet):
         if (not self.queryset.filter(pk = pk).exists()):
             return Response({"detail": "Tournament not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        match = self.queryset.get(pk = pk)
+        tournament = self.queryset.get(pk = pk)
 
-        return Response(self.serializer_class(match).data, status=status.HTTP_200_OK)
+        return Response(self.serializer_class(tournament).data, status=status.HTTP_200_OK)
+
+    def retrieve_all(self, request: HttpRequest):
+        tournaments = self.queryset.all
+        return Response(self.serializer_class(tournaments).data, status=status.HTTP_200_OK)
