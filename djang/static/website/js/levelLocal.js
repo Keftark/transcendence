@@ -12,7 +12,7 @@ import { addMatchToHistory, getPlayerName, playerStats } from './playerManager.j
 import { getTranslation } from './translate.js';
 import { createSpaceLevel } from './levelSpace.js';
 import { createCaveLevel } from './levelCave.js';
-import { getMatchTime, getRawMatchTime, isGamePaused, pauseStopWatch, resetStopwatch, resumeStopWatch, setStopWatch, startStopwatch, stopStopwatch } from './timer.js';
+import { getRawMatchTime, isGamePaused, pauseStopWatch, resetStopwatch, resumeStopWatch, setStopWatch, startStopwatch, stopStopwatch } from './timer.js';
 import { closeGameMenu, setHeaderVisibility } from './menu.js';
 import { getRules } from './rules.js';
 import { ArenaType, LevelMode, PlayerStatus, VictoryType } from './variables.js';

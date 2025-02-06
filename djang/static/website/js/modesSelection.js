@@ -1,14 +1,15 @@
 import { openRules, setCustomRules, setDefaultRules } from './rules.js';
-import { sendInvitationDuel } from './chat.js';
+import { createInvitationDuel } from './chat.js';
 import { getLevelState, setLevelState } from './main.js';
 import { LevelMode } from './variables.js';
 import { getCurrentView, navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
 import { isInGame, passInfosPlayersToLevel } from './levelLocal.js';
 import { checkAccessModes } from './registration.js';
-import { socketAskListMatchs, socketConnectToDuel, socketSpectateMatch } from './sockets.js';
+import { socketAskListMatchs, socketConnectToDuel, socketCreateDuelInvit, socketSpectateMatch } from './sockets.js';
 import { getUserName } from './apiFunctions.js';
 import { closeTournamentView, openTournamentLobby } from './tournament.js';
+import { getDuelTargetPlayer } from './duelPanel.js';
 
 const modesLocalButton = document.getElementById('modesLocalButton');
 const modesOnlineButton = document.getElementById('modesOnlineButton');
@@ -300,24 +301,16 @@ function open2v2Panel()
         navigateTo('mode2v2', "2v2"); // faire la page 2v2 !
 }
 
-export function openTournamentMenu()
-{
-    if (playerStats.isRegistered)
-        navigateTo('tournament-menu');
-}
-
-function joinTournament()
-{
-    navigateTo('tournament-join');
-}
-
 export function askForDuel()
 {
-    if (getSelectedMode() === LevelMode.DUEL || isInGame)
+    const curMode = getSelectedMode();
+    if (curMode === LevelMode.DUEL || curMode === LevelMode.TOURNAMENT || isInGame)
         return;
     console.log("asking for a duel");
     setSelectedMode(LevelMode.DUEL);
-    sendInvitationDuel(playerStats.nickname);
+
+    socketCreateDuelInvit(getDuelTargetPlayer());
+    createInvitationDuel(playerStats.nickname);
     navigateTo('duel');
 }
 

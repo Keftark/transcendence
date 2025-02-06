@@ -100,8 +100,6 @@
     "defeat": "Défaite !",
     "wins": " gagne !",
     "signInHeader": "Connexion",
-    "createTournamentText": "Créer un tournoi",
-    "joinTournamentText": "Rejoindre un tournoi",
     "addPlayerTournament": "Ajouter",
     "tournamentLobbyHeaderText": "Tournoi - Accueil",
     "tournamentAskBackText": "Voulez-vous abandonner le tournoi ?",
@@ -140,6 +138,8 @@
     "enterNewNickname": "Entrez votre nouveau pseudonyme",
     "enterNewFirstname": "Entrez votre nouveau prénom",
     "enterNewLastname": "Entrez votre nouveau nom",
+    "history": "Historique",
+    "tournamentnb": "Tournoi #",
 
     "entityDontLeaveMe": "Non... S'il vous plaît... J'ai besoin de vous...",
     "entityRegister": "Ah ! Un nouveau joueur... C'est délicieux !",

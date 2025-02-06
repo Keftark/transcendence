@@ -144,6 +144,8 @@ export function updateHTML(translations)
 	document.getElementById('confirmNewPassword').innerText = translations.confirmNewPassword;
 	document.getElementById('buttonAcceptChangeField').innerText = translations.confirm;
 	document.getElementById('buttonCancelChangeField').innerText = translations.cancel;
+	document.getElementById('viewTournamentHistoryButton').innerText = translations.history;
+	document.getElementById('closeTournamentHistoryButton').innerText = translations.close;
 	
 	
     document.querySelector('.gdpr').addEventListener('click', function(event) {

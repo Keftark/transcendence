@@ -7,7 +7,7 @@ import { getCamera, getPlayerPosition, getRenderer, id_players, isInGame } from 
 import { openMiniProfile } from "./menu.js";
 import { getPlayerName, playerStats } from "./playerManager.js";
 import { getRules, resetInputfieldsRules } from "./rules.js";
-import { socketCreateDuelInvit, socketSendMessage, socketSendPrivSticker, socketSendPublicSticker, socketSendSalonSticker } from "./sockets.js";
+import { socketSendMessage, socketSendPrivSticker, socketSendPublicSticker, socketSendSalonSticker } from "./sockets.js";
 import { getTranslation } from "./translate.js";
 import { ArenaType, EmotionType } from "./variables.js";
 
@@ -109,7 +109,6 @@ document.addEventListener("DOMContentLoaded", function() {
     sendButton.addEventListener('click', function() {
         trySendMessage();
     });
-
     inputElement.addEventListener('keypress', function(e) {
         if (e.key === 'Enter' && !e.shiftKey) {
             if (document.activeElement === inputElement)
@@ -118,7 +117,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 inputElement.focus();
         }
     });
-
     toggleSizeButton.addEventListener('click', function() {
         if (chatBox.classList.contains('expanded')) {
             closeChat();
@@ -126,14 +124,10 @@ document.addEventListener("DOMContentLoaded", function() {
             openChat();
         }
     });
-    // chatBox.classList.add('expanded');
-    // closeChat();
 });
 
 function messageIsACode(message)
 {
-    // if (getLevelState() === LevelMode.MENU || getLevelState() === LevelMode.MODESELECTION)
-    //     return false;
     const words = message.trim().split(/\s+/);
 
     if (words.length > 0) {
@@ -196,8 +190,6 @@ export function helpFunctionDisplay()
 {
     receiveMessage("Help bot", getTranslation('helpBasicCommands'), false);
     receiveMessage("Help bot", getTranslation('helpInGameCommands'), false);
-    // sendSystemMessage("helpBasicCommands", "");
-    // sendSystemMessage("helpInGameCommands", "");
 }
 
 function sendPrivateMessage()
@@ -580,14 +572,8 @@ export function getDuelInvitContent()
 }
 
 let divDuel;
-export function sendInvitationDuel(sender)
+export function createInvitationDuel(sender)
 {
-    console.log("0");
-    if (getDuelTargetPlayer() != "" && getDuelTargetPlayer() != playerStats.nickname)
-    {
-        socketCreateDuelInvit(getDuelTargetPlayer());
-        return;
-    }
     console.log("trying to get the invitation duel");
     const newMessage = document.createElement('div');
     divDuel = newMessage;
@@ -609,7 +595,7 @@ export function sendInvitationDuel(sender)
     // ajouter la fonction pour rejoindre un duel fait par la personne
     // le bouton ne sera pas cliquable par l'envoyeur
     newMessage.appendChild(invitationButton);
-    if (isInGame || getDuelTargetPlayer() != playerStats.nickname)
+    if (isInGame || sender === playerStats.nickname) // getDuelTargetPlayer() != playerStats.nickname
     {
         const overlay = document.createElement('div');
         overlay.classList.add('overlayMessage');

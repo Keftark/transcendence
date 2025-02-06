@@ -243,6 +243,7 @@
     <div id="tournament-lobby" class="page">
         <h2 class="headerText" id="tournamentLobbyHeaderText"></h2>
         <div id="tournamentLobbyPanel">
+            <button id="viewTournamentHistoryButton"></button>
             <div id="listPlayers">
                 <div class="listPlayersTournament" id="listPlayersTournament"></div>
                 <p id="nbrPlayersTournament"></p>
@@ -265,6 +266,15 @@
             <button class="buttonCancel" id="cancelMatchTournamentButton"></button>
             <button class="buttonCancel buttonCenter" id="closeTournamentViewButton"></button>
         </div>
+    </div>
+    <div id="tournamentHistorySidePanel">
+        <div id="tournamentHistoryList">
+        </div>
+        <button id="reduceTournamentHistoryButton">
+            <img src="{% static 'icons/reduceArrow.webp' %}" alt="">
+        </button>
+        <button class="buttonCancel" id="closeTournamentHistoryButton">
+        </button>
     </div>
     <div id="tournamentWinVictory">
         <h1 id="tournamentWinVictoryText"></h1>
@@ -523,7 +533,7 @@
             <div class="messages" id="messages">
             </div>
             <div class="input-container" id="inputContainer">
-                <input type="text" id="inputChat" placeholder="...">
+                <input type="text" id="inputChat" maxlength="255" placeholder="...">
                 <button id="sendButton">
                     <img src="{% static 'icons/send.webp' %}" class="button-send-img" />
                 </button>

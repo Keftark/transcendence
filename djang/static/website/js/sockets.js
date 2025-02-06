@@ -287,8 +287,8 @@ export function socketCreateDuelInvit(targetMsg) {
                     type: "join",
                     answer: "no",
                     id: playerStats.id,
-                    blacklist: playerStats.blacklist, // mettre les id au lieu des noms
-                    private: "invite", // 
+                    blacklist: playerStats.blacklist,
+                    private: "invite",
                     invited: target.id,
                     invited_by: playerStats.id
                 };

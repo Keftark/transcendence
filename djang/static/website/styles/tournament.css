@@ -1,5 +1,6 @@
-#tournamentMenuPanel, #tournamentLobbyPanel, #tournamentJoinPanel
+#tournamentLobbyPanel
 {
+    position: relative;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -11,32 +12,12 @@
     z-index: 0;
 }
 
-#tournament-menu p
-{
-    text-align: center;
-    font-size: clamp(1rem + 0.2vw + 0.2vh, 1rem + 0.5vw + 0.5vh, 6rem);
-}
-
-#createTournament, #joinTournament
-{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-#createTournamentButton img, #joinTournamentButton img
-{
-    width: 100%;
-    height: 100%;
-}
-
 #cancelTournamentButton
 {
     transform: translate(0%, 0%);
 }
 
-#addPlayerTournament
+#addPlayerTournament, #viewTournamentHistoryButton
 {
     right: 0;
     display: flex;
@@ -49,7 +30,7 @@
     background-color:rgba(255, 230, 0, 0.1);
 }
 
-#addPlayerTournament:hover
+#addPlayerTournament:hover, #viewTournamentHistoryButton:hover
 {
     border-color: #c2ae00;
     background-color: rgba(255, 251, 0, 0.3);
@@ -297,4 +278,77 @@
     z-index: 3;
     bottom: -8%;
     justify-content: center;
+}
+
+#viewTournamentHistoryButton
+{
+    position: absolute;
+    top: 0;
+    right: unset;
+}
+
+#cancelTournamentLobbyButton, #startTournamentButton
+{
+    position: absolute;
+    bottom: -20%;
+}
+
+#tournamentHistorySidePanel
+{
+    position: absolute;
+    display: none;
+    left: 0;
+    height: 90vh;
+    width: 8rem;
+    border: 2px solid #00776dbb;
+    background-color: #00776d20;
+    border-radius: 8px;
+    z-index: 2;
+}
+
+#tournamentHistoryList
+{
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    height: 100%;
+    width: 100%;
+    gap: 4px;
+    padding: 4px;
+}
+
+.tournamentHistoryItem
+{
+    border: 2px solid #00a3a340;
+    background-color: #0047444d;
+    height: 2rem;
+    border-radius: 4px;
+}
+
+.tournamentHistoryItem:hover
+{
+    border: 2px solid #00ffff60;
+    background-color: #005e5a6d;
+    height: 2rem;
+    border-radius: 4px;
+}
+
+#reduceTournamentHistoryButton
+{
+    top: 50%;
+    right: -20%;
+    position: absolute;
+    width: 24px;
+    height: 32px;
+    border: none;
+    background: none;
+}
+
+#closeTournamentHistoryButton
+{
+    position: fixed;
+    left: 50%;
+    width: inherit;
+    bottom: 1rem;
+    transform: translateX(-50%);
 }

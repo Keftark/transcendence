@@ -100,8 +100,6 @@
     "defeat": "Defeat!",
     "wins": " wins!",
     "signInHeader": "Sign in",
-    "createTournamentText": "Create a tournament",
-    "joinTournamentText": "Join a tournament",
     "addPlayerTournament": "Add",
     "tournamentLobbyHeaderText": "Tournament - Lobby",
     "tournamentAskBackText": "Do you want to exit the tournament?",
@@ -140,6 +138,8 @@
     "enterNewNickname": "Enter your new nickname",
     "enterNewFirstname": "Enter your new first name",
     "enterNewLastname": "Enter your new last name",
+    "history": "History",
+    "tournamentnb": "Tournament #",
     
     "entityDontLeaveMe": "No... Please... I need you...",
     "entityRegister": "Ah! A new player... Delicious.",

@@ -60,15 +60,9 @@ def game_ai(request):
 def game_tournament(request):
     return render(request, 'index.html', {'current_page': 'game-tournament'})
 
-def tournament_menu(request):
-    return render(request, 'index.html', {'current_page': 'tournament-menu'})
-
 def tournament_lobby(request):
     return render(request, 'index.html', {'current_page': 'tournament-lobby'})
-
-def tournament_join(request):
-    return render(request, 'index.html', {'current_page': 'tournament-join'})
-
+    
 def index(request):
     return render(request, 'index.html', {})
 

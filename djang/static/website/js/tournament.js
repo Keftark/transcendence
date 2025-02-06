@@ -130,6 +130,7 @@ function openAddPlayer()
 
 export function openTournamentLobby()
 {
+
     addDisableButtonEffect(startTournamentButton);
     nbrPlayersTournament.innerText = countPlayers + " " + getTranslation('players');
     navigateTo('tournament-lobby');
@@ -314,6 +315,7 @@ function drawOnCanvases() {
 
 export function openTournamentView(fromGame = false)
 {
+    tournamentViewButtons.style.display = 'flex';
     tournamentMatchsCanvas.style.display = 'flex';
     if (fromGame)
     {
@@ -385,7 +387,7 @@ export function cancelBackTournamentView()
     startMatchTournamentButton.focus();
 }
 
-export function backTournamentView()
+function resetTournamentView()
 {
     currentTier = 0;
     playersInTier = 0
@@ -399,6 +401,11 @@ export function backTournamentView()
     tiersList.length = 0;
     while (tournamentMatchsCanvas.children.length > 1)
         tournamentMatchsCanvas.removeChild(tournamentMatchsCanvas.lastChild);
+}
+
+export function backTournamentView()
+{
+    resetTournamentView();
     closeTournamentViewPanel();
     addPlayerButton.focus();
 }
@@ -577,6 +584,67 @@ function removeStorage()
 export function askResumeTournament()
 {
     
+}
+
+document.getElementById('viewTournamentHistoryButton').addEventListener('click', () => {
+    openTournamentHistory();
+});
+document.getElementById('closeTournamentHistoryButton').addEventListener('click', () => {
+    closeTournamentHistory();
+});
+
+const historyPanel = document.getElementById('tournamentHistorySidePanel');
+const tournamentViewButtons = document.getElementById('tournamentViewButtons');
+const tournamentHistoryList = document.getElementById('tournamentHistoryList');
+
+function createTournamentItem(tournamentNbr)
+{
+    const childDiv = document.createElement('button');
+    childDiv.classList.add('tournamentHistoryItem');
+    childDiv.style.cursor = "url('./static/icons/cursor-button.webp'), pointer";
+    childDiv.innerHTML = getTranslation('tournamentnb') + (tournamentNbr + 1);
+    childDiv.addEventListener('click', () => {
+        clickTournamentHistoryItem(tournamentNbr);
+    });
+    tournamentHistoryList.appendChild(childDiv);
+}
+
+function clickTournamentHistoryItem(tournamentNbr)
+{
+    console.log("Click on tournament No " + (tournamentNbr + 1));
+    // on affiche les infos contenues dans tournamentHistory[tournamentNbr]
+}
+
+let tournamentHistory = [];
+function loadTournamentsHistory()
+{
+    // on recupere les tournois dans la bdd et on les met dans tournamentHistory
+    for (let i = 0; i < 10; i++)
+    {
+        createTournamentItem(i);
+    }
+}
+
+function openTournamentHistory()
+{
+    tournamentViewButtons.style.display = 'none';
+    historyPanel.style.display = 'flex';
+    tournamentMatchsCanvas.style.display = 'flex';
+    loadTournamentsHistory();
+}
+
+function deleteTournamentHistory()
+{
+    while (tournamentHistoryList.children.length > 1)
+        tournamentHistoryList.removeChild(tournamentHistoryList.lastChild);
+}
+
+function closeTournamentHistory()
+{
+    resetTournamentView();
+    closeTournamentViewPanel();
+    deleteTournamentHistory();
+    historyPanel.style.display = 'none';
 }
 
 // createTournamentView();
