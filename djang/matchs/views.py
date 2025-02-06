@@ -12,7 +12,7 @@ from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
 from accounts.models import AccountModel
 
-from .models import Match, MatchMembers
+from .models import Match, MatchMembers, TournamentMatchModel, TournamentModel
 from .serializers import MatchSerializer
 from django.db.models import Q
 
@@ -142,3 +142,19 @@ class HistoriqueViewSet(ViewSet):
             })
 
         return Response(matches_data, status=status.HTTP_200_OK)
+    
+class TournamentMatchViewSet(viewsets.ModelViewSet):
+
+    queryset = TournamentMatchModel.objects
+    serializer_class = MatchSerializer
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = (SessionAuthentication,)
+
+    def retrieve(self, request: HttpRequest, pk):
+
+        if (not self.queryset.filter(pk = pk).exists()):
+            return Response({"detail": "Match not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        match = self.queryset.get(pk = pk)
+
+        return Response(self.serializer_class(match).data, status=status.HTTP_200_OK)

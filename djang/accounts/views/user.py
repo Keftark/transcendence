@@ -1,8 +1,6 @@
-from django.shortcuts import render
 import os
-from django.http import HttpResponse
-from django.contrib.auth.models import User
 import json
+import base64
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
@@ -10,20 +8,24 @@ from django.utils.translation import gettext as _
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.http import HttpResponse
+from django.shortcuts import render
+from django.core.files.storage import FileSystemStorage
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+from django.views.decorators.http import require_http_methods
+from django.contrib.auth.hashers import check_password
 from accounts.models import *
+from accounts.serializers import AccountSerializer
 from ..serializers import UpdateUserSerializer, UpdatePasswordSerializer, UpdateSettingsSerializer
 from rest_framework.generics import UpdateAPIView
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
-from accounts.serializers import AccountSerializer
 from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth.decorators import login_required
 from dotenv import load_dotenv
-from django.core.files.storage import FileSystemStorage
-from django.conf import settings
-import base64
-from django.views.decorators.http import require_http_methods
-from django.contrib.auth.hashers import check_password
+
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -307,8 +309,8 @@ def upload_base64image(request):
         if serializer.is_valid():
             account = serializer.save()
             data = serializer.data
-            return Response(data=data)
-        return Response(serializer.errors, status=400)
+            return JsonResponse({'success': False, 'message': 'No image uploaded.'})
+        return JsonResponse({'success': True, 'url': data})
 
 def upload_image(request):
     if request.method == 'POST' and request.FILES.get('image'):
