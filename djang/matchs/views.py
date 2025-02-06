@@ -13,7 +13,7 @@ from django.shortcuts import get_object_or_404
 from accounts.models import AccountModel
 
 from .models import Match, MatchMembers, TournamentMatchModel, TournamentModel
-from .serializers import MatchSerializer
+from .serializers import MatchSerializer, TournamentSerializer
 from django.db.models import Q
 
 def create_match(request):
@@ -154,6 +154,21 @@ class TournamentMatchViewSet(viewsets.ModelViewSet):
 
         if (not self.queryset.filter(pk = pk).exists()):
             return Response({"detail": "Match not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        match = self.queryset.get(pk = pk)
+
+        return Response(self.serializer_class(match).data, status=status.HTTP_200_OK)
+    
+class TournamentViewSet(viewsets.ModelViewSet):
+    queryset = TournamentModel.objects
+    serializer_class = TournamentSerializer
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = (SessionAuthentication,)
+
+    def retrieve(self, request: HttpRequest, pk):
+
+        if (not self.queryset.filter(pk = pk).exists()):
+            return Response({"detail": "Tournament not found."}, status=status.HTTP_404_NOT_FOUND)
 
         match = self.queryset.get(pk = pk)
 

@@ -3,7 +3,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.db.models import QuerySet
 
-from .models import Match
+from .models import Match, TournamentModel
 from accounts.serializers import AccountSerializer
 
 class MatchSerializer(serializers.ModelSerializer):
@@ -36,3 +36,19 @@ class MatchSerializer(serializers.ModelSerializer):
 
     def get_players(self, instance: Match):
         return AccountSerializer(instance.get_players_profiles(), many=True).data
+    
+class TournamentSerializer(serializers.ModelSerializer):
+    tournament_id = serializers.SerializerMethodField()
+    players = serializers.SerializerMethodField()
+    matchs =  serializers.SerializerMethodField()
+    winner = serializers.SerializerMethodField()
+
+    class Meta:
+        model = TournamentModel
+        fields = ["tournament_id", "players", "matchs", "winner"]
+
+    def get_winner(self, instance: Match):
+        if (instance.winner is None):
+            return None
+        return instance.winner
+
