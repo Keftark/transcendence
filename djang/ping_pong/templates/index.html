@@ -215,27 +215,63 @@
         <div id="duelPanel">
             <div id="playersDuel">
                 <img id="helpRulesDuel" src="{% static 'icons/helpIcon.webp' %}">
-                <div id="player1Duel">
-                    <p id="player1NameDuel"></p>
-                    <img id="player1ImgDuel" src="{% static 'icons/playerNoImg.webp' %}">
-                    <p id="fakewaiting"> </p>
-                    <button id="ready1DuelButton"></button>
+                <div id="player1Duel" class="playerDuelClass">
+                    <p id="player1NameDuel" class="playerNameDuelClass"></p>
+                    <img id="player1ImgDuel" class="playerImgDuelClass" src="{% static 'icons/playerNoImg.webp' %}">
+                    <button id="ready1DuelButton" class="readyPlayerDuelClass"></button>
                 </div>
-                <div id="player2Duel">
-                    <p id="player2NameDuel"></p>
-                    <img id="player2ImgDuel" src="{% static 'icons/playerNoImg.webp' %}">
-                    <p id="waitingForPlayer"></p>
-                    <button id="ready2DuelButton"></button>
+                <div id="player2Duel" class="playerDuelClass">
+                    <p id="player2NameDuel" class="playerNameDuelClass"></p>
+                    <img id="player2ImgDuel" class="playerImgDuelClass" src="{% static 'icons/playerNoImg.webp' %}">
+                    <button id="ready2DuelButton" class="readyPlayerDuelClass"></button>
                 </div>
             </div>
             <div id="buttonsDuel">
-                <!-- <button class="buttonAccept" id="startDuelButton"></button> -->
-                <button class="buttonCancel" id="leaveDuelButton"></button>
+                <button class="buttonCancel leaveDuelButtonClass" id="leaveDuelButton"></button>
             </div>
         </div>
         <div id="helpRulesTextPanel">
             <h2 id="helpRulesTitle"></h2>
             <p id="helpRulesText"></p>
+        </div>
+    </div>
+
+    <!------------------------------ 2v2 Panel ------------------------------>
+    <div id="multi" class="page">
+        <h2 class="headerText" id="multiHeaderText"></h2>
+        <img id="thunderImgMulti" src="{% static 'images/thunder.webp' %}">
+        <img id="vsImgMulti" src="{% static 'images/vs.webp' %}">
+        <div id="multiPanel">
+            <div id="playersMulti">
+                <img id="helpRulesMulti" src="{% static 'icons/helpIcon.webp' %}">
+                <div id="player1Multi" class="playerDuelClass">
+                    <p id="player1NameMulti" class="playerNameDuelClass"></p>
+                    <img id="player1ImgMulti" class="playerImgDuelClass" src="{% static 'icons/playerNoImg.webp' %}">
+                    <button id="ready1MultiButton" class="readyPlayerDuelClass"></button>
+                </div>
+                <div id="player2Multi" class="playerDuelClass">
+                    <p id="player2NameMulti" class="playerNameDuelClass"></p>
+                    <img id="player2ImgMulti" class="playerImgDuelClass" src="{% static 'icons/playerNoImg.webp' %}">
+                    <button id="ready2MultiButton" class="readyPlayerDuelClass"></button>
+                </div>
+                <div id="player3Multi" class="playerDuelClass">
+                    <p id="player3NameMulti" class="playerNameDuelClass"></p>
+                    <img id="player3ImgMulti" class="playerImgDuelClass" src="{% static 'icons/playerNoImg.webp' %}">
+                    <button id="ready3MultiButton" class="readyPlayerDuelClass"></button>
+                </div>
+                <div id="player4Multi" class="playerDuelClass">
+                    <p id="player4NameMulti" class="playerNameDuelClass"></p>
+                    <img id="player4ImgMulti" class="playerImgDuelClass" src="{% static 'icons/playerNoImg.webp' %}">
+                    <button id="ready4MultiButton" class="readyPlayerDuelClass"></button>
+                </div>
+            </div>
+            <div id="buttonsMulti">
+                <button class="buttonCancel leaveDuelButtonClass" id="leaveMultiButton"></button>
+            </div>
+        </div>
+        <div class="helpRulesTextPanelMulti">
+            <h2 id="helpRulesTitleMulti"></h2>
+            <p id="helpRulesTextMulti"></p>
         </div>
     </div>
 

@@ -64,8 +64,6 @@ export function updateHTML(translations)
 	document.getElementById('inviteGameButton').innerText = translations.headerDuel;
 	document.getElementById('player1NameDuel').innerText = translations.player1Name;
 	document.getElementById('player2NameDuel').innerText = translations.player2Name;
-	document.getElementById('waitingForPlayer').innerText = translations.waitingForPlayer;
-	// document.getElementById('startDuelButton').innerText = translations.start;
 	document.getElementById('leaveDuelButton').innerText = translations.leaveDuelButton;
 	document.getElementById('loading').innerText = translations.loading;
 	document.getElementById('rulesPointsText').innerText = translations.rulesPointsText;
@@ -86,6 +84,10 @@ export function updateHTML(translations)
 	document.getElementById('pressBoostTextRight').innerText = translations.pressBoostTextRight;
 	document.getElementById('ready1DuelButton').innerText = translations.ready;
 	document.getElementById('ready2DuelButton').innerText = translations.ready;
+	document.getElementById('ready1MultiButton').innerText = translations.ready;
+	document.getElementById('ready2MultiButton').innerText = translations.ready;
+	document.getElementById('ready3MultiButton').innerText = translations.ready;
+	document.getElementById('ready4MultiButton').innerText = translations.ready;
 	document.getElementById('duelHeaderText').innerText = translations.headerDuel;
 	document.getElementById('connectToChat').innerText = translations.connectToChat;
 	document.getElementById('signInConfirm').innerText = translations.confirm;

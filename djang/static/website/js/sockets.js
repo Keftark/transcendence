@@ -1,10 +1,11 @@
 import { getUserById, getUserByName } from "./apiFunctions.js";
 import { setBallPosition } from "./ball.js";
-import { createInvitationDuel, receiveGameSticker, receiveMessage } from "./chat.js";
+import { createInvitationDuel, deleteDuelInChat, receiveGameSticker, receiveMessage } from "./chat.js";
 import { closeDuelPanel, matchFound, setPlayersControllers, updateReadyButtons } from "./duelPanel.js";
 import { addReadyPlayer, doUpdateBallLight, getBallPosition, getPlayerSideById, removeReadyPlayers, resetScreenFunction, spawnSparksFunction, startScreenShake } from "./levelLocal.js";
 import { getLevelState, socket, listener } from "./main.js";
-import { getListMatchs } from "./modesSelection.js";
+import { getListMatchs, setSelectedMode } from "./modesSelection.js";
+import { navigateTo } from "./pages.js";
 import { playerStats } from "./playerManager.js";
 import { setPlayersPositions } from "./playerMovement.js";
 import { checkPowerUpState, setPowerBarsPlayers } from "./powerUp.js";
@@ -98,7 +99,7 @@ export function socketRefuseDuelInvited(playerId)
         answer: "no",
         id: playerStats.id,
         blacklist: playerStats.blacklist, // mettre les id au lieu des noms
-        private: "join",
+        private: "refuse",
         invited_by: playerId,
         payload: {}
     };
@@ -477,7 +478,7 @@ export function socketUnspectateMatch()
 export function addSocketListener()
 {
     listener.addEventListener("message", ({ data }) => {
-        // console.log(data);
+        console.log(data);
         let event;
         try {
             event = JSON.parse(data);
@@ -643,6 +644,11 @@ export function addSocketListener()
         //     break;
         case "crash":
             console.log(data);
+            break;
+        case "refusal":
+            setSelectedMode(LevelMode.MENU);
+            navigateTo('home');
+            deleteDuelInChat();
             break;
         case "ping":
             break;

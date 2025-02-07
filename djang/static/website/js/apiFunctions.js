@@ -53,7 +53,8 @@ export async function registerUser(nameValue, firstNameValue, lastNameValue, ema
         first_name: firstNameValue,
         last_name: lastNameValue,
         email: emailValue,
-        password: passwordValue
+        password: passwordValue,
+        status: "online"
     };
 
     try {
@@ -255,10 +256,10 @@ export async function getUserByName(userName) {
             throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);
         const userData = await response.json();
         if (userData.error)
-            console.error(userData.error);
+            throw new Error(userData.error);
         return userData;
     } catch (error) {
-        console.error("An error occurred while fetching the user details:", error);
+        throw new Error("An error occurred while fetching the user details:", error);
     }
 }
 
@@ -307,13 +308,65 @@ export async function setUserPaddleSkin(userId, newPaddleSkin) {
         if (updatedUserData.error) {
             console.error(updatedUserData.error);
         } else {
-            return updatedUserData;  // You can return the updated user data if needed
+            return updatedUserData;
         }
     } catch (error) {
         console.error("An error occurred while updating the paddle skin:", error);
     }
 }
 
+export async function getUserStatus(username) {
+    if (!username) {
+        console.error("Username is required.");
+        return;
+    }
+    try {
+        const response = await fetch(`/user_status/${username}/`);
+        if (!response.ok)
+            throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);
+        const userData = await response.json();
+        if (userData.error)
+            console.error(userData.error);
+        return userData;
+    } catch (error) {
+        console.error("An error occurred while fetching the user details:", error);
+    }
+}
+
+export async function setUserStatus(newStatus) {
+    if (!playerStats.isRegistered)
+        return;
+    if (!newStatus) {
+        console.error("Username and status are required.");
+        return;
+    }
+    try {
+        const response = await fetch(`/user_status/${playerStats.nickname}/`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken(),
+            },
+            body: JSON.stringify({
+                status: newStatus
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to update status: ${response.status} ${response.statusText}`);
+        }
+
+        const updatedUserData = await response.json();
+
+        if (updatedUserData.error) {
+            console.error(updatedUserData.error);
+        } else {
+            return updatedUserData;
+        }
+    } catch (error) {
+        console.error("An error occurred while updating the status:", error);
+    }
+}
 
 export async function getFriendsList() {
     try {

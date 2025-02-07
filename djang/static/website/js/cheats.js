@@ -1,12 +1,14 @@
+import { getUserByName } from "./apiFunctions.js";
 import { askAddFriendFunction, clickBlockUser, helpFunctionDisplay, receiveMessage, removeFriendFunction, sendPubSticker, sendSystemMessage } from "./chat.js";
 import { setDuelTargetPlayer } from "./duelPanel.js";
 import { removeBlockedUser } from "./friends.js";
-import { changeBallSizeInstance, changeBallSpeedInstance, changePlayersSize, getBallPosition } from "./levelLocal.js";
+import { changeBallSizeInstance, changeBallSpeedInstance, changePlayersSize, getBallPosition, isInGame } from "./levelLocal.js";
 import { isAnOfflineMode } from "./main.js";
-import { askForDuel } from "./modesSelection.js";
+import { askForDuel, getSelectedMode } from "./modesSelection.js";
 import { getCurrentView } from "./pages.js";
 import { playerStats } from "./playerManager.js";
 import { socketSendPrivMessage, socketSendPrivSticker } from "./sockets.js";
+import { LevelMode } from "./variables.js";
 
 export const cheatCodes =
 {
@@ -73,9 +75,29 @@ function changePaddlesSize(newSize)
 
 function sendInvitDuel(playerInvit = "")
 {
-    if (playerInvit != "")
+    const curMode = getSelectedMode();
+    if (curMode === LevelMode.ONLINE || curMode === LevelMode.TOURNAMENT || isInGame)
+        return;
+    if (playerInvit === "")
+    {
+        sendSystemMessage("duelWrongParameter", "");
+        return;
+    }
+    getUserByName(playerInvit)
+    .then((response) => {
+        console.log(response);
+        if (response.status === "offline")
+        {
+            sendSystemMessage("userOffline", playerInvit, true);
+            return;
+        }
+            console.log("Not logged in");
         setDuelTargetPlayer(playerInvit);
-    askForDuel();
+        askForDuel(playerInvit);
+    })
+    .catch((error) => {
+        sendSystemMessage("userNotFound", playerInvit, true);
+    });
 }
 
 function sendPrivateMessage(target = "", message = "")

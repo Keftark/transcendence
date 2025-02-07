@@ -21,7 +21,7 @@ import { isBoostReadyLeft, isBoostReadyRight, resetBoostBar, useBoost } from './
 import { createDeathSphere } from './deathSphere.js';
 import { Sparks } from './sparks.js';
 import { socketSendPlayerReady, setMatchAlreadyStarted } from './sockets.js';
-import { getUserById, getUserPaddleSkin } from './apiFunctions.js';
+import { getUserById, getUserPaddleSkin, setUserStatus } from './apiFunctions.js';
 import { getTournamentPlayers, setWinner } from './tournament.js';
 
 const gameMenuPanel = document.getElementById('gameMenuPanel');
@@ -210,6 +210,7 @@ export function unloadLevel()
 {
     if (!scene)
         return;
+    setUserStatus("online");
     resetIdPlayers();
     if (isAnOnlineMode(currentLevelMode))
         removeGameStickers();
@@ -625,6 +626,7 @@ export let resetScreenFunction = null;
 
 export function StartLevel(levelMode)
 {
+    setUserStatus("busy");
     playerStats.status = PlayerStatus.BUSY;
     animationId = null;
     deathSphere = null;

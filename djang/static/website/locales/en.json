@@ -64,7 +64,6 @@
     "headerDuel": "Duel",
     "player1Name": "Player 1",
     "player2Name": "Player 2",
-    "waitingForPlayer": "Waiting for player...",
     "start": "Start",
     "leaveDuelButton": "Leave",
     "loading": "Loading...",
@@ -142,6 +141,9 @@
     "history": "History",
     "tournamentnb": "Tournament #",
     "refuse": "Refuse",
+    "userNotFound": "User not found: ",
+    "duelWrongParameter": "Wrong command syntax: /duel &lt;name&gt;",
+    "userOffline": "User is offline: ",
     
     
     "entityDontLeaveMe": "No... Please... I need you...",

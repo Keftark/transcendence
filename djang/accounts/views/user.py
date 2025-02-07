@@ -86,6 +86,7 @@ def register_user(request):
             last_name = data.get('last_name', '').strip()
             email = data.get('email', '').strip()
             password = data.get('password', '').strip()
+            status = data.get('status', '').strip()
 
             # Check required fields
             if not name or not email or not password:
@@ -111,6 +112,8 @@ def register_user(request):
                 email=email,
                 password=password,
             )
+            user.accountmodel.status = status
+            user.accountmodel.save()
             user.save()
 
             # Log the user in
@@ -129,6 +132,8 @@ def register_user(request):
     
 def logout_user(request):
     if request.method == 'POST':
+        request.user.accountmodel.status = "offline"
+        request.user.accountmodel.save()
         logout(request)
 
         return JsonResponse({'success': True, 'message': 'User logged out successfully.'})
@@ -227,10 +232,51 @@ def get_user_by_name(request, username):
             'username': user.username,
             'email': user.email,
             'first_name': user.first_name,
-            'last_name': user.last_name
+            'last_name': user.last_name,
+            'status': user.accountmodel.status
         })
     except User.DoesNotExist:
         return JsonResponse({'error': 'User not found'}, status=404)
+
+@require_http_methods(["GET", "PUT"])  # Allow GET and PUT methods
+def set_user_status(request, username):
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+
+    # Handle GET request: return preferred paddle skin
+    if request.method == 'GET':
+        return JsonResponse({
+            'status': user.accountmodel.status
+        })
+
+    # Handle PUT request: update preferred paddle skin
+    elif request.method == 'PUT':
+        try:
+            # Get the JSON data sent in the request body
+            data = json.loads(request.body)
+
+            # Get the new preferred paddle skin from the request data
+            new_status = data.get('status')
+            if not new_status:
+                return JsonResponse({'error': 'Status is required'}, status=400)
+
+            # Update the user's preferred paddle skin
+            user.accountmodel.status = new_status
+            user.accountmodel.save()
+
+            # Return the updated user data
+            return JsonResponse({
+                'status': user.accountmodel.status
+            })
+
+        except KeyError:
+            return JsonResponse({'error': 'Invalid data'}, status=400)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
 
 def get_user_by_id(request, user_id):
     try:
@@ -265,6 +311,9 @@ def login_user(request):
         if user is not None:
             settings = SettingsModel.objects.get(pk=user.id)
             login(request, user)
+            user2 = User.objects.get(username=username)
+            user2.accountmodel.status = "online"
+            user2.accountmodel.save()
             user_data = {
                 "id": user.id,
                 "username": user.username,
@@ -272,6 +321,7 @@ def login_user(request):
                 "first_name": user.first_name,
                 "last_name": user.last_name,
                 "preferredPaddle": user.accountmodel.preferredPaddle,
+                "status": user.accountmodel.status,
                 "color": settings.color,
                 "language": settings.language,
                 "orthographicView": settings.view

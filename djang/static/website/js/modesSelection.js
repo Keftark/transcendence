@@ -59,11 +59,11 @@ modeDuelButton.addEventListener('click', () => {
 });
 
 mode2v2Button.addEventListener('click', () => {
-    setSelectedMode(LevelMode.MULTI);
+    // socket connexion to 2v2
     closeOnlineModes();
     isInsideModes = false;
     setTimeout(() => {
-        openRules();
+        open2v2Panel();
     }, 300);
 });
 
@@ -295,7 +295,10 @@ export function openDuelPanel()
 function open2v2Panel()
 {
     if (playerStats.isRegistered)
-        navigateTo('mode2v2', "2v2"); // faire la page 2v2 !
+    {
+        navigateTo('multi', LevelMode.MULTI); // faire la page 2v2 !
+        setSelectedMode(LevelMode.MULTI);
+    }
 }
 
 export function askForDuel()

@@ -10,7 +10,7 @@ const friendsList = document.getElementById('friendsList');
 const blockedList = document.getElementById('blockedList');
 
 let isShowingFriends = true;
-
+let isFriendOpen = false;
 
 friendsHeaderButton.addEventListener('click', function() {
     isShowingFriends = !isShowingFriends;
@@ -20,6 +20,16 @@ friendsHeaderButton.addEventListener('click', function() {
         showBlocked();
 });
 
+let loopFunction;
+
+function checkStatusFriends()
+{
+    // faire un loop et recuperer pour chaque user son status
+
+    // ou faire une fonction qui recupere les friends et retourne 
+    // leurs status en array, qu'on applique a chaque div de la liste d'amis
+}
+
 export function showFriendsBox(isTrue)
 {
     friendsBox.style.display = isTrue ? 'flex' : 'none'; 
@@ -27,6 +37,9 @@ export function showFriendsBox(isTrue)
 
 function showFriends()
 {
+    isFriendOpen = true;
+    if (loopFunction != null)
+        loopFunction = setInterval(checkStatusFriends, 5000);
     friendsHeaderButton.innerText = getTranslation('friendsHeader');
     blockedList.style.display = 'none';
     friendsList.style.display = 'flex';
@@ -34,6 +47,12 @@ function showFriends()
 
 function showBlocked()
 {
+    isFriendOpen = false;
+    if (loopFunction != null)
+    {
+        clearInterval(loopFunction);
+        loopFunction = null;
+    }
     friendsHeaderButton.innerText = getTranslation('blocked');
     friendsList.style.display = 'none';
     blockedList.style.display = 'flex';
@@ -41,6 +60,9 @@ function showBlocked()
 
 function openFriends()
 {
+    isFriendOpen = true;
+    if (loopFunction != null)
+        loopFunction = setInterval(checkStatusFriends, 5000);
     friendsBox.classList.remove('shrunk');
     friendsBox.classList.remove('hide-elements');
     friendsBox.classList.add('expanded');
@@ -49,14 +71,20 @@ function openFriends()
 
 function closeFriends()
 {
+    isFriendOpen = false;
+    if (loopFunction != null)
+    {
+        clearInterval(loopFunction);
+        loopFunction = null;
+    }
     friendsBox.classList.remove('expanded');
     friendsBox.classList.add('shrunk');
     toggleIconFriends.src = 'static/icons/friendsIcon.webp';
 
     setTimeout(function() {
         friendsBox.classList.add('hide-elements');
-        showFriends();
-        isShowingFriends = true;
+        // showFriends();
+        // isShowingFriends = true;
     }, 400);
 }
 

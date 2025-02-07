@@ -64,7 +64,6 @@
     "headerDuel": "Duel",
     "player1Name": "Joueur 1",
     "player2Name": "Joueur 2",
-    "waitingForPlayer": "En attente du joueur...",
     "start": "Commencer",
     "leaveDuelButton": "Quitter",
     "loading": "Chargement...",
@@ -142,6 +141,9 @@
     "history": "Historique",
     "tournamentnb": "Tournoi #",
     "refuse": "Refuser",
+    "userNotFound": "Utilisateur inconnu : ",
+    "duelWrongParameter": "Mauvaise syntaxe : /duel &lt;nom&gt;",
+    "userOffline": "Utilisateur hors ligne : ",
 
     "entityDontLeaveMe": "Non... S'il vous plaît... J'ai besoin de vous...",
     "entityRegister": "Ah ! Un nouveau joueur... C'est délicieux !",

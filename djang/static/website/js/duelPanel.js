@@ -21,8 +21,6 @@ const player1Img = document.getElementById('player1ImgDuel');
 const player2Img = document.getElementById('player2ImgDuel');
 const player1ReadyButton = document.getElementById('ready1DuelButton');
 const player2ReadyButton = document.getElementById('ready2DuelButton');
-const waitingPlayer2 = document.getElementById('waitingForPlayer');
-// const startButtonDuel = document.getElementById('startDuelButton');
 const animDiv = document.getElementById('vsImg');
 const baseImgPath = "static/icons/playerNoImg.webp";
 
@@ -80,7 +78,6 @@ function resetDuelPanel()
     player2ReadyButton.classList.remove('active');
     player1Img.src = baseImgPath;
     player2Img.src = baseImgPath;
-    waitingPlayer2.innerText = getTranslation('waitingForPlayer');
     player2NameText.innerText = getTranslation('player2Name');
     removeDisableButtonEffect(player1ReadyButton);
     removeDisableButtonEffect(player2ReadyButton);
@@ -135,7 +132,6 @@ function fillInfosPlayer(playerNbr, playerInfos) {
                     player1NameText.innerText = playerProfile.username;
                     // mettre la photo de profil
                 } else {
-                    waitingPlayer2.innerText = " ";
                     player2NameText.innerText = playerProfile.username;
                     // mettre la photo de profil
                 }
@@ -208,7 +204,8 @@ export function refuseDuel(playerId)
 {
     if (playerId === playerStats.id)
         return;
-    socketRefuseDuelInvited();
+    deleteDuelInChat();
+    socketRefuseDuelInvited(playerId);
 }
 
 export function startWaitingForPlayer()

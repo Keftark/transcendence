@@ -462,14 +462,3 @@ button:hover {
     height: 32px;
     animation: moveUpAndDisappear 3s forwards;
 }
-
-@keyframes moveUpAndDisappear {
-    0% {
-        transform: translateY(0); /* Start at normal position */
-        opacity: 1;               /* Fully visible */
-    }
-    100% {
-        transform: translateY(-100px); /* Move 100px up */
-        opacity: 0;                   /* Fade out */
-    }
-}
