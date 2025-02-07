@@ -75,6 +75,7 @@
     "rulesPaddleText": "Paddle",
     "choosePaddleText": "Choose your paddle",
     "rulesTimerText": "Max. time (in seconds): ",
+    "noMaxTime": "No timer",
     "rulesMaxPlayersText": "Number of players: ",
     "players": "Players",
     "cameraTypeHeader": "Camera: ",
@@ -140,6 +141,8 @@
     "enterNewLastname": "Enter your new last name",
     "history": "History",
     "tournamentnb": "Tournament #",
+    "refuse": "Refuse",
+    
     
     "entityDontLeaveMe": "No... Please... I need you...",
     "entityRegister": "Ah! A new player... Delicious.",

@@ -1,7 +1,7 @@
 import * as THREE from '../node_modules/.vite/deps/three.js';
 import { askAddFriend, deleteFriend, getAccountUser, getIncomingFriendRequests, getOutgoingFriendRequests } from "./apiFunctions.js";
 import { cheatCodes } from "./cheats.js";
-import { getDuelTargetPlayer, joinDuel } from "./duelPanel.js";
+import { getDuelTargetPlayer, joinDuel, refuseDuel } from "./duelPanel.js";
 import { addFriend, addFriendDiv, addFriendRequest, addOutgoingFriendRequest, blockUser, checkAndRemoveFriend } from "./friends.js";
 import { getCamera, getPlayerPosition, getRenderer, id_players, isInGame } from "./levelLocal.js";
 import { openMiniProfile } from "./menu.js";
@@ -564,37 +564,50 @@ function trySendMessage(isASticker = false) {
 export function getDuelInvitContent()
 {
     const rules = getRules();
-    return getPlayerName() + getTranslation('sendsInvitationDuel') + "\n\n" +
+    const maxTimeText = rules.maxTime === 0 ? getTranslation('noMaxTime') : getTranslation('rulesTimerText') + " " + rules.maxTime;
+    return getTranslation('sendsInvitationDuel') + "\n\n" +
     getTranslation('rulesHeaderText') + "\n" + 
     getTranslation('rulesPointsText') + " " + rules.pointsToWin + "\n" +
     getTranslation('rulesArenaText') + " " + ArenaType[rules.arena] + "\n" +
-    getTranslation('rulesTimerText') + " " + rules.maxTime;
+    maxTimeText;
 }
 
-let divDuel;
-export function createInvitationDuel(sender)
+let divDuel = null;
+export function createInvitationDuel(sender, id = "")
 {
-    console.log("trying to get the invitation duel");
+    checkNewMessage();
     const newMessage = document.createElement('div');
     divDuel = newMessage;
     newMessage.setAttribute('sender', sender);
     newMessage.classList.add('joinDuelInChat');
     const invitationText = document.createElement('div');
     invitationText.classList.add('textJoinDuel');
-    invitationText.textContent = getDuelInvitContent();
+    invitationText.textContent = sender + getDuelInvitContent();
     invitationText.style.color = playerStats.colors;
     newMessage.appendChild(invitationText);
+
+    const invitationParentButton = document.createElement('div');
+    invitationParentButton.classList.add('buttonJoinDuelParent');
+    newMessage.appendChild(invitationParentButton);
+
     const invitationButton = document.createElement('div');
     invitationButton.classList.add('buttonJoinDuel');
     invitationButton.classList.add('buttonJoinDuelText');
     invitationButton.textContent = getTranslation('join');
     invitationButton.style.color = playerStats.colors;
     invitationButton.addEventListener('click', () => {
-        joinDuel();
-      });
-    // ajouter la fonction pour rejoindre un duel fait par la personne
-    // le bouton ne sera pas cliquable par l'envoyeur
-    newMessage.appendChild(invitationButton);
+        joinDuel(id);
+    });
+    invitationParentButton.appendChild(invitationButton);
+    const invitationCancelButton = document.createElement('div');
+    invitationCancelButton.classList.add('buttonCancelDuel');
+    invitationCancelButton.classList.add('buttonJoinDuelText');
+    invitationCancelButton.textContent = getTranslation('refuse');
+    invitationCancelButton.style.color = playerStats.colors;
+    invitationCancelButton.addEventListener('click', () => {
+        refuseDuel(id);
+    });
+    invitationParentButton.appendChild(invitationCancelButton);
     if (isInGame || sender === playerStats.nickname) // getDuelTargetPlayer() != playerStats.nickname
     {
         const overlay = document.createElement('div');
@@ -622,13 +635,12 @@ export function setAccessAllDuelsInChat(access)
 
 export function deleteDuelInChat()
 {
-    if (divDuel != null)
-    {
-        const newArray = listDuelsInChat.filter(element => element !== divDuel);
-        listDuelsInChat = newArray;
-        divDuel.remove();
-        divDuel = null;
-    }
+    if (divDuel === null)
+        return;
+    const newArray = listDuelsInChat.filter(element => element !== divDuel);
+    listDuelsInChat = newArray;
+    divDuel.remove();
+    divDuel = null;
 }
 
 export function checkAccessToChat()
@@ -774,8 +786,10 @@ function convert3DTo2DScreenSpace(threejsPosition, camera, renderer) {
     if (!(threejsPosition instanceof THREE.Vector3)) {
         throw new Error('The position must be an instance of THREE.Vector3');
     }
-    const vector = threejsPosition.clone().project(camera);
     const width = renderer.domElement.width;
+    let vector = threejsPosition.clone().project(camera);
+    if (vector.x < 0)
+        vector.x -= 0.05;
     const height = renderer.domElement.height;
     const x = (vector.x * 0.5 + 0.5) * width;
     const y = (0.5 - vector.y * 0.5) * height;

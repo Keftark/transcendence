@@ -280,19 +280,19 @@
     justify-content: center;
 }
 
-#viewTournamentHistoryButton
-{
-    position: absolute;
-    top: 0;
-    right: unset;
-}
-
 #cancelTournamentLobbyButton, #startTournamentButton
 {
     position: absolute;
     bottom: -20%;
 }
 
+
+/* #viewTournamentHistoryButton
+{
+    position: absolute;
+    top: 0;
+    right: unset;
+}
 #tournamentHistorySidePanel
 {
     position: absolute;
@@ -351,4 +351,4 @@
     width: inherit;
     bottom: 1rem;
     transform: translateX(-50%);
-}
+} */

@@ -38,17 +38,19 @@ class MatchSerializer(serializers.ModelSerializer):
         return AccountSerializer(instance.get_players_profiles(), many=True).data
     
 class TournamentSerializer(serializers.ModelSerializer):
-    tournament_id = serializers.SerializerMethodField()
     players = serializers.SerializerMethodField()
     matchs =  serializers.SerializerMethodField()
     winner = serializers.SerializerMethodField()
 
     class Meta:
         model = TournamentModel
-        fields = ["tournament_id", "players", "matchs", "winner"]
+        fields = ["players", "matchs", "winner"]
 
-    def get_winner(self, instance: Match):
+    def get_winner(self, instance: TournamentModel):
         if (instance.winner is None):
             return None
         return instance.winner
+
+    def get_players(self, instance: TournamentModel):
+        return TournamentSerializer(instance.players, many=True).data
 

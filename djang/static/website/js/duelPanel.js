@@ -2,11 +2,12 @@ import { getLoggedInUser, getUserById } from "./apiFunctions.js";
 import { deleteDuelInChat } from "./chat.js";
 import { id_players, passInfosPlayersToLevel } from "./levelLocal.js";
 import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
-import { setSelectedMode, showModeChoice } from "./modesSelection.js";
-import { socketExitLobby, socketNotReadyToDuel, socketReadyToDuel } from "./sockets.js";
+import { openDuelPanel, setSelectedMode, showModeChoice } from "./modesSelection.js";
+import { socketConnectToDuelInvited, socketExitLobby, socketNotReadyToDuel, socketReadyToDuel, socketRefuseDuelInvited } from "./sockets.js";
 import { getTranslation } from "./translate.js";
 import { clickPlayGame } from "./modesSelection.js";
 import { LevelMode } from "./variables.js";
+import { playerStats } from "./playerManager.js";
 
 document.getElementById('leaveDuelButton').addEventListener('click', () => {
     closeDuelPanel();
@@ -191,16 +192,23 @@ export function clickReadyDuel(playerNbr)
         else
             socketNotReadyToDuel();
     }
-    // if (player1ReadyButton.classList.contains('active') && player2ReadyButton.classList.contains('active'))
-    //     removeDisableButtonEffect(startButtonDuel);
-    // else
-    //     addDisableButtonEffect(startButtonDuel);
 }
 
-export function joinDuel()
+export function joinDuel(playerId)
 {
+    if (playerId === playerStats.id)
+        return;
+    socketConnectToDuelInvited(playerId);
+    openDuelPanel();
     // fillInfosPlayer(2);
     resetVSAnimation();
+}
+
+export function refuseDuel(playerId)
+{
+    if (playerId === playerStats.id)
+        return;
+    socketRefuseDuelInvited();
 }
 
 export function startWaitingForPlayer()
@@ -248,8 +256,7 @@ export function setPlayersControllers()
 
 export function matchFound(player1, player2)
 {
-    // console.log("Player1: " + player1);
-    // console.log("Player2: " + player2);
+    deleteDuelInChat();
     idP1 = player1;
     idP2 = player2;
     id_players[0] = player1;

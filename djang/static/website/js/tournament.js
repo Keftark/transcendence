@@ -586,66 +586,75 @@ export function askResumeTournament()
     
 }
 
-document.getElementById('viewTournamentHistoryButton').addEventListener('click', () => {
-    openTournamentHistory();
-});
-document.getElementById('closeTournamentHistoryButton').addEventListener('click', () => {
-    closeTournamentHistory();
-});
+// document.getElementById('viewTournamentHistoryButton').addEventListener('click', () => {
+//     openTournamentHistory();
+// });
+// document.getElementById('closeTournamentHistoryButton').addEventListener('click', () => {
+//     closeTournamentHistory();
+// });
 
-const historyPanel = document.getElementById('tournamentHistorySidePanel');
-const tournamentViewButtons = document.getElementById('tournamentViewButtons');
-const tournamentHistoryList = document.getElementById('tournamentHistoryList');
+// const historyPanel = document.getElementById('tournamentHistorySidePanel');
+// const tournamentViewButtons = document.getElementById('tournamentViewButtons');
+// const tournamentHistoryList = document.getElementById('tournamentHistoryList');
 
-function createTournamentItem(tournamentNbr)
-{
-    const childDiv = document.createElement('button');
-    childDiv.classList.add('tournamentHistoryItem');
-    childDiv.style.cursor = "url('./static/icons/cursor-button.webp'), pointer";
-    childDiv.innerHTML = getTranslation('tournamentnb') + (tournamentNbr + 1);
-    childDiv.addEventListener('click', () => {
-        clickTournamentHistoryItem(tournamentNbr);
-    });
-    tournamentHistoryList.appendChild(childDiv);
-}
+// function createTournamentItem(tournamentNbr)
+// {
+//     const childDiv = document.createElement('button');
+//     childDiv.classList.add('tournamentHistoryItem');
+//     childDiv.style.cursor = "url('./static/icons/cursor-button.webp'), pointer";
+//     childDiv.innerHTML = getTranslation('tournamentnb') + (tournamentNbr + 1);
+//     childDiv.addEventListener('click', () => {
+//         clickTournamentHistoryItem(tournamentNbr);
+//     });
+//     tournamentHistoryList.appendChild(childDiv);
+// }
 
-function clickTournamentHistoryItem(tournamentNbr)
-{
-    console.log("Click on tournament No " + (tournamentNbr + 1));
-    // on affiche les infos contenues dans tournamentHistory[tournamentNbr]
-}
+// function clickTournamentHistoryItem(tournamentNbr)
+// {
+//     console.log("Click on tournament No " + (tournamentNbr + 1));
+//     // on affiche les infos contenues dans tournamentHistory[tournamentNbr]
+// }
 
-let tournamentHistory = [];
-function loadTournamentsHistory()
-{
-    // on recupere les tournois dans la bdd et on les met dans tournamentHistory
-    for (let i = 0; i < 10; i++)
-    {
-        createTournamentItem(i);
-    }
-}
+// let tournamentHistory = [];
+// function loadTournamentsHistory()
+// {
+//     // on recupere les tournois dans la bdd et on les met dans tournamentHistory
+//     for (let i = 0; i < 10; i++)
+//     {
+//         createTournamentItem(i);
+//     }
+// }
 
-function openTournamentHistory()
-{
-    tournamentViewButtons.style.display = 'none';
-    historyPanel.style.display = 'flex';
-    tournamentMatchsCanvas.style.display = 'flex';
-    loadTournamentsHistory();
-}
+// function openTournamentHistory()
+// {
+//     tournamentViewButtons.style.display = 'none';
+//     historyPanel.style.display = 'flex';
+//     tournamentMatchsCanvas.style.display = 'flex';
+//     loadTournamentsHistory();
+// }
 
-function deleteTournamentHistory()
-{
-    while (tournamentHistoryList.children.length > 1)
-        tournamentHistoryList.removeChild(tournamentHistoryList.lastChild);
-}
+// function deleteTournamentHistory()
+// {
+//     while (tournamentHistoryList.children.length > 1)
+//         tournamentHistoryList.removeChild(tournamentHistoryList.lastChild);
+// }
 
-function closeTournamentHistory()
-{
-    resetTournamentView();
-    closeTournamentViewPanel();
-    deleteTournamentHistory();
-    historyPanel.style.display = 'none';
-}
+// function closeTournamentHistory()
+// {
+//     resetTournamentView();
+//     closeTournamentViewPanel();
+//     deleteTournamentHistory();
+//     historyPanel.style.display = 'none';
+// }
 
 // createTournamentView();
 // setInterval(() => endOfTournamentMatch(1), 500);
+
+// getTournaments()
+// .then((response) => {
+//     console.log(response);
+
+// })
+// .catch((error) => {
+//     console.error("Failed to get the friendship relation:", error);
+// });

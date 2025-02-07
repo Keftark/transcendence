@@ -144,8 +144,8 @@ export function updateHTML(translations)
 	document.getElementById('confirmNewPassword').innerText = translations.confirmNewPassword;
 	document.getElementById('buttonAcceptChangeField').innerText = translations.confirm;
 	document.getElementById('buttonCancelChangeField').innerText = translations.cancel;
-	document.getElementById('viewTournamentHistoryButton').innerText = translations.history;
-	document.getElementById('closeTournamentHistoryButton').innerText = translations.close;
+	// document.getElementById('viewTournamentHistoryButton').innerText = translations.history;
+	// document.getElementById('closeTournamentHistoryButton').innerText = translations.close;
 	
 	
     document.querySelector('.gdpr').addEventListener('click', function(event) {
@@ -160,7 +160,7 @@ function updateChat()
 	const childDivs = messages.querySelectorAll("div");
 	childDivs.forEach((childDiv) => {
 		if (childDiv.classList.contains('textJoinDuel')) // message de demande de duel
-			childDiv.innerText = getDuelInvitContent();
+			childDiv.innerText = childDiv.parentElement.getAttribute('sender') + getDuelInvitContent();
 		else if (childDiv.classList.contains('message-middle')) // c'est un message d'un joueur
 		{
 			const otherVar = childDiv.getAttribute("value");

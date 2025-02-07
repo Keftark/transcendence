@@ -283,16 +283,13 @@ export function onModesClose()
     // showMainMenu();
 }
 
-function openDuelPanel()
+export function openDuelPanel()
 {
     if (playerStats.isRegistered)
     {
         navigateTo('duel');
         setSelectedMode(LevelMode.ONLINE);
     }
-    // else
-        
-    // if otherPlayer != "" and if isInTheDatabase(otherPlayer), sends an invitation to this player
 }
 
 function open2v2Panel()
@@ -304,13 +301,11 @@ function open2v2Panel()
 export function askForDuel()
 {
     const curMode = getSelectedMode();
-    if (curMode === LevelMode.DUEL || curMode === LevelMode.TOURNAMENT || isInGame)
+    if (curMode === LevelMode.ONLINE || curMode === LevelMode.TOURNAMENT || isInGame)
         return;
-    console.log("asking for a duel");
-    setSelectedMode(LevelMode.DUEL);
-
+    setSelectedMode(LevelMode.ONLINE);
     socketCreateDuelInvit(getDuelTargetPlayer());
-    createInvitationDuel(playerStats.nickname);
+    createInvitationDuel(playerStats.nickname, playerStats.id);
     navigateTo('duel');
 }
 

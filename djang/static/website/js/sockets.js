@@ -1,6 +1,6 @@
-import { getUserByName } from "./apiFunctions.js";
+import { getUserById, getUserByName } from "./apiFunctions.js";
 import { setBallPosition } from "./ball.js";
-import { receiveGameSticker, receiveMessage } from "./chat.js";
+import { createInvitationDuel, receiveGameSticker, receiveMessage } from "./chat.js";
 import { closeDuelPanel, matchFound, setPlayersControllers, updateReadyButtons } from "./duelPanel.js";
 import { addReadyPlayer, doUpdateBallLight, getBallPosition, getPlayerSideById, removeReadyPlayers, resetScreenFunction, spawnSparksFunction, startScreenShake } from "./levelLocal.js";
 import { getLevelState, socket, listener } from "./main.js";
@@ -66,8 +66,41 @@ export function socketConnectToDuel()
         answer: "no",
         id: playerStats.id,
         blacklist: playerStats.blacklist, // mettre les id au lieu des noms
-        private: "none", // 
-        invited_by: 8
+        private: "none",
+        invited_by: 8,
+        payload: {}
+    };
+    listener.send(JSON.stringify(event));
+}
+
+export function socketConnectToDuelInvited(playerId)
+{
+    const event = {
+        key: keySocket,
+        server: "1v1_classic",
+        type: "join",
+        answer: "no",
+        id: playerStats.id,
+        blacklist: playerStats.blacklist, // mettre les id au lieu des noms
+        private: "join",
+        invited_by: playerId,
+        payload: {}
+    };
+    listener.send(JSON.stringify(event));
+}
+
+export function socketRefuseDuelInvited(playerId)
+{
+    const event = {
+        key: keySocket,
+        server: "1v1_classic",
+        type: "join",
+        answer: "no",
+        id: playerStats.id,
+        blacklist: playerStats.blacklist, // mettre les id au lieu des noms
+        private: "join",
+        invited_by: playerId,
+        payload: {}
     };
     listener.send(JSON.stringify(event));
 }
@@ -290,7 +323,8 @@ export function socketCreateDuelInvit(targetMsg) {
                     blacklist: playerStats.blacklist,
                     private: "invite",
                     invited: target.id,
-                    invited_by: playerStats.id
+                    invited_by: playerStats.id,
+                    payload: {}
                 };
                 console.log("Sending an invitation to: " + targetMsg);
                 listener.send(JSON.stringify(event));
@@ -589,14 +623,24 @@ export function addSocketListener()
                 setTimeFromServer(event.timer);
             }
             break;
+        case "invite":
+            getUserById(event.from)
+                .then(playerProfile => {
+                    createInvitationDuel(playerProfile.username, playerProfile.id);
+                })
+                .catch(error => {
+                    console.error("Error fetching user profile:", error);
+                    reject(error); // Reject if an error occurs
+                });
+            break;
         case "wait_start_invited":
-            
+            // console.log("got an invitation: " + data);
             break;
-        case "join":
-            console.log("Invitation percue");
-            if (event.invited === playerStats.id)
-                console.log("Invitation recue");
-            break;
+        // case "join":
+        //     console.log("Invitation percue");
+        //     if (event.invited === playerStats.id)
+        //         console.log("Invitation recue");
+        //     break;
         case "crash":
             console.log(data);
             break;

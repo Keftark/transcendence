@@ -753,3 +753,67 @@ export async function updateLastnameInDatabase(newLastname) {
         console.error('Error:', error);
     }
 }
+
+export async function sendTournament(names)
+{
+    // c'est un test !
+    const data = {
+        players: names,
+        winner: "winner"
+    };
+
+    // console.log(data);
+    try
+    {
+        const response = await fetch('api/matchs/get_tournaments', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken(),
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok)
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        const responseData = await response.json();
+
+        if (responseData.success)
+            return true;
+        else {
+            console.error('Registration error:', responseData.error);
+            return false;
+        }
+    } catch (error) {
+        console.error('Error sending data to backend:', error);
+        return false;
+    }
+}
+
+// export async function getTournaments()
+// {
+//     try
+//     {
+//         const response = await fetch('api/matchs/get_tournaments', {
+//             method: 'GET',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//                 'X-CSRFToken': getCSRFToken(),
+//             }
+//         });
+
+//         if (!response.ok)
+//             throw new Error(`HTTP error! Status: ${response.status}`);
+//         const responseData = await response.json();
+
+//         if (responseData.success)
+//             return responseData;
+//         else {
+//             console.error('Registration error:', responseData.error);
+//             return null;
+//         }
+//     } catch (error) {
+//         console.error('Error sending data to backend:', error);
+//         return null;
+//     }
+// }

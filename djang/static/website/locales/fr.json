@@ -75,6 +75,7 @@
     "rulesPaddleText": "Raquette",
     "choosePaddleText": "Choisissez votre raquette",
     "rulesTimerText": "Temps max. (en secondes) : ",
+    "noMaxTime": "Pas de timer",
     "rulesMaxPlayersText": "Nombre de joueurs : ",
     "players": "Joueurs",
     "cameraTypeHeader": "Caméra : ",
@@ -140,6 +141,7 @@
     "enterNewLastname": "Entrez votre nouveau nom",
     "history": "Historique",
     "tournamentnb": "Tournoi #",
+    "refuse": "Refuser",
 
     "entityDontLeaveMe": "Non... S'il vous plaît... J'ai besoin de vous...",
     "entityRegister": "Ah ! Un nouveau joueur... C'est délicieux !",

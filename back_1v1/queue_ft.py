@@ -44,13 +44,13 @@ class Queue:
                 elif message["private"] == "join":
                     _id = (int)(message["invited_by"])
                     for private in self._private:
-                        if private.player_1_paddle.id == _id:
+                        if private.paddle_1.id == _id:
                             private.join_player()
                             break
                 elif message["private"] == "refuse":
                     _id = (int)(message["invited_by"])
                     for private in self._private:
-                        if private.player_1_paddle.id == _id:
+                        if private.paddle_1.id == _id:
                             self._message_queue.append(self.dump_refusal(_id))
                             self._private.remove(private)
                             break
@@ -123,10 +123,12 @@ class Queue:
                             self._match_list.append(Match(self._room_id, p1.id, p2.id))
             for private in self._private:
                 private.tick()
+                self._message_queue.extend(private.formatted_queue)
+                private.formatted_queue.clear()
                 if private.needs_to_wait is False:
                     self._private.remove(private)
                     self.match_list.append(private)
-                self._message_queue.extend(private.formatted_queue)
+                
             await self.notify_waiting()
 
     @property
