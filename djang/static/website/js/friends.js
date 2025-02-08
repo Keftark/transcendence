@@ -1,4 +1,4 @@
-import { blockUserRequest, getBlockedList, getFriendsList, unblockUserRequest } from "./apiFunctions.js";
+import { blockUserRequest, getAllUserStatuses, getBlockedList, getFriendsList, getUserStatus, unblockUserRequest } from "./apiFunctions.js";
 import { askAddFriendFunction, hideMessagesFrom, openNameContextMenu, restoreMessagesFromUser, sendSystemMessage } from "./chat.js";
 import { playerStats } from "./playerManager.js";
 import { getTranslation } from "./translate.js";
@@ -20,14 +20,26 @@ friendsHeaderButton.addEventListener('click', function() {
         showBlocked();
 });
 
-let loopFunction;
+let loopFunction = null;
 
+ // should be friends and not all users! 
+ // if each player checks all users if the game is big, it will be costly!
 function checkStatusFriends()
 {
-    // faire un loop et recuperer pour chaque user son status
-
-    // ou faire une fonction qui recupere les friends et retourne 
-    // leurs status en array, qu'on applique a chaque div de la liste d'amis
+    getAllUserStatuses()
+    .then((data) => {
+        for (const child of friendsList.children) {
+            const name = child.getAttribute('name');
+            const user = data.statuses.find(user => user.user__username === name)
+            if (user)
+            {
+                setPlayerStatusImg(user.status, child.lastChild);
+            }
+          }
+    })
+    .catch((error) => {
+        console.error("Failed to get user statuses:", error);
+    });
 }
 
 export function showFriendsBox(isTrue)
@@ -35,11 +47,28 @@ export function showFriendsBox(isTrue)
     friendsBox.style.display = isTrue ? 'flex' : 'none'; 
 }
 
+function startCheckingFriendsStatuses()
+{
+    if (loopFunction === null)
+    {
+        checkStatusFriends();
+        loopFunction = setInterval(checkStatusFriends, 3000);
+    }
+}
+
+function stopCheckingFriendsStatuses()
+{
+    if (loopFunction != null)
+    {
+        clearInterval(loopFunction);
+        loopFunction = null;
+    }
+}
+
 function showFriends()
 {
     isFriendOpen = true;
-    if (loopFunction != null)
-        loopFunction = setInterval(checkStatusFriends, 5000);
+    startCheckingFriendsStatuses();
     friendsHeaderButton.innerText = getTranslation('friendsHeader');
     blockedList.style.display = 'none';
     friendsList.style.display = 'flex';
@@ -48,11 +77,7 @@ function showFriends()
 function showBlocked()
 {
     isFriendOpen = false;
-    if (loopFunction != null)
-    {
-        clearInterval(loopFunction);
-        loopFunction = null;
-    }
+    stopCheckingFriendsStatuses();
     friendsHeaderButton.innerText = getTranslation('blocked');
     friendsList.style.display = 'none';
     blockedList.style.display = 'flex';
@@ -61,8 +86,7 @@ function showBlocked()
 function openFriends()
 {
     isFriendOpen = true;
-    if (loopFunction != null)
-        loopFunction = setInterval(checkStatusFriends, 5000);
+    startCheckingFriendsStatuses();
     friendsBox.classList.remove('shrunk');
     friendsBox.classList.remove('hide-elements');
     friendsBox.classList.add('expanded');
@@ -72,11 +96,7 @@ function openFriends()
 function closeFriends()
 {
     isFriendOpen = false;
-    if (loopFunction != null)
-    {
-        clearInterval(loopFunction);
-        loopFunction = null;
-    }
+    stopCheckingFriendsStatuses();
     friendsBox.classList.remove('expanded');
     friendsBox.classList.add('shrunk');
     toggleIconFriends.src = 'static/icons/friendsIcon.webp';
@@ -162,14 +182,14 @@ function getPlayerStatus(userName)
     return (0);
 }
 
-function setPlayerStatusImg(statusNbr, divStatus)
+function setPlayerStatusImg(status, divStatus)
 {
-    if (statusNbr === 0)
+    if (status === "offline")
         addOffline(divStatus);
-    else if (statusNbr === 1)
+    else if (status === "online")
         friendIsOnline(divStatus);
-    else if (statusNbr === 2)
-        addOffline(divStatus);
+    else if (status === "busy")
+        addBusy(divStatus);
 }
 
 // check avant si le joueur existe dans la bdd. si non, on n'ajoute rien
@@ -188,10 +208,13 @@ export function addFriendDiv(userName)
     const imgStatus = document.createElement('img');
     imgStatus.src = 'static/icons/statusPlayer.webp'
     imgStatus.classList.add('friendStatus');
-    let playerStatus = getPlayerStatus();
-    setPlayerStatusImg(playerStatus, imgStatus);
     newDiv.appendChild(imgStatus);
     friendsList.appendChild(newDiv);
+    getUserStatus(userName)
+    .then((data) =>
+    {
+        setPlayerStatusImg(data.status, imgStatus);
+    })
 }
 
 function acceptFriend(friendDiv, playerName)

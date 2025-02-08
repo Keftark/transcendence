@@ -36,6 +36,7 @@ urlpatterns = [
     path('get-user/<str:username>/', user.get_user_by_name, name='get-user-by-name'),
     path('user/<int:user_id>/', user.get_user_by_id, name='user_detail'),
     path('user/del_user', user.del_user, name='del_user'),
+    path('get_all_statuses', user.get_all_statuses, name='get_all_statuses'),
     path('username/<int:user_id>/', user.get_username, name='user_name_only'),
     path("me", MyAccountViewSet.as_view({'get': 'retrieve'}), name="my_account_page"), #My Account page
     path("update-profile", UpdateProfileView.as_view(), name="update-user"), # update user

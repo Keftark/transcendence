@@ -24,6 +24,7 @@ from rest_framework.generics import UpdateAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from dotenv import load_dotenv
+from django.db.models import Q, Case, When, Value
 
 
 
@@ -463,6 +464,29 @@ def change_lastname(request):
             request.user.last_name = new_lastname
             request.user.save()
             return JsonResponse({"success": True, "message": "Last name updated successfully!"}, status=200)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"success": False, "errors": ["Invalid JSON data."]}, status=400)
+
+    return JsonResponse({"success": False, "errors": ["Invalid request method."]}, status=405)
+
+def get_all_statuses(request):
+    if request.method == 'GET':
+        try:
+            statuses = list(
+                AccountModel.objects.filter(Q(status__in=["online", "busy", "offline"]))
+                .annotate(
+                    sort_order=Case(
+                        When(status="online", then=Value(1)),
+                        When(status="busy", then=Value(2)),
+                        When(status="offline", then=Value(3)),
+                        default=Value(4),
+                    )
+                )
+                .order_by('sort_order')
+                .values('user__username', 'status')
+            )
+            return JsonResponse({"success": True, 'statuses': statuses}, status=200)
 
         except json.JSONDecodeError:
             return JsonResponse({"success": False, "errors": ["Invalid JSON data."]}, status=400)

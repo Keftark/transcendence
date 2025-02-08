@@ -368,6 +368,26 @@ export async function setUserStatus(newStatus) {
     }
 }
 
+export async function getAllUserStatuses() {
+    try {
+        const response = await fetch(`/get_all_statuses`, {
+            method: 'GET',
+            headers: {
+                'X-CSRFToken': getCSRFToken()
+            }
+        });
+        if (!response.ok)
+            throw new Error(`Failed to fetch user statuses: ${response.status} ${response.statusText}`);
+        const userData = await response.json();
+        // console.log("User data:\n" + JSON.stringify(userData));
+        if (userData.error)
+            console.error(userData.error);
+        return userData;
+    } catch (error) {
+        console.error("An error occurred while fetching the user details:", error);
+    }
+}
+
 export async function getFriendsList() {
     try {
         const response = await fetch(`/friends`, {
