@@ -54,7 +54,6 @@ export function getDuelTargetPlayer()
 
 export function setDuelTargetPlayer(playerNick)
 {
-    console.log("Setting the player to invite: " + playerNick);
     duelTargetPlayer = playerNick;
 }
 

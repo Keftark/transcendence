@@ -308,7 +308,6 @@ export function socketSendMessage(messageContent)
 }
 
 export function socketCreateDuelInvit(targetMsg) {
-    console.log("Trying to send an invitation to: " + targetMsg);
     if (!listener || listener.readyState !== WebSocket.OPEN)
         return;
     if (targetMsg != "")
@@ -327,7 +326,6 @@ export function socketCreateDuelInvit(targetMsg) {
                     invited_by: playerStats.id,
                     payload: {}
                 };
-                console.log("Sending an invitation to: " + targetMsg);
                 listener.send(JSON.stringify(event));
             })
             .catch((error) => {
@@ -478,7 +476,7 @@ export function socketUnspectateMatch()
 export function addSocketListener()
 {
     listener.addEventListener("message", ({ data }) => {
-        console.log(data);
+        // console.log(data);
         let event;
         try {
             event = JSON.parse(data);

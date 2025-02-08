@@ -112,7 +112,7 @@ async def private_handler(event):
     """
     _id = int(event["id"])
     target = int(event["target"])
-    if is_user(id) is True and is_user(target) is True:
+    if is_user(_id) is True and is_user(target) is True:
         for user in Users:
             if user.id == _id:
                 for targ in Users:
@@ -153,7 +153,7 @@ async def friends_handler(event):
     """
     _id = int(event["id"])
     target = int(event["target"])
-    if is_user(id) is True and is_user(target) is True:
+    if is_user(_id) is True and is_user(target) is True:
         for user in Users:
             if user.id == _id:
                 for targ in Users:
@@ -175,7 +175,7 @@ async def chat_handler(event):
     """
     if event["type"] == "join_chat":
         _id = int(event["id"])
-        if is_user(id) is False:
+        if is_user(_id) is False:
             sock = UserSocket(_id, event["name"])
             Users.append(sock)
             logger.log("User with ID :: " + str(_id) + " has joined the chat.", 1)

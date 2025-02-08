@@ -1,4 +1,4 @@
-import { getUserByName } from "./apiFunctions.js";
+import { getUserByName, getUserStatus } from "./apiFunctions.js";
 import { askAddFriendFunction, clickBlockUser, helpFunctionDisplay, receiveMessage, removeFriendFunction, sendPubSticker, sendSystemMessage } from "./chat.js";
 import { setDuelTargetPlayer } from "./duelPanel.js";
 import { removeBlockedUser } from "./friends.js";
@@ -17,6 +17,7 @@ export const cheatCodes =
     "/BALLSPEED" : changeBallSpeed,
     "/PADDLESIZE" : changePaddlesSize,
     "/GBP" : getBallPos,
+    "/ID" : getId,
     "/DUEL" : sendInvitDuel,
     "/MSG" : sendPrivateMessage,
     "/BLOCK" : blockPlayer,
@@ -38,6 +39,11 @@ export const cheatCodes =
 function helpFunction()
 {
     helpFunctionDisplay();
+}
+
+function getId()
+{
+    sendSystemMessage("yourId", playerStats.id, true);
 }
 
 function changeBallSize(newSize)
@@ -83,19 +89,22 @@ function sendInvitDuel(playerInvit = "")
         sendSystemMessage("duelWrongParameter", "");
         return;
     }
-    getUserByName(playerInvit)
+    getUserStatus(playerInvit)
     .then((response) => {
-        console.log(response);
+        if (response.success === false)
+        {
+            sendSystemMessage("userNotFound", playerInvit, true);
+            return;
+        }
         if (response.status === "offline")
         {
             sendSystemMessage("userOffline", playerInvit, true);
             return;
         }
-            console.log("Not logged in");
         setDuelTargetPlayer(playerInvit);
         askForDuel(playerInvit);
     })
-    .catch((error) => {
+    .catch(() => {
         sendSystemMessage("userNotFound", playerInvit, true);
     });
 }

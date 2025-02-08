@@ -362,6 +362,7 @@ function createMessageElement(name, messageText, isPrivate, isASticker) {
     messageContent.classList.add('message');
     if (isASticker)
     {
+        messageContainer.style.color = playerStats.colors;
         messageContainer.classList.add('message-container-sticker');
     }
     if (isASticker && !isPrivate)

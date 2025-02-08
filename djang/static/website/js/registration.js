@@ -212,6 +212,7 @@ export async function welcomeBackUser()
 
 export function logInUserUI()
 {
+    // console.log("Id: " + playerStats.id);
     openSocket();
     replaceLogInButtons();
     removeDisableButtonEffect(profileButton);

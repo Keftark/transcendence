@@ -298,7 +298,7 @@ function setOrthographicCamera()
 
 function setPerspectiveCamera()
 {
-    let camera = new THREE.PerspectiveCamera(75, SCREEN_WIDTH / SCREEN_HEIGHT, 0.1, 1000);
+    let camera = new THREE.PerspectiveCamera(85, SCREEN_WIDTH / SCREEN_HEIGHT, 0.1, 1000);
     return camera;
 }
 

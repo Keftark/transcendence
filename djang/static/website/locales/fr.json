@@ -144,6 +144,7 @@
     "userNotFound": "Utilisateur inconnu : ",
     "duelWrongParameter": "Mauvaise syntaxe : /duel &lt;nom&gt;",
     "userOffline": "Utilisateur hors ligne : ",
+    "yourId": "Votre id est : ",
 
     "entityDontLeaveMe": "Non... S'il vous plaît... J'ai besoin de vous...",
     "entityRegister": "Ah ! Un nouveau joueur... C'est délicieux !",

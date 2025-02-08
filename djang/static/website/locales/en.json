@@ -144,6 +144,7 @@
     "userNotFound": "User not found: ",
     "duelWrongParameter": "Wrong command syntax: /duel &lt;name&gt;",
     "userOffline": "User is offline: ",
+    "yourId": "Your id is: ",
     
     
     "entityDontLeaveMe": "No... Please... I need you...",
