@@ -151,6 +151,7 @@ export async function getUserById(userId) {
         const userData = await response.json();
         if (userData.error)
             console.error(userData.error);
+        console.log("Got user: " + userData);
         return userData;
     } catch (error) {
         console.error("An error occurred while fetching the user details:", error);

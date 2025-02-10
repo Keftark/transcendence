@@ -5,6 +5,7 @@ import { closeDuelPanel, matchFound, setPlayersControllers, updateReadyButtons }
 import { addReadyPlayer, doUpdateBallLight, getBallPosition, getPlayerSideById, removeReadyPlayers, resetScreenFunction, spawnSparksFunction, startScreenShake } from "./levelLocal.js";
 import { getLevelState, socket, listener } from "./main.js";
 import { getListMatchs, setSelectedMode } from "./modesSelection.js";
+import { matchFoundMulti, setPlayersControllersMulti, updateReadyButtonsMulti } from "./multiPanel.js";
 import { navigateTo } from "./pages.js";
 import { playerStats } from "./playerManager.js";
 import { setPlayersPositions } from "./playerMovement.js";
@@ -476,7 +477,7 @@ export function socketUnspectateMatch()
 export function addSocketListener()
 {
     listener.addEventListener("message", ({ data }) => {
-        console.log(data);
+        // console.log(data);
         let event;
         try {
             event = JSON.parse(data);
@@ -527,17 +528,20 @@ export function addSocketListener()
             // console.log("Exit queue");
             break;
         case "wait_start":
-            updateReadyButtons(event.p1_state, event.p2_state);
+            if (getLevelState() === LevelMode.DUEL)
+                updateReadyButtons(event.p1_state, event.p2_state);
+            else
+                updateReadyButtonsMulti(event.p1_state, event.p2_state, event.p3_state, event.p4_state);
             break;
         case "wait_ready":
             if (event.p1_state)
-            {
                 addReadyPlayer(1);
-            }
             else if (event.p2_state)
-            {
                 addReadyPlayer(2);
-            }
+            else if (event.p3_state)
+                addReadyPlayer(3);
+            else if (event.p4_state)
+                addReadyPlayer(4);
             break;
         case "match_init":
             id_room = event.room_id;
@@ -552,7 +556,7 @@ export function addSocketListener()
             else
             {
                 setTimeout(() => {
-                    matchFound(event.id_p1, event.id_p2, event.id_p3, event.id_p4);
+                    matchFoundMulti(event.id_p1, event.id_p2, event.id_p3, event.id_p4);
                 }, 1000);
             }
             break;
@@ -567,7 +571,10 @@ export function addSocketListener()
                 break;
             matchAlreadyStarted = true;
             // console.log(data);
-            setPlayersControllers();
+            if (getLevelState() === LevelMode.DUEL)
+                setPlayersControllers();
+            else
+                setPlayersControllersMulti();
             break;
         case "bounce_player":
             { if (event.room_id != playerStats.room_id)

@@ -56,7 +56,7 @@ class Logger:
         self._start = time.time()
         self._lock = threading.Lock()
 
-    def format(self, val, max_len = 12, sep = " "):
+    def format(self, val, max_len = 14, sep = " "):
         """Formats the time value.
 
         Args:
@@ -78,7 +78,7 @@ class Logger:
         while len(string) < max_len:
             string = sep + string
         if len(string) > max_len:
-            string = "..." + string[len(string) - 7:]
+            string = "..." + string[len(string) - 11:]
         return str(string)
 
     def format_time(self, val):
@@ -96,16 +96,23 @@ class Logger:
         tim -= seconds
         tim /= 60
         tim = int(tim)
+        if seconds < 10:
+            seconds = "0" + str(seconds)
+        else:
+            seconds = str(seconds)
         if tim <= 0:
-            return str(seconds)
+            return seconds
         mins = tim % 60
         tim -= mins
         tim /= 60
         tim = int(tim)
-        mins = str(mins) + "'"
+        if mins < 10:
+            mins = "0" + str(mins) + CWHITE + "m " + CBEIGE2
+        else:
+            mins = str(mins) + CWHITE + "m " + CBEIGE2
         if tim <= 0:
             return mins + str(seconds)
-        return str(tim) + "''" + mins + str(seconds)
+        return str(tim) + CWHITE + "h " + CBEIGE2 + mins + str(seconds)
 
     def tick(self):
         """Creates a string object containing the formated timer.

@@ -69,6 +69,8 @@ const controlsRightImg = document.getElementById('controlsP2LocalImg');
 const controlsP2 = document.getElementById('controlsP2');
 const player1Name = document.getElementById('playername-left');
 const player2Name = document.getElementById('playername-right');
+const player3Name = document.getElementById('playername-right');
+const player4Name = document.getElementById('playername-right');
 let currentLevelMode;
 let isCameraAnimationComplete = false;
 let cameraRatioWidth = 0;
@@ -85,6 +87,8 @@ let cameraZoomSpeed = 2; // Set the zoom speed
 let playersId = [0, 0, 0, 0];
 let playerProfile1;
 let playerProfile2;
+let playerProfile3;
+let playerProfile4;
 
 export function getCamera()
 {
@@ -96,12 +100,12 @@ export function getRenderer()
     return renderer;
 }
 
-export function setPlayersIds(player1Id, player2Id)
+export function setPlayersIds(player1Id, player2Id, player3Id = 0, player4Id = 0)
 {
     playersId[0] = player1Id;
     playersId[1] = player2Id;
-    playersId[2] = 0;
-    playersId[3] = 0;
+    playersId[2] = player3Id;
+    playersId[3] = player4Id;
 }
 
 export function getPlayerPosition(playerNbr)
@@ -185,6 +189,16 @@ export function addReadyPlayer(playerNbr)
         player2Ready = true;
         addLightPlayerReady(player2, true);
     }
+    else if (playerNbr === 3 && player3Ready === false)
+    {
+        player3Ready = true;
+        addLightPlayerReady(player3, true);
+    }
+    else if (playerNbr === 4 && player4Ready === false)
+    {
+        player4Ready = true;
+        addLightPlayerReady(player4, true);
+    }
 }
 
 export function removeReadyPlayers()
@@ -224,8 +238,8 @@ export function unloadLevel()
     isInGame = false;
     setAccessAllDuelsInChat(true);
     playerStats.playerController = 1;
-    playerProfile1 = null;
-    playerProfile2 = null;
+    playersId[3] = playersId[2] = playersId[1] = playersId[0] = 0;
+    playerProfile4 = playerProfile3 = playerProfile2 = playerProfile1 = null;
     setMatchAlreadyStarted(false);
     window.removeEventListener('wheel', camZoomEvent);
 }
@@ -414,6 +428,24 @@ export function passInfosPlayersToLevel(idP1, idP2)
         });
 }
 
+export function passInfosPlayersToLevelMulti(idP1, idP2, idP3, idP4)
+{
+    return Promise.all([getUserById(idP1), getUserById(idP2), getUserById(idP3), getUserById(idP4), getUserPaddleSkin(id_players[0]), getUserPaddleSkin(id_players[1]), getUserPaddleSkin(id_players[2]), getUserPaddleSkin(id_players[3])])
+        .then(([profile1, profile2, profile3, profile4, textureP1, textureP2, textureP3, textureP4]) => {
+            playerProfile1 = profile1;
+            playerProfile2 = profile2;
+            playerProfile3 = profile3;
+            playerProfile4 = profile4;
+            setPlayersIds(idP1, idP2, idP3, idP4);
+            setTextures(textureP1, textureP2, textureP3, textureP4);
+            return setPlayerController(idP1, idP2, idP3, idP4);
+        })
+        .catch((error) => {
+            console.error("Error in passInfosPlayersToLevel:", error);
+            throw error;
+        });
+}
+
 function setPlayerNames()
 {
     if (currentLevelMode === LevelMode.TOURNAMENT)
@@ -426,6 +458,11 @@ function setPlayerNames()
     {
         player1Name.innerText = playerProfile1.username;
         player2Name.innerText = playerProfile2.username;
+        if (currentLevelMode === LevelMode.MULTI)
+        {
+            player3Name.innerText = playerProfile3.username;
+            player4Name.innerText = playerProfile4.username;
+        }
     }
     else
     {
@@ -784,6 +821,11 @@ export function StartLevel(levelMode)
             {
                 isBallMoving = true;
                 socketSendPlayerReady();
+            }
+            else if (currentLevelMode === LevelMode.MULTI)
+            {
+                isBallMoving = true;
+                socketSendPlayerReady("2v2_classic");
             }
             else
             {

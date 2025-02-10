@@ -25,7 +25,7 @@ class Match:
             self._timer_count = 0
             self._quitter = 0
             self._max_time_seconds = -1
-            self._board = Board(50, 80)
+            self._board = Board(25, 40)
             self._paddle_r1 = Paddle(p1, self._board.min_x + 1, 12, \
                                         self._board.max_y, 2)
             self._paddle_r2 = Paddle(p2, self._board.max_x - 2, 12, \

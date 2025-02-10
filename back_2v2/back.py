@@ -4,7 +4,6 @@
 import asyncio
 import time
 import json
-import sys
 import signal
 import ssl
 import pathlib
@@ -389,49 +388,33 @@ async def connection_handler():
                 try:
                     await Sockets.CENTRAL_SOCKET.send(json.dumps(pong()))
                 except Exception as e:
-                    logger.log("", 2, e)
+                    logger.log("Error while pinging central server", 2, e)
         await asyncio.sleep(5)
 
-
-async def shutdown():
-    """Gracefully shuts down the server."""
-    print("Shutting down server...")
-
-    Sockets.STOP_FLAG = True
-    shutdown_event.set()
-    loops = asyncio.get_running_loop()
-    tasks = [t for t in asyncio.all_tasks(loops) if t is not asyncio.current_task()]
-    for task in tasks:
-        task.cancel()
-    await asyncio.gather(*tasks, return_exceptions=True)
-    loops.stop()
-
-def signal_handler(signal, frame):
+def signal_handler(sig, frame):
     """Handles signals.
 
     Args:
-        signal (_type_): _description_
+        sig (_type_): _description_
         frame (_type_): _description_
     """
-    print("KILL")
+    logger.log(f"Received signal {sig} with frame {frame}, shutting down...", 0)
     loops = asyncio.get_event_loop()
-    if Sockets.CENTRAL_SOCKET is not None:
-        Sockets.CENTRAL_SOCKET.close()
-    for ws in ws_list:
-        ws.close()
-    if loops.is_running():
-        asyncio.create_task(shutdown())
-    sys.exit(0)
+    tasks = [t for t in asyncio.all_tasks(loops) if not t.done()]
+    for task in tasks:
+        task.cancel()
+    loops.stop()
 
 async def main():
     """Main async function that starts all tasks."""
     logger.log("Server launched.", 0)
-
-    server_task = asyncio.create_task(server_listener())
-    ticker_task = asyncio.create_task(loop())
-    connection_task = asyncio.create_task(connection_handler())
-
-    await asyncio.gather(server_task, ticker_task, connection_task)
+    try:
+        server_task = asyncio.create_task(server_listener())
+        ticker_task = asyncio.create_task(loop())
+        connection_task = asyncio.create_task(connection_handler())
+        await asyncio.gather(server_task, ticker_task, connection_task)
+    except asyncio.CancelledError:
+        logger.log("Server shutdown initiated.", 0)
 
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
