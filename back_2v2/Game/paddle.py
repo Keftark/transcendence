@@ -11,7 +11,7 @@ class Paddle(Bouncable):
     """A paddle, the player character.
     """
     def __init__(self, _id, x, _len, board_top_y, board_bottom_y):
-        super().__init__(x, 0, 0.5, _len)
+        super().__init__(x, (board_top_y + board_bottom_y) / 2, 0.5, _len)
         self._id = _id
         self._speed = DEFAULT_SPEED
         self._y_max = board_top_y
