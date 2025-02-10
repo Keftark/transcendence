@@ -4,7 +4,7 @@ import math
 import random
 
 MAX_BOUNCE_ANGLE = math.radians(60)
-MAX_SPEED = 30
+MAX_SPEED = 5
 PRECISION = 5
 
 class Ball:

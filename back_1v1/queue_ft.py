@@ -71,7 +71,7 @@ class Queue:
             if us.id == _id:
                 self._liste.remove(us)
 
-    async def notify_waiting(self):
+    def notify_waiting(self):
         """Generates the message queue.
         """
         for user in self._liste:
@@ -105,7 +105,7 @@ class Queue:
         }
         return event
 
-    async def tick(self):
+    def tick(self):
         """Ticks the queue, creating matches if two compatible
         players are waiting.
         """
@@ -128,8 +128,7 @@ class Queue:
                 if private.needs_to_wait is False:
                     self._private.remove(private)
                     self.match_list.append(private)
-                
-            await self.notify_waiting()
+            self.notify_waiting()
 
     @property
     def liste(self):

@@ -2,7 +2,6 @@
 #!/usr/bin/env python
 
 import asyncio
-import threading
 import time
 import json
 import sys
@@ -21,9 +20,6 @@ SERVER_PORT         = os.environ.get("PORT_2V2_CLASSIC", 8001)
 CENTRAL_PORT        = os.environ.get("PORT_CENTRAL", 7777)
 DEBUG               = (bool)(os.environ.get("DEBUG", False))
 
-#import logging
-#logging.basicConfig(level=logging.DEBUG)
-
 @dataclass
 class SocketData:
     """Dataclass for sockets.
@@ -36,7 +32,6 @@ Sockets = SocketData
 logger = Logger()
 queue = Queue(logger)
 matchs = []
-lock = threading.Lock()
 lock_a = asyncio.Lock()
 message_queue = []
 parse_queue = []
@@ -224,7 +219,7 @@ async def send_to_central():
     """Sends all the data from the message queue to the central
     Server.
     """
-    with lock:
+    async with lock_a:
         for message in message_queue.copy():
             if Sockets.CENTRAL_SOCKET is not None:
                 try:
@@ -252,13 +247,13 @@ def extend_to_queue(data):
     """
     message_queue.extend(data)
 
-def add_to_parse(data):
+async def add_to_parse(data):
     """_summary_
 
     Args:
         data (_type_): _description_
     """
-    with lock:
+    async with lock_a:
         parse_queue.append(data)
 
 async def loop():
@@ -269,7 +264,7 @@ async def loop():
     """
     logger.log("Ticker thread launched.", 0)
     while Sockets.STOP_FLAG is False:
-        parser()
+        await parser()
         #update queue
         found = await queue.tick()
         for found in queue.match_list:
@@ -299,17 +294,17 @@ async def handler(websocket):
             event = json.loads(message)
             if event["type"] == "ping":
                 pass #on est content on fait rien
-            add_to_parse(message)
+            await add_to_parse(message)
     except Exception as e:
         logger.log("", 2, e)
 
-def parser():
+async def parser():
     """Receives and handle incomming messages from websocket.
 
     Args:
         websocket (WebSocket): The WS to read from.
     """
-    with lock:
+    async with lock_a:
         for message in parse_queue:
             event = json.loads(message)
             if event["type"] == "ping":
@@ -358,7 +353,7 @@ def parser():
                 add_to_queue(dump_error("unknown_command", (int)(event["id"])))
         parse_queue.clear()
 
-async def main():
+async def server_listener():
     """Opens up the server and starts listening on SERVER_PORT (by default 8001)
     """
     logger.log("Listener thread launched.", 0)
@@ -374,7 +369,7 @@ async def connection_handler():
     connected, attempts to connect instead.
     """
     while Sockets.STOP_FLAG is False:
-        with lock:
+        async with lock_a:
             if Sockets.CENTRAL_SOCKET is None:
                 try:
                     logger.log("Attempting connection to central server.", 1)
@@ -392,21 +387,6 @@ async def connection_handler():
                     logger.log("", 2, e)
         await asyncio.sleep(5)
 
-def connection_launcher():
-    """Launches the connection handler as a asyncio task.
-    """
-    asyncio.run(connection_handler())
-
-def server_launcher():
-    """Launches the server handler as a asyncio task.
-    """
-    asyncio.run(main())
-
-def ticker_launcher():
-    """Launches the ticker handler as a asyncio task.
-    """
-    asyncio.run(loop())
-
 def signal_handler(signal, frame):
     """Handles signals.
 
@@ -417,22 +397,22 @@ def signal_handler(signal, frame):
     Sockets.STOP_FLAG = True
     sys.exit(0)
 
+async def main():
+    """Main async function that starts all tasks."""
+    logger.log("Server launched.", 0)
+
+    server_task = asyncio.create_task(server_listener())
+    ticker_task = asyncio.create_task(loop())
+    connection_task = asyncio.create_task(connection_handler())
+
+    await asyncio.gather(server_task, ticker_task, connection_task)
+
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
     logger.log("Server launched.", 0)
     try:
-        ticker = threading.Thread(target=ticker_launcher)
-        server = threading.Thread(target=server_launcher)
-        connex = threading.Thread(target=connection_launcher)
-        ticker.daemon = True
-        server.daemon = True
-        connex.daemon = True
-        ticker.start()
-        server.start()
-        connex.start()
-        ticker.join()
-        server.join()
-        connex.join()
+        asyncio.run(main())
     except Exception as e:
         logger.log("Server exited with manual closure.", 0, e)
+
