@@ -108,8 +108,7 @@ export function onOpenDuel()
 
 export function onCloseDuel()
 {
-    idP1 = -1;
-    idP2 = -1;
+    idP2 = idP1 = -1;
     resetDuelPanel();
 
     // document.getElementById('duelPanel').style.display = 'none'; // inutile ??
@@ -212,24 +211,18 @@ export function startWaitingForPlayer()
 
 async function displayUIPlayer(player1, player2)
 {
-    getLoggedInUser().then(user => {
-        if (user) {
-            if (user.id === player1)
-            {
-                addDisableButtonEffect(player2ReadyButton);
-                player1Duel.classList.add('selectedPlayer');
-                player1ReadyButton.focus();
-            }
-            else if (user.id === player2)
-            {
-                addDisableButtonEffect(player1ReadyButton);
-                player2Duel.classList.add('selectedPlayer');
-                player2ReadyButton.focus();
-            }
-        } else {
-            console.error("No user is currently logged in or an error occurred.");
-        }
-    });
+    if (playerStats.id === player1)
+    {
+        addDisableButtonEffect(player2ReadyButton);
+        player1Duel.classList.add('selectedPlayer');
+        player1ReadyButton.focus();
+    }
+    else if (playerStats.id === player2)
+    {
+        addDisableButtonEffect(player1ReadyButton);
+        player2Duel.classList.add('selectedPlayer');
+        player2ReadyButton.focus();
+    }
 }
 
 export function setPlayersControllers()
@@ -251,10 +244,8 @@ export function setPlayersControllers()
 export function matchFound(player1, player2)
 {
     deleteDuelInChat();
-    idP1 = player1;
-    idP2 = player2;
-    id_players[0] = player1;
-    id_players[1] = player2;
+    id_players[0] = idP1 = player1;
+    id_players[1] = idP2 = player2;
     displayUIPlayer(player1, player2);
     Promise.all([
         fillInfosPlayer(1, player1),

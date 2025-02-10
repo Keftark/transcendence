@@ -111,17 +111,30 @@ export function updatePlayerModel(oldPlayer) {
 
 let cylinderTexture1 = null;
 let cylinderTexture2 = null;
+let cylinderTexture3 = null;
+let cylinderTexture4 = null;
 
 export function unsetTextures()
 {
     cylinderTexture1 = null;
     cylinderTexture2 = null;
+    cylinderTexture3 = null;
+    cylinderTexture4 = null;
 }
 
-export function setTextures(p1, p2)
+export function setTextures(p1, p2, p3 = -1, p4 = -1)
 {
     cylinderTexture1 = `static/mat/player${p1.preferredPaddle}.png`;
     cylinderTexture2 = `static/mat/player${p2.preferredPaddle}.png`;
+    if (p3 > -1)
+    {
+        console.log("Setting paddles");
+        console.log("Setting paddle from p3: " + p3.preferredPaddle);
+        cylinderTexture3 = `static/mat/player${p3.preferredPaddle}.png`;
+        console.log("Setting paddle from p4: " + p4.preferredPaddle);
+        cylinderTexture4 = `static/mat/player${p4.preferredPaddle}.png`;
+    }
+
 }
 
 export function createPlayers(scene, textureLoader)
@@ -152,9 +165,12 @@ export function createPlayers(scene, textureLoader)
     let player4 = null;
     if (levelState === LevelMode.MULTI)
     {
+        const tex3 = textureLoader.load(cylinderTexture3);
+        const tex4 = textureLoader.load(cylinderTexture4);
+        tex4.colorSpace = tex3.colorSpace = THREE.SRGBColorSpace;
         // TODO recuperer les paddle skins des joueurs 3 et 4 pour appliquer les textures
-        const material3 = new THREE.MeshStandardMaterial({ map: cylinderTexture1, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });
-        const material4 = new THREE.MeshStandardMaterial({ map: cylinderTexture1, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });
+        const material3 = new THREE.MeshStandardMaterial({ map: tex3, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });
+        const material4 = new THREE.MeshStandardMaterial({ map: tex4, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });
         player3 = new THREE.Mesh(geometry, material3);
         player3.add(createPlayerBoostModel(textureLoader));
         scene.add(player3);

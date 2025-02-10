@@ -324,7 +324,7 @@ export function createBall(scene, callBack)
     {
         if (currentLevelMode === LevelMode.LOCAL || currentLevelMode === LevelMode.ADVENTURE || currentLevelMode === LevelMode.TOURNAMENT)
             moveBall(player1, player2);
-        else if (currentLevelMode === LevelMode.ONLINE)
+        else if (currentLevelMode === LevelMode.ONLINE || currentLevelMode === LevelMode.MULTI)
             setBallPosition(ballPosition.x, ballPosition.y);
         pointLight.position.copy(ball.position);
         rotateBall();

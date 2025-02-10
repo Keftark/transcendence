@@ -17,12 +17,16 @@ let botTargetPosition = 0;
 const botDelay = 1000;
 let rotationBoost = 0;
 
-export function setPlayerController(id_p1, id_p2)
+export function setPlayerController(id_p1, id_p2, id_p3 = null, id_p4 = null)
 {
     if (playerStats.id === id_p1)
         playerStats.playerController = 1;
     else if (playerStats.id === id_p2)
         playerStats.playerController = 2;
+    else if (id_p3 != null && playerStats.id === id_p3)
+        playerStats.playerController = 3;
+    else if (id_p4 != null && playerStats.id === id_p4)
+        playerStats.playerController = 4;
 }
 
 export function setPlayersPositions(p1Pos, p2Pos)
