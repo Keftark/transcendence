@@ -192,11 +192,11 @@ class Historique2v2ViewSet(ViewSet):
     def get_matchs2v2_history(self, request: HttpRequest, username):
         
         user = get_object_or_404(User, username=username)
-        matchs = Match2v2.objects.filter(Q(player_1=user.accountmodel) | Q(player_2=user.accountmodel))
+        matchs = Match2v2.objects.filter(Q(player_1=user.accountmodel) | Q(player_2=user.accountmodel) | Q(player_3=user.accountmodel) | Q(player_4=user.accountmodel))
 
         matches_data = []
         match_count = matchs.count()
-        wins = matchs.filter(winner=user.accountmodel).count()
+        wins = matchs.filter(winner1=user.accountmodel).count()
         matches_data.append({
             "match_count": match_count,
             "wins": wins
