@@ -122,7 +122,7 @@ class Queue:
                             self.del_from_queue(p3.id)
                             self.del_from_queue(p4.id)
                             text = "Created match room for players " + str(p1.id) + ":" \
-                                + str(p2.id) + " VS " + str(p3.id) + ":" + str(p3.id) \
+                                + str(p2.id) + " VS " + str(p3.id) + ":" + str(p4.id) \
                                 + " with Room ID :" + str(self._room_id)
                             self._logger.log(text, 1)
                             self._match_list.append \

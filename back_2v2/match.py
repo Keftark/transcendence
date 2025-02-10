@@ -13,6 +13,7 @@ class Match:
     """Class to handle matches. Kinda wack
     """
     def __init__(self, _id, p1, p2, p3, p4):
+        print(f"MAKING THE MATCHS FOR {p1}, {p2}, {p3}, {p4}")
         self._room_id = _id
         self._spectators = []
         self._message_queue = []
@@ -47,6 +48,8 @@ class Match:
 
         self._board.place(BrickTriangleUnbreak(), 0, 1)
         self._board.place(BrickTriangleReverseUnbreak(), self._board.max_x - 1, 1)
+
+        print("STARTING THE MATCH")
 
     def load_parameters(self, payload):
         """Loads the custom parameters of the match.

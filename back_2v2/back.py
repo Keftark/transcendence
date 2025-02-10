@@ -33,8 +33,10 @@ logger = Logger()
 queue = Queue(logger)
 matchs = []
 lock_a = asyncio.Lock()
+shutdown_event = asyncio.Event()
 message_queue = []
 parse_queue = []
+ws_list = []
 
 localhost_pem = pathlib.Path("/etc/certs/cponmamju2.fr_key.pem")
 #loads up ssl crap
@@ -289,6 +291,7 @@ async def handler(websocket):
     Args:
         websocket (WebSocket): The WS to read from.
     """
+    ws_list.append(websocket)
     try:
         async for message in websocket:
             event = json.loads(message)
@@ -297,6 +300,8 @@ async def handler(websocket):
             await add_to_parse(message)
     except Exception as e:
         logger.log("", 2, e)
+    finally:
+        ws_list.remove(websocket)
 
 async def parser():
     """Receives and handle incomming messages from websocket.
@@ -359,7 +364,7 @@ async def server_listener():
     logger.log("Listener thread launched.", 0)
     async with serve(handler, "", SERVER_PORT, ping_interval=10,
                         ping_timeout=None, ssl=ssl_context):
-        await asyncio.get_running_loop().create_future()  # run forever
+        await shutdown_event.wait() # run forever
     Sockets.STOP_FLAG = True
 
 async def connection_handler():
@@ -387,6 +392,20 @@ async def connection_handler():
                     logger.log("", 2, e)
         await asyncio.sleep(5)
 
+
+async def shutdown():
+    """Gracefully shuts down the server."""
+    print("Shutting down server...")
+
+    Sockets.STOP_FLAG = True
+    shutdown_event.set()
+    loops = asyncio.get_running_loop()
+    tasks = [t for t in asyncio.all_tasks(loops) if t is not asyncio.current_task()]
+    for task in tasks:
+        task.cancel()
+    await asyncio.gather(*tasks, return_exceptions=True)
+    loops.stop()
+
 def signal_handler(signal, frame):
     """Handles signals.
 
@@ -394,7 +413,14 @@ def signal_handler(signal, frame):
         signal (_type_): _description_
         frame (_type_): _description_
     """
-    Sockets.STOP_FLAG = True
+    print("KILL")
+    loops = asyncio.get_event_loop()
+    if Sockets.CENTRAL_SOCKET is not None:
+        Sockets.CENTRAL_SOCKET.close()
+    for ws in ws_list:
+        ws.close()
+    if loops.is_running():
+        asyncio.create_task(shutdown())
     sys.exit(0)
 
 async def main():
@@ -415,4 +441,3 @@ if __name__ == "__main__":
         asyncio.run(main())
     except Exception as e:
         logger.log("Server exited with manual closure.", 0, e)
-

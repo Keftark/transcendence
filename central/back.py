@@ -289,7 +289,7 @@ async def handle_transfer(event):
             await Sockets.SOCKET_2V2.send(json.dumps(event))
         except Exception as e:
             logger.log("Error while sending to 2v2 Socket", 2, e)
-            Sockets.SOCKET_1V1 = None
+            Sockets.SOCKET_2V2 = None
 
 async def handle_log(websocket, event):
     """Handles a connecting user.
