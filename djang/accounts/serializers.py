@@ -101,7 +101,7 @@ class AccountSerializer(serializers.ModelSerializer):
             return None
 
         return user.accountmodel.description
-    
+
     def get_preferredPaddle(self, obj: AccountModel):
 
         user = self.context.get('user')
