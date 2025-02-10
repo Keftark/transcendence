@@ -134,6 +134,54 @@ def key_check(_id, key):
             return False
     return False
 
+def dump_all_users(me):
+    """Returns a list of all logged in users.
+
+    Args:
+        me (int): id of the user calling the function.
+
+    Returns:
+        dict: dumped data.
+    """
+    event = {
+        "type": "list_all_users",
+        "data": []
+    }
+    for user in userList:
+        if user.id != me:
+            event["data"].append(user.dump_status())
+    return event
+
+def dump_all_friends(me, friends):
+    """Dumps the status of the user's friends.
+
+    Args:
+        me (int): id of the user calling the function.
+        friends (dict): list of int refering to the friends'
+        IDs.
+
+    Returns:
+        dict: dumped list.
+    """
+    event = {
+        "type": "list_all_friends",
+        "id": me,
+        "data": []
+    }
+    for _id in friends:
+        for user in userList:
+            if user.id == int(_id):
+                event["data"].append(user.dump_status())
+                break
+        event["data"].append({
+            "type": "status",
+            "id": int(_id),
+            "game": "offline",
+            "status": "offline",
+            "room": "offline"
+        })
+    return event
+
 async def handler_1v1(event):
     """Handles 1v1 game answers.
 
@@ -216,8 +264,6 @@ async def handle_answers(event):
         event (dict): A list containing the query's data.
     """
     _type = event["type"]
-    if _type != "match_data":
-        print("answers", event)
     _server = event["server"]
     if _server == "1v1_classic":
         await handler_1v1(event)
@@ -256,7 +302,6 @@ async def handle_transfer(event):
     Args:
         event (List): A list containing the query's data.
     """
-    print("Ah ::", event)
     _id = (int)(event["id"])
     _server = event["server"]
 
@@ -375,9 +420,16 @@ async def handle_commands(websocket, event):
         event (List): A list containing the query's data.
     """
     _type = event["type"]
+    _id = event["id"]
 
     if _type == "status":
         await websocket.send(json.dumps(dump_player_status((int)(event["id"]))))
+    if _type == "all_user":
+        await websocket.send(json.dumps(dump_all_users(int(_id))))
+    if _type == "all_friends":
+        await websocket.send(json.dumps(dump_all_friends(int(_id), event["friendlist"])))
+    if _type == "all_blacklist":
+        await websocket.send(json.dumps(dump_all_friends(int(_id), event["blacklist"])))
 
 async def handler(websocket):
     """Handles incomming messages from a websocket

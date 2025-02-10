@@ -88,7 +88,7 @@ class Paddle(Bouncable):
         self._vertical = MOVE_NONE
         self._is_powered_up = False
         self._power = 0
-        self._y = 0
+        self._y = (self._y_max + self.y_min) / 2
 
     def charge_power(self, ball):
         """Transfers the power to the ball if the paddle
