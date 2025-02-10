@@ -377,7 +377,7 @@ def upload_image(request):
 
     else:
         return JsonResponse({'success': False, 'message': 'No image uploaded.'})
-    
+
 def del_user(request):
     try:
         u = request.user
