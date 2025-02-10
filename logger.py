@@ -78,7 +78,7 @@ class Logger:
         while len(string) < max_len:
             string = sep + string
         if len(string) > max_len:
-            string = "..." + string[len(string) - 11:]
+            string = "+" + string[len(string) - (max_len - 1):]
         return str(string)
 
     def format_time(self, val):
@@ -95,7 +95,7 @@ class Logger:
         seconds = round(seconds, 2)
         tim -= seconds
         tim /= 60
-        tim = int(tim)
+        tim = round(tim)
         if seconds < 10:
             seconds = "0" + str(seconds)
         else:
@@ -105,14 +105,35 @@ class Logger:
         mins = tim % 60
         tim -= mins
         tim /= 60
-        tim = int(tim)
+        tim = round(tim)
         if mins < 10:
-            mins = "0" + str(mins) + CWHITE + "m " + CBEIGE2
+            mins = "0" + str(mins) + "m "
         else:
-            mins = str(mins) + CWHITE + "m " + CBEIGE2
+            mins = str(mins) + "m "
         if tim <= 0:
             return mins + str(seconds)
-        return str(tim) + CWHITE + "h " + CBEIGE2 + mins + str(seconds)
+        return str(tim) + "h " + mins + str(seconds)
+
+    def color(self, value):
+        """Genereates a fully formated and colored string.
+
+        Args:
+            value (value): String to color
+
+        Returns:
+            string: colored string
+        """
+        string = self.format(self.format_time(value))
+        point = string.find("+")
+        if point > 0:
+            string = string[:point] + CWHITE + "+" + CBEIGE2 + string[point + 1:]
+        point = string.find("h")
+        if point > 0:
+            string = string[:point] + CWHITE + "h" + CBEIGE2 + string[point + 1:]
+        point = string.find("m")
+        if point > 0:
+            string = string[:point] + CWHITE + "m" + CBEIGE2 + string[point + 1:]
+        return string
 
     def tick(self):
         """Creates a string object containing the formated timer.
@@ -120,8 +141,8 @@ class Logger:
         Returns:
             string: a formatted timer.
         """
-        t = round(time.time() - self._start, 2)
-        return CWHITE + "[" + CBEIGE2 + self.format(self.format_time(t)) + CWHITE + "]"
+        t = round(float(time.time() - self._start), 2)
+        return CWHITE + "[" + CBEIGE2 + self.color(t) + CWHITE + "]"
 
     def warning_level(self, level = 0):
         """Creates a string object containing the level of the log.
