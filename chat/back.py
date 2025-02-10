@@ -2,10 +2,8 @@
 #!/usr/bin/env python
 
 import asyncio
-import sys
 import json
 import signal
-import threading
 import ssl
 import pathlib
 import os
@@ -216,7 +214,7 @@ async def handler(websocket):
     finally:
         SocketData.CENTRAL_SOCKET = None
 
-async def main():
+async def server_listener():
     """Opens up the server and starts listening on SERVER_PORT (by default 7878)
     """
     logger.log("Chat listener launched.", 0)
@@ -247,36 +245,35 @@ async def connection_handler():
             await send_server(pong())
         await asyncio.sleep(5)
 
-def connection_launcher():
-    """Launches the connection handler as a asyncio task.
-    """
-    asyncio.run(connection_handler())
-
-def server_launcher():
-    """Launches the server handler as a asyncio task.
-    """
-    asyncio.run(main())
-
-def signal_handler(signal, frame):
-    """blabla
+def signal_handler(sig, frame):
+    """Handles signals.
 
     Args:
-        signal (_type_): _description_
+        sig (_type_): _description_
         frame (_type_): _description_
     """
-    SocketData.STOP_FLAG = True
-    sys.exit(0)
+    logger.log(f"Received signal {sig} with frame {frame}, shutting down...", 0)
+    loops = asyncio.get_event_loop()
+    tasks = [t for t in asyncio.all_tasks(loops) if not t.done()]
+    for task in tasks:
+        task.cancel()
+    loops.stop()
+
+async def main():
+    """Main async function that starts all tasks."""
+    logger.log("Server launched.", 0)
+    try:
+        server_task = asyncio.create_task(server_listener())
+        connection_task = asyncio.create_task(connection_handler())
+        await asyncio.gather(server_task, connection_task)
+    except asyncio.CancelledError:
+        logger.log("Server shutdown initiated.", 0)
 
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
     logger.log("Server launched.", 0)
     try:
-        ticker = threading.Thread(target=connection_launcher, daemon=True)
-        server = threading.Thread(target=server_launcher, daemon=True)
-        ticker.start()
-        server.start()
-        ticker.join()
-        server.join()
+        asyncio.run(main())
     except Exception as e:
         logger.log("Server exited with manual closure.", 0, e)

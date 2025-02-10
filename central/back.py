@@ -2,7 +2,6 @@
 #!/usr/bin/env python
 
 import asyncio
-import threading
 import time
 import json
 import random
@@ -11,7 +10,6 @@ import signal
 import pathlib
 import ssl
 import os
-import sys
 from signal import SIGPIPE, SIG_DFL
 from dataclasses import dataclass
 from websockets.asyncio.server import serve
@@ -467,8 +465,8 @@ def ping():
     }
     return event
 
-async def connection_loop():
-    """Creates an infinite loop in a thread that overwatches the 
+async def connection_handler():
+    """Creates an infinite loop in a task that overwatches the 
     sockets to the subprocesses server. Should a connection fail,
     the loop will reconnect the subprocess.
     """
@@ -489,7 +487,7 @@ async def connection_loop():
             try:
                 await Sockets.SOCKET_CHAT.send(json.dumps(ping()))
             except Exception as e:
-                logger.log("", 2, e)
+                logger.log("Error while pinging chat server", 2, e)
                 Sockets.SOCKET_CHAT = None
 
         if Sockets.SOCKET_1V1 is None:
@@ -506,7 +504,7 @@ async def connection_loop():
             try:
                 await Sockets.SOCKET_1V1.send(json.dumps(ping()))
             except Exception as e:
-                logger.log("", 2, e)
+                logger.log("Error while pinging 1v1 game server", 2, e)
                 Sockets.SOCKET_1V1 = None
 
         if Sockets.SOCKET_2V2 is None:
@@ -523,7 +521,7 @@ async def connection_loop():
             try:
                 await Sockets.SOCKET_2V2.send(json.dumps(ping()))
             except Exception as e:
-                logger.log("", 2, e)
+                logger.log("Error while pinging 2v2 game server", 2, e)
                 Sockets.SOCKET_2V2 = None
         await asyncio.sleep(3)
         if displayed_welcome is False:
@@ -534,44 +532,41 @@ async def server_listener():
     """Server functions. Listens for incomming connections through
     websockets.
     """
-    logger.log("Listener thread launched.", 1)
+    logger.log("Listener task launched.", 1)
     async with serve(handler, "", SERVER_PORT, ping_interval=10, \
                      ping_timeout=None, ssl=ssl_context):
         await asyncio.get_running_loop().create_future()  # run forever
     Sockets.STOP_FLAG = True
 
-def connection_handler():
-    """Launches the subprocess connection thread with asyncio.
-    """
-    asyncio.run(connection_loop())
-
-def server_thread():
-    """Launches the server thread with asyncio.
-    """
-    asyncio.run(server_listener())
-
-def signal_handler(signal, frame):
-    """blabla
+def signal_handler(sig, frame):
+    """Handles signals.
 
     Args:
-        signal (_type_): _description_
+        sig (_type_): _description_
         frame (_type_): _description_
     """
-    SocketData.STOP_FLAG = True
-    sys.exit(0)
+    logger.log(f"Received signal {sig} with frame {frame}, shutting down...", 0)
+    loops = asyncio.get_event_loop()
+    tasks = [t for t in asyncio.all_tasks(loops) if not t.done()]
+    for task in tasks:
+        task.cancel()
+    loops.stop()
+
+async def main():
+    """Main async function that starts all tasks."""
+    logger.log("Server launched.", 0)
+    try:
+        server_task = asyncio.create_task(server_listener())
+        connection_task = asyncio.create_task(connection_handler())
+        await asyncio.gather(server_task, connection_task)
+    except asyncio.CancelledError:
+        logger.log("Server shutdown initiated.", 0)
 
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
-    logger.log("Central Server launched.", 0)
+    logger.log("Server launched.", 0)
     try:
-        connections = threading.Thread(target=connection_handler)
-        server = threading.Thread(target=server_thread)
-        connections.daemon = True
-        server.daemon = True
-        connections.start()
-        server.start()
-        server.join()
-        connections.join()
+        asyncio.run(main())
     except Exception as e:
         logger.log("Server exited with manual closure.", 0, e)
