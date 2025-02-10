@@ -56,7 +56,7 @@ class Logger:
         self._start = time.time()
         self._lock = threading.Lock()
 
-    def format(self, val, max_len = 10, sep = " "):
+    def format(self, val, max_len = 12, sep = " "):
         """Formats the time value.
 
         Args:
@@ -69,7 +69,6 @@ class Logger:
         Returns:
             string: Formatted time value.
         """
-        val = round(val, 4)
         string = str(val)
         point = string.find(".")
         if point < 0:
@@ -82,6 +81,32 @@ class Logger:
             string = "..." + string[len(string) - 7:]
         return str(string)
 
+    def format_time(self, val):
+        """transforms a time value in seconds in something readable by humans.
+
+        Args:
+            val (float): Time in seconds.
+        
+        Returns:
+            string: time formatted.
+        """
+        tim = round(val, 2)
+        seconds = val % 60
+        seconds = round(seconds, 2)
+        tim -= seconds
+        tim /= 60
+        tim = int(tim)
+        if tim <= 0:
+            return str(seconds)
+        mins = tim % 60
+        tim -= mins
+        tim /= 60
+        tim = int(tim)
+        mins = str(mins) + "'"
+        if tim <= 0:
+            return mins + str(seconds)
+        return str(tim) + "''" + mins + str(seconds)
+
     def tick(self):
         """Creates a string object containing the formated timer.
 
@@ -89,7 +114,7 @@ class Logger:
             string: a formatted timer.
         """
         t = round(time.time() - self._start, 2)
-        return CWHITE + "[" + CBEIGE2 + self.format(t) + CWHITE + "]"
+        return CWHITE + "[" + CBEIGE2 + self.format(self.format_time(t)) + CWHITE + "]"
 
     def warning_level(self, level = 0):
         """Creates a string object containing the level of the log.

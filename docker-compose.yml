@@ -84,6 +84,7 @@ services:
       - ./certs:/etc/certs:ro
     env_file:
       - .env
+    stop_signal: SIGINT
   
   2v2_classic:
     container_name: 2v2_classic
@@ -99,6 +100,7 @@ services:
       - ./certs:/etc/certs:ro
     env_file:
       - .env
+    stop_signal: SIGINT
 
 volumes:
   postgres_data:

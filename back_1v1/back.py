@@ -213,7 +213,6 @@ async def send_server(data):
         data (dict): Data to send.
     """
     try:
-        print("Sending ::", data)
         await Sockets.CENTRAL_SOCKET.send(json.dumps(data))
     except Exception as e:
         logger.log("Error while sending data to central server.", 2, e)
@@ -292,7 +291,6 @@ async def handler(websocket):
     try:
         async for message in websocket:
             event = json.loads(message)
-            print("Got ::", event)
             if event["type"] == "ping":
                 pass #on est content on fait rien
             await add_to_parse(message)

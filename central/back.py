@@ -421,6 +421,7 @@ async def connection_loop():
     the loop will reconnect the subprocess.
     """
     displayed_welcome = False
+    await asyncio.sleep(1)
     while Sockets.STOP_FLAG is False:
         if Sockets.SOCKET_CHAT is None:
             try:
