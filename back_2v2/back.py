@@ -32,7 +32,6 @@ logger = Logger()
 queue = Queue(logger)
 matchs = []
 lock_a = asyncio.Lock()
-shutdown_event = asyncio.Event()
 message_queue = []
 parse_queue = []
 ws_list = []
@@ -263,7 +262,7 @@ async def loop():
     Ticks down the queue and every match every UPDATE_DELAY seconds
     (by default, 0.016 or 60 times a second)
     """
-    logger.log("Ticker thread launched.", 0)
+    logger.log("Ticker task launched.", 0)
     while Sockets.STOP_FLAG is False:
         await parser()
         #update queue
@@ -360,10 +359,10 @@ async def parser():
 async def server_listener():
     """Opens up the server and starts listening on SERVER_PORT (by default 8001)
     """
-    logger.log("Listener thread launched.", 0)
+    logger.log("Listener task launched.", 0)
     async with serve(handler, "", SERVER_PORT, ping_interval=10,
                         ping_timeout=None, ssl=ssl_context):
-        await shutdown_event.wait() # run forever
+        await asyncio.get_running_loop().create_future() # run forever
     Sockets.STOP_FLAG = True
 
 async def connection_handler():
