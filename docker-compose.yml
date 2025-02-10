@@ -84,9 +84,7 @@ services:
       - ./certs:/etc/certs:ro
     env_file:
       - .env
-    stop_signal: SIGINT
-    stop_grace_period: 0.2s
-  
+
   2v2_classic:
     container_name: 2v2_classic
     build: ./back_2v2/
@@ -101,8 +99,6 @@ services:
       - ./certs:/etc/certs:ro
     env_file:
       - .env
-    stop_signal: SIGINT
-    stop_grace_period: 0.2s
 
 volumes:
   postgres_data:
