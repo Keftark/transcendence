@@ -103,8 +103,6 @@ export function closeDuelPanel()
 
 export function onOpenDuel()
 {
-    // fillInfosPlayer(1);
-    // document.getElementById('duelPanel').style.display = 'flex'; // inutile ??
     startWaitingForPlayer();
 }
 
