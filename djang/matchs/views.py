@@ -6,12 +6,10 @@ from rest_framework.authentication import SessionAuthentication
 from django.contrib.auth.models import User
 import json
 from django.http import JsonResponse
-
 from django.http import HttpRequest
 from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
 from accounts.models import AccountModel
-
 from .models import Match, Match2v2, MatchMembers, TournamentMatchModel, TournamentModel
 from .serializers import MatchSerializer, Match2v2Serializer, TournamentSerializer
 from django.db.models import Q
@@ -63,6 +61,64 @@ def create_match(request):
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
     return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
+
+def create_match2v2(request):
+    if request.method == 'POST':
+        try:
+            # Parse JSON body
+            data = json.loads(request.body)
+
+            # Extract data
+            status = data.get('status', '')
+            user_1 = data.get('player_1', '')
+            player_1 = AccountModel.objects.filter(user__username=user_1).first()
+            user_2 = data.get('player_2', '')
+            player_2 = AccountModel.objects.filter(user__username=user_2).first()
+            team_1_score = data.get('team_1_score', '')
+            user_3 = data.get('player_3', '')
+            player_3 = AccountModel.objects.filter(user__username=user_3).first()
+            user_4 = data.get('player_4', '')
+            player_4 = AccountModel.objects.filter(user__username=user_4).first()
+            team_2_score = data.get('team_2_score', '')
+            start_timestamp = data.get('start_timestamp', '')
+            stop_timestamp = data.get('stop_timestamp', '')
+            winner1 = data.get('winner1', '')
+            winner2 = data.get('winner2', '')
+            win1 = AccountModel.objects.filter(user__username=winner1).first()
+            win2 = AccountModel.objects.filter(user__username=winner2).first()
+
+            # Validation
+
+            if player_1 and player_2 == 0 and player_3 == 0 and player_4 == 0:
+                return JsonResponse({'success': False, 'error': 'Missing required fields.'}, status=400)
+
+            # Create match
+            match = Match2v2.objects.create(
+                finished = True,
+                started = False,
+                winner1 = win1,
+                winner2 = win2,
+                match_id = Match.objects.count(),
+                player_1 = player_1,
+                player_2 = player_2,
+                team_1_score = team_1_score,
+                player_3 = player_3,
+                player_4 = player_4,
+                team_2_score = team_2_score,
+                start_timestamp = start_timestamp,
+                stop_timestamp =  stop_timestamp,
+                status = status
+            )
+            match.save()
+            return JsonResponse({'success': True, 'message': 'Match successfully created.'})
+
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON.'}, status=400)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
+
 
 # Create your views here.
 class MatchViewSet(viewsets.ModelViewSet):
