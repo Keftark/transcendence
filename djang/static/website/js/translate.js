@@ -115,6 +115,7 @@ export function updateHTML(translations)
 	document.getElementById('rulesIsPrivateText').innerText = translations.rulesIsPrivateInput;
 	document.getElementById('friendsHeader').innerText = translations.friendsHeader;
 	document.getElementById('blockUserButton').innerText = translations.blockUserButton;
+	document.getElementById('leaveMultiButton').innerText = translations.cancel;
 	document.getElementById('consent-text').innerHTML = translations.consentText;
 	document.getElementById('gdprText').innerHTML = translations.gdpr;
 	document.getElementById('gdprBack').innerHTML = translations.backText;

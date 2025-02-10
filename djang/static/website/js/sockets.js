@@ -58,11 +58,11 @@ export function connectToServerOutput()
     listener.send(JSON.stringify(event));   
 }
 
-export function socketConnectToDuel()
+export function socketConnectToDuel(mode = "1v1_classic")
 {
     const event = {
         key: keySocket,
-        server: "1v1_classic",
+        server: mode,
         type: "join",
         answer: "no",
         id: playerStats.id,
@@ -106,12 +106,12 @@ export function socketRefuseDuelInvited(playerId)
     listener.send(JSON.stringify(event));
 }
 
-export function socketReadyToDuel()
+export function socketReadyToDuel(mode = "1v1_classic")
 {
     const event = {
         key: keySocket,
         answer: "no",
-        server: "1v1_classic",
+        server: mode,
         type: "ready",
         room_id: id_room,
         id: playerStats.id
@@ -119,12 +119,12 @@ export function socketReadyToDuel()
     socket.send(JSON.stringify(event));
 }
 
-export function socketNotReadyToDuel()
+export function socketNotReadyToDuel(mode = "1v1_classic")
 {
     const event = {
         key: keySocket,
         answer: "no",
-        server: "1v1_classic",
+        server: mode,
         type: "pause",
         room_id: id_room,
         id: playerStats.id
@@ -132,12 +132,12 @@ export function socketNotReadyToDuel()
     socket.send(JSON.stringify(event));
 }
 
-export function socketExitLobby()
+export function socketExitLobby(mode = "1v1_classic")
 {
     const event = {
         key: keySocket,
         answer: "no",
-        server: "1v1_classic",
+        server: mode,
         type: "quit_lobby",
         room_id: playerStats.room_id,
         id: playerStats.id
@@ -145,12 +145,12 @@ export function socketExitLobby()
     socket.send(JSON.stringify(event));
 }
 
-export function socketExitDuel()
+export function socketExitDuel(mode = "1v1_classic")
 {
     const event = {
         key: keySocket,
         answer: "no",
-        server: "1v1_classic",
+        server: mode,
         type: "quit_lobby",
         room_id: playerStats.room_id,
         id: playerStats.id
@@ -158,12 +158,12 @@ export function socketExitDuel()
     socket.send(JSON.stringify(event));    
 }
 
-export function socketSendPlayerReady()
+export function socketSendPlayerReady(mode = "1v1_classic")
 {
     const event = {
         key: keySocket,
         answer: "no",
-        server: "1v1_classic",
+        server: mode,
         type: "ready",
         room_id: playerStats.room_id,
         id: playerStats.id
@@ -171,12 +171,12 @@ export function socketSendPlayerReady()
     socket.send(JSON.stringify(event));
 }
 
-export function socketPlayerUp()
+export function socketPlayerUp(mode = "1v1_classic")
 {
     const event = {
         key: keySocket,
         answer: "no",
-        server: "1v1_classic",
+        server: mode,
         type: "input",
         room_id: playerStats.room_id,
         id: playerStats.id,
@@ -186,12 +186,12 @@ export function socketPlayerUp()
     socket.send(JSON.stringify(event));
 }
 
-export function socketPlayerUpNot()
+export function socketPlayerUpNot(mode = "1v1_classic")
 {
     const event = {
         key: keySocket,
         answer: "no",
-        server: "1v1_classic",
+        server: mode,
         type: "input",
         room_id: playerStats.room_id,
         id: playerStats.id,
@@ -201,12 +201,12 @@ export function socketPlayerUpNot()
     socket.send(JSON.stringify(event));
 }
 
-export function socketPlayerDown()
+export function socketPlayerDown(mode = "1v1_classic")
 {
     const event = {
         key: keySocket,
         answer: "no",
-        server: "1v1_classic",
+        server: mode,
         type: "input",
         room_id: playerStats.room_id,
         id: playerStats.id,
@@ -216,12 +216,12 @@ export function socketPlayerDown()
     socket.send(JSON.stringify(event));
 }
 
-export function socketPlayerDownNot()
+export function socketPlayerDownNot(mode = "1v1_classic")
 {
     const event = {
         key: keySocket,
         answer: "no",
-        server: "1v1_classic",
+        server: mode,
         type: "input",
         room_id: playerStats.room_id,
         id: playerStats.id,
@@ -242,14 +242,14 @@ export function exitGameSocket()
     }
 }
 
-export function socketBoostPaddle()
+export function socketBoostPaddle(mode = "1v1_classic")
 {
     if (!socket || socket.readyState !== WebSocket.OPEN)
         return;
     const event = {
         key: keySocket,
         answer: "no",
-        server: "1v1_classic",
+        server: mode,
         type: "input",
         room_id: id_room,
         id: playerStats.id,
@@ -476,7 +476,7 @@ export function socketUnspectateMatch()
 export function addSocketListener()
 {
     listener.addEventListener("message", ({ data }) => {
-        // console.log(data);
+        console.log(data);
         let event;
         try {
             event = JSON.parse(data);
@@ -542,10 +542,19 @@ export function addSocketListener()
         case "match_init":
             id_room = event.room_id;
             playerStats.room_id = id_room;
-            // console.log("Found a match against player " + event.id_p2);
-            setTimeout(() => {
-                matchFound(event.id_p1, event.id_p2);
-            }, 1000);
+
+            if (getLevelState() === LevelMode.DUEL)
+            {
+                setTimeout(() => {
+                    matchFound(event.id_p1, event.id_p2);
+                }, 1000);
+            }
+            else
+            {
+                setTimeout(() => {
+                    matchFound(event.id_p1, event.id_p2, event.id_p3, event.id_p4);
+                }, 1000);
+            }
             break;
         case "match_resume":
             removeReadyPlayers();

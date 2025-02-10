@@ -15,6 +15,7 @@ import { clickCancelSignIn, isSigninOpen } from './signIn.js';
 import { getAddress } from './apiFunctions.js';
 import { askBackTournamentView, cancelAddPlayerTournament, cancelBackTournamentView, closeTournamentViewPanel, isAddPlayerTournamentIsOpen, isInAskBackTournamentView, isTournamentViewOpen, quitTournamentLobby } from './tournament.js';
 import { loadBlocks, loadFriends } from './friends.js';
+import { closeMultiPanel } from './multiPanel.js';
 
 window.onbeforeunload = function() {
     localStorage.removeItem('currentPath');
@@ -91,6 +92,8 @@ export function checkEscapeKey()
         quitTournamentLobby();
     else if (currentView === 'duel')
         closeDuelPanel();
+    else if (currentView === 'multi')
+        closeMultiPanel();
     else if (isInGame && !gameEnded)
         openOrCloseGameMenu();
 }

@@ -44,8 +44,7 @@ class Board:
         if brick:
             return True
         return False
-
-    @DeprecationWarning
+    
     def place(self, brick, x, y):
         """Place a brick within the game board at the x;y positions.
 

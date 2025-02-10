@@ -14,41 +14,43 @@ class Match:
     """
     def __init__(self, _id, p1, p2, p3, p4):
         print(f"MAKING THE MATCHS FOR {p1}, {p2}, {p3}, {p4}")
-        self._room_id = _id
-        self._spectators = []
-        self._message_queue = []
-        self._formatted_queue = []
-        self._side_1_score = 0
-        self._side_2_score = 0
-        self._point_to_win = 3
-        self._timer_count = 0
-        self._quitter = 0
-        self._max_time_seconds = -1
-        self._board = Board(50, 80)
-        self._paddle_r1 = Paddle(p1, self._board.min_x + 1, 12, \
-                                       self._board.max_y, 2)
-        self._paddle_r2 = Paddle(p2, self._board.max_x - 2, 12, \
-                                       -2, self._board.min_y)
-        self._paddle_l1 = Paddle(p3, self._board.min_x + 1, 12, \
-                                       self._board.max_y, 2)
-        self._paddle_l2 = Paddle(p4, self._board.max_x - 2, 12, \
-                                       -2, self._board.min_y)
-        self._ball = Ball(self._room_id)
-        self._initialised = False
-        self._started = False
-        self._ended = False
-        self._needs_to_wait = False
-        self._abandonned = False
-        self._ragequitted = False
-        self._timer_pause = True
-        self._concluded = False
-        self._timer = time.time()
-        self._lock = threading.Lock()
-        self._message_locker = threading.Lock()
+        try:
+            self._room_id = _id
+            self._spectators = []
+            self._message_queue = []
+            self._formatted_queue = []
+            self._side_1_score = 0
+            self._side_2_score = 0
+            self._point_to_win = 3
+            self._timer_count = 0
+            self._quitter = 0
+            self._max_time_seconds = -1
+            self._board = Board(50, 80)
+            self._paddle_r1 = Paddle(p1, self._board.min_x + 1, 12, \
+                                        self._board.max_y, 2)
+            self._paddle_r2 = Paddle(p2, self._board.max_x - 2, 12, \
+                                        -2, self._board.min_y)
+            self._paddle_l1 = Paddle(p3, self._board.min_x + 1, 12, \
+                                        self._board.max_y, 2)
+            self._paddle_l2 = Paddle(p4, self._board.max_x - 2, 12, \
+                                        -2, self._board.min_y)
+            self._ball = Ball(self._room_id)
+            self._initialised = False
+            self._started = False
+            self._ended = False
+            self._needs_to_wait = False
+            self._abandonned = False
+            self._ragequitted = False
+            self._timer_pause = True
+            self._concluded = False
+            self._timer = time.time()
+            self._lock = threading.Lock()
+            self._message_locker = threading.Lock()
 
-        self._board.place(BrickTriangleUnbreak(), 0, 1)
-        self._board.place(BrickTriangleReverseUnbreak(), self._board.max_x - 1, 1)
-
+            self._board.place(BrickTriangleUnbreak(), 0, 1)
+            self._board.place(BrickTriangleReverseUnbreak(), self._board.max_x - 1, 1)
+        except Exception as e:
+            print("Aie ::", e)
         print("STARTING THE MATCH")
 
     def load_parameters(self, payload):

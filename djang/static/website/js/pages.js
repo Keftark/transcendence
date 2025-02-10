@@ -31,6 +31,9 @@ function onOpenPage(path, otherVar = null) {
         case 'duel':
             onOpenDuel();
             break;
+        case 'multi':
+            onOpenDuel();
+            break;
         case 'game-local':
             onPlayGame(otherVar);
             break;
