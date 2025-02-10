@@ -4,6 +4,7 @@ import base64
 import hashlib
 import time
 import re
+from PIL import Image
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
@@ -369,12 +370,44 @@ def upload_base64image(request):
 MAX_FILE_SIZE = 5 * 1024 * 1024
 
 def generate_secure_filename(original_name):
+    """Generate a secure name based on the original name.
+
+    Args:
+        original_name (stirng): original name.
+
+    Returns:
+        string: secured name.
+    """
     ext = os.path.splitext(original_name)[1]
     hash_name = hashlib.sha256(f"{time.time()}_{original_name}".encode()).hexdigest()
     return f"{hash_name}{ext}"
 
 def sanitize_filename(filename):
+    """Sanitize an input.
+
+    Args:
+        filename (string): input to sanitize.
+
+    Returns:
+        string: sanitized input.
+    """
     return re.sub(r'[^a-zA-Z0-9_.-]', '_', filename)
+
+def validate_image(image):
+    """Uses Pillow API to validate an image.
+
+    Args:
+        image (Image): image to validate.
+
+    Returns:
+        bool: `True` if the image is verified, `False` otherwise.
+    """
+    try:
+        img = Image.open(image)
+        img.verify()
+        return True
+    except Exception:
+        return False
 
 def upload_image(request):
     if request.method == 'POST' and request.FILES.get('image'):
@@ -382,6 +415,9 @@ def upload_image(request):
 
         if image.size > MAX_FILE_SIZE:
             return JsonResponse({'success': False, 'message': 'File too large.'})
+        
+        if not validate_image(image):
+            return JsonResponse({'success': False, 'message': 'Invalid image file.'})
         
         fs = FileSystemStorage(location=settings.MEDIA_ROOT)
         filename = generate_secure_filename(sanitize_filename(image.name))
