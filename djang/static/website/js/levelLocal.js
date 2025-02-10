@@ -122,7 +122,6 @@ export function getPlayerPosition(playerNbr)
 
 export function animateBoostPlayers()
 {
-    console.log("trying to animate...");
     animatePlayers(player1, player2);
 }
 
@@ -619,7 +618,6 @@ function animateDeathSphere()
 
 export function getBallPosition()
 {
-    // console.log(balle.position);
     return balle.position;
 }
 

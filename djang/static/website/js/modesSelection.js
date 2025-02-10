@@ -50,11 +50,11 @@ modeComputerButton.addEventListener('click', () => {
 });
 
 modeDuelButton.addEventListener('click', () => {
-    socketConnectToDuel();
     closeOnlineModes();
     isInsideModes = false;
     setTimeout(() => {
         openDuelPanel();
+        socketConnectToDuel();
     }, 300);
 });
 

@@ -149,6 +149,7 @@ export function setupPlayerMovement(player1, player2, player3, player4)
     boundsPlayer[2] = boundsPlayer[3] = setPlayer3Bounds(levelState);
     const boundymax = setPlayer1Bounds(levelState).max;
     const boundymin = setPlayer1Bounds(levelState).min;
+    const mode = levelState === LevelMode.ONLINE ? "1v1_classic" : "2v2_clasic";
 
     function checkKeys(event, isTrue)
     {
@@ -203,8 +204,6 @@ export function setupPlayerMovement(player1, player2, player3, player4)
 
     setPlayersPositionsFunction = function setPlayerPosition(p1Pos, p2Pos)
     {
-        // faire la requete pour recuperer la position du joueur
-        // console.log(p1Pos + ", " + p2Pos);
         player1.position.y = p1Pos;
         player2.position.y = p2Pos;
     }
@@ -224,10 +223,10 @@ export function setupPlayerMovement(player1, player2, player3, player4)
                 if (isDown)
                 {
                     isDown = false;
-                    socketPlayerDownNot();
+                    socketPlayerDownNot(mode);
                 }
                 isUp = true;
-                socketPlayerUp();
+                socketPlayerUp(mode);
             }
             else
             {
@@ -242,10 +241,10 @@ export function setupPlayerMovement(player1, player2, player3, player4)
                 if (isUp)
                 {
                     isUp = false;
-                    socketPlayerUpNot();
+                    socketPlayerUpNot(mode);
                 }
                 isDown = true;
-                socketPlayerDown();
+                socketPlayerDown(mode);
             }
             else
             {
@@ -258,12 +257,12 @@ export function setupPlayerMovement(player1, player2, player3, player4)
             if (isUp)
             {
                 isUp = false;
-                socketPlayerUpNot();
+                socketPlayerUpNot(mode);
             }
             if (isDown)
             {
                 isDown = false;
-                socketPlayerDownNot();
+                socketPlayerDownNot(mode);
             }
         }
 

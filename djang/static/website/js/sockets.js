@@ -6,7 +6,7 @@ import { addReadyPlayer, doUpdateBallLight, getBallPosition, getPlayerSideById, 
 import { getLevelState, socket, listener } from "./main.js";
 import { getListMatchs, setSelectedMode } from "./modesSelection.js";
 import { matchFoundMulti, setPlayersControllersMulti, updateReadyButtonsMulti } from "./multiPanel.js";
-import { navigateTo } from "./pages.js";
+import { getCurrentView, navigateTo } from "./pages.js";
 import { playerStats } from "./playerManager.js";
 import { setPlayersPositions } from "./playerMovement.js";
 import { checkPowerUpState, setPowerBarsPlayers } from "./powerUp.js";
@@ -528,7 +528,7 @@ export function addSocketListener()
             // console.log("Exit queue");
             break;
         case "wait_start":
-            if (getLevelState() === LevelMode.DUEL)
+            if (getCurrentView() === "duel")
                 updateReadyButtons(event.p1_state, event.p2_state);
             else
                 updateReadyButtonsMulti(event.p1_state, event.p2_state, event.p3_state, event.p4_state);
@@ -547,7 +547,7 @@ export function addSocketListener()
             id_room = event.room_id;
             playerStats.room_id = id_room;
 
-            if (getLevelState() === LevelMode.DUEL)
+            if (getCurrentView() === "duel")
             {
                 setTimeout(() => {
                     matchFound(event.id_p1, event.id_p2);
@@ -571,22 +571,22 @@ export function addSocketListener()
                 break;
             matchAlreadyStarted = true;
             // console.log(data);
-            if (getLevelState() === LevelMode.DUEL)
+            if (getCurrentView() === "duel")
                 setPlayersControllers();
             else
                 setPlayersControllersMulti();
             break;
         case "bounce_player":
-            { if (event.room_id != playerStats.room_id)
+            if (event.room_id != playerStats.room_id)
                 return;
             const strength = event.ball_boosted ? event.ball_speed * 150 : event.ball_speed * 75;
             startScreenShake(event.ball_speed / 6, strength);
             doUpdateBallLight();
             if (event.ball_speed > 0.78)
                 spawnSparksFunction(getBallPosition(), event.ball_speed * 20);
-            break; }
+            break;
         case "victory": // end of match, dans le lobby ou dans le match
-            console.log("Victory: " + event);
+            // console.log("Victory: " + event);
             if (event.room_id != playerStats.room_id)
                 return;
             // console.log(data);

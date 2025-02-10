@@ -133,8 +133,6 @@ function resetVSAnimation()
 
 async function displayUIPlayer(player1, player2, player3, player4)
 {
-    console.log("Players: " + player1 + ", " + player2 + ", " + player3 + ", " + player4);
-
     if (playerStats.id === player1)
     {
         addDisableButtonEffect(player2ReadyButton);
