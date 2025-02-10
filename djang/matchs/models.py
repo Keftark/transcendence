@@ -83,7 +83,7 @@ class Match2v2(models.Model):
     start_timestamp = models.BigIntegerField(null = True, blank = True)
     stop_timestamp = models.BigIntegerField(null = True, blank = True)
     
-    winner = models.ForeignKey(AccountModel, on_delete=models.SET_NULL, null=True, related_name='winner2v2_1')
+    winner1 = models.ForeignKey(AccountModel, on_delete=models.SET_NULL, null=True, related_name='winner2v2_1')
     winner2 = models.ForeignKey(AccountModel, on_delete=models.SET_NULL, null=True, related_name='winner2v2_2')
     status = models.IntegerField(default=started)
 

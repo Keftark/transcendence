@@ -12,8 +12,8 @@ from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
 from accounts.models import AccountModel
 
-from .models import Match, MatchMembers, TournamentMatchModel, TournamentModel
-from .serializers import MatchSerializer, TournamentSerializer
+from .models import Match, Match2v2, MatchMembers, TournamentMatchModel, TournamentModel
+from .serializers import MatchSerializer, Match2v2Serializer, TournamentSerializer
 from django.db.models import Q
 
 def create_match(request):
@@ -81,6 +81,22 @@ class MatchViewSet(viewsets.ModelViewSet):
 
         return Response(self.serializer_class(match).data, status=status.HTTP_200_OK)
     
+class Match2v2ViewSet(viewsets.ModelViewSet):
+
+    queryset = Match2v2.objects
+    serializer_class = Match2v2Serializer
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = (SessionAuthentication,)
+
+    def retrieve(self, request: HttpRequest, pk):
+
+        if (not self.queryset.filter(pk = pk).exists()):
+            return Response({"detail": "Match not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        match2v2 = self.queryset.get(pk = pk)
+
+        return Response(self.serializer_class(match2v2).data, status=status.HTTP_200_OK)
+    
 class HistoriqueViewSet(ViewSet):
     
     queryset = User.objects.all()
@@ -143,6 +159,77 @@ class HistoriqueViewSet(ViewSet):
 
         return Response(matches_data, status=status.HTTP_200_OK)
     
+class Historique2v2ViewSet(ViewSet):
+    
+    queryset = User.objects.all()
+    serializer_class = Match2v2Serializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def retrive(self, request: HttpRequest, pk: int = None):
+        
+        user: User = get_object_or_404(User, pk=pk)
+        
+        member_game_model_list: list[MatchMembers] = MatchMembers.objects.filter(player=user)
+        
+        game_model_list: list[Match] = [member_game_model.game for member_game_model in member_game_model_list]
+        
+        games_data: list[dict] = self.serializer_class(game_model_list, many=True).data
+        
+        return Response(games_data)
+    
+    def get_matchs2v2_count(self, request: HttpRequest, username):
+        
+        user = get_object_or_404(User, username=username)
+        matchs2v2 = Match2v2.objects.filter(Q(player_1=user.accountmodel) | Q(player_2=user.accountmodel))
+
+        match_count = matchs2v2.count()
+        wins = matchs2v2.filter(winner1=user.accountmodel).count()
+        return Response({
+            "match_count": match_count,
+            "wins": wins
+        })
+
+    def get_matchs2v2_history(self, request: HttpRequest, username):
+        
+        user = get_object_or_404(User, username=username)
+        matchs = Match2v2.objects.filter(Q(player_1=user.accountmodel) | Q(player_2=user.accountmodel) | Q(player_3=user.accountmodel) | Q(player_4=user.accountmodel))
+
+        matches_data = []
+        match_count = matchs.count()
+        wins = matchs.filter(winner1=user.accountmodel).count()
+        matches_data.append({
+            "match_count": match_count,
+            "wins": wins
+        })
+        for match in matchs:
+            player_1 = User.objects.filter(username=match.player_1).first()
+            player_2 = User.objects.filter(username=match.player_2).first()
+            player_3 = User.objects.filter(username=match.player_3).first()
+            player_4 = User.objects.filter(username=match.player_4).first()
+            winner1 = User.objects.filter(username=match.winner1).first()
+            winner2 = User.objects.filter(username=match.winner2).first()
+            winner1_name = winner1.username if winner1 else "anonymous"
+            winner2_name = winner1.username if winner2 else "anonymous"
+            player_1_name = player_1.username if player_1 else "anonymous"
+            player_2_name = player_2.username if player_2 else "anonymous"
+            player_3_name = player_3.username if player_3 else "anonymous"
+            player_4_name = player_4.username if player_4 else "anonymous"
+            matches_data.append({
+                "id": match.match_id,
+                "player_1": player_1_name,
+                "player_2": player_2_name,
+                "player_3": player_3_name,
+                "player_4": player_4_name,
+                "winner1": winner1_name,
+                "winner2": winner2_name,
+                "team_1_score": match.team_1_score,
+                "team_2_score": match.team_2_score,
+                "timer": match.stop_timestamp - match.start_timestamp
+                # "date": match.date.isoformat()  # Format the date to ISO format
+            })
+
+        return Response(matches_data, status=status.HTTP_200_OK)
+
 class TournamentMatchViewSet(viewsets.ModelViewSet):
 
     queryset = TournamentMatchModel.objects
