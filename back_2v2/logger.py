@@ -78,7 +78,7 @@ class Logger:
         while len(string) < max_len:
             string = sep + string
         if len(string) > max_len:
-            string = "..." + string[len(string) - 7:]
+            string = "..." + string[len(string) - 11:]
         return str(string)
 
     def format_time(self, val):
