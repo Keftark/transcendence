@@ -544,6 +544,7 @@ export function addSocketListener()
                 addReadyPlayer(4);
             break;
         case "match_init":
+            console.log(data);
             id_room = event.room_id;
             playerStats.room_id = id_room;
 
@@ -561,6 +562,7 @@ export function addSocketListener()
             }
             break;
         case "match_resume":
+            console.log(data);
             removeReadyPlayers();
             break;
         case "list_all":
@@ -570,7 +572,7 @@ export function addSocketListener()
             if (matchAlreadyStarted)
                 break;
             matchAlreadyStarted = true;
-            // console.log(data);
+            console.log(data);
             if (getCurrentView() === "duel")
                 setPlayersControllers();
             else
@@ -586,7 +588,7 @@ export function addSocketListener()
                 spawnSparksFunction(getBallPosition(), event.ball_speed * 20);
             break;
         case "victory": // end of match, dans le lobby ou dans le match
-            // console.log("Victory: " + event);
+            console.log("Victory: " + data);
             if (event.room_id != playerStats.room_id)
                 return;
             // console.log(data);
@@ -616,6 +618,7 @@ export function addSocketListener()
             console.log("Got error : " + event.content);
             break;
         case "point":
+            console.log(data);
             if (event.room_id === playerStats.room_id);
             {
                 spawnSparksFunction(getBallPosition(), 400);

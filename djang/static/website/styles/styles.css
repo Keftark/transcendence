@@ -7,6 +7,7 @@
 
 :root {
     --glow-color: #00ffff;
+    --base-color: #fffbf0;
 }
 
 .message li {
@@ -19,14 +20,14 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #000;
+    background-color: #000307;
     overflow: hidden;
     font-family: 'MyCustomFont', Arial, sans-serif;
     scrollbar-color: #00505a #00000048;
 }
 
 p, button, input {
-    color: white;
+    color: var(--base-color);
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
@@ -36,7 +37,7 @@ p, button, input {
 }
 
 h1, h2, h3 {
-    color: white;
+    color: var(--base-color);
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
 }
 
@@ -82,7 +83,7 @@ a:focus
     left: 50%;
     transform: translateX(-50%);
     background: none;
-    color: white;
+    color: var(--base-color);
     font-size: clamp(1rem + 1vw + 1vh, 3rem + 1vw + 1vh, 6rem);
     text-align: center;
     z-index: 0;
@@ -103,7 +104,7 @@ a:focus
     max-width: 56rem;
     height: 54vh;
     max-height: 30rem;
-    background-color: #000000;
+    background-color: #000102;
     border: 1px solid #002522;
     border-radius: 15px;
     z-index: 0;

@@ -231,7 +231,7 @@ export function setupPlayerMovement(player1, player2, player3, player4)
             else
             {
                 const newPosition = lerp(playerposy, playerposy + adjustedSpeed, 0.1);
-                player.position.y = Math.min(newPosition, boundsPlayer[controller].max - playerBound);    
+                player.position.y = Math.min(newPosition, boundsPlayer[controller - 1].max - playerBound);    
             }
         }
         else if (moveDown1 && !moveUp1)
@@ -249,7 +249,7 @@ export function setupPlayerMovement(player1, player2, player3, player4)
             else
             {
                 const newPosition = lerp(playerposy, playerposy - adjustedSpeed, 0.1);
-                player.position.y = Math.max(newPosition, boundsPlayer[controller].min + playerBound);
+                player.position.y = Math.max(newPosition, boundsPlayer[controller - 1].min + playerBound);
             }
         }
         else if ((moveUp1 && moveDown1) || (!moveUp1 && !moveDown1))

@@ -176,6 +176,8 @@ export function getPlayer(playerNbr)
 
 let player1Ready = false;
 let player2Ready = false;
+let player3Ready = false;
+let player4Ready = false;
 export function addReadyPlayer(playerNbr)
 {
     if (playerNbr === 1 && player1Ready === false)
@@ -206,6 +208,10 @@ export function removeReadyPlayers()
     addLightPlayerReady(player1, false);
     player2Ready = false;
     addLightPlayerReady(player2, false);
+    player3Ready = false;
+    addLightPlayerReady(player3, false);
+    player4Ready = false;
+    addLightPlayerReady(player4, false);
 }
 
 function hideInGameUI()

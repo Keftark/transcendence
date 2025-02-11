@@ -14,7 +14,7 @@
 
 #pressplay {
     background: rgba(0, 0, 0, 0);
-    color: white;
+    color: var(--base-color);
     font-size: 4vw;
     text-align: center;
     text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.459),
@@ -28,7 +28,7 @@
     line-height: 0.7;
     text-align: center;
     background: rgba(0, 0, 0, 0);
-    color: white;
+    color: var(--base-color);
     font-size: 7vw;
     text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.459),
     -1px -1px 0px rgba(0, 0, 0, 0.459),
@@ -98,7 +98,7 @@
 
 #score-left, #score-right{
     top: 0;
-    color: white;
+    color: var(--base-color);
     font-size: clamp(1rem, 1vw + 1.5rem, 6vw);
     position: absolute;
 }
@@ -117,7 +117,7 @@
 
 #playername-left, #playername-right {
     top: 0;
-    color: white;
+    color: var(--base-color);
     font-size: clamp(1rem, 1vw + 1.5rem, 6vw);
     position: absolute;
     white-space: nowrap;
@@ -164,10 +164,11 @@
     display: none;
     position: absolute;
     bottom: 16px;
-    width: 20vw;
+    width: 16vw;
     max-width: 12rem;
     flex-direction: row;
     gap: 64px;
+    justify-content: center;
 }
 
 #controlsP1
@@ -181,7 +182,6 @@
 }
 
 #controlsP1LocalImg, #controlsP2LocalImg {
-    bottom: 16px;
     width: 20vw;
     max-width: 12rem;
 }

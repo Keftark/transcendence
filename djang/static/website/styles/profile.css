@@ -102,13 +102,13 @@
     font-size: 2rem;
     margin: 0;
     text-align: center;
-    color: white;
+    color: var(--base-color);
 }
 
 #profilePanel p, #settingsPanel p {
     margin: 1.5vh 0 0 0;
     text-align: left;
-    color: white;
+    color: var(--base-color);
 }
 
 #matchListPanel {
@@ -133,7 +133,7 @@
     align-self: center;
     margin-top: 2vh;
     padding: 0.2rem;
-    color: white;
+    color: var(--base-color);
     border: 3px solid #770000a4;
     border-radius: 8px;
     text-align: center;
@@ -323,7 +323,7 @@
     background: none;
     border: none;
     background-color: #00000025;
-    color: white;
+    color: var(--base-color);
     text-align: center;
     filter: brightness(40%);
     border: 3px solid transparent;

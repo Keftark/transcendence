@@ -68,12 +68,12 @@
 {
     display: flex;
     flex-direction: column;
-    color: white;
+    color: var(--base-color);
     position: relative;
 }
 
 .consent-label {
-    color: white;
+    color: var(--base-color);
 }
 
 .inputfield
@@ -83,7 +83,7 @@
     padding: 4px;
     font-size: clamp(0.5rem, 0.5rem + 0.3vw + 0.3vh, 10vw);
     background-color: #002e33;
-    color: white;
+    color: var(--base-color);
     border: 2px solid #6b8692;
     border-radius: 5px;
     outline: none;
