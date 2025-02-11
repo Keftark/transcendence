@@ -69,8 +69,6 @@ const controlsRightImg = document.getElementById('controlsP2LocalImg');
 const controlsP2 = document.getElementById('controlsP2');
 const player1Name = document.getElementById('playername-left');
 const player2Name = document.getElementById('playername-right');
-const player3Name = document.getElementById('playername-right');
-const player4Name = document.getElementById('playername-right');
 let currentLevelMode;
 let isCameraAnimationComplete = false;
 let cameraRatioWidth = 0;
@@ -178,25 +176,30 @@ let player1Ready = false;
 let player2Ready = false;
 let player3Ready = false;
 let player4Ready = false;
+ 
 export function addReadyPlayer(playerNbr)
 {
     if (playerNbr === 1 && player1Ready === false)
     {
+        // console.log("1");
         player1Ready = true;
         addLightPlayerReady(player1, true);
     }
     else if (playerNbr === 2 && player2Ready === false)
     {
+        // console.log("2");
         player2Ready = true;
         addLightPlayerReady(player2, true);
     }
     else if (playerNbr === 3 && player3Ready === false)
     {
+        // console.log("3");
         player3Ready = true;
         addLightPlayerReady(player3, true);
     }
     else if (playerNbr === 4 && player4Ready === false)
     {
+        // console.log("4");
         player4Ready = true;
         addLightPlayerReady(player4, true);
     }
@@ -208,6 +211,8 @@ export function removeReadyPlayers()
     addLightPlayerReady(player1, false);
     player2Ready = false;
     addLightPlayerReady(player2, false);
+    if (player3 === null)
+        return;
     player3Ready = false;
     addLightPlayerReady(player3, false);
     player4Ready = false;
@@ -461,12 +466,15 @@ function setPlayerNames()
     }
     else if (isAnOnlineMode(currentLevelMode))
     {
-        player1Name.innerText = playerProfile1.username;
-        player2Name.innerText = playerProfile2.username;
         if (currentLevelMode === LevelMode.MULTI)
         {
-            player3Name.innerText = playerProfile3.username;
-            player4Name.innerText = playerProfile4.username;
+            player1Name.innerHTML = playerProfile1.username + "<br>" + playerProfile3.username;
+            player2Name.innerHTML = playerProfile2.username + "<br>" + playerProfile4.username;
+        }
+        else
+        {
+            player1Name.innerText = playerProfile1.username;
+            player2Name.innerText = playerProfile2.username;
         }
     }
     else
@@ -522,10 +530,10 @@ function resetPlayersPositions()
         player4.position.set(BOUNDARY.X_MAX, 0 - (BOUNDARY.Y_MAX - BOUNDARY.Y_MIN) / 4, 0);
         return;
     }
-    // player1.position.set(BOUNDARY.X_MIN, 0, 0);
-    // player1.rotation.y = Math.PI / 6;
-    player1.position.set(0, 0, 0);
-    player1.rotation.y = Math.PI / 2.5;
+    player1.position.set(BOUNDARY.X_MIN, 0, 0);
+    player1.rotation.y = Math.PI / 6;
+    // player1.position.set(0, 0, 0);
+    // player1.rotation.y = Math.PI / 2.5;
     player2.position.set(BOUNDARY.X_MAX, 0, 0);
 }
 

@@ -193,6 +193,25 @@ export async function getUserAvatar(userName) {
     }
 }
 
+export async function getUserAvatarById(id) {
+    if (!id) {
+        console.error("User name is required.");
+        return;
+    }
+    try {
+        const response = await fetch(`/useravatarid/${id}/`);
+        if (!response.ok)
+            throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);
+        const userData = await response.json();
+        if (userData.error)
+            console.error(userData.error);
+        // console.log("user data: " + JSON.stringify(userData));
+        return userData;
+    } catch (error) {
+        console.error("An error occurred while fetching the user details:", error);
+    }
+}
+
 // export async function uploadAvatar(username, url_picture)
 // {
 //     const data = new FormData();
@@ -571,7 +590,6 @@ export async function unblockUserRequest(userName) {
 export async function sendMatch(name1, name2, score1, score2, timer)
 {
     const winnerPlayer = score1 > score2 ? name1 : name2;
-    // c'est un test !
     const data = {
         finished: true,
         started: false,
@@ -615,10 +633,8 @@ export async function sendMatch(name1, name2, score1, score2, timer)
 
 export async function getMatchsLittleData(userName) {
     try {
-      // Make a GET request to the retrieve_account view
       const response = await fetch(`api/matchs/get_matchs_count/${userName}`);
       
-      // Check if the response is ok (status code 200-299)
       if (!response.ok)
         throw new Error('Network response was not ok');
       
@@ -627,16 +643,14 @@ export async function getMatchsLittleData(userName) {
       return data;
     } catch (error) {
       console.error('Error:', error);
-      return null;  // You can return an error object or null if needed
+      return null;
     }
 }
 
 export async function getMatchsFullData(userName) {
     try {
-      // Make a GET request to the retrieve_account view
       const response = await fetch(`api/matchs/history/${userName}`);
       
-      // Check if the response is ok (status code 200-299)
       if (!response.ok)
         throw new Error('Network response was not ok');
       
@@ -645,7 +659,7 @@ export async function getMatchsFullData(userName) {
       return data;
     } catch (error) {
       console.error('Error:', error);
-      return null;  // You can return an error object or null if needed
+      return null;
     }
 }
 

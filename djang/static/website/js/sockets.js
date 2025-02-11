@@ -534,13 +534,14 @@ export function addSocketListener()
                 updateReadyButtonsMulti(event.p1_state, event.p2_state, event.p3_state, event.p4_state);
             break;
         case "wait_ready":
+            console.log(data);
             if (event.p1_state)
                 addReadyPlayer(1);
-            else if (event.p2_state)
+            if (event.p2_state)
                 addReadyPlayer(2);
-            else if (event.p3_state)
+            if (event.p3_state)
                 addReadyPlayer(3);
-            else if (event.p4_state)
+            if (event.p4_state)
                 addReadyPlayer(4);
             break;
         case "match_init":

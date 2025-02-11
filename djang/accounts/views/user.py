@@ -180,6 +180,25 @@ def get_user_avatar(request, username):
         # Handle case where user is not found
         return JsonResponse({'error': 'User not found'}, status=404)
 
+def get_user_avatar_id(request, user_id):
+    try:
+        # Get the user by username
+        user = User.objects.get(id=user_id)
+        
+        # Access the related AccountModel instance
+        account = user.accountmodel
+        
+        # Check if the avatar exists
+        if account.avatar:
+            return JsonResponse({'avatar_url': account.avatar.url})
+        else:
+            # Handle case where avatar is not uploaded
+            return JsonResponse({'avatar_url': None, 'message': 'No avatar available'}, status=200)
+    
+    except User.DoesNotExist:
+        # Handle case where user is not found
+        return JsonResponse({'error': 'User not found'}, status=404)
+
 @require_http_methods(["GET", "PUT"])  # Allow GET and PUT methods
 def get_user_paddle(request, user_id):
     try:

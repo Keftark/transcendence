@@ -1,4 +1,4 @@
-import { getUserById } from "./apiFunctions.js";
+import { getUserAvatarById, getUserById } from "./apiFunctions.js";
 import { deleteDuelInChat } from "./chat.js";
 import { id_players, passInfosPlayersToLevel } from "./levelLocal.js";
 import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
@@ -247,14 +247,19 @@ export function matchFound(player1, player2)
     id_players[0] = idP1 = player1;
     id_players[1] = idP2 = player2;
     displayUIPlayer(player1, player2);
+
     Promise.all([
         fillInfosPlayer(1, player1),
-        fillInfosPlayer(2, player2)
+        fillInfosPlayer(2, player2),
+        getUserAvatarById(player1),
+        getUserAvatarById(player2)
     ])
-    .then(() => {
+    .then(results => {
+        const [ , , avatar1, avatar2 ] = results;
         document.getElementById('waitingMatch').style.display = "none";
+        player1Img.src = avatar1.avatar_url;
+        player2Img.src = avatar2.avatar_url;
         resetVSAnimation();
-        // on met à jour l'interface après avoir récupéré les deux joueurs
     })
     .catch(error => {
         console.error("Error in matchFound:", error);

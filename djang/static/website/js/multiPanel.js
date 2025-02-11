@@ -178,12 +178,20 @@ export function matchFoundMulti(player1, player2, player3, player4)
         fillInfosPlayer(1, player1),
         fillInfosPlayer(2, player2),
         fillInfosPlayer(3, player3),
-        fillInfosPlayer(4, player4)
+        fillInfosPlayer(4, player4), 
+        getUserAvatarById(player1),
+        getUserAvatarById(player2),
+        getUserAvatarById(player3),
+        getUserAvatarById(player4)
     ])
     .then(() => {
+        const [ , , , , avatar1, avatar2, avatar3, avatar4 ] = results;
         document.getElementById('waitingMatch').style.display = "none";
+        player1Img.src = avatar1.avatar_url;
+        player2Img.src = avatar2.avatar_url;
+        player3Img.src = avatar3.avatar_url;
+        player4Img.src = avatar4.avatar_url;
         resetVSAnimation();
-        // on met à jour l'interface après avoir récupéré les deux joueurs
     })
     .catch(error => {
         console.error("Error in matchFound:", error);

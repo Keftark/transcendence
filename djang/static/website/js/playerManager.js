@@ -22,7 +22,7 @@ export function createPlayerStats() {
         mail: "",
         password: "",
         language: "en",
-        colors: "white",
+        colors: "#fffbf0",
         photoIndex: 0,
         room_id: -1,
         playerController: 1,
@@ -91,22 +91,6 @@ export function editPlayerStats(userData)
 
 export function resetPlayerStats()
 {
-    // playerStats.nickname = getTranslation('guest');
-    // playerStats.id = 0;
-    // playerStats.firstName = "";
-    // playerStats.lastName = "";
-    // playerStats.mail = "";
-    // playerStats.password = "";
-    // playerStats.language = "en";
-    // playerStats.photoIndex = 0;
-    // playerStats.room_id = -1;
-    // playerStats.colors = "white";
-    // playerStats.matches = [];
-    // playerStats.friends = [];
-    // playerStats.isRegistered = false;
-    // playerStats.playerController = 1;
-    // playerStats.currentPaddleSkin = 1;
-    // playerStats.status = PlayerStatus.ONLINE;
     playerStats = createPlayerStats();
     loadPlayerConfig();
 }
@@ -118,10 +102,10 @@ export function changeProfilePicture(newIndex)
     // update la photo sur l'UI
 }
 
-export function changePlayerName(playerStats)
-{
-    // on change le nom dans la base de donnees et sur le profil.
-}
+// export function changePlayerName(playerStats)
+// {
+//     // on change le nom dans la base de donnees et sur le profil.
+// }
 
 export function loadPlayerConfig()
 {

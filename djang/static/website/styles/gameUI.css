@@ -125,9 +125,11 @@
 
 #playername-left{
     right: 7vw;
+    text-align: end;
 }
 #playername-right{
     left: 7vw;
+    text-align: start;
 }
 
 .fall-down {

@@ -31,6 +31,7 @@ urlpatterns = [
     path('check-login/', user.check_user_login, name='check_user_login'),
     path('current_user', user.get_logged_in_user, name='current_user'),
     path('useravatar/<str:username>/', user.get_user_avatar, name='user_avatar'),
+    path('useravatarid/<int:user_id>/', user.get_user_avatar_id, name='user_avatar_id'),
     path('user_paddle/<int:user_id>/', user.get_user_paddle, name='user_paddle'),
     path('user_status/<str:username>/', user.set_user_status, name='user_status'),
     path('get-user/<str:username>/', user.get_user_by_name, name='get-user-by-name'),
