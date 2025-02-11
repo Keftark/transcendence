@@ -29,7 +29,7 @@
   
 #menu-label span {
     display: block;
-    color: white;
+    color: var(--base-color);
     padding: 0px 8px;
     font-size: 24px;
     font-weight: bold;

@@ -188,7 +188,7 @@
     overflow-y: scroll;
     margin-top: 10px;
     margin-bottom: 10px;
-    color: white;
+    color: var(--base-color);
 }
 
 .matchInList

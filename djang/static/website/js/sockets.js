@@ -6,7 +6,7 @@ import { addReadyPlayer, doUpdateBallLight, getBallPosition, getPlayerSideById, 
 import { getLevelState, socket, listener } from "./main.js";
 import { getListMatchs, setSelectedMode } from "./modesSelection.js";
 import { matchFoundMulti, setPlayersControllersMulti, updateReadyButtonsMulti } from "./multiPanel.js";
-import { navigateTo } from "./pages.js";
+import { getCurrentView, navigateTo } from "./pages.js";
 import { playerStats } from "./playerManager.js";
 import { setPlayersPositions } from "./playerMovement.js";
 import { checkPowerUpState, setPowerBarsPlayers } from "./powerUp.js";
@@ -401,7 +401,7 @@ export function socketSendSalonSticker(stickerName)
 {
     if (!listener || listener.readyState !== WebSocket.OPEN)
         return;
-    console.log("Sending salon sticker");
+    // console.log("Sending salon sticker");
     const event = {
         key: keySocket,
         type: "salon_sticker",
@@ -528,7 +528,7 @@ export function addSocketListener()
             // console.log("Exit queue");
             break;
         case "wait_start":
-            if (getLevelState() === LevelMode.DUEL)
+            if (getCurrentView() === "duel")
                 updateReadyButtons(event.p1_state, event.p2_state);
             else
                 updateReadyButtonsMulti(event.p1_state, event.p2_state, event.p3_state, event.p4_state);
@@ -544,10 +544,11 @@ export function addSocketListener()
                 addReadyPlayer(4);
             break;
         case "match_init":
+            console.log(data);
             id_room = event.room_id;
             playerStats.room_id = id_room;
 
-            if (getLevelState() === LevelMode.DUEL)
+            if (getCurrentView() === "duel")
             {
                 setTimeout(() => {
                     matchFound(event.id_p1, event.id_p2);
@@ -561,6 +562,7 @@ export function addSocketListener()
             }
             break;
         case "match_resume":
+            console.log(data);
             removeReadyPlayers();
             break;
         case "list_all":
@@ -570,23 +572,23 @@ export function addSocketListener()
             if (matchAlreadyStarted)
                 break;
             matchAlreadyStarted = true;
-            // console.log(data);
-            if (getLevelState() === LevelMode.DUEL)
+            console.log(data);
+            if (getCurrentView() === "duel")
                 setPlayersControllers();
             else
                 setPlayersControllersMulti();
             break;
         case "bounce_player":
-            { if (event.room_id != playerStats.room_id)
+            if (event.room_id != playerStats.room_id)
                 return;
             const strength = event.ball_boosted ? event.ball_speed * 150 : event.ball_speed * 75;
             startScreenShake(event.ball_speed / 6, strength);
             doUpdateBallLight();
             if (event.ball_speed > 0.78)
                 spawnSparksFunction(getBallPosition(), event.ball_speed * 20);
-            break; }
+            break;
         case "victory": // end of match, dans le lobby ou dans le match
-            console.log("Victory: " + event);
+            console.log("Victory: " + data);
             if (event.room_id != playerStats.room_id)
                 return;
             // console.log(data);
@@ -616,6 +618,7 @@ export function addSocketListener()
             console.log("Got error : " + event.content);
             break;
         case "point":
+            console.log(data);
             if (event.room_id === playerStats.room_id);
             {
                 spawnSparksFunction(getBallPosition(), 400);

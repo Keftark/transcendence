@@ -143,7 +143,6 @@ export async function getUserById(userId) {
         console.error("User ID is required.");
         return;
     }
-
     try {
         const response = await fetch(`/user/${userId}/`);
         if (!response.ok)
@@ -151,7 +150,6 @@ export async function getUserById(userId) {
         const userData = await response.json();
         if (userData.error)
             console.error(userData.error);
-        console.log("Got user: " + userData);
         return userData;
     } catch (error) {
         console.error("An error occurred while fetching the user details:", error);
@@ -164,7 +162,6 @@ export async function getUserName(userId) {
         return;
     }
     try {
-        // console.log("Trying to get the user name");
         const response = await fetch(`/username/${userId}/`);
         if (!response.ok)
             throw new Error(`Failed to fetch user: ${response.status} ${response.statusText}`);

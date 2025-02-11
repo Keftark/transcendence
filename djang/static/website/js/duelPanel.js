@@ -1,4 +1,4 @@
-import { getLoggedInUser, getUserById } from "./apiFunctions.js";
+import { getUserById } from "./apiFunctions.js";
 import { deleteDuelInChat } from "./chat.js";
 import { id_players, passInfosPlayersToLevel } from "./levelLocal.js";
 import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";

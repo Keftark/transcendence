@@ -122,16 +122,13 @@ export function unsetTextures()
     cylinderTexture4 = null;
 }
 
-export function setTextures(p1, p2, p3 = -1, p4 = -1)
+export function setTextures(p1, p2, p3 = null, p4 = null)
 {
     cylinderTexture1 = `static/mat/player${p1.preferredPaddle}.png`;
     cylinderTexture2 = `static/mat/player${p2.preferredPaddle}.png`;
-    if (p3 > -1)
+    if (p3 != null)
     {
-        console.log("Setting paddles");
-        console.log("Setting paddle from p3: " + p3.preferredPaddle);
         cylinderTexture3 = `static/mat/player${p3.preferredPaddle}.png`;
-        console.log("Setting paddle from p4: " + p4.preferredPaddle);
         cylinderTexture4 = `static/mat/player${p4.preferredPaddle}.png`;
     }
 

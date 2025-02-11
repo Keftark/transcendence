@@ -122,7 +122,6 @@ export function getPlayerPosition(playerNbr)
 
 export function animateBoostPlayers()
 {
-    console.log("trying to animate...");
     animatePlayers(player1, player2);
 }
 
@@ -177,6 +176,8 @@ export function getPlayer(playerNbr)
 
 let player1Ready = false;
 let player2Ready = false;
+let player3Ready = false;
+let player4Ready = false;
 export function addReadyPlayer(playerNbr)
 {
     if (playerNbr === 1 && player1Ready === false)
@@ -207,6 +208,10 @@ export function removeReadyPlayers()
     addLightPlayerReady(player1, false);
     player2Ready = false;
     addLightPlayerReady(player2, false);
+    player3Ready = false;
+    addLightPlayerReady(player3, false);
+    player4Ready = false;
+    addLightPlayerReady(player4, false);
 }
 
 function hideInGameUI()
@@ -517,9 +522,10 @@ function resetPlayersPositions()
         player4.position.set(BOUNDARY.X_MAX, 0 - (BOUNDARY.Y_MAX - BOUNDARY.Y_MIN) / 4, 0);
         return;
     }
-    player1.position.set(BOUNDARY.X_MIN, 0, 0);
-    // player1.position.set(0, 0, 0);
-    player1.rotation.y = Math.PI / 6;
+    // player1.position.set(BOUNDARY.X_MIN, 0, 0);
+    // player1.rotation.y = Math.PI / 6;
+    player1.position.set(0, 0, 0);
+    player1.rotation.y = Math.PI / 2.5;
     player2.position.set(BOUNDARY.X_MAX, 0, 0);
 }
 
@@ -619,7 +625,6 @@ function animateDeathSphere()
 
 export function getBallPosition()
 {
-    // console.log(balle.position);
     return balle.position;
 }
 
