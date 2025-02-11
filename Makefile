@@ -43,7 +43,7 @@ first: silent migration migrate superuser
 
 #Launch the superuser creation procedure
 superuser:
-	docker exec -it django python manage.py createsuperuser	
+	docker exec -it django python manage.py createsuperuser
 
 #Take down the project cleanly
 down:
