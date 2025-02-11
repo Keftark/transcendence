@@ -144,7 +144,7 @@ class Match2v2ViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = (SessionAuthentication,)
 
-    def retrieve(self, request: HttpRequest, pk):
+    def retrieve2v2(self, request: HttpRequest, pk):
 
         if (not self.queryset.filter(pk = pk).exists()):
             return Response({"detail": "Match not found."}, status=status.HTTP_404_NOT_FOUND)
@@ -221,7 +221,7 @@ class Historique2v2ViewSet(ViewSet):
     serializer_class = Match2v2Serializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
-    def retrive(self, request: HttpRequest, pk: int = None):
+    def retrive2v2(self, request: HttpRequest, pk: int = None):
         
         user: User = get_object_or_404(User, pk=pk)
         

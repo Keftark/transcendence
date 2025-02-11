@@ -56,7 +56,7 @@ class Match2v2Serializer(serializers.ModelSerializer):
         model = Match2v2
         fields = ["id", "winner1","winner2",  "state", "started", "finished", "player1", "player2", "player3", "player4", "start_timestamp", "stop_timestamp", "match_type"]
 
-    def get_state(self, instance: Match2v2):
+    def get_state2v2(self, instance: Match2v2):
         if (instance.finished):
             return "finished"
         if (instance.started):
@@ -73,7 +73,7 @@ class Match2v2Serializer(serializers.ModelSerializer):
             return None
         return AccountSerializer(instance.winner2.accountmodel).data
 
-    def get_players(self, instance: Match2v2):
+    def get_players2v2(self, instance: Match2v2):
         return AccountSerializer(instance.get_players_profiles(), many=True).data
     
 class TournamentSerializer(serializers.ModelSerializer):
