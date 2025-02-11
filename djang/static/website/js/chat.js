@@ -805,6 +805,10 @@ export function receiveGameSticker(playerId, stickerName)
         stickerPosition = convert3DTo2DScreenSpace(getPlayerPosition(1), getCamera(), getRenderer());
     else if (id_players[1] === playerId)
         stickerPosition = convert3DTo2DScreenSpace(getPlayerPosition(2), getCamera(), getRenderer());
+    else if (id_players[2] === playerId)
+        stickerPosition = convert3DTo2DScreenSpace(getPlayerPosition(3), getCamera(), getRenderer());
+    else if (id_players[3] === playerId)
+        stickerPosition = convert3DTo2DScreenSpace(getPlayerPosition(4), getCamera(), getRenderer());
     const imgDiv = document.createElement('img');
     imgDiv.src = `static/stickers/${stickerName}.webp`;
     imgDiv.classList.add('sticker-disappear');

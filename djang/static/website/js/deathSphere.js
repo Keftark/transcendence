@@ -10,7 +10,7 @@ export function createDeathSphere()
     const baseSphere = new THREE.Mesh(ballGeometry, ballMaterial);
 
     const ballOutGeometry = new THREE.SphereGeometry(1.05, 32, 32);
-    const ballOutTexture = textureLoader.load('static/mat/deathBall.png');
+    const ballOutTexture = textureLoader.load('static/mat/scifiwall.png');
     const material = new THREE.MeshStandardMaterial({
         map: ballOutTexture,
         transparent: true,

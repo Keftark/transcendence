@@ -401,7 +401,7 @@ export function socketSendSalonSticker(stickerName)
 {
     if (!listener || listener.readyState !== WebSocket.OPEN)
         return;
-    console.log("Sending salon sticker");
+    // console.log("Sending salon sticker");
     const event = {
         key: keySocket,
         type: "salon_sticker",

@@ -32,7 +32,6 @@ export function createPlayerStats() {
         matches: [],
         friends: [],
         blacklist: [],
-        paddleSkins: [],
         status: PlayerStatus.ONLINE
     };
 }

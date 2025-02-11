@@ -522,9 +522,10 @@ function resetPlayersPositions()
         player4.position.set(BOUNDARY.X_MAX, 0 - (BOUNDARY.Y_MAX - BOUNDARY.Y_MIN) / 4, 0);
         return;
     }
-    player1.position.set(BOUNDARY.X_MIN, 0, 0);
-    // player1.position.set(0, 0, 0);
-    player1.rotation.y = Math.PI / 6;
+    // player1.position.set(BOUNDARY.X_MIN, 0, 0);
+    // player1.rotation.y = Math.PI / 6;
+    player1.position.set(0, 0, 0);
+    player1.rotation.y = Math.PI / 2.5;
     player2.position.set(BOUNDARY.X_MAX, 0, 0);
 }
 
