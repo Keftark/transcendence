@@ -40,6 +40,8 @@ function getBallTexturePath()
         return 'static/mat/caveBall.png';
     if (levelType === ArenaType.SPACE)
         return 'static/mat/spaceBall.png';
+    if (levelType === ArenaType.VOLCANO)
+        return 'static/mat/lava.png';
 }
 
 function createBallBoostModel(textureLoader)
