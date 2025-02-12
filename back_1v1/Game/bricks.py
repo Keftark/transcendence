@@ -1,7 +1,7 @@
 """BRICKS"""
 
 import random
-from obstacle import Obstacle
+from Game.obstacle import Obstacle
 
 class Brick():
     """A simple abstract brick.
@@ -42,12 +42,13 @@ class Brick():
             brick.x += x
             brick.y += y
 
-    def tick(self):
+    def tick(self, ball):
         """Checks all brick. If a brick life is equal 
         or below 0, it gets deleted, unless it is unbreakable.
         """
         for brick in self.bricks:
-            if (brick.breakable and brick.life <= 0):
+            brick.collide(ball)
+            if brick.breakable and brick.life <= 0:
                 self._bricks.remove(brick)
 
     def dump_brick(self):
@@ -58,12 +59,12 @@ class Brick():
         """
         dump = []
         for brick in self._bricks:
-            data = "["
-            data += "x: " + brick.x
-            data += ", y: " + brick.y
-            data += ", color: " + brick.color
-            data += ", life: " + brick.life
-            data += "], "
+            data = {
+                "x": brick.x,
+                "y": brick.y,
+                "color": brick.color,
+                "life": brick.life
+            }
             dump.append(data)
         return dump
 
@@ -102,6 +103,19 @@ class BrickTriangle(Brick):
         self.add_brick(Obstacle(0, 2, 1, 1, 0x2618c4))
         self.add_brick(Obstacle(1, 1, 1, 1, 0x2618c4))
 
+class BrickTriangleUnbreak(Brick):
+    """A triangle but unbreakable
+    #     o
+    #     oo
+    #     o
+    """
+    def __init__(self):
+        super().__init__()
+        self.add_brick(Obstacle(0, 0, 1, -1, 0x666666))
+        self.add_brick(Obstacle(0, 1, 1, -1, 0x666666))
+        self.add_brick(Obstacle(0, 2, 1, -1, 0x666666))
+        self.add_brick(Obstacle(1, 1, 1, -1, 0x666666))
+
 class BrickTriangleReverse(Brick):
     """Also a triangle
     #     o
@@ -114,6 +128,19 @@ class BrickTriangleReverse(Brick):
         self.add_brick(Obstacle(1, 1, 1, 1, 0x2618c4))
         self.add_brick(Obstacle(1, 2, 1, 1, 0x2618c4))
         self.add_brick(Obstacle(0, 1, 1, 1, 0x2618c4))
+
+class BrickTriangleReverseUnbreak(Brick):
+    """Also a triangle but you can't touch this
+    #     o
+    #    oo
+    #     o
+    """
+    def __init__(self):
+        super().__init__()
+        self.add_brick(Obstacle(1, 0, 1, -1, 0x666666))
+        self.add_brick(Obstacle(1, 1, 1, -1, 0x666666))
+        self.add_brick(Obstacle(1, 2, 1, -1, 0x666666))
+        self.add_brick(Obstacle(0, 1, 1, -1, 0x666666))
 
 class BrickTriangleUp(Brick):
     """Again a triangle

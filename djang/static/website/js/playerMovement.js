@@ -16,6 +16,7 @@ let isBoostedRight = false;
 let botTargetPosition = 0;
 const botDelay = 1000;
 let rotationBoost = 0;
+let mode;
 
 export function setPlayerController(id_p1, id_p2, id_p3 = null, id_p4 = null)
 {
@@ -29,9 +30,9 @@ export function setPlayerController(id_p1, id_p2, id_p3 = null, id_p4 = null)
         playerStats.playerController = 4;
 }
 
-export function setPlayersPositions(p1Pos, p2Pos)
+export function setPlayersPositions(p1Pos, p2Pos, p3Pos, p4Pos)
 {
-    setPlayersPositionsFunction(p1Pos, p2Pos);
+    setPlayersPositionsFunction(p1Pos, p2Pos, p3Pos, p4Pos);
 }
 
 export function addPlayerMovementKeyDown(event)
@@ -46,11 +47,11 @@ export function addPlayerMovementKeyUp(event)
 
 export function showBoostPlayer(playerNbr, showOrHide)
 {
-    if (playerNbr === 0)
+    if (playerNbr === 0 || playerNbr === 2)
     {
         isBoostedLeft = showOrHide;
     }
-    else
+    else if (playerNbr === 1 || playerNbr === 3)
     {
         isBoostedRight = showOrHide;
     }
@@ -59,14 +60,7 @@ export function showBoostPlayer(playerNbr, showOrHide)
 
 export function boostPlayer(playerNbr)
 {
-    if (playerNbr === 0)
-    {
-        socketBoostPaddle(); // WTF!!! it's the same thing
-    }
-    else
-    {
-        socketBoostPaddle();
-    }
+    socketBoostPaddle(mode);
     showBoostPlayer(playerNbr, true);
 }
 
@@ -156,7 +150,7 @@ export function setupPlayerMovement(player1, player2, player3, player4)
     boundsPlayer[2] = boundsPlayer[3] = setPlayer3Bounds(levelState);
     const boundymax = setPlayer1Bounds(levelState).max;
     const boundymin = setPlayer1Bounds(levelState).min;
-    const mode = levelState === LevelMode.ONLINE ? "1v1_classic" : "2v2_classic";
+    mode = levelState === LevelMode.ONLINE ? "1v1_classic" : "2v2_classic";
 
     function checkKeys(event, isTrue)
     {
@@ -209,10 +203,15 @@ export function setupPlayerMovement(player1, player2, player3, player4)
             return player4;
     }
 
-    setPlayersPositionsFunction = function setPlayerPosition(p1Pos, p2Pos)
+    setPlayersPositionsFunction = function setPlayerPosition(p1Pos, p2Pos, p3Pos = null, p4Pos = null)
     {
+
         player1.position.y = p1Pos;
         player2.position.y = p2Pos;
+        if (p3Pos === null)
+            return;
+        player3.position.y = p3Pos;
+        player4.position.y = p4Pos;
     }
 
     let isUp = false;

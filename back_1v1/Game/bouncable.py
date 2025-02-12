@@ -1,7 +1,5 @@
 """Bouncable class file"""
 
-PRECISION = 5
-
 class Bouncable():
     """A bouncable is a physical object that does not move
     and will instead bounce a ball upon contact.
@@ -84,14 +82,18 @@ class Bouncable():
 
             if next_x + ball.radius > left and next_x - ball.radius < right and \
             next_y + ball.radius > bottom and next_y - ball.radius < top:
-                if ball.x < left <= next_x + ball.radius:
+                if ball.x < left <= next_x + ball.radius and ball.can_bounce:
                     self.bounce_event_left(ball)
-                elif ball.x > right >= next_x - ball.radius:
+                    ball.can_bounce = False
+                elif ball.x > right >= next_x - ball.radius and ball.can_bounce:
                     self.bounce_event_right(ball)
-                elif ball.y > top >= next_y - ball.radius:
+                    ball.can_bounce = False
+                elif ball.y > top >= next_y - ball.radius and ball.can_bounce:
                     self.bounce_event_top(ball)
-                elif ball.y < bottom <= next_y + ball.radius:
+                    ball.can_bounce = False
+                elif ball.y < bottom <= next_y + ball.radius and ball.can_bounce:
                     self.bounce_event_bottom(ball)
+                    ball.can_bounce = False
 
     @property
     def x(self):
