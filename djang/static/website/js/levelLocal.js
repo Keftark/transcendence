@@ -818,7 +818,7 @@ export function StartLevel(levelMode)
             }
         }
         if (animateLevelFunction != null)
-            animateLevelFunction();
+            animateLevelFunction(scene);
         animateDeathSphere();
         renderer.render(scene, camera);
         if (!toggleReset)

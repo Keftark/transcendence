@@ -13,8 +13,12 @@ export const ArenaType =
 {
     CAVE: 0,
     SPACE: 1,
+	VOLCANO: 2,
+	GRASSLAND: 3,
 	0: "Cave",
-	1: "Space"
+	1: "Space",
+	2: "Volcano",
+	3: "Grasslands"
 }
 
 export const VictoryType =
