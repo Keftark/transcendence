@@ -1,4 +1,4 @@
-import { getUserById } from "./apiFunctions.js";
+import { getUserAvatarById, getUserById } from "./apiFunctions.js";
 import { id_players, passInfosPlayersToLevelMulti } from "./levelLocal.js";
 import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
 import { clickPlayGame, setSelectedMode, showModeChoice } from "./modesSelection.js";
@@ -184,7 +184,7 @@ export function matchFoundMulti(player1, player2, player3, player4)
         getUserAvatarById(player3),
         getUserAvatarById(player4)
     ])
-    .then(() => {
+    .then(results => {
         const [ , , , , avatar1, avatar2, avatar3, avatar4 ] = results;
         document.getElementById('waitingMatch').style.display = "none";
         player1Img.src = avatar1.avatar_url;
