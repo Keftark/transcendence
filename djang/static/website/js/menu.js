@@ -7,6 +7,7 @@ import { addDisableButtonEffect, removeDisableButtonEffect, setLevelState } from
 import { clickBackButtonMenu, showModeChoice } from './modesSelection.js';
 import { getCurrentView, navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
+import { openGdprPanel } from './registration.js';
 import { loadScores, removeAllScores } from './scoreManager.js';
 import { exitGameSocket } from './sockets.js';
 import { openTournamentView, setCancelledInMatch } from './tournament.js';
@@ -85,6 +86,10 @@ buttonAcceptChangeField.addEventListener('click', () => {
 });
 buttonCancelChangeField.addEventListener('click', () => {
     closeEditProfileField();
+});
+
+document.getElementById('bottomGdprDiv').addEventListener('click', () => {
+    openGdprPanel();
 });
 
 document.getElementById('showConfirmNewPasswordButton').addEventListener('click', () => {

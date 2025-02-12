@@ -353,9 +353,8 @@ export function openGdprPanel()
     gdprIsOpen = true;
     gdprPanel.style.display = 'flex';
     setTimeout(() => {
-        
         document.getElementById('gdprPanel').focus();
-    }, 10);
+    }, 50);
 }
 
 export function closeGdprPanel()
@@ -363,11 +362,18 @@ export function closeGdprPanel()
     document.querySelector('#gdprPanel').scrollTop = 0;
     gdprIsOpen = false;
     gdprPanel.style.display = 'none';
-    if (isFirstTime)
-        inputName.focus();
+    if (isRegistOpen)
+    {
+        if (isFirstTime)
+            inputName.focus();
+        else
+            checkboxGdpr.focus();
+        isFirstTime = false;
+    }
     else
-        checkboxGdpr.focus();
-    isFirstTime = false;
+    {
+        document.getElementById('bottomGdprDiv').focus();
+    }
 }
 
 function addSelectableTexts()
