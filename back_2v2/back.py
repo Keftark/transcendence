@@ -290,11 +290,7 @@ async def handler(websocket):
     """
     try:
         async for message in websocket:
-            event = json.loads(message)
-            if event["type"] == "ping":
-                pass #on est content on fait rien
-            print("got it ", message)
-            await add_to_parse(event)
+            await add_to_parse(message)
     except Exception as e:
         logger.log("Error while reading from websocket", 2, e)
 
@@ -369,23 +365,26 @@ async def connection_handler():
     connected, attempts to connect instead.
     """
     while Sockets.STOP_FLAG is False:
-        async with lock_a:
-            if Sockets.CENTRAL_SOCKET is None:
-                try:
-                    logger.log("Attempting connection to central server.", 1)
-                    uri = "wss://172.17.0.1:" + str(CENTRAL_PORT) + "/"
-                    Sockets.CENTRAL_SOCKET = await connect(uri, ping_interval=10,
-                                                        ping_timeout=None, ssl=ssl_client)
-                    logger.log("Central server connected.", 1)
-                except Exception as e:
-                    Sockets.CENTRAL_SOCKET = None
-                    logger.log("Couldn't connect to the central server", 2, e)
-            else:
-                try:
-                    await Sockets.CENTRAL_SOCKET.send(json.dumps(pong()))
-                except Exception as e:
-                    logger.log("Error while pinging central server", 2, e)
-        await asyncio.sleep(5)
+        try:
+            async with lock_a:
+                if Sockets.CENTRAL_SOCKET is None:
+                    try:
+                        logger.log("Attempting connection to central server.", 1)
+                        uri = "wss://172.17.0.1:" + str(CENTRAL_PORT) + "/"
+                        Sockets.CENTRAL_SOCKET = await connect(uri, ping_interval=10,
+                                                            ping_timeout=None, ssl=ssl_client)
+                        logger.log("Central server connected.", 1)
+                    except Exception as e:
+                        Sockets.CENTRAL_SOCKET = None
+                        logger.log("Couldn't connect to the central server", 2, e)
+                else:
+                    try:
+                        await Sockets.CENTRAL_SOCKET.send(json.dumps(pong()))
+                    except Exception as e:
+                        logger.log("Error while pinging central server", 2, e)
+            await asyncio.sleep(1)
+        except Exception as e:
+            logger.log("Holu shit", 2, e)
 
 def signal_handler(sig, frame):
     """Handles signals.
