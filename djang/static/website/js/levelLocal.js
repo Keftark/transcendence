@@ -512,6 +512,8 @@ function setUpLevel(scene)
     createLights(scene, arenaType);
     resetPlayersPositions();
     if (arenaType === ArenaType.SPACE)
+        animateLevelFunction = createSpaceLevel(scene, textureLoader);
+    if (arenaType === ArenaType.VOLCANO)
         animateLevelFunction = createVolcanoLevel(scene, textureLoader);
     else if (arenaType === ArenaType.CAVE)
         createCaveLevel(scene, textureLoader);

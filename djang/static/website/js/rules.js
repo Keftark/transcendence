@@ -13,6 +13,9 @@ document.getElementById('rulesArenaTypeCave').addEventListener('click', () => {
 document.getElementById('rulesArenaTypeSpace').addEventListener('click', () => {
     selectArena(1);
 });
+document.getElementById('rulesArenaTypeVolcano').addEventListener('click', () => {
+    selectArena(2);
+});
 document.getElementById('rulesIsPrivateToggle').addEventListener('click', () => {
     togglePrivate();
 });
