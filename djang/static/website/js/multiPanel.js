@@ -54,6 +54,7 @@ let player4IsReady = false;
 
 export function isPlayerSameSide(id)
 {
+    console.log("Player id: " + playerStats.id + ", winner: " + id);
     if (playerStats.id === id
         || (id === idP1 && playerStats.id === idP3) 
         || (id === idP3 && playerStats.id === idP1)
@@ -75,11 +76,12 @@ export function closeMultiPanel()
 
 function resetMultiPanel()
 {
+    idP4 = idP3 = idP3 = idP4 = -1;
+    player4IsReady = player3IsReady = player2IsReady = player1IsReady = false;
     player4Multi.classList.remove('selectedPlayer');
     player3Multi.classList.remove('selectedPlayer');
     player2Multi.classList.remove('selectedPlayer');
     player1Multi.classList.remove('selectedPlayer');
-    player4IsReady = player3IsReady = player2IsReady = player1IsReady = false;
     player1ReadyButton.classList.remove('active');
     player2ReadyButton.classList.remove('active');
     player3ReadyButton.classList.remove('active');
@@ -99,7 +101,6 @@ function resetMultiPanel()
 
 export function onCloseMulti()
 {
-    idP4 = idP3 = idP3 = idP4 = -1;
     resetMultiPanel();
 
     // document.getElementById('duelPanel').style.display = 'none'; // inutile ??

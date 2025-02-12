@@ -99,6 +99,11 @@ export function getRenderer()
     return renderer;
 }
 
+export function getPlayerNbr()
+{
+    return playersId.indexOf(playerStats.id);
+}
+
 export function setPlayersIds(player1Id, player2Id, player3Id = 0, player4Id = 0)
 {
     playersId[0] = player1Id;
@@ -606,7 +611,6 @@ function animateDeathSphere()
 {
     if (deathSphere != null)
         {
-            console.log("Death sphere");
             if (!deathSphereGrew)
             {
                 if (scaleSphere < 20)
@@ -961,6 +965,8 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
     deathSphere = createDeathSphere();
     scene.add(deathSphere);
     deathSphere.position.set(balle.position.x, balle.position.y, balle.position.z);
+    if (isAnOnlineMode(currentLevelMode))
+        return;
     setTimeout(() => {
         let winner = '';
         if (scoreP1 > scoreP2)

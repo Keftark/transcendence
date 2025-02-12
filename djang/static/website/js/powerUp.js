@@ -1,4 +1,5 @@
 import { showBoostedBall } from "./ball.js";
+import { getPlayerNbr } from "./levelLocal.js";
 import { boostPlayer, showBoostPlayer } from "./playerMovement.js";
 
 const boostBarUILeft = document.getElementById('boostBarUILeft');
@@ -15,10 +16,42 @@ let fillAmountRight = 0;
 let isReadyRight = false;
 let doOnceRight = false;
 
-export function setPowerBarsPlayers(p1Amount, p2Amount)
+let p1OldAmount = 0; 
+let p2OldAmount = 0; 
+let p3OldAmount = 0; 
+let p4OldAmount = 0; 
+
+export function setPowerBarsPlayers(p1Amount, p2Amount, p3Amount = null, p4Amount = null)
 {
-    setPowerBarLeft(p1Amount);
-    setPowerBarRight(p2Amount);
+    if (p1Amount === p1OldAmount && p2Amount === p2OldAmount)
+        return;
+    if (p3Amount !== null && p1Amount === p1OldAmount && p2Amount === p2OldAmount && p3Amount === p3OldAmount && p4Amount === p4OldAmount)
+        return;
+    const playerNbr = getPlayerNbr();
+    if (playerNbr === 0)
+    {
+        console.log("P1 changes its state: " + p1Amount);
+        p1OldAmount = p1Amount;
+        setPowerBarLeft(p1Amount);
+    }
+    else if (playerNbr === 1)
+    {
+        console.log("P2 changes its state: " + p2Amount);
+        p2OldAmount = p2Amount;
+        setPowerBarRight(p2Amount);
+    }
+    else if (playerNbr === 2)
+    {
+        console.log("P3 changes its state: " + p3Amount);
+        p3OldAmount = p3Amount;
+        setPowerBarLeft(p3Amount);
+    }
+    else if (playerNbr === 3)
+    {
+        console.log("P4 changes its state: " + p4Amount);
+        p4OldAmount = p4Amount;
+        setPowerBarRight(p4Amount);
+    }
 }
 
 export function resetPowerBarLeft()

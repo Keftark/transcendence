@@ -9,7 +9,7 @@ import { isPlayerSameSide, matchFoundMulti, setPlayersControllersMulti, updateRe
 import { getCurrentView, navigateTo } from "./pages.js";
 import { playerStats } from "./playerManager.js";
 import { setPlayersPositions } from "./playerMovement.js";
-import { checkPowerUpState, setPowerBarsPlayers } from "./powerUp.js";
+import { checkPowerUpState, resetBoostBar, setPowerBarsPlayers } from "./powerUp.js";
 import { endOfMatch } from "./scoreManager.js";
 import { setTimeFromServer } from "./timer.js";
 import { LevelMode, VictoryType } from "./variables.js";
@@ -580,7 +580,7 @@ export function addSocketListener()
             // console.log("Victory: " + data);
             if (event.room_id != playerStats.room_id)
                 return;
-            // console.log(data);
+            console.log(data);
             if (event.mode === "abandon" && event.player != playerStats.id)
             {
                 closeDuelPanel();
@@ -610,6 +610,7 @@ export function addSocketListener()
             // console.log(data);
             if (event.room_id === playerStats.room_id);
             {
+                resetBoostBar();
                 spawnSparksFunction(getBallPosition(), 400);
                 let nbr = getPlayerSideById(event.player) + 1;
                 // inversion du joueur ayant marque un but
@@ -624,10 +625,10 @@ export function addSocketListener()
             // console.log("oui");
             if (event.room_id === playerStats.room_id);
             {
-                console.log(data);
+                // console.log(data);
                 setPlayersPositions(event.p1_pos, event.p2_pos, event.p3_pos, event.p4_pos);
                 setBallPosition(event.ball_x, event.ball_y);
-                setPowerBarsPlayers(event.p1_juice, event.p2_juice);
+                setPowerBarsPlayers(event.p1_juice, event.p2_juice, event.p3_juice, event.p4_juice);
                 checkPowerUpState(event.p1_boosting, event.p2_boosting, event.ball_boosting);
                 setTimeFromServer(event.timer);
             }

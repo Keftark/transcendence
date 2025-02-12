@@ -137,7 +137,7 @@ export function setTextures(p1, p2, p3 = null, p4 = null)
 export function createPlayers(scene, textureLoader)
 {
     const levelState = getLevelState();
-    const playerSize = levelState === LevelMode.MULTI ? PLAYER_HEIGHT / 1.5 : PLAYER_HEIGHT;
+    const playerSize = levelState === LevelMode.MULTI ? PLAYER_HEIGHT / 1.6 : PLAYER_HEIGHT;
     if (cylinderTexture1 === null)
     {
         const paddle = playerStats.currentPaddleSkin;
