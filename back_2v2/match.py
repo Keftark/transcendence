@@ -3,6 +3,7 @@
 import threading
 import time
 import random
+import os
 from Game.paddle import Paddle
 from Game.ball import Ball
 from Game.board import Board
@@ -20,18 +21,23 @@ class Match:
         self._formatted_queue = []
         self._side_left_score = 0
         self._side_right_score = 0
-        self._point_to_win = 3
+        self._point_to_win = int(os.environ.get("MATCH_POINT_TO_WIN", 3))
         self._timer_count = 0
         self._quitter = 0
         self._max_time_seconds = -1
-        self._board = Board(25, 40)
-        self._paddle_l1 = Paddle(p1, self._board.min_x + 1, 8, \
+        self._board = Board(int(os.environ.get("BOARD_HEIGTH", 25)),
+                            int(os.environ.get("BOARD_WIDTH", 40)))
+        self._paddle_l1 = Paddle(p1, self._board.min_x + 1, \
+                                    int(os.environ.get("PADDLE_SIZE_SMALL", 8)), \
                                     self._board.max_y, 2)
-        self._paddle_l2 = Paddle(p2, self._board.min_x + 1, 8, \
+        self._paddle_l2 = Paddle(p2, self._board.min_x + 1, \
+                                    int(os.environ.get("PADDLE_SIZE_SMALL", 8)), \
                                     -2, self._board.min_y)
-        self._paddle_r1 = Paddle(p3, self._board.max_x - 2, 8, \
+        self._paddle_r1 = Paddle(p3, self._board.max_x - 2, \
+                                    int(os.environ.get("PADDLE_SIZE_SMALL", 8)), \
                                     self._board.max_y, 2)
-        self._paddle_r2 = Paddle(p4, self._board.max_x - 2, 8, \
+        self._paddle_r2 = Paddle(p4, self._board.max_x - 2, \
+                                    int(os.environ.get("PADDLE_SIZE_SMALL", 8)), \
                                     -2, self._board.min_y)
         self._ball = Ball(self._room_id)
         self._initialised = False

@@ -2,10 +2,10 @@
 
 import math
 import random
+import os
 
 MAX_BOUNCE_ANGLE = math.radians(60)
-MAX_SPEED = 5
-PRECISION = 5
+MAX_SPEED = float(os.environ.get("BALL_SPEED_LIMIT", 8))
 
 class Ball:
     """A ball class that balls around
@@ -13,15 +13,15 @@ class Ball:
     def __init__(self, room_id):
         self._x = 0
         self._y = 0
-        self._speed = 0.7
+        self._speed = float(os.environ.get("BALL_SPEED_INITIAL", 0.7))
         self._base_speed = self._speed
         self._velocity_x = self._speed if random.random() < 0.5 else self._speed * -1
-        self._velocity_y = 0
+        self._velocity_y = self._speed if random.random() < 0.5 else self._speed * -1
         self._velocity_boosted_x = 0
         self._velocity_boosted_y = 0
-        self._speed_increment = 1.01
+        self._speed_increment = float(os.environ.get("BALL_SPEED_INCREMENT", 1.01))
         self._bounce_angle_max = 75 * math.pi / 180
-        self._radius = 0.7
+        self._radius = float(os.environ.get("BALL_RADIUS", 0.7))
         self._is_powered_up = False
         self._power_boost = 1.5
         self._room_id = room_id
@@ -54,7 +54,7 @@ class Ball:
         self._y = 0
         self._speed = self._base_speed
         self._velocity_x = self._speed if side else self._speed * -1
-        self._velocity_y = 0
+        self._velocity_y = self._speed if random.random() < 0.5 else self._speed * -1
         self._velocity_boosted_x = self._velocity_x
         self._velocity_boosted_y = 0
         self._is_powered_up = False

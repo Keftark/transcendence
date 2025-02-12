@@ -1,7 +1,5 @@
 """Bouncable class file"""
 
-PRECISION = 5
-
 class Bouncable():
     """A bouncable is a physical object that does not move
     and will instead bounce a ball upon contact.

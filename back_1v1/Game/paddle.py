@@ -1,8 +1,9 @@
 """"Paddle"""
 
+import os
 from Game.bouncable import Bouncable
 
-DEFAULT_SPEED = 0.75
+DEFAULT_SPEED = float(os.environ.get("PADDLE_SPEED", 0.75))
 MOVE_UP    = 1
 MOVE_DOWN  = -1
 MOVE_NONE = 0
@@ -19,8 +20,8 @@ class Paddle(Bouncable):
         self._vertical = MOVE_NONE
         self._ready = False
         self._power = 0
-        self._power_per_bounce = 25
-        self._power_multiplier = 2
+        self._power_per_bounce = int(os.environ.get("PADDLE_POWER_PER_BOUNCE", 25))
+        self._power_multiplier = float(os.environ.get("PADDLE_POWER_MULTIPLIER", 25))
         self._is_powered_up = False
         #Event list
         self._message_queue = []
