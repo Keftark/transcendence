@@ -42,11 +42,12 @@ class Brick():
             brick.x += x
             brick.y += y
 
-    def tick(self):
+    def tick(self, ball):
         """Checks all brick. If a brick life is equal 
         or below 0, it gets deleted, unless it is unbreakable.
         """
         for brick in self.bricks:
+            brick.collide(ball)
             if brick.breakable and brick.life <= 0:
                 self._bricks.remove(brick)
 

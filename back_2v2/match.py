@@ -217,6 +217,8 @@ class Match:
                 self._paddle_l2.collide(self._ball)
                 self._paddle_r1.collide(self._ball)
                 self._paddle_r2.collide(self._ball)
+                for brick in self.board.bricks:
+                    brick.tick(self._ball)
                 if self._ball.x < self._board.min_x: #point for p2
                     self._side_right_score += 1
                     self.reset_board()

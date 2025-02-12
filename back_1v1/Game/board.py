@@ -108,3 +108,16 @@ class Board:
     @max_y.setter
     def max_y(self, value):
         self._max_y = value
+
+    @property
+    def bricks(self):
+        """Returns the upper y bound (up side).
+
+        Returns:
+            float: up side y
+        """
+        return self._bricks
+
+    @bricks.setter
+    def bricks(self, value):
+        self._bricks = value
