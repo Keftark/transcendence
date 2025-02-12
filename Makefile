@@ -38,7 +38,7 @@ show-mig:
 	docker exec -it django python manage.py showmigrations
 
 #Does the first launch procedure
-first: silent migration migrate superuser 
+first: update key silent migration migrate superuser 
 	docker compose logs -f
 
 #Launch the superuser creation procedure

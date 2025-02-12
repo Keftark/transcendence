@@ -301,6 +301,7 @@ class Match:
         Returns:
             dict: dump for the point.
         """
+        print("BOOM POINT")
         event = {
             "type": "point",
             "room_id": self._room_id,
