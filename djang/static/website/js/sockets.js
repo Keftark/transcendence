@@ -63,13 +63,15 @@ export function socketConnectToDuel(mode = "1v1_classic")
 {
     getBlockedList(true)
     .then((results) => {
+        console.log("Array: " + results);
         const event = {
             key: keySocket,
             server: mode,
             type: "join",
             answer: "no",
             id: playerStats.id,
-            blacklist: results,
+            // blacklist: results,
+            blacklist: {},
             private: "none",
             invited_by: 8,
             payload: {}
@@ -91,7 +93,8 @@ export function socketConnectToDuelInvited(playerId)
             type: "join",
             answer: "no",
             id: playerStats.id,
-            blacklist: results,
+            // blacklist: results,
+            blacklist: {},
             private: "join",
             invited_by: playerId,
             payload: {}
@@ -186,6 +189,7 @@ export function socketSendPlayerReady(mode = "1v1_classic")
 
 export function socketPlayerUp(mode = "1v1_classic")
 {
+    console.log("Up. Mode: " + mode);
     const event = {
         key: keySocket,
         answer: "no",
@@ -201,6 +205,7 @@ export function socketPlayerUp(mode = "1v1_classic")
 
 export function socketPlayerUpNot(mode = "1v1_classic")
 {
+    console.log("Up not. Mode: " + mode);
     const event = {
         key: keySocket,
         answer: "no",
@@ -216,6 +221,7 @@ export function socketPlayerUpNot(mode = "1v1_classic")
 
 export function socketPlayerDown(mode = "1v1_classic")
 {
+    console.log("Down. Mode: " + mode);
     const event = {
         key: keySocket,
         answer: "no",
@@ -231,6 +237,7 @@ export function socketPlayerDown(mode = "1v1_classic")
 
 export function socketPlayerDownNot(mode = "1v1_classic")
 {
+    console.log("Down not. Mode: " + mode);
     const event = {
         key: keySocket,
         answer: "no",
