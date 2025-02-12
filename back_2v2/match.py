@@ -24,13 +24,13 @@ class Match:
         self._quitter = 0
         self._max_time_seconds = -1
         self._board = Board(25, 40)
-        self._paddle_r1 = Paddle(p1, self._board.min_x + 1, 4, \
+        self._paddle_r1 = Paddle(p1, self._board.min_x + 1, 8, \
                                     self._board.max_y, 2)
-        self._paddle_r2 = Paddle(p2, self._board.max_x - 2, 4, \
+        self._paddle_r2 = Paddle(p2, self._board.min_x + 1, 8, \
                                     -2, self._board.min_y)
-        self._paddle_l1 = Paddle(p3, self._board.min_x + 1, 4, \
+        self._paddle_l1 = Paddle(p3, self._board.max_x - 2, 8, \
                                     self._board.max_y, 2)
-        self._paddle_l2 = Paddle(p4, self._board.max_x - 2, 4, \
+        self._paddle_l2 = Paddle(p4, self._board.max_x - 2, 8, \
                                     -2, self._board.min_y)
         self._ball = Ball(self._room_id)
         self._initialised = False
@@ -110,14 +110,14 @@ class Match:
             self._message_queue.append(self.dump_victory(self._paddle_r1.id, "points"))
         elif self._side_2_score >= self._point_to_win:
             self._ended = True
-            self._message_queue.append(self.dump_victory(self._paddle_r2.id, "points"))
+            self._message_queue.append(self.dump_victory(self._paddle_l1.id, "points"))
         elif self._max_time_seconds > 0 and self._timer_count >= self._max_time_seconds:
             if self._side_1_score > self._side_2_score:
                 self._ended = True
                 self._message_queue.append(self.dump_victory(self._paddle_r1.id, "timer"))
             elif self._side_1_score < self._side_2_score:
                 self._ended = True
-                self._message_queue.append(self.dump_victory(self._paddle_r2.id, "timer"))
+                self._message_queue.append(self.dump_victory(self._paddle_l1.id, "timer"))
             else:
                 self._ended = True
                 self._message_queue.append(self.dump_victory(0, "equal"))
@@ -213,10 +213,12 @@ class Match:
                     self._side_2_score += 1
                     self.reset_board()
                     self._message_queue.append(self.dump_point(self._paddle_r2.id))
+                    print(f"A point as been marked. The score is now {self._side_1_score}/{self._side_2_score}")
                 elif self._ball.x > self._board.max_x: #point for p1
                     self._side_1_score += 1
                     self.reset_board()
                     self._message_queue.append(self.dump_point(self._paddle_l1.id))
+                    print(f"A point as been marked. The score is now {self._side_1_score}/{self._side_2_score}")
                 self._message_queue.append(self.dump_variables())
             else:
                 self._message_queue.append(self.dump_waiting())
@@ -301,7 +303,6 @@ class Match:
         Returns:
             dict: dump for the point.
         """
-        print("BOOM POINT")
         event = {
             "type": "point",
             "room_id": self._room_id,
@@ -371,8 +372,8 @@ class Match:
             "type": "wait_ready",
             "room_id": self._room_id,
             "p1_state": self._paddle_r1.ready,
-            "p2_state": self._paddle_r2.ready,
-            "p3_state": self._paddle_l1.ready,
+            "p2_state": self._paddle_l1.ready,
+            "p3_state": self._paddle_r2.ready,
             "p4_state": self._paddle_l2.ready
         }
         return event
@@ -387,8 +388,8 @@ class Match:
             "type": "wait_start",
             "room_id": self._room_id,
             "p1_state": self._paddle_r1.ready,
-            "p2_state": self._paddle_r2.ready,
-            "p3_state": self._paddle_l1.ready,
+            "p2_state": self._paddle_l1.ready,
+            "p3_state": self._paddle_r2.ready,
             "p4_state": self._paddle_l2.ready
         }
         return event
@@ -404,8 +405,8 @@ class Match:
             "type": "wait_start_invited",
             "room_id": self._room_id,
             "p1_state": self._paddle_r1.ready,
-            "p2_state": self._paddle_r2.ready,
-            "p3_state": self._paddle_l1.ready,
+            "p2_state": self._paddle_l1.ready,
+            "p3_state": self._paddle_r2.ready,
             "p4_state": self._paddle_l2.ready
         }
         return event
@@ -420,8 +421,8 @@ class Match:
             "type": "match_init",
             "room_id": self._room_id,
             "id_p1": self._paddle_r1.id,
-            "id_p2": self._paddle_r2.id,
-            "id_p3": self._paddle_l1.id,
+            "id_p2": self._paddle_l1.id,
+            "id_p3": self._paddle_r2.id,
             "id_p4": self._paddle_l2.id
         }
         return event
@@ -436,8 +437,8 @@ class Match:
             "type": "match_start",
             "room_id": self._room_id,
             "id_p1": self._paddle_r1.id,
-            "id_p2": self._paddle_r2.id,
-            "id_p3": self._paddle_l1.id,
+            "id_p2": self._paddle_l1.id,
+            "id_p3": self._paddle_r2.id,
             "id_p4": self._paddle_l2.id
         }
         return event
@@ -465,18 +466,18 @@ class Match:
             "type": "tick",
             "room_id": self._room_id,
             "p1_pos": self._paddle_r1.y,
-            "p2_pos": self._paddle_r2.y,
-            "p3_pos": self._paddle_l1.y,
+            "p2_pos": self._paddle_l1.y,
+            "p3_pos": self._paddle_r2.y,
             "p4_pos": self._paddle_l2.y,
             "p1_score": self._side_1_score,
             "p2_score": self._side_2_score,
             "p1_boosting": self._paddle_r1.is_powered_up,
-            "p2_boosting": self._paddle_r2.is_powered_up,
-            "p3_boosting": self._paddle_l1.is_powered_up,
+            "p2_boosting": self._paddle_l1.is_powered_up,
+            "p3_boosting": self._paddle_r2.is_powered_up,
             "p4_boosting": self._paddle_l2.is_powered_up,
             "p1_juice": self._paddle_r1.power,
-            "p2_juice": self._paddle_r2.power,
-            "p3_juice": self._paddle_l1.power,
+            "p2_juice": self._paddle_l1.power,
+            "p3_juice": self._paddle_r2.power,
             "p4_juice": self._paddle_l2.power,
             "ball_x": self._ball.x,
             "ball_y": self._ball.y,

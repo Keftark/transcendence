@@ -12,6 +12,7 @@ class Paddle(Bouncable):
     """
     def __init__(self, _id, x, _len, board_top_y, board_bottom_y):
         super().__init__(x, (board_top_y + board_bottom_y) / 2, 0.5, _len)
+        print(f"initialised player {_id} with paramets x : {x}, top y : {board_top_y}, bottom y : {board_bottom_y}, y : {self.y}")
         self._id = _id
         self._speed = DEFAULT_SPEED
         self._y_max = board_top_y
@@ -49,28 +50,33 @@ class Paddle(Bouncable):
     def move_up(self):
         """Displaces the paddle up.
         """
+        print(f"moving paddle {self.id} from {self.y}")
         if self.upper_bound() < self._y_max:
-            self._y += self._speed + self._speed_bonus
+            self.y += self._speed + self._speed_bonus
 
     def move_down(self):
         """Displaces the paddle down.
         """
+        print(f"moving paddle {self.id} from {self.y}")
         if self.lower_bound() > self._y_min:
-            self._y -= self._speed + self._speed_bonus
+            self.y -= self._speed + self._speed_bonus
 
     def set_move_up(self):
         """Sets the movement of the paddle upwards.
         """
+        print(f"Setting move up for paddle {self.id}")
         self._vertical = MOVE_UP
 
     def set_move_down(self):
         """Sets the movement of the paddle downwards.
         """
+        print(f"Setting move down for paddle {self.id}")
         self._vertical = MOVE_DOWN
 
     def set_move_stop(self):
         """Stops the movement of the paddle.
         """
+        print(f"Setting move stop for paddle {self.id}")
         self._vertical = MOVE_NONE
 
     def tick(self):
@@ -88,7 +94,7 @@ class Paddle(Bouncable):
         self._vertical = MOVE_NONE
         self._is_powered_up = False
         self._power = 0
-        self._y = (self._y_max + self.y_min) / 2
+        self.y = (self._y_max + self._y_min) / 2
 
     def charge_power(self, ball):
         """Transfers the power to the ball if the paddle

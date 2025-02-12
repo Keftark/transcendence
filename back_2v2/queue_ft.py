@@ -126,7 +126,7 @@ class Queue:
                                 + " with Room ID :" + str(self._room_id)
                             self._logger.log(text, 1)
                             self._match_list.append \
-                                (Match(self._room_id, p1.id, p3.id, p2.id, p4.id))
+                                (Match(self._room_id, p1.id, p2.id, p3.id, p4.id))
 
     async def tick(self):
         """Ticks the queue, creating matches if four compatible
