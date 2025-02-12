@@ -227,7 +227,7 @@ async def send_to_central():
                     message_queue.remove(message)
                 except Exception as e:
                     Sockets.CENTRAL_SOCKET = None
-                    logger.log("", 2, e)
+                    logger.log("Error while sending data", 2, e)
             else:
                 break
 
