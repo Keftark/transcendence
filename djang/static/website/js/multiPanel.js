@@ -52,6 +52,17 @@ let player2IsReady = false;
 let player3IsReady = false;
 let player4IsReady = false;
 
+export function isPlayerSameSide(id)
+{
+    if (playerStats.id === id
+        || (id === idP1 && playerStats.id === idP3) 
+        || (id === idP3 && playerStats.id === idP1)
+        || (id === idP2 && playerStats.id === idP4)
+        || (id === idP4 && playerStats.id === idP2))
+        return true;
+    return false;
+}
+
 export function closeMultiPanel()
 {
     // double chargement de la page de retour pour le joueur qui quitte
