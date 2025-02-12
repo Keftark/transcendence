@@ -263,7 +263,6 @@ async def handle_answers(event):
     """
     _type = event["type"]
     _server = event["server"]
-    print(f"transfer shit {event}")
     if _server == "1v1_classic":
         await handler_1v1(event)
     elif _server == "2v2_classic":
@@ -304,7 +303,6 @@ async def handle_transfer(event):
     _id = (int)(event["id"])
     _server = event["server"]
 
-    print("On est la")
     for user in userList:
         if user.id == _id:
             if user.key != event["key"]:
@@ -323,7 +321,6 @@ async def handle_transfer(event):
             Sockets.SOCKET_CHAT = None
 
     elif _server == "1v1_classic":
-        print("Envoie au 1v1")
         try:
             await Sockets.SOCKET_1V1.send(json.dumps(event))
         except Exception as e:
@@ -331,7 +328,6 @@ async def handle_transfer(event):
             Sockets.SOCKET_1V1 = None
 
     elif _server == "2v2_classic":
-        print("Envoie au 2v2")
         try:
             await Sockets.SOCKET_2V2.send(json.dumps(event))
         except Exception as e:
@@ -442,7 +438,6 @@ async def handler(websocket):
     try:
         async for message in websocket:
             event = json.loads(message)
-            print(f"Got message {event}")
             if event["type"] == "pong":
                 pass
             elif event["type"] == "log":
@@ -450,7 +445,6 @@ async def handler(websocket):
             elif event["answer"] == "yes":
                 await handle_answers(event)
             elif event["server"] != "main":
-                print("Let's transfer")
                 await handle_transfer(event)
             else : #Commandes de serveur ...
                 await handle_commands(websocket, event)
