@@ -254,6 +254,11 @@ class Match:
         try:
             with self._lock:
                 if value["type"] == "input":
+                    print(f"Input value = {value}")
+                    print(f"Comparing event id = {value["id"]} to player r1 ID = {self._paddle_r1.id}")
+                    print(f"Comparing event id = {value["id"]} to player r2 ID = {self._paddle_r2.id}")
+                    print(f"Comparing event id = {value["id"]} to player l1 ID = {self._paddle_l1.id}")
+                    print(f"Comparing event id = {value["id"]} to player l2 ID = {self._paddle_l2.id}")
                     if (int)(value["id"]) == self._paddle_r1.id:
                         self._paddle_r1.input_move(value)
                     elif (int)(value["id"])== self._paddle_r2.id:
