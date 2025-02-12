@@ -2,6 +2,7 @@
 
 import threading
 import time
+import random
 from Game.paddle import Paddle
 from Game.ball import Ball
 from Game.board import Board
@@ -44,6 +45,7 @@ class Match:
         self._timer = time.time()
         self._lock = threading.Lock()
         self._message_locker = threading.Lock()
+        self._map = random.randint(0, 1)
 
         self._board.place(BrickTriangleUnbreak(), 0, 1)
         self._board.place(BrickTriangleReverseUnbreak(), self._board.max_x - 1, 1)
@@ -418,6 +420,7 @@ class Match:
         event = {
             "type": "match_init",
             "room_id": self._room_id,
+            "level_type": self._map,
             "id_p1": self._paddle_l1.id,
             "id_p2": self._paddle_r1.id,
             "id_p3": self._paddle_l2.id,
