@@ -87,9 +87,18 @@ game-re:
 	docker compose build 1v1_classic
 	docker compose up --no-deps -d 1v1_classic
 
-#Stops the chat server container
+#Stops the game server container
 game-down:
 	docker compose down 1v1_classic
+
+#Recreates the game server container
+game2-re:
+	docker compose build 2v2_classic
+	docker compose up --no-deps -d 2v2_classic
+
+#Stops the chat server container
+game2-down:
+	docker compose down 2v2_classic
 
 #Recreates the chat server container
 chat-re:

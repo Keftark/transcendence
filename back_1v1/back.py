@@ -37,7 +37,6 @@ matchs = []
 lock_a = asyncio.Lock()
 message_queue = []
 parse_queue = []
-ws_list = []
 
 localhost_pem = pathlib.Path("/etc/certs/cponmamju2.fr_key.pem")
 #loads up ssl crap
@@ -288,8 +287,6 @@ async def handler(websocket):
     Args:
         websocket (WebSocket): The WS to read from.
     """
-    ws_list.append(websocket)
-    print("aaaaaaaaaaaaaaa")
     try:
         async for message in websocket:
             event = json.loads(message)
@@ -299,8 +296,6 @@ async def handler(websocket):
             await add_to_parse(event)
     except Exception as e:
         logger.log("Error while reading from websocket", 2, e)
-    finally:
-        ws_list.remove(websocket)
 
 async  def parser():
     """Receives and handle incomming messages from websocket.
