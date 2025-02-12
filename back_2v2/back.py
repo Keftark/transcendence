@@ -295,9 +295,10 @@ async def handler(websocket):
             event = json.loads(message)
             if event["type"] == "ping":
                 pass #on est content on fait rien
+            print("got it ", message)
             await add_to_parse(message)
     except Exception as e:
-        logger.log("", 2, e)
+        logger.log("Error while reading from websocket", 2, e)
     finally:
         ws_list.remove(websocket)
 
