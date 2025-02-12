@@ -5,7 +5,7 @@ import { closeDuelPanel, matchFound, setPlayersControllers, updateReadyButtons }
 import { addReadyPlayer, doUpdateBallLight, getBallPosition, getPlayerSideById, removeReadyPlayers, resetScreenFunction, spawnSparksFunction, startScreenShake } from "./levelLocal.js";
 import { getLevelState, socket, listener } from "./main.js";
 import { getListMatchs, setSelectedMode } from "./modesSelection.js";
-import { matchFoundMulti, setPlayersControllersMulti, updateReadyButtonsMulti } from "./multiPanel.js";
+import { isPlayerSameSide, matchFoundMulti, setPlayersControllersMulti, updateReadyButtonsMulti } from "./multiPanel.js";
 import { getCurrentView, navigateTo } from "./pages.js";
 import { playerStats } from "./playerManager.js";
 import { setPlayersPositions } from "./playerMovement.js";
@@ -189,7 +189,6 @@ export function socketSendPlayerReady(mode = "1v1_classic")
 
 export function socketPlayerUp(mode = "1v1_classic")
 {
-    console.log("Up. Mode: " + mode);
     const event = {
         key: keySocket,
         answer: "no",
@@ -200,13 +199,11 @@ export function socketPlayerUp(mode = "1v1_classic")
         move: "up",
         method: "held"
     };
-    console.log("Event: " + JSON.stringify(event));
     socket.send(JSON.stringify(event));
 }
 
 export function socketPlayerUpNot(mode = "1v1_classic")
 {
-    console.log("Up not. Mode: " + mode);
     const event = {
         key: keySocket,
         answer: "no",
@@ -217,7 +214,6 @@ export function socketPlayerUpNot(mode = "1v1_classic")
         move: "up",
         method: "release"
     };
-    console.log("Event: " + JSON.stringify(event));
     socket.send(JSON.stringify(event));
 }
 
@@ -233,14 +229,11 @@ export function socketPlayerDown(mode = "1v1_classic")
         move: "down",
         method: "held"
     };
-    console.log("Down. Mode: " + mode);
-    console.log("Event: " + JSON.stringify(event));
     socket.send(JSON.stringify(event));
 }
 
 export function socketPlayerDownNot(mode = "1v1_classic")
 {
-    console.log("Down not. Mode: " + mode);
     const event = {
         key: keySocket,
         answer: "no",
@@ -251,7 +244,6 @@ export function socketPlayerDownNot(mode = "1v1_classic")
         move: "down",
         method: "release"
     };
-    console.log("Event: " + JSON.stringify(event));
     socket.send(JSON.stringify(event));
 }
 
@@ -282,38 +274,6 @@ export function socketBoostPaddle(mode = "1v1_classic")
     };
     socket.send(JSON.stringify(event));
 }
-
-// export function socketJoinChat()
-// {
-//     if (!listener || listener.readyState !== WebSocket.OPEN)
-//         return;
-//     // console.log("Joining the chat");
-//     const event = {
-//         key: keySocket,
-//         type: "join_chat",
-//         id: playerStats.id,
-//         name: playerStats.nickname,
-//         blacklist: playerStats.blacklist,
-//         answer: "no",
-//         server: "chat"
-//     };
-//     listener.send(JSON.stringify(event));
-// }
-
-// export function socketQuitChat()
-// {
-//     if (!listener || listener.readyState !== WebSocket.OPEN)
-//         return;
-//     // console.log("Quitting the chat");
-//     const event = {
-//         key: keySocket,
-//         type: "quit_chat",
-//         id: playerStats.id,
-//         answer: "no",
-//         server: "chat"
-//     };
-//     listener.send(JSON.stringify(event));
-// }
 
 export function socketSendMessage(messageContent)
 {
@@ -509,6 +469,10 @@ export function addSocketListener()
             console.error("Failed to parse JSON:", error);
             return;
         }
+        if ('id' in event && 'type' in event && event.id === playerStats.id)
+        {
+            return;
+        }
         if ('id' in event && 'key' in event && event.id === playerStats.id)
         {
             keySocket = event.key;
@@ -557,7 +521,7 @@ export function addSocketListener()
                 updateReadyButtonsMulti(event.p1_state, event.p2_state, event.p3_state, event.p4_state);
             break;
         case "wait_ready":
-            console.log(data);
+            // console.log(data);
             if (event.p1_state)
                 addReadyPlayer(1);
             if (event.p2_state)
@@ -568,7 +532,7 @@ export function addSocketListener()
                 addReadyPlayer(4);
             break;
         case "match_init":
-            console.log(data);
+            // console.log(data);
             id_room = event.room_id;
             playerStats.room_id = id_room;
 
@@ -586,7 +550,7 @@ export function addSocketListener()
             }
             break;
         case "match_resume":
-            console.log(data);
+            // console.log(data);
             removeReadyPlayers();
             break;
         case "list_all":
@@ -596,7 +560,7 @@ export function addSocketListener()
             if (matchAlreadyStarted)
                 break;
             matchAlreadyStarted = true;
-            console.log(data);
+            // console.log(data);
             if (getCurrentView() === "duel")
                 setPlayersControllers();
             else
@@ -612,7 +576,7 @@ export function addSocketListener()
                 spawnSparksFunction(getBallPosition(), event.ball_speed * 20);
             break;
         case "victory": // end of match, dans le lobby ou dans le match
-            console.log("Victory: " + data);
+            // console.log("Victory: " + data);
             if (event.room_id != playerStats.room_id)
                 return;
             // console.log(data);
@@ -627,7 +591,7 @@ export function addSocketListener()
             }
             else if (event.mode === "points" || event.mode === "timer")
             {
-                if (event.player === playerStats.id)
+                if (isPlayerSameSide(event.player))
                     callVictoryScreen(VictoryType.VICTORY);
                 else
                     callVictoryScreen(VictoryType.DEFEAT);
@@ -642,7 +606,7 @@ export function addSocketListener()
             console.log("Got error : " + event.content);
             break;
         case "point":
-            console.log(data);
+            // console.log(data);
             if (event.room_id === playerStats.room_id);
             {
                 spawnSparksFunction(getBallPosition(), 400);
