@@ -23,7 +23,7 @@ const player1ReadyButton = document.getElementById('ready1MultiButton');
 const player2ReadyButton = document.getElementById('ready2MultiButton');
 const player3ReadyButton = document.getElementById('ready3MultiButton');
 const player4ReadyButton = document.getElementById('ready4MultiButton');
-const animDiv = document.getElementById('vsImg');
+const animDiv = document.getElementById('vsImgMulti');
 const baseImgPath = "static/icons/playerNoImg.webp";
 
 document.getElementById('leaveMultiButton').addEventListener('click', () => {
@@ -185,12 +185,13 @@ export function matchFoundMulti(player1, player2, player3, player4)
         getUserAvatarById(player4)
     ])
     .then(results => {
+        // todo mettre les images par defaut s'il n'y a pas d'avatar
         const [ , , , , avatar1, avatar2, avatar3, avatar4 ] = results;
-        document.getElementById('waitingMatch').style.display = "none";
         player1Img.src = avatar1.avatar_url;
         player2Img.src = avatar2.avatar_url;
         player3Img.src = avatar3.avatar_url;
         player4Img.src = avatar4.avatar_url;
+        document.getElementById('waitingMatch').style.display = "none";
         resetVSAnimation();
     })
     .catch(error => {

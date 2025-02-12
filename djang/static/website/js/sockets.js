@@ -1,4 +1,4 @@
-import { getUserById, getUserByName } from "./apiFunctions.js";
+import { getBlockedList, getUserById, getUserByName } from "./apiFunctions.js";
 import { setBallPosition } from "./ball.js";
 import { createInvitationDuel, deleteDuelInChat, receiveGameSticker, receiveMessage } from "./chat.js";
 import { closeDuelPanel, matchFound, setPlayersControllers, updateReadyButtons } from "./duelPanel.js";
@@ -61,34 +61,46 @@ export function connectToServerOutput()
 
 export function socketConnectToDuel(mode = "1v1_classic")
 {
-    const event = {
-        key: keySocket,
-        server: mode,
-        type: "join",
-        answer: "no",
-        id: playerStats.id,
-        blacklist: playerStats.blacklist, // mettre les id au lieu des noms
-        private: "none",
-        invited_by: 8,
-        payload: {}
-    };
-    listener.send(JSON.stringify(event));
+    getBlockedList(true)
+    .then((results) => {
+        const event = {
+            key: keySocket,
+            server: mode,
+            type: "join",
+            answer: "no",
+            id: playerStats.id,
+            blacklist: results,
+            private: "none",
+            invited_by: 8,
+            payload: {}
+        };
+        listener.send(JSON.stringify(event));
+    })
+    .catch((error) => {
+        console.error("Failed to get user by name:", error);
+    });
 }
 
 export function socketConnectToDuelInvited(playerId)
 {
-    const event = {
-        key: keySocket,
-        server: "1v1_classic",
-        type: "join",
-        answer: "no",
-        id: playerStats.id,
-        blacklist: playerStats.blacklist, // mettre les id au lieu des noms
-        private: "join",
-        invited_by: playerId,
-        payload: {}
-    };
-    listener.send(JSON.stringify(event));
+    getBlockedList(true)
+    .then((results) => {
+        const event = {
+            key: keySocket,
+            server: "1v1_classic",
+            type: "join",
+            answer: "no",
+            id: playerStats.id,
+            blacklist: results,
+            private: "join",
+            invited_by: playerId,
+            payload: {}
+        };
+        listener.send(JSON.stringify(event));
+    })
+    .catch((error) => {
+        console.error("Failed to get user by name:", error);
+    });
 }
 
 export function socketRefuseDuelInvited(playerId)

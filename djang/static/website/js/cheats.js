@@ -96,6 +96,9 @@ function sendInvitDuel(playerInvit = "")
             sendSystemMessage("userNotFound", playerInvit, true);
             return;
         }
+        // todo attendre la fonction qui verifie si l'user est bloque
+        // et ne rien faire de plus si c'est le cas
+        // mettre un message systeme indiquant que l'user est bloque
         if (response.status === "offline")
         {
             sendSystemMessage("userOffline", playerInvit, true);

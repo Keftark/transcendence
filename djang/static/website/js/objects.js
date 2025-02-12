@@ -165,7 +165,6 @@ export function createPlayers(scene, textureLoader)
         const tex3 = textureLoader.load(cylinderTexture3);
         const tex4 = textureLoader.load(cylinderTexture4);
         tex4.colorSpace = tex3.colorSpace = THREE.SRGBColorSpace;
-        // TODO recuperer les paddle skins des joueurs 3 et 4 pour appliquer les textures
         const material3 = new THREE.MeshStandardMaterial({ map: tex3, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });
         const material4 = new THREE.MeshStandardMaterial({ map: tex4, transparent: true, emissive: new THREE.Color(0x00ff00), emissiveIntensity: 0 });
         player3 = new THREE.Mesh(geometry, material3);

@@ -129,3 +129,21 @@ a:focus
 #consent-text a {
     cursor: url('../icons/cursor-button.webp'), pointer;
 }
+
+#bottomGdprDiv
+{
+    position: absolute;
+    display: block;
+    bottom: 0;
+    right: 0;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    background: none;
+    border: 3px solid transparent;
+}
+
+#bottomGdprDiv:hover
+{
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.301);
+}

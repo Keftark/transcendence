@@ -425,7 +425,7 @@ export async function getFriendsList() {
     }
 }
 
-export async function getBlockedList() {
+export async function getBlockedList(returnId = false) {
     try {
         const response = await fetch(`/blocked`, {
             method: 'GET',
@@ -438,6 +438,8 @@ export async function getBlockedList() {
         const userData = await response.json();
         if (userData.error)
             console.error(userData.error);
+        if (returnId)
+            return userData.map(user => user.id);
         return userData;
     } catch (error) {
         console.error("An error occurred while fetching the user details:", error);

@@ -149,7 +149,8 @@ export function updateHTML(translations)
 	document.getElementById('buttonCancelChangeField').innerText = translations.cancel;
 	// document.getElementById('viewTournamentHistoryButton').innerText = translations.history;
 	// document.getElementById('closeTournamentHistoryButton').innerText = translations.close;
-	
+	document.getElementById('bottomGdprDiv').innerText = translations.privacyPolicy;
+
 	
     document.querySelector('.gdpr').addEventListener('click', function(event) {
 		event.preventDefault();
