@@ -210,12 +210,10 @@ export function checkPowerUpState(p1Boosted, p2Boosted, ballBoosted)
         if (ballBoosted && !oldBallBoosted)
         {
             showBoostedBall(true);
-            // on affiche le boost de la balle
         }
         else if (!ballBoosted && oldBallBoosted)
         {
             showBoostedBall(false);
-            // on cache le boost de la balle
         }
         oldBallBoosted = ballBoosted;
     }
