@@ -17,20 +17,20 @@ class Match:
         self._spectators = []
         self._message_queue = []
         self._formatted_queue = []
-        self._side_1_score = 0
-        self._side_2_score = 0
+        self._side_left_score = 0
+        self._side_right_score = 0
         self._point_to_win = 3
         self._timer_count = 0
         self._quitter = 0
         self._max_time_seconds = -1
         self._board = Board(25, 40)
-        self._paddle_r1 = Paddle(p1, self._board.min_x + 1, 8, \
+        self._paddle_l1 = Paddle(p1, self._board.min_x + 1, 8, \
                                     self._board.max_y, 2)
-        self._paddle_r2 = Paddle(p2, self._board.min_x + 1, 8, \
+        self._paddle_l2 = Paddle(p2, self._board.min_x + 1, 8, \
                                     -2, self._board.min_y)
-        self._paddle_l1 = Paddle(p3, self._board.max_x - 2, 8, \
+        self._paddle_r1 = Paddle(p3, self._board.max_x - 2, 8, \
                                     self._board.max_y, 2)
-        self._paddle_l2 = Paddle(p4, self._board.max_x - 2, 8, \
+        self._paddle_r2 = Paddle(p4, self._board.max_x - 2, 8, \
                                     -2, self._board.min_y)
         self._ball = Ball(self._room_id)
         self._initialised = False
@@ -69,8 +69,8 @@ class Match:
                 case "board_x":
                     self._board.max_x = (int)(payload[data])
                     self._board.min_x = (int)(payload[data]) * -1
-                    self._paddle_r1.x = self._board.min_x + 1
-                    self._paddle_r2.x = self._board.max_x - 2
+                    self._paddle_l1.x = self._board.min_x + 1
+                    self._paddle_l2.x = self._board.max_x - 2
                 case "board_y":
                     self._board.max_y = (int)(payload[data])
                     self._board.min_y = (int)(payload[data]) * -1
@@ -95,29 +95,29 @@ class Match:
         """Reset the board, the ball, and the paddle.
         """
         self._ball.reset(True)
-        self._paddle_r1.reset()
-        self._paddle_r2.reset()
         self._paddle_l1.reset()
         self._paddle_l2.reset()
+        self._paddle_r1.reset()
+        self._paddle_r2.reset()
         self._timer_pause = True
 
     def check_victory(self):
         """Checks wether or not the victory has been attained.
         Sets the match to finished if it is.
         """
-        if self._side_1_score >= self._point_to_win:
-            self._ended = True
-            self._message_queue.append(self.dump_victory(self._paddle_r1.id, "points"))
-        elif self._side_2_score >= self._point_to_win:
+        if self._side_left_score >= self._point_to_win:
             self._ended = True
             self._message_queue.append(self.dump_victory(self._paddle_l1.id, "points"))
+        elif self._side_right_score >= self._point_to_win:
+            self._ended = True
+            self._message_queue.append(self.dump_victory(self._paddle_r1.id, "points"))
         elif self._max_time_seconds > 0 and self._timer_count >= self._max_time_seconds:
-            if self._side_1_score > self._side_2_score:
-                self._ended = True
-                self._message_queue.append(self.dump_victory(self._paddle_r1.id, "timer"))
-            elif self._side_1_score < self._side_2_score:
+            if self._side_left_score > self._side_right_score:
                 self._ended = True
                 self._message_queue.append(self.dump_victory(self._paddle_l1.id, "timer"))
+            elif self._side_left_score < self._side_right_score:
+                self._ended = True
+                self._message_queue.append(self.dump_victory(self._paddle_r1.id, "timer"))
             else:
                 self._ended = True
                 self._message_queue.append(self.dump_victory(0, "equal"))
@@ -145,13 +145,13 @@ class Match:
         Returns:
             bool: `True` if all players are ready, `False` otherwise.
         """
-        if self._paddle_l1.ready is False:
-            return False
-        if self._paddle_l2.ready is False:
-            return False
         if self._paddle_r1.ready is False:
             return False
         if self._paddle_r2.ready is False:
+            return False
+        if self._paddle_l1.ready is False:
+            return False
+        if self._paddle_l2.ready is False:
             return False
         return True
 
@@ -165,60 +165,58 @@ class Match:
             if self._ended is True:
                 self._concluded = True
                 if self._abandonned is True :
-                    if self._quitter == self._paddle_r1.id:
-                        self._message_queue.append(self.dump_abandon(self._paddle_r1.id))
-                    elif self._quitter == self._paddle_r2.id:
-                        self._message_queue.append(self.dump_abandon(self._paddle_r2.id))
-                    elif self._quitter == self._paddle_l1.id:
+                    if self._quitter == self._paddle_l1.id:
                         self._message_queue.append(self.dump_abandon(self._paddle_l1.id))
                     elif self._quitter == self._paddle_l2.id:
                         self._message_queue.append(self.dump_abandon(self._paddle_l2.id))
-                elif self._ragequitted is True:
-                    if self._quitter == self._paddle_r1.id:
-                        self._message_queue.append(self.dump_ragequit(self._paddle_r1.id))
+                    elif self._quitter == self._paddle_r1.id:
+                        self._message_queue.append(self.dump_abandon(self._paddle_r1.id))
                     elif self._quitter == self._paddle_r2.id:
-                        self._message_queue.append(self.dump_ragequit(self._paddle_r2.id))
-                    elif self._quitter == self._paddle_l1.id:
+                        self._message_queue.append(self.dump_abandon(self._paddle_r2.id))
+                elif self._ragequitted is True:
+                    if self._quitter == self._paddle_l1.id:
                         self._message_queue.append(self.dump_ragequit(self._paddle_l1.id))
                     elif self._quitter == self._paddle_l2.id:
                         self._message_queue.append(self.dump_ragequit(self._paddle_l2.id))
+                    elif self._quitter == self._paddle_r1.id:
+                        self._message_queue.append(self.dump_ragequit(self._paddle_r1.id))
+                    elif self._quitter == self._paddle_r2.id:
+                        self._message_queue.append(self.dump_ragequit(self._paddle_r2.id))
             elif self._initialised is False:
                 self._initialised = True
                 self._message_queue.append(self.dump_init())
             elif self._started is False:
                 if self.ready_check():
                     self._started = True
-                    self._paddle_r1.ready = False
-                    self._paddle_r2.ready = False
                     self._paddle_l1.ready = False
                     self._paddle_l2.ready = False
+                    self._paddle_r1.ready = False
+                    self._paddle_r2.ready = False
                     self._message_queue.append(self.dump_start())
                 else:
                     self._message_queue.append(self.dump_waiting_start())
             elif self.ready_check():
                 self.restart_time()
-                self._paddle_r1.tick()
-                self._paddle_r2.tick()
                 self._paddle_l1.tick()
                 self._paddle_l2.tick()
+                self._paddle_r1.tick()
+                self._paddle_r2.tick()
                 self._ball.update_position()
                 if self._ball.y >= (self._board.max_y - WALL_OFFSET) \
                         or self._ball.y <= (self._board.min_y + WALL_OFFSET):
                     self._ball.bounce_horizontal()
-                self._paddle_r1.collide(self._ball)
-                self._paddle_r2.collide(self._ball)
                 self._paddle_l1.collide(self._ball)
                 self._paddle_l2.collide(self._ball)
+                self._paddle_r1.collide(self._ball)
+                self._paddle_r2.collide(self._ball)
                 if self._ball.x < self._board.min_x: #point for p2
-                    self._side_2_score += 1
+                    self._side_right_score += 1
                     self.reset_board()
-                    self._message_queue.append(self.dump_point(self._paddle_r2.id))
-                    print(f"A point as been marked. The score is now {self._side_1_score}/{self._side_2_score}")
+                    self._message_queue.append(self.dump_point(self._paddle_l2.id))
                 elif self._ball.x > self._board.max_x: #point for p1
-                    self._side_1_score += 1
+                    self._side_left_score += 1
                     self.reset_board()
-                    self._message_queue.append(self.dump_point(self._paddle_l1.id))
-                    print(f"A point as been marked. The score is now {self._side_1_score}/{self._side_2_score}")
+                    self._message_queue.append(self.dump_point(self._paddle_r1.id))
                 self._message_queue.append(self.dump_variables())
             else:
                 self._message_queue.append(self.dump_waiting())
@@ -229,10 +227,10 @@ class Match:
         """Formats the message list.
         """
         id_list = []
-        id_list.append(self._paddle_r1.id)
-        id_list.append(self._paddle_r2.id)
         id_list.append(self._paddle_l1.id)
         id_list.append(self._paddle_l2.id)
+        id_list.append(self._paddle_r1.id)
+        id_list.append(self._paddle_r2.id)
         id_list.extend(self._spectators)
         for event in self._message_queue:
             data = {
@@ -254,24 +252,19 @@ class Match:
         try:
             with self._lock:
                 if value["type"] == "input":
-                    print(f"Input value = {value}")
-                    print(f"Comparing event id = {value["id"]} to player r1 ID = {self._paddle_r1.id}")
-                    print(f"Comparing event id = {value["id"]} to player r2 ID = {self._paddle_r2.id}")
-                    print(f"Comparing event id = {value["id"]} to player l1 ID = {self._paddle_l1.id}")
-                    print(f"Comparing event id = {value["id"]} to player l2 ID = {self._paddle_l2.id}")
-                    if (int)(value["id"]) == self._paddle_r1.id:
-                        self._paddle_r1.input_move(value)
-                    elif (int)(value["id"])== self._paddle_r2.id:
-                        self._paddle_r2.input_move(value)
-                    elif (int)(value["id"])== self._paddle_l1.id:
+                    if (int)(value["id"]) == self._paddle_l1.id:
                         self._paddle_l1.input_move(value)
                     elif (int)(value["id"])== self._paddle_l2.id:
                         self._paddle_l2.input_move(value)
+                    elif (int)(value["id"])== self._paddle_r1.id:
+                        self._paddle_r1.input_move(value)
+                    elif (int)(value["id"])== self._paddle_r2.id:
+                        self._paddle_r2.input_move(value)
                 elif value["type"] == "quit_lobby":
-                    if (int)(value["id"]) == self._paddle_r1.id \
-                                or (int)(value["id"]) == self._paddle_r2.id \
-                                or (int)(value["id"]) == self._paddle_l1.id \
-                                or (int)(value["id"]) == self._paddle_l2.id:
+                    if (int)(value["id"]) == self._paddle_l1.id \
+                                or (int)(value["id"]) == self._paddle_l2.id \
+                                or (int)(value["id"]) == self._paddle_r1.id \
+                                or (int)(value["id"]) == self._paddle_r2.id:
                         self._ended = True
                         self._quitter = (int)(value["id"])
                         if self._started is False:
@@ -279,23 +272,23 @@ class Match:
                         else:
                             self._ragequitted = True
                 elif value["type"] == "ready":
-                    if (int)(value["id"]) == self._paddle_r1.id:
-                        self._paddle_r1.ready = True
-                    elif (int)(value["id"]) == self._paddle_r2.id:
-                        self._paddle_r2.ready = True
-                    elif (int)(value["id"]) == self._paddle_l1.id:
+                    if (int)(value["id"]) == self._paddle_l1.id:
                         self._paddle_l1.ready = True
                     elif (int)(value["id"]) == self._paddle_l2.id:
                         self._paddle_l2.ready = True
-                elif value["type"] == "pause":
-                    if (int)(value["id"]) == self._paddle_r1.id:
-                        self._paddle_r1.ready = False
+                    elif (int)(value["id"]) == self._paddle_r1.id:
+                        self._paddle_r1.ready = True
                     elif (int)(value["id"]) == self._paddle_r2.id:
-                        self._paddle_r2.ready = False
-                    elif (int)(value["id"]) == self._paddle_l1.id:
+                        self._paddle_r2.ready = True
+                elif value["type"] == "pause":
+                    if (int)(value["id"]) == self._paddle_l1.id:
                         self._paddle_l1.ready = False
                     elif (int)(value["id"]) == self._paddle_l2.id:
                         self._paddle_l2.ready = False
+                    elif (int)(value["id"]) == self._paddle_r1.id:
+                        self._paddle_r1.ready = False
+                    elif (int)(value["id"]) == self._paddle_r2.id:
+                        self._paddle_r2.ready = False
         except Exception as e: #unknown JSON case, ignore it
             print(e)
 
@@ -376,10 +369,10 @@ class Match:
         event = {
             "type": "wait_ready",
             "room_id": self._room_id,
-            "p1_state": self._paddle_r1.ready,
-            "p2_state": self._paddle_l1.ready,
-            "p3_state": self._paddle_r2.ready,
-            "p4_state": self._paddle_l2.ready
+            "p1_state": self._paddle_l1.ready,
+            "p2_state": self._paddle_r1.ready,
+            "p3_state": self._paddle_l2.ready,
+            "p4_state": self._paddle_r2.ready
         }
         return event
 
@@ -392,10 +385,10 @@ class Match:
         event = {
             "type": "wait_start",
             "room_id": self._room_id,
-            "p1_state": self._paddle_r1.ready,
-            "p2_state": self._paddle_l1.ready,
-            "p3_state": self._paddle_r2.ready,
-            "p4_state": self._paddle_l2.ready
+            "p1_state": self._paddle_l1.ready,
+            "p2_state": self._paddle_r1.ready,
+            "p3_state": self._paddle_l2.ready,
+            "p4_state": self._paddle_r2.ready
         }
         return event
 
@@ -409,10 +402,10 @@ class Match:
         event = {
             "type": "wait_start_invited",
             "room_id": self._room_id,
-            "p1_state": self._paddle_r1.ready,
-            "p2_state": self._paddle_l1.ready,
-            "p3_state": self._paddle_r2.ready,
-            "p4_state": self._paddle_l2.ready
+            "p1_state": self._paddle_l1.ready,
+            "p2_state": self._paddle_r1.ready,
+            "p3_state": self._paddle_l2.ready,
+            "p4_state": self._paddle_r2.ready
         }
         return event
 
@@ -425,10 +418,10 @@ class Match:
         event = {
             "type": "match_init",
             "room_id": self._room_id,
-            "id_p1": self._paddle_r1.id,
-            "id_p2": self._paddle_l1.id,
-            "id_p3": self._paddle_r2.id,
-            "id_p4": self._paddle_l2.id
+            "id_p1": self._paddle_l1.id,
+            "id_p2": self._paddle_r1.id,
+            "id_p3": self._paddle_l2.id,
+            "id_p4": self._paddle_r2.id
         }
         return event
 
@@ -441,10 +434,10 @@ class Match:
         event = {
             "type": "match_start",
             "room_id": self._room_id,
-            "id_p1": self._paddle_r1.id,
-            "id_p2": self._paddle_l1.id,
-            "id_p3": self._paddle_r2.id,
-            "id_p4": self._paddle_l2.id
+            "id_p1": self._paddle_l1.id,
+            "id_p2": self._paddle_r1.id,
+            "id_p3": self._paddle_l2.id,
+            "id_p4": self._paddle_r2.id
         }
         return event
 
@@ -470,20 +463,20 @@ class Match:
         event = {
             "type": "tick",
             "room_id": self._room_id,
-            "p1_pos": self._paddle_r1.y,
-            "p2_pos": self._paddle_l1.y,
-            "p3_pos": self._paddle_r2.y,
-            "p4_pos": self._paddle_l2.y,
-            "p1_score": self._side_1_score,
-            "p2_score": self._side_2_score,
-            "p1_boosting": self._paddle_r1.is_powered_up,
-            "p2_boosting": self._paddle_l1.is_powered_up,
-            "p3_boosting": self._paddle_r2.is_powered_up,
-            "p4_boosting": self._paddle_l2.is_powered_up,
-            "p1_juice": self._paddle_r1.power,
-            "p2_juice": self._paddle_l1.power,
-            "p3_juice": self._paddle_r2.power,
-            "p4_juice": self._paddle_l2.power,
+            "p1_pos": self._paddle_l1.y,
+            "p2_pos": self._paddle_r1.y,
+            "p3_pos": self._paddle_l2.y,
+            "p4_pos": self._paddle_r2.y,
+            "p1_score": self._side_left_score,
+            "p2_score": self._side_right_score,
+            "p1_boosting": self._paddle_l1.is_powered_up,
+            "p2_boosting": self._paddle_r1.is_powered_up,
+            "p3_boosting": self._paddle_l2.is_powered_up,
+            "p4_boosting": self._paddle_r2.is_powered_up,
+            "p1_juice": self._paddle_l1.power,
+            "p2_juice": self._paddle_r1.power,
+            "p3_juice": self._paddle_l2.power,
+            "p4_juice": self._paddle_r2.power,
             "ball_x": self._ball.x,
             "ball_y": self._ball.y,
             "ball_speed": self._ball.speed,
@@ -553,11 +546,11 @@ class Match:
         Returns:
             int: P1 score
         """
-        return self._side_1_score
+        return self._side_left_score
 
     @player_1_score.setter
     def player_1_score(self, value):
-        self._side_1_score = value
+        self._side_left_score = value
 
     @property
     def player_2_score(self):
@@ -566,11 +559,11 @@ class Match:
         Returns:
             int: P2 score
         """
-        return self._side_2_score
+        return self._side_right_score
 
     @player_2_score.setter
     def player_2_score(self, value):
-        self._side_2_score = value
+        self._side_right_score = value
 
     @property
     def point_to_win(self):
@@ -644,11 +637,11 @@ class Match:
         Returns:
             Paddle: the paddle of P1.
         """
-        return self._paddle_r1
+        return self._paddle_l1
 
     @paddle_1.setter
     def paddle_1(self, value):
-        self._paddle_r1 = value
+        self._paddle_l1 = value
 
     @property
     def paddle_2(self):
@@ -657,11 +650,11 @@ class Match:
         Returns:
             Paddle: the paddle of P2.
         """
-        return self._paddle_r2
+        return self._paddle_l2
 
     @paddle_2.setter
     def paddle_2(self, value):
-        self._paddle_r2 = value
+        self._paddle_l2 = value
 
     @property
     def ball(self):
