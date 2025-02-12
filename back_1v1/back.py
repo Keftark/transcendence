@@ -289,12 +289,14 @@ async def handler(websocket):
         websocket (WebSocket): The WS to read from.
     """
     ws_list.append(websocket)
+    print("aaaaaaaaaaaaaaa")
     try:
         async for message in websocket:
             event = json.loads(message)
+            print("e", event)
             if event["type"] == "ping":
                 pass #on est content on fait rien
-            await add_to_parse(message)
+            await add_to_parse(event)
     except Exception as e:
         logger.log("Error while reading from websocket", 2, e)
     finally:
