@@ -24,13 +24,13 @@ class Match:
         self._quitter = 0
         self._max_time_seconds = -1
         self._board = Board(25, 40)
-        self._paddle_r1 = Paddle(p1, self._board.min_x + 1, 8, \
+        self._paddle_r1 = Paddle(p1, self._board.min_x + 1, 4, \
                                     self._board.max_y, 2)
-        self._paddle_r2 = Paddle(p2, self._board.max_x - 2, 8, \
+        self._paddle_r2 = Paddle(p2, self._board.max_x - 2, 4, \
                                     -2, self._board.min_y)
-        self._paddle_l1 = Paddle(p3, self._board.min_x + 1, 8, \
+        self._paddle_l1 = Paddle(p3, self._board.min_x + 1, 4, \
                                     self._board.max_y, 2)
-        self._paddle_l2 = Paddle(p4, self._board.max_x - 2, 8, \
+        self._paddle_l2 = Paddle(p4, self._board.max_x - 2, 4, \
                                     -2, self._board.min_y)
         self._ball = Ball(self._room_id)
         self._initialised = False
