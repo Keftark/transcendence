@@ -296,7 +296,7 @@ async def handler(websocket):
             if event["type"] == "ping":
                 pass #on est content on fait rien
             print("got it ", message)
-            await add_to_parse(message)
+            await add_to_parse(event)
     except Exception as e:
         logger.log("Error while reading from websocket", 2, e)
     finally:
