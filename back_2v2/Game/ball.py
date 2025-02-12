@@ -58,6 +58,7 @@ class Ball:
         self._velocity_boosted_x = self._velocity_x
         self._velocity_boosted_y = 0
         self._is_powered_up = False
+        self._can_bounce = True
 
     def bounce_vertical(self):
         """Vertical bounce event.
