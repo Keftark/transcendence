@@ -13,45 +13,40 @@ class Match:
     """Class to handle matches. Kinda wack
     """
     def __init__(self, _id, p1, p2, p3, p4):
-        print(f"MAKING THE MATCHS FOR {p1}, {p2}, {p3}, {p4}")
-        try:
-            self._room_id = _id
-            self._spectators = []
-            self._message_queue = []
-            self._formatted_queue = []
-            self._side_1_score = 0
-            self._side_2_score = 0
-            self._point_to_win = 3
-            self._timer_count = 0
-            self._quitter = 0
-            self._max_time_seconds = -1
-            self._board = Board(25, 40)
-            self._paddle_r1 = Paddle(p1, self._board.min_x + 1, 12, \
-                                        self._board.max_y, 2)
-            self._paddle_r2 = Paddle(p2, self._board.max_x - 2, 12, \
-                                        -2, self._board.min_y)
-            self._paddle_l1 = Paddle(p3, self._board.min_x + 1, 12, \
-                                        self._board.max_y, 2)
-            self._paddle_l2 = Paddle(p4, self._board.max_x - 2, 12, \
-                                        -2, self._board.min_y)
-            self._ball = Ball(self._room_id)
-            self._initialised = False
-            self._started = False
-            self._ended = False
-            self._needs_to_wait = False
-            self._abandonned = False
-            self._ragequitted = False
-            self._timer_pause = True
-            self._concluded = False
-            self._timer = time.time()
-            self._lock = threading.Lock()
-            self._message_locker = threading.Lock()
+        self._room_id = _id
+        self._spectators = []
+        self._message_queue = []
+        self._formatted_queue = []
+        self._side_1_score = 0
+        self._side_2_score = 0
+        self._point_to_win = 3
+        self._timer_count = 0
+        self._quitter = 0
+        self._max_time_seconds = -1
+        self._board = Board(25, 40)
+        self._paddle_r1 = Paddle(p1, self._board.min_x + 1, 8, \
+                                    self._board.max_y, 2)
+        self._paddle_r2 = Paddle(p2, self._board.max_x - 2, 8, \
+                                    -2, self._board.min_y)
+        self._paddle_l1 = Paddle(p3, self._board.min_x + 1, 8, \
+                                    self._board.max_y, 2)
+        self._paddle_l2 = Paddle(p4, self._board.max_x - 2, 8, \
+                                    -2, self._board.min_y)
+        self._ball = Ball(self._room_id)
+        self._initialised = False
+        self._started = False
+        self._ended = False
+        self._needs_to_wait = False
+        self._abandonned = False
+        self._ragequitted = False
+        self._timer_pause = True
+        self._concluded = False
+        self._timer = time.time()
+        self._lock = threading.Lock()
+        self._message_locker = threading.Lock()
 
-            self._board.place(BrickTriangleUnbreak(), 0, 1)
-            self._board.place(BrickTriangleReverseUnbreak(), self._board.max_x - 1, 1)
-        except Exception as e:
-            print("Aie ::", e)
-        print("STARTING THE MATCH")
+        self._board.place(BrickTriangleUnbreak(), 0, 1)
+        self._board.place(BrickTriangleReverseUnbreak(), self._board.max_x - 1, 1)
 
     def load_parameters(self, payload):
         """Loads the custom parameters of the match.
@@ -174,13 +169,19 @@ class Match:
                         self._message_queue.append(self.dump_abandon(self._paddle_r1.id))
                     elif self._quitter == self._paddle_r2.id:
                         self._message_queue.append(self.dump_abandon(self._paddle_r2.id))
+                    elif self._quitter == self._paddle_l1.id:
+                        self._message_queue.append(self.dump_abandon(self._paddle_l1.id))
+                    elif self._quitter == self._paddle_l2.id:
+                        self._message_queue.append(self.dump_abandon(self._paddle_l2.id))
                 elif self._ragequitted is True:
                     if self._quitter == self._paddle_r1.id:
                         self._message_queue.append(self.dump_ragequit(self._paddle_r1.id))
                     elif self._quitter == self._paddle_r2.id:
                         self._message_queue.append(self.dump_ragequit(self._paddle_r2.id))
-            elif self._needs_to_wait is True:
-                self._message_queue.append(self.dump_waiting_start2())
+                    elif self._quitter == self._paddle_l1.id:
+                        self._message_queue.append(self.dump_ragequit(self._paddle_l1.id))
+                    elif self._quitter == self._paddle_l2.id:
+                        self._message_queue.append(self.dump_ragequit(self._paddle_l2.id))
             elif self._initialised is False:
                 self._initialised = True
                 self._message_queue.append(self.dump_init())
@@ -206,6 +207,8 @@ class Match:
                     self._ball.bounce_horizontal()
                 self._paddle_r1.collide(self._ball)
                 self._paddle_r2.collide(self._ball)
+                self._paddle_l1.collide(self._ball)
+                self._paddle_l2.collide(self._ball)
                 if self._ball.x < self._board.min_x: #point for p2
                     self._side_2_score += 1
                     self.reset_board()
@@ -213,7 +216,7 @@ class Match:
                 elif self._ball.x > self._board.max_x: #point for p1
                     self._side_1_score += 1
                     self.reset_board()
-                    self._message_queue.append(self.dump_point(self._paddle_r1.id))
+                    self._message_queue.append(self.dump_point(self._paddle_l1.id))
                 self._message_queue.append(self.dump_variables())
             else:
                 self._message_queue.append(self.dump_waiting())
