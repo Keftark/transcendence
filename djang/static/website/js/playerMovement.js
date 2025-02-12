@@ -99,7 +99,7 @@ export function resetBoostedStatus()
     isBoostedLeft = isBoostedRight = false;
 }
 
-export function animatePlayers(player1, player2)
+export function animatePlayers(player1, player2, player3 = null, player4 = null)
 {
     rotationBoost++;
     if (rotationBoost == 2)
@@ -108,6 +108,13 @@ export function animatePlayers(player1, player2)
             player1.children[0].rotation.y = Math.random() * Math.PI * 2;
         if (isBoostedRight)
             player2.children[0].rotation.y = Math.random() * Math.PI * 2;
+        if (player3 !== null)
+        {
+            if (isBoostedLeft)
+                player3.children[0].rotation.y = Math.random() * Math.PI * 2;
+            if (isBoostedRight)
+                player4.children[0].rotation.y = Math.random() * Math.PI * 2;
+        }
         rotationBoost = 0;
     }
 }
@@ -149,7 +156,7 @@ export function setupPlayerMovement(player1, player2, player3, player4)
     boundsPlayer[2] = boundsPlayer[3] = setPlayer3Bounds(levelState);
     const boundymax = setPlayer1Bounds(levelState).max;
     const boundymin = setPlayer1Bounds(levelState).min;
-    const mode = levelState === LevelMode.ONLINE ? "1v1_classic" : "2v2_clasic";
+    const mode = levelState === LevelMode.ONLINE ? "1v1_classic" : "2v2_classic";
 
     function checkKeys(event, isTrue)
     {
@@ -319,7 +326,7 @@ export function setupPlayerMovement(player1, player2, player3, player4)
 
     function updatePlayers(deltaTime)
     {
-        animatePlayers(player1, player2);
+        animatePlayers(player1, player2, player3, player4);
         if (playerStats.playerController == -1)
             return;
         const adjustedSpeed = moveSpeed * (deltaTime / 1000);

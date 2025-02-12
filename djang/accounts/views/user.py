@@ -151,6 +151,8 @@ def check_user_login(request):
 def get_logged_in_user(request):
     if request.user.is_authenticated:
         user = request.user
+        # todo ajouter les settings ici
+        # 'language': user.settings.language ou un truc du genre
         return JsonResponse({
             'username': user.username,
             'email': user.email,

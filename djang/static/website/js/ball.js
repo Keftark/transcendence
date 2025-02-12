@@ -20,8 +20,8 @@ let ballPosition =
 
 export function setBallPosition(xPos, yPos)
 {
-    ballPosition.x = xPos;
-    ballPosition.y = yPos;
+    ballPosition.x = isNaN(xPos) ? 0 : xPos;
+    ballPosition.y = isNaN(yPos) ? 0 : yPos;
 }
 
 function getDimensions(object) {
@@ -345,7 +345,7 @@ export function createBall(scene, callBack)
 
     function changeBallSpeed(newSpeed)
     { 
-        console.log(newSpeed);
+        // console.log(newSpeed);
         if (isNaN(newSpeed))
             ballSpeedMult = 1;
         else

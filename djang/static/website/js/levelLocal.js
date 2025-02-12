@@ -456,8 +456,17 @@ export function passInfosPlayersToLevelMulti(idP1, idP2, idP3, idP4)
         });
 }
 
+function setSide()
+{
+    if (playerProfile1.username === playerStats.nickname || (playerProfile3 !== null && playerProfile3.username === playerStats.nickname))
+        isRightSide = false;
+    else
+        isRightSide = true;
+}
+
 function setPlayerNames()
 {
+    setSide();
     if (currentLevelMode === LevelMode.TOURNAMENT)
     {
         const [player1Tournament, player2Tournament] = getTournamentPlayers();
@@ -894,6 +903,8 @@ export function StartLevel(levelMode)
     }, 500);
 }
 
+let isRightSide = false;
+
 export function endMatch(scoreP1, scoreP2, forcedVictory = false)
 {
     gameEnded = true;
@@ -965,7 +976,7 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
             if (winner === getPlayerName())
                 callVictoryScreen(VictoryType.VICTORY, winner);
             else
-                callVictoryScreen(VictoryType.DEFEAT, winner);
+                callVictoryScreen(VictoryType.DEFEAT, winner); // winner var useless?
         }
         else
             callVictoryScreen(VictoryType.EXAEQUO);

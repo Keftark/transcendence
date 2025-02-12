@@ -109,6 +109,9 @@ export function changeProfilePicture(newIndex)
 
 export function loadPlayerConfig()
 {
+    
+    if (typeof playerStats.language === "undefined")
+        return;
     let buttonLang = document.querySelector(`button[data-language=${playerStats.language}]`);  
     buttonLang.click();
     document.getElementById('cameraType').children[Number(playerStats.cameraOrthographic)].click();

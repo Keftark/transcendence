@@ -232,7 +232,7 @@ async function acceptRegistration() {
         return;
     if (registerConfirm.classList.contains('disabledButtonHover'))
         return;
-    const result = await registerUser(inputName.value, inputFirstName.value, inputLastName.value, inputMail.value, inputPassword.value);
+    const result = await registerUser(inputName.value, inputFirstName.value, inputLastName.value, inputMail.value, inputPassword.value, playerStats.language);
     if (result.success === false) {
         displayErrors(result.errors);
         return;

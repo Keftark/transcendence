@@ -63,7 +63,7 @@ export function socketConnectToDuel(mode = "1v1_classic")
 {
     getBlockedList(true)
     .then((results) => {
-        console.log("Array: " + results);
+        // console.log("Array: " + results);
         const event = {
             key: keySocket,
             server: mode,
@@ -200,6 +200,7 @@ export function socketPlayerUp(mode = "1v1_classic")
         move: "up",
         method: "held"
     };
+    console.log("Event: " + JSON.stringify(event));
     socket.send(JSON.stringify(event));
 }
 
@@ -216,12 +217,12 @@ export function socketPlayerUpNot(mode = "1v1_classic")
         move: "up",
         method: "release"
     };
+    console.log("Event: " + JSON.stringify(event));
     socket.send(JSON.stringify(event));
 }
 
 export function socketPlayerDown(mode = "1v1_classic")
 {
-    console.log("Down. Mode: " + mode);
     const event = {
         key: keySocket,
         answer: "no",
@@ -232,6 +233,8 @@ export function socketPlayerDown(mode = "1v1_classic")
         move: "down",
         method: "held"
     };
+    console.log("Down. Mode: " + mode);
+    console.log("Event: " + JSON.stringify(event));
     socket.send(JSON.stringify(event));
 }
 
@@ -248,6 +251,7 @@ export function socketPlayerDownNot(mode = "1v1_classic")
         move: "down",
         method: "release"
     };
+    console.log("Event: " + JSON.stringify(event));
     socket.send(JSON.stringify(event));
 }
 
