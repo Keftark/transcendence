@@ -4,7 +4,7 @@ import math
 import random
 
 MAX_BOUNCE_ANGLE = math.radians(60)
-MAX_SPEED = 30
+MAX_SPEED = 5
 PRECISION = 5
 
 class Ball:
@@ -16,7 +16,7 @@ class Ball:
         self._speed = 0.7
         self._base_speed = self._speed
         self._velocity_x = self._speed if random.random() < 0.5 else self._speed * -1
-        self._velocity_y = self._speed if random.random() < 0.5 else self._speed * -1
+        self._velocity_y = 0
         self._velocity_boosted_x = 0
         self._velocity_boosted_y = 0
         self._speed_increment = 1.01
@@ -26,6 +26,7 @@ class Ball:
         self._power_boost = 1.5
         self._room_id = room_id
         self._message_queue = []
+        self._can_bounce = True
 
     def set_up(self, payload):
         """Loads optionnal parameters.
@@ -53,7 +54,7 @@ class Ball:
         self._y = 0
         self._speed = self._base_speed
         self._velocity_x = self._speed if side else self._speed * -1
-        self._velocity_y = self._speed if random.random() < 0.5 else self._speed * -1
+        self._velocity_y = 0
         self._velocity_boosted_x = self._velocity_x
         self._velocity_boosted_y = 0
         self._is_powered_up = False
@@ -129,6 +130,20 @@ class Ball:
         """Updates the position of the ball, adding the velocity
         vector to the position vector.
         """
+        if self._x < 0:
+            if self._is_powered_up is True:
+                if self._x + self._velocity_boosted_x > 0:
+                    self._can_bounce = True
+            else:
+                if self._x + self._velocity_x > 0:
+                    self._can_bounce = True
+        if self._x > 0:
+            if self._is_powered_up is True:
+                if self._x + self._velocity_boosted_x < 0:
+                    self._can_bounce = True
+            else:
+                if self._x + self._velocity_x < 0:
+                    self._can_bounce = True
         if self._is_powered_up is True:
             self._x += self._velocity_boosted_x
             self._y += self._velocity_boosted_y
@@ -356,3 +371,17 @@ class Ball:
     @message_queue.setter
     def message_queue(self, value):
         self._message_queue = value
+
+    @property
+    def can_bounce(self):
+        """Returns wether or not the ball can bounce.
+        Used to avoid the ball bouncing twice in the same frame.
+
+        Returns:
+            bool: be bouncy
+        """
+        return self._can_bounce
+
+    @can_bounce.setter
+    def can_bounce(self, value):
+        self._can_bounce = value

@@ -11,7 +11,7 @@ class Paddle(Bouncable):
     """A paddle, the player character.
     """
     def __init__(self, _id, x, _len, board_top_y, board_bottom_y):
-        super().__init__(x, 0, 0.5, _len)
+        super().__init__(x, (board_top_y + board_bottom_y) / 2, 0.5, _len)
         self._id = _id
         self._speed = DEFAULT_SPEED
         self._y_max = board_top_y
@@ -50,13 +50,13 @@ class Paddle(Bouncable):
         """Displaces the paddle up.
         """
         if self.upper_bound() < self._y_max:
-            self._y += self._speed + self._speed_bonus
+            self.y += self._speed + self._speed_bonus
 
     def move_down(self):
         """Displaces the paddle down.
         """
         if self.lower_bound() > self._y_min:
-            self._y -= self._speed + self._speed_bonus
+            self.y -= self._speed + self._speed_bonus
 
     def set_move_up(self):
         """Sets the movement of the paddle upwards.
@@ -88,7 +88,7 @@ class Paddle(Bouncable):
         self._vertical = MOVE_NONE
         self._is_powered_up = False
         self._power = 0
-        self._y = 0
+        self.y = (self._y_max + self._y_min) / 2
 
     def charge_power(self, ball):
         """Transfers the power to the ball if the paddle

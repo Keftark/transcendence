@@ -97,19 +97,15 @@ class Paddle(Bouncable):
         Args:
             ball (Ball): ball to charge up.
         """
-        print(f"Paddle{self._id} will gain power. Currently at {self._power}")
         self._power += self._power_per_bounce
         self._power = min(self._power, 100)
-        print(f"Paddle{self._id} has gained power. Now at {self._power}")
         if self._is_powered_up is True:
             ball.activate_power_up(self._power_multiplier + self._power_bonus)
             self._is_powered_up = False
-            print(f"Paddle{self._id} has boosted the ball and lost the power mode.")
 
     def boosto(self):
         """Activates the power-up.
         """
-        print(f"Boost actived for paddle{self._id}")
         if self._power >= 100:
             self._power = 0
             self._is_powered_up = True
