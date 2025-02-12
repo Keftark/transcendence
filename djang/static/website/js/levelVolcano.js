@@ -14,7 +14,9 @@ export function animateScene()
     wallRight.rotation.y += 0.02;
     wallBot.rotation.x -= 0.02;
     wallTop.rotation.x += 0.02;
-    texture.offset.x += 0.002;
+    if (background && background.material.map) {
+        background.material.map.offset.x += 0.0002; // Adjust speed as needed
+    }
 }
 
 // function addModels(scene)
@@ -36,25 +38,19 @@ function getRandomRock()
 
 function drawBackground(scene, textureLoader)
 {
-    textureLoader.load('static/backgrounds/magma.png', function(texture) {
-        texture.colorSpace = THREE.SRGBColorSpace;
-        texture.wrapS = THREE.RepeatWrapping; // Enable horizontal repeating
-        texture.wrapT = THREE.RepeatWrapping; // Enable vertical repeating (optional)
-        scene.background = texture;
-    });
-    background = new THREE.PlaneGeometry(1000, 1000);
-
-    const backgroundTop = new THREE.PlaneGeometry(BOUNDARY.X_MAX * 2 + 7, BOUNDARY.Y_MAX * 2 + 2);
-    const textureTop = textureLoader.load('static/backgrounds/bgSpaceTop.png');
+    const geometry = new THREE.PlaneGeometry(2000, 2000);
+    const texture = textureLoader.load('static/backgrounds/magoma.png');
+    
     texture.colorSpace = THREE.SRGBColorSpace;
-    const materialTop =  new THREE.MeshStandardMaterial({ 
-        map: textureTop ,
-        transparent: true,
-        opacity: 1
-    });
-    const bgTop = new THREE.Mesh(backgroundTop, materialTop);
-    scene.add(bgTop);
-    bgTop.position.set(0, 0, -1);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(2, 2); // Adjust tiling if needed
+
+    const material = new THREE.MeshStandardMaterial({ map: texture });
+    background = new THREE.Mesh(geometry, material); // Store the Mesh in `background`
+    
+    scene.add(background);
+    background.position.set(0, 0, -100);
 }
 
 function createWalls(scene, textureLoader)

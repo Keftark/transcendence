@@ -459,7 +459,7 @@ export function passInfosPlayersToLevelMulti(idP1, idP2, idP3, idP4)
 
 function setSide()
 {
-    if (playerProfile1.username === playerStats.nickname || (playerProfile3 !== null && playerProfile3.username === playerStats.nickname))
+    if (playerProfile1 == null || playerProfile1.username === playerStats.nickname || (playerProfile3 !== null && playerProfile3.username === playerStats.nickname))
         isLeftSide = true;
     else
         isLeftSide = false;
@@ -468,7 +468,10 @@ function setSide()
 function setPlayerNames()
 {
     setSide();
-    leftSideName = playerProfile1.username;
+    if (playerProfile1 == null)
+        leftSideName = "Guest player"
+    else 
+        leftSideName = playerProfile1.username;
     if (currentLevelMode === LevelMode.TOURNAMENT)
     {
         const [player1Tournament, player2Tournament] = getTournamentPlayers();
