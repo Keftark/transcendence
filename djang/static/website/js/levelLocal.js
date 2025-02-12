@@ -11,6 +11,7 @@ import { addGameStickers, removeGameStickers, setAccessAllDuelsInChat, tryCloseC
 import { addMatchToHistory, getPlayerName, playerStats } from './playerManager.js';
 import { getTranslation } from './translate.js';
 import { createSpaceLevel } from './levelSpace.js';
+import { createVolcanoLevel } from './levelVolcano.js';
 import { createCaveLevel } from './levelCave.js';
 import { getRawMatchTime, isGamePaused, pauseStopWatch, resetStopwatch, resumeStopWatch, setStopWatch, startStopwatch, stopStopwatch } from './timer.js';
 import { closeGameMenu, setHeaderVisibility } from './menu.js';
@@ -503,7 +504,7 @@ function setUpLevel(scene)
     createLights(scene, arenaType);
     resetPlayersPositions();
     if (arenaType === ArenaType.SPACE)
-        animateLevelFunction = createSpaceLevel(scene, textureLoader);
+        animateLevelFunction = createVolcanoLevel(scene, textureLoader);
     else if (arenaType === ArenaType.CAVE)
         createCaveLevel(scene, textureLoader);
 }
