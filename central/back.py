@@ -445,8 +445,10 @@ async def handler(websocket):
             elif event["answer"] == "yes":
                 await handle_answers(event)
             elif event["server"] != "main":
+                #logger.log(event, 3)
                 await handle_transfer(event)
             else : #Commandes de serveur ...
+                #logger.log(event, 3)
                 await handle_commands(websocket, event)
         await websocket.wait_closed()
     except Exception as e:
