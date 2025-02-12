@@ -272,6 +272,7 @@ export function socketBoostPaddle(mode = "1v1_classic")
         move: "boost",
         method: "osef"
     };
+    // console.log("Sending boost: " + JSON.stringify(event));
     socket.send(JSON.stringify(event));
 }
 
@@ -620,9 +621,11 @@ export function addSocketListener()
             }
             break;
         case "tick":
+            // console.log("oui");
             if (event.room_id === playerStats.room_id);
             {
-                setPlayersPositions(event.p1_pos, event.p2_pos);
+                console.log(data);
+                setPlayersPositions(event.p1_pos, event.p2_pos, event.p3_pos, event.p4_pos);
                 setBallPosition(event.ball_x, event.ball_y);
                 setPowerBarsPlayers(event.p1_juice, event.p2_juice);
                 checkPowerUpState(event.p1_boosting, event.p2_boosting, event.ball_boosting);

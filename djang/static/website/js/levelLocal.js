@@ -84,10 +84,10 @@ let sparks;
 let cameraZoomSpeed = 2; // Set the zoom speed
 
 let playersId = [0, 0, 0, 0];
-let playerProfile1;
-let playerProfile2;
-let playerProfile3;
-let playerProfile4;
+let playerProfile1 = null;
+let playerProfile2 = null;
+let playerProfile3 = null;
+let playerProfile4 = null;
 
 export function getCamera()
 {
@@ -606,6 +606,7 @@ function animateDeathSphere()
 {
     if (deathSphere != null)
         {
+            console.log("Death sphere");
             if (!deathSphereGrew)
             {
                 if (scaleSphere < 20)
