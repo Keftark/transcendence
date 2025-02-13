@@ -51,7 +51,7 @@ class Match:
         self._timer = time.time()
         self._lock = threading.Lock()
         self._message_locker = threading.Lock()
-        self._map = random.randint(0, 1)
+        self._map = random.randint(0, 2)
 
         self._board.place(BrickTriangleUnbreak(), 0, 1)
         self._board.place(BrickTriangleReverseUnbreak(), self._board.max_x - 1, 1)
