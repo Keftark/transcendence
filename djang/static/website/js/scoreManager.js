@@ -24,6 +24,15 @@ export class MatchResult
     }
 }
 
+export function getScoreP1()
+{
+    return player1Score;
+}
+export function getScoreP2()
+{
+    return player2Score;
+}
+
 function animateScoreChange(scoreElement, newScore)
 {
     scoreElement.classList.add('fall-down');

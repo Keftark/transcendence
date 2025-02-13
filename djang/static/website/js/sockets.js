@@ -2,7 +2,7 @@ import { getBlockedList, getUserById, getUserByName } from "./apiFunctions.js";
 import { setBallPosition } from "./ball.js";
 import { createInvitationDuel, deleteDuelInChat, receiveGameSticker, receiveMessage } from "./chat.js";
 import { closeDuelPanel, matchFound, setPlayersControllers, updateReadyButtons } from "./duelPanel.js";
-import { addReadyPlayer, doUpdateBallLight, getBallPosition, getPlayerSideById, removeReadyPlayers, resetScreenFunction, spawnSparksFunction, startScreenShake } from "./levelLocal.js";
+import { addReadyPlayer, doUpdateBallLight, endMatch, getBallPosition, getPlayerSideById, removeReadyPlayers, resetScreenFunction, spawnSparksFunction, startScreenShake } from "./levelLocal.js";
 import { getLevelState, socket, listener } from "./main.js";
 import { getListMatchs, setSelectedMode } from "./modesSelection.js";
 import { closeMultiPanel, isPlayerSameSide, matchFoundMulti, setPlayersControllersMulti, updateReadyButtonsMulti } from "./multiPanel.js";
@@ -11,7 +11,7 @@ import { playerStats } from "./playerManager.js";
 import { setPlayersPositions } from "./playerMovement.js";
 import { checkPowerUpState, resetBoostBar, setPowerBarsPlayers } from "./powerUp.js";
 import { setArenaType } from "./rules.js";
-import { endOfMatch } from "./scoreManager.js";
+import { endOfMatch, getScoreP1, getScoreP2 } from "./scoreManager.js";
 import { setTimeFromServer } from "./timer.js";
 import { LevelMode, VictoryType } from "./variables.js";
 import { callVictoryScreen } from "./victory.js";
@@ -535,7 +535,7 @@ export function addSocketListener()
                 addReadyPlayer(4);
             break;
         case "match_init":
-            console.log(data);
+            // console.log(data);
             id_room = event.room_id;
             playerStats.room_id = id_room;
             setArenaType(event.level_type);
@@ -605,12 +605,15 @@ export function addSocketListener()
             }
             else if (event.mode === "points" || event.mode === "timer")
             {
-                if (isPlayerSameSide(event.player))
-                    callVictoryScreen(VictoryType.VICTORY);
-                else
-                    callVictoryScreen(VictoryType.DEFEAT);
+                endMatch(getScoreP1(), getScoreP2());
+                setTimeout(() => {
+                    if (isPlayerSameSide(event.player))
+                        callVictoryScreen(VictoryType.VICTORY);
+                    else
+                        callVictoryScreen(VictoryType.DEFEAT);
+                }, 1800);
             }
-            else if (event.mode === "equal")
+            else if (event.mode === "equal") // unused
                 callVictoryScreen(VictoryType.EXAEQUO);
             break;
         case "connection_lost": // plus utile ?
@@ -621,7 +624,6 @@ export function addSocketListener()
             break;
         case "point":
             // console.log(data);
-
             if (event.room_id != playerStats.room_id)
                 return;
             resetBoostBar();
@@ -648,7 +650,7 @@ export function addSocketListener()
         case "tick":
             if (event.room_id != playerStats.room_id)
                 return;
-            // console.log(data);
+            console.log(data);
             if (isInDuel)
             {
                 setPlayersPositions(
@@ -665,7 +667,9 @@ export function addSocketListener()
                     isNaN(event.p4_pos) ? 0 : event.p4_pos
                 );
             }
-            setBallPosition(event.ball_x, event.ball_y);
+            setBallPosition(
+                isNaN(event.ball_x) ? 0 : event.ball_x,
+                isNaN(event.ball_y) ? 0 : event.ball_y);
             setPowerBarsPlayers(event.p1_juice, event.p2_juice, event.p3_juice, event.p4_juice);
             checkPowerUpState(event.p1_boosting, event.p2_boosting, event.ball_boosting);
             setTimeFromServer(event.timer);

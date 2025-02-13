@@ -36,14 +36,13 @@ export function createPlayerStats() {
     };
 }
 
-export function addMatchToHistory(victoryType, playerScore, opponentScore, opponentName, matchTime = '0')
+export function addMatchToHistory(victoryType, playerScore, teamName, opponentScore, opponentName, matchTime = '0')
 {
-    // console.log("Adding match");
     if (!playerStats.isRegistered)
         return;
-    // console.trace("Adding match to history:\nplayer score: " + playerScore + "\nOpponent score: " + opponentScore + "\nOpponent name: " + opponentName);
+    console.trace("Adding match to history:\nplayer score: " + playerScore + "\nOpponent score: " + opponentScore + "\nOpponent name: " + opponentName);
     if (victoryType === VictoryType.VICTORY)
-        sendMatch(playerStats.nickname, opponentName, playerScore, opponentScore, matchTime);
+        sendMatch(teamName, opponentName, playerScore, opponentScore, matchTime);
 }
 
 export async function createNewPlayer()

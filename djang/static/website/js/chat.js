@@ -780,6 +780,7 @@ export function addGameStickers()
 
 function sendGameSticker(stickerName)
 {
+    receiveGameSticker(playerStats.id, stickerName);
     socketSendSalonSticker(stickerName);
 }
 

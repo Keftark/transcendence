@@ -88,6 +88,7 @@ let playerProfile1 = null;
 let playerProfile2 = null;
 let playerProfile3 = null;
 let playerProfile4 = null;
+let teamName = "";
 
 export function getCamera()
 {
@@ -473,8 +474,8 @@ function setPlayerNames()
     if (currentLevelMode === LevelMode.TOURNAMENT)
     {
         const [player1Tournament, player2Tournament] = getTournamentPlayers();
-        player1Name.innerText = player1Tournament;
-        player2Name.innerText = player2Tournament;
+        player1Name.innerHTML = player1Tournament;
+        player2Name.innerHTML = player2Tournament;
     }
     else if (isAnOnlineMode(currentLevelMode))
     {
@@ -485,15 +486,21 @@ function setPlayerNames()
         }
         else
         {
-            player1Name.innerText = playerProfile1.username;
-            player2Name.innerText = playerProfile2.username;
+            player1Name.innerHTML = playerProfile1.username;
+            player2Name.innerHTML = playerProfile2.username;
         }
     }
     else
     {
         setPlayerRightName();
-        player1Name.innerText = getPlayerName();
+        player1Name.innerHTML = getPlayerName();
     }
+    if (playerProfile1 === null)
+        teamName = player1Name.innerHTML;
+    else if (playerProfile1.username === playerStats.nickname || (playerProfile3 !== null && playerProfile3.username === playerStats.nickname))
+        teamName = player1Name.innerHTML;
+    else
+        teamName = player2Name.innerHTML;
 }
 
 function setUpLevel(scene)
@@ -915,8 +922,8 @@ let leftSideName = "";
 export function endMatch(scoreP1, scoreP2, forcedVictory = false)
 {
     gameEnded = true;
-    const player1NameText = player1Name.innerText;
-    const player2NameText = player2Name.innerText;
+    const player1NameText = player1Name.innerHTML;
+    const player2NameText = player2Name.innerHTML;
     let scorePlayer;
     let scoreOpponent;
     let opponentName;
@@ -959,7 +966,7 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
     if (currentLevelMode === LevelMode.TOURNAMENT)
         setWinner(player1NameText, player2NameText, scoreP1, scoreP2);
     if (!isSpectator())
-        addMatchToHistory(victoryType, scorePlayer, scoreOpponent, opponentName, getRawMatchTime());
+        addMatchToHistory(victoryType, scorePlayer, teamName, scoreOpponent, opponentName, getRawMatchTime());
     pressPlayDiv.style.display = 'none';
     stopStopwatch();
     deathSphereGrew = false;
