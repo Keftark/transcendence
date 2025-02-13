@@ -1,6 +1,6 @@
 import { openRules, setCustomRules, setDefaultRules } from './rules.js';
 import { createInvitationDuel } from './chat.js';
-import { getLevelState, setLevelState } from './main.js';
+import { getLevelState, isAnOnlineMode, setLevelState } from './main.js';
 import { LevelMode } from './variables.js';
 import { getCurrentView, navigateTo } from './pages.js';
 import { playerStats } from './playerManager.js';
@@ -101,7 +101,8 @@ export function getSelectedMode()
 export function clickPlayGame()
 {
     const selecMode = getSelectedMode();
-    setCustomRules();
+    if (!isAnOnlineMode(selecMode))
+        setCustomRules();
     if (selecMode === LevelMode.LOCAL)
         navigateTo('game-local', selecMode);
     else if (selecMode === LevelMode.ADVENTURE)

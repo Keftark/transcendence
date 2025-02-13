@@ -581,7 +581,7 @@ export function addSocketListener()
             // console.log("Victory: " + data);
             if (event.room_id != playerStats.room_id)
                 return;
-            console.log(data);
+            // console.log(data);
             if (event.mode === "abandon" && event.player != playerStats.id)
             {
                 if (getCurrentView() === "duel")

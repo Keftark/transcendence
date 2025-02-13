@@ -70,6 +70,7 @@ export function setDuelSenderPlayer(playerNick)
 
 function resetDuelPanel()
 {
+    // console.log("Resetting panel");
     idP2 = idP1 = -1;
     player2Duel.classList.remove('selectedPlayer');
     player1Duel.classList.remove('selectedPlayer');

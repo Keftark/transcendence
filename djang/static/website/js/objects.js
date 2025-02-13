@@ -185,7 +185,8 @@ export function setWallRight(wall)
 
 export function setVisibilityRightWall(isVisible)
 {
-    wallRight.visible = isVisible;
+    if (typeof wallRight !== "undefined")
+        wallRight.visible = isVisible;
 }
 
 export function createLights(scene, arenaType)

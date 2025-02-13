@@ -220,10 +220,12 @@ class Match:
                 for brick in self.board.bricks:
                     brick.tick(self._ball)
                 if self._ball.x < self._board.min_x: #point for p2
+                    print(f"Ball is at {self._ball.x}|{self._ball.y}, player 1 at {self._paddle_l1.y}, player 2 at {self._paddle_r1.y}, player 3 at {self._paddle_l2.y}, player 4 at {self._paddle_r2.y}")
                     self._side_right_score += 1
                     self.reset_board()
                     self._message_queue.append(self.dump_point(self._paddle_l2.id))
                 elif self._ball.x > self._board.max_x: #point for p1
+                    print(f"Ball is at {self._ball.x}|{self._ball.y}, player 1 at {self._paddle_l1.y}, player 2 at {self._paddle_r1.y}, player 3 at {self._paddle_l2.y}, player 4 at {self._paddle_r2.y}")
                     self._side_left_score += 1
                     self.reset_board()
                     self._message_queue.append(self.dump_point(self._paddle_r1.id))
