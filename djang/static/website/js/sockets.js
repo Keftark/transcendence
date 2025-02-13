@@ -619,20 +619,45 @@ export function addSocketListener()
                 resetBoostBar();
                 spawnSparksFunction(getBallPosition(), 400);
                 let nbr = getPlayerSideById(event.player);
-                // inversion du joueur ayant marque un but
-                if (nbr === 1)
-                    nbr = 2;
-                else if (nbr === 2)
-                    nbr = 1;
+                // console.log("Nbr before: " + nbr);
+                if (getCurrentView() === "game-online")
+                {
+                    if (nbr === 0)
+                        nbr = 2;
+                    else if (nbr === 1)
+                        nbr = 1;
+                }
+                else // code pas normal !
+                {
+                    if (nbr === 2)
+                        nbr = 1;
+                    else if (nbr === 1)
+                        nbr = 2;
+                }
+                // console.log("Nbr after: " + nbr);
                 resetScreenFunction(nbr, true);
             }
             break;
         case "tick":
-            // console.log("oui");
             if (event.room_id === playerStats.room_id);
             {
                 // console.log(data);
-                setPlayersPositions(event.p1_pos, event.p2_pos, event.p3_pos, event.p4_pos);
+                if (getCurrentView() === "game-online")
+                {
+                    setPlayersPositions(
+                        isNaN(event.p1_pos) ? 0 : event.p1_pos,
+                        isNaN(event.p2_pos) ? 0 : event.p2_pos
+                    );
+                }
+                else
+                {
+                    setPlayersPositions(
+                        isNaN(event.p1_pos) ? 0 : event.p1_pos,
+                        isNaN(event.p2_pos) ? 0 : event.p2_pos,
+                        isNaN(event.p3_pos) ? 0 : event.p3_pos,
+                        isNaN(event.p4_pos) ? 0 : event.p4_pos
+                    );
+                }
                 setBallPosition(event.ball_x, event.ball_y);
                 setPowerBarsPlayers(event.p1_juice, event.p2_juice, event.p3_juice, event.p4_juice);
                 checkPowerUpState(event.p1_boosting, event.p2_boosting, event.ball_boosting);
