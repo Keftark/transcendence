@@ -28,27 +28,28 @@ export function setPowerBarsPlayers(p1Amount, p2Amount, p3Amount = null, p4Amoun
     if (p3Amount !== null && p1Amount === p1OldAmount && p2Amount === p2OldAmount && p3Amount === p3OldAmount && p4Amount === p4OldAmount)
         return;
     const playerNbr = getPlayerNbr();
+    // console.log("Player nbr: " + playerNbr);
     if (playerNbr === 0)
     {
-        console.log("P1 changes its state: " + p1Amount);
+        // console.log("P1 changes its state: " + p1Amount);
         p1OldAmount = p1Amount;
         setPowerBarLeft(p1Amount);
     }
     else if (playerNbr === 1)
     {
-        console.log("P2 changes its state: " + p2Amount);
+        // console.log("P2 changes its state: " + p2Amount);
         p2OldAmount = p2Amount;
         setPowerBarRight(p2Amount);
     }
     else if (playerNbr === 2)
     {
-        console.log("P3 changes its state: " + p3Amount);
+        // console.log("P3 changes its state: " + p3Amount);
         p3OldAmount = p3Amount;
         setPowerBarLeft(p3Amount);
     }
     else if (playerNbr === 3)
     {
-        console.log("P4 changes its state: " + p4Amount);
+        // console.log("P4 changes its state: " + p4Amount);
         p4OldAmount = p4Amount;
         setPowerBarRight(p4Amount);
     }

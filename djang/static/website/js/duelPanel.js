@@ -8,6 +8,7 @@ import { getTranslation } from "./translate.js";
 import { clickPlayGame } from "./modesSelection.js";
 import { LevelMode } from "./variables.js";
 import { playerStats } from "./playerManager.js";
+import { showMessage } from "./menu.js";
 
 document.getElementById('leaveDuelButton').addEventListener('click', () => {
     closeDuelPanel();
@@ -69,6 +70,7 @@ export function setDuelSenderPlayer(playerNick)
 
 function resetDuelPanel()
 {
+    idP2 = idP1 = -1;
     player2Duel.classList.remove('selectedPlayer');
     player1Duel.classList.remove('selectedPlayer');
     player1IsReady = false;
@@ -91,10 +93,13 @@ function resetVSAnimation()
     animDiv.classList.add('vsAnim');
 }
 
-export function closeDuelPanel()
+export function closeDuelPanel(fromSocket = false)
 {
-    // double chargement de la page de retour pour le joueur qui quitte
-    // mettre un message indiquant que l'autre joueur a quitte
+    if (idP1 === -1)
+        return;
+    if (fromSocket)
+        showMessage("playerHasQuit");
+    resetDuelPanel();
     setSelectedMode(LevelMode.MENU);
     document.getElementById('waitingMatch').style.display = "none";
     socketExitLobby();
@@ -108,9 +113,6 @@ export function onOpenDuel()
 
 export function onCloseDuel()
 {
-    idP2 = idP1 = -1;
-    resetDuelPanel();
-
     // document.getElementById('duelPanel').style.display = 'none'; // inutile ??
     animDiv.classList.remove('vsAnim');
     animDiv.style.display = 'none';

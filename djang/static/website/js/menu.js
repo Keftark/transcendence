@@ -874,4 +874,23 @@ function toggleShowCurrentPassword()
     }
 }
 
-// changeFieldProfileConfirm.style.display = 'flex';
+const messagePanel = document.getElementById('messagePanel');
+messagePanel.addEventListener('click', () => {
+    closeMessagePanel();
+});
+function closeMessagePanel()
+{
+    messagePanel.style.display = 'none';
+    messagePanel.classList.remove('fadeInOut');
+    messagePanel.style.opacity = 0;
+}
+
+export function showMessage(message)
+{
+    document.getElementById('messageText').innerHTML = getTranslation(message);
+    messagePanel.style.display = 'grid';
+    messagePanel.classList.add('fadeInOut');
+    setTimeout(() => {
+        closeMessagePanel();
+    }, 3000);
+}

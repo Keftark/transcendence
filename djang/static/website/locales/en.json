@@ -146,6 +146,7 @@
     "duelWrongParameter": "Wrong command syntax: /duel &lt;name&gt;",
     "userOffline": "User is offline: ",
     "yourId": "Your id is: ",
+    "playerHasQuit": "A player has quit the lobby",
     
     
     "entityDontLeaveMe": "No... Please... I need you...",

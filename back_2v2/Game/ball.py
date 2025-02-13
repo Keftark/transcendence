@@ -150,6 +150,7 @@ class Ball:
         else:
             self._x += self._velocity_x
             self._y += self._velocity_y
+        # print(f"Ball is bouncable {self._can_bounce}")
 
     def dump_bounce_player(self):
         """Event of a ball colliding on a player.

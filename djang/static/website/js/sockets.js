@@ -5,7 +5,7 @@ import { closeDuelPanel, matchFound, setPlayersControllers, updateReadyButtons }
 import { addReadyPlayer, doUpdateBallLight, getBallPosition, getPlayerSideById, removeReadyPlayers, resetScreenFunction, spawnSparksFunction, startScreenShake } from "./levelLocal.js";
 import { getLevelState, socket, listener } from "./main.js";
 import { getListMatchs, setSelectedMode } from "./modesSelection.js";
-import { isPlayerSameSide, matchFoundMulti, setPlayersControllersMulti, updateReadyButtonsMulti } from "./multiPanel.js";
+import { closeMultiPanel, isPlayerSameSide, matchFoundMulti, setPlayersControllersMulti, updateReadyButtonsMulti } from "./multiPanel.js";
 import { getCurrentView, navigateTo } from "./pages.js";
 import { playerStats } from "./playerManager.js";
 import { setPlayersPositions } from "./playerMovement.js";
@@ -583,7 +583,10 @@ export function addSocketListener()
             console.log(data);
             if (event.mode === "abandon" && event.player != playerStats.id)
             {
-                closeDuelPanel();
+                if (getCurrentView() === "duel")
+                    closeDuelPanel(true);
+                else
+                    closeMultiPanel(true);
             }
             else if ((event.mode === "disconnected" || event.mode === "ragequit") && event.player != playerStats.id)
             {
@@ -612,7 +615,7 @@ export function addSocketListener()
             {
                 resetBoostBar();
                 spawnSparksFunction(getBallPosition(), 400);
-                let nbr = getPlayerSideById(event.player) + 1;
+                let nbr = getPlayerSideById(event.player);
                 // inversion du joueur ayant marque un but
                 if (nbr === 1)
                     nbr = 2;

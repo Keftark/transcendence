@@ -131,14 +131,6 @@ export function animateBoostPlayers()
 
 export function getPlayerSideById(playerId)
 {
-    // console.log("List: ");
-    // console.log("0: " + playersId[0]);
-    // console.log("1: " + playersId[1]);
-    // console.log("2: " + playersId[2]);
-    // console.log("3: " + playersId[3]);
-    // console.log(" ");
-    // console.log("Get player id: " + playerId);
-    // console.log("Index: " + playersId.indexOf(playerId));
     return playersId.indexOf(playerId);
 }
 
@@ -258,6 +250,7 @@ export function unloadLevel()
     playerProfile4 = playerProfile3 = playerProfile2 = playerProfile1 = null;
     setMatchAlreadyStarted(false);
     window.removeEventListener('wheel', camZoomEvent);
+    document.getUserById('bottomGdprDiv').style.display = 'flex';
 }
 
 export function gameEventsListener(event)
@@ -697,6 +690,7 @@ export let resetScreenFunction = null;
 
 export function StartLevel(levelMode)
 {
+    document.getUserById('bottomGdprDiv').style.display = 'none';
     setUserStatus("busy");
     playerStats.status = PlayerStatus.BUSY;
     animationId = null;
@@ -949,6 +943,11 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
         victoryType = VictoryType.VICTORY;
     else if (winner != '')
     {
+        // if ((scoreP1 > scoreP2 && isLeftSide) || (scoreP1 < scoreP2 && !isLeftSide))
+        //     victoryType = VictoryType.VICTORY;
+        // else
+        //     victoryType = VictoryType.DEFEAT;
+
         if (winner === getPlayerName() || (winner === leftSideName && isLeftSide) || (winner !== leftSideName && !isLeftSide))
             victoryType = VictoryType.VICTORY;
         else

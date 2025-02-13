@@ -38,6 +38,7 @@ export function createPlayerStats() {
 
 export function addMatchToHistory(victoryType, playerScore, opponentScore, opponentName, matchTime = '0')
 {
+    // console.log("Adding match");
     if (!playerStats.isRegistered)
         return;
     // console.trace("Adding match to history:\nplayer score: " + playerScore + "\nOpponent score: " + opponentScore + "\nOpponent name: " + opponentName);

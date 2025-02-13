@@ -146,6 +146,7 @@
     "duelWrongParameter": "Mauvaise syntaxe : /duel &lt;nom&gt;",
     "userOffline": "Utilisateur hors ligne : ",
     "yourId": "Votre id est : ",
+    "playerHasQuit": "Un joueur a quitté le salon",
 
     "entityDontLeaveMe": "Non... S'il vous plaît... J'ai besoin de vous...",
     "entityRegister": "Ah ! Un nouveau joueur... C'est délicieux !",

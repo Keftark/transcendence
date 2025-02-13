@@ -1,6 +1,6 @@
 import { getMatchsFullData } from "./apiFunctions.js";
 import { endMatch } from "./levelLocal.js";
-import { getLevelState } from "./main.js";
+import { getLevelState, isAnOnlineMode } from "./main.js";
 import { getPlayerVictories, playerStats } from "./playerManager.js";
 import { checkPoints } from "./rules.js";
 import { formatTime } from "./timer.js";
@@ -51,7 +51,7 @@ export function addScore(playerNbr)
         player1Score += 1;
         animateScoreChange(scoreLeft, player1Score);
     }
-    if (getLevelState() !== LevelMode.ONLINE)
+    if (!isAnOnlineMode(getLevelState()))
         checkPoints(player1Score, player2Score);
 }
 
@@ -135,4 +135,5 @@ export function loadScores(player = playerStats)
 export function endOfMatch(forcedVictory = false)
 {
     endMatch(player1Score, player2Score, forcedVictory);
+    player1score = player2score = 0;
 }
