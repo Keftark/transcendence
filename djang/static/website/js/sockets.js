@@ -10,6 +10,7 @@ import { getCurrentView, navigateTo } from "./pages.js";
 import { playerStats } from "./playerManager.js";
 import { setPlayersPositions } from "./playerMovement.js";
 import { checkPowerUpState, resetBoostBar, setPowerBarsPlayers } from "./powerUp.js";
+import { setArenaType } from "./rules.js";
 import { endOfMatch } from "./scoreManager.js";
 import { setTimeFromServer } from "./timer.js";
 import { LevelMode, VictoryType } from "./variables.js";
@@ -536,7 +537,7 @@ export function addSocketListener()
             console.log(data);
             id_room = event.room_id;
             playerStats.room_id = id_room;
-
+            setArenaType(event.level_type);
             if (getCurrentView() === "duel")
             {
                 setTimeout(() => {
@@ -590,8 +591,10 @@ export function addSocketListener()
             }
             else if ((event.mode === "disconnected" || event.mode === "ragequit") && event.player != playerStats.id)
             {
+                if (!isPlayerSameSide(event.player))
+                    callVictoryScreen(VictoryType.VICTORY);
                 // aficher un message different si le mode est disconnected ou ragequit?
-                endOfMatch(true);// mettre un argument pour forcer la victoire et indiquer que l'autre a quitte
+                // endOfMatch(true);// mettre un argument pour forcer la victoire et indiquer que l'autre a quitte
             }
             else if (event.mode === "points" || event.mode === "timer")
             {
