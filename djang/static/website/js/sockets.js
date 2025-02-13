@@ -459,6 +459,7 @@ export function socketUnspectateMatch()
     listener.send(JSON.stringify(event));    
 }
 
+let isInDuel = false;
 export function addSocketListener()
 {
     listener.addEventListener("message", ({ data }) => {
@@ -562,11 +563,17 @@ export function addSocketListener()
             if (matchAlreadyStarted)
                 break;
             matchAlreadyStarted = true;
-            console.log(data);
+            // console.log(data);
             if (getCurrentView() === "duel")
+            {
+                isInDuel = true;
                 setPlayersControllers();
+            }
             else
+            {
+                isInDuel = false;
                 setPlayersControllersMulti();
+            }
             break;
         case "bounce_player":
             if (event.room_id != playerStats.room_id)
@@ -614,55 +621,54 @@ export function addSocketListener()
             break;
         case "point":
             // console.log(data);
-            if (event.room_id === playerStats.room_id);
+
+            if (event.room_id != playerStats.room_id)
+                return;
+            resetBoostBar();
+            spawnSparksFunction(getBallPosition(), 400);
+            let nbr = getPlayerSideById(event.player);
+            // console.log("Nbr before: " + nbr);
+            if (isInDuel)
             {
-                resetBoostBar();
-                spawnSparksFunction(getBallPosition(), 400);
-                let nbr = getPlayerSideById(event.player);
-                // console.log("Nbr before: " + nbr);
-                if (getCurrentView() === "game-online")
-                {
-                    if (nbr === 0)
-                        nbr = 2;
-                    else if (nbr === 1)
-                        nbr = 1;
-                }
-                else // code pas normal !
-                {
-                    if (nbr === 2)
-                        nbr = 1;
-                    else if (nbr === 1)
-                        nbr = 2;
-                }
-                // console.log("Nbr after: " + nbr);
-                resetScreenFunction(nbr, true);
+                if (nbr === 0)
+                    nbr = 2;
+                else if (nbr === 1)
+                    nbr = 1;
             }
+            else // code pas normal !
+            {
+                if (nbr === 2)
+                    nbr = 1;
+                else if (nbr === 1)
+                    nbr = 2;
+            }
+            // console.log("Nbr after: " + nbr);
+            resetScreenFunction(nbr, true);
             break;
         case "tick":
-            if (event.room_id === playerStats.room_id);
+            if (event.room_id != playerStats.room_id)
+                return;
+            // console.log(data);
+            if (isInDuel)
             {
-                // console.log(data);
-                if (getCurrentView() === "game-online")
-                {
-                    setPlayersPositions(
-                        isNaN(event.p1_pos) ? 0 : event.p1_pos,
-                        isNaN(event.p2_pos) ? 0 : event.p2_pos
-                    );
-                }
-                else
-                {
-                    setPlayersPositions(
-                        isNaN(event.p1_pos) ? 0 : event.p1_pos,
-                        isNaN(event.p2_pos) ? 0 : event.p2_pos,
-                        isNaN(event.p3_pos) ? 0 : event.p3_pos,
-                        isNaN(event.p4_pos) ? 0 : event.p4_pos
-                    );
-                }
-                setBallPosition(event.ball_x, event.ball_y);
-                setPowerBarsPlayers(event.p1_juice, event.p2_juice, event.p3_juice, event.p4_juice);
-                checkPowerUpState(event.p1_boosting, event.p2_boosting, event.ball_boosting);
-                setTimeFromServer(event.timer);
+                setPlayersPositions(
+                    isNaN(event.p1_pos) ? 0 : event.p1_pos,
+                    isNaN(event.p2_pos) ? 0 : event.p2_pos
+                );
             }
+            else
+            {
+                setPlayersPositions(
+                    isNaN(event.p1_pos) ? 0 : event.p1_pos,
+                    isNaN(event.p2_pos) ? 0 : event.p2_pos,
+                    isNaN(event.p3_pos) ? 0 : event.p3_pos,
+                    isNaN(event.p4_pos) ? 0 : event.p4_pos
+                );
+            }
+            setBallPosition(event.ball_x, event.ball_y);
+            setPowerBarsPlayers(event.p1_juice, event.p2_juice, event.p3_juice, event.p4_juice);
+            checkPowerUpState(event.p1_boosting, event.p2_boosting, event.ball_boosting);
+            setTimeFromServer(event.timer);
             break;
         case "invite":
             getUserById(event.from)
@@ -677,11 +683,6 @@ export function addSocketListener()
         case "wait_start_invited":
             // console.log("got an invitation: " + data);
             break;
-        // case "join":
-        //     console.log("Invitation percue");
-        //     if (event.invited === playerStats.id)
-        //         console.log("Invitation recue");
-        //     break;
         case "crash":
             console.log(data);
             break;
