@@ -250,7 +250,7 @@ export function unloadLevel()
     playerProfile4 = playerProfile3 = playerProfile2 = playerProfile1 = null;
     setMatchAlreadyStarted(false);
     window.removeEventListener('wheel', camZoomEvent);
-    document.getUserById('bottomGdprDiv').style.display = 'flex';
+    document.getElementById('bottomGdprDiv').style.display = 'flex';
 }
 
 export function gameEventsListener(event)
@@ -690,7 +690,7 @@ export let resetScreenFunction = null;
 
 export function StartLevel(levelMode)
 {
-    document.getUserById('bottomGdprDiv').style.display = 'none';
+    document.getElementById('bottomGdprDiv').style.display = 'none';
     setUserStatus("busy");
     playerStats.status = PlayerStatus.BUSY;
     animationId = null;

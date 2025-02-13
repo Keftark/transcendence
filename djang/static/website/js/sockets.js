@@ -533,7 +533,7 @@ export function addSocketListener()
                 addReadyPlayer(4);
             break;
         case "match_init":
-            // console.log(data);
+            console.log(data);
             id_room = event.room_id;
             playerStats.room_id = id_room;
 
@@ -561,7 +561,7 @@ export function addSocketListener()
             if (matchAlreadyStarted)
                 break;
             matchAlreadyStarted = true;
-            // console.log(data);
+            console.log(data);
             if (getCurrentView() === "duel")
                 setPlayersControllers();
             else

@@ -135,5 +135,5 @@ export function loadScores(player = playerStats)
 export function endOfMatch(forcedVictory = false)
 {
     endMatch(player1Score, player2Score, forcedVictory);
-    player1score = player2score = 0;
+    player1Score = player2Score = 0;
 }
