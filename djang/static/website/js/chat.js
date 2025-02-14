@@ -7,7 +7,7 @@ import { getCamera, getPlayerPosition, getRenderer, id_players, isInGame } from 
 import { openMiniProfile } from "./menu.js";
 import { getPlayerName, playerStats } from "./playerManager.js";
 import { getRules, resetInputfieldsRules } from "./rules.js";
-import { socketSendMessage, socketSendPrivSticker, socketSendPublicSticker, socketSendSalonSticker } from "./sockets.js";
+import { socketSendFriendInvite, socketSendMessage, socketSendPrivSticker, socketSendPublicSticker, socketSendSalonSticker } from "./sockets.js";
 import { getTranslation } from "./translate.js";
 import { ArenaType, EmotionType } from "./variables.js";
 
@@ -249,6 +249,7 @@ export function askAddFriendFunction(playerName)
         {
             sendSystemMessage("youSendRequest", playerName, true);
             addOutgoingFriendRequest(playerName);
+            socketSendFriendInvite(playerName);
         }
         else if (response.status == 201) // ajout ami
         {

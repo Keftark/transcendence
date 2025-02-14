@@ -1,6 +1,7 @@
-import { blockUserRequest, getAllUserStatuses, getBlockedList, getFriendsList, getUserStatus, unblockUserRequest } from "./apiFunctions.js";
+import { blockUserRequest, deleteFriend, getAllUserStatuses, getBlockedList, getFriendsList, getUserStatus, unblockUserRequest } from "./apiFunctions.js";
 import { askAddFriendFunction, hideMessagesFrom, openNameContextMenu, restoreMessagesFromUser, sendSystemMessage } from "./chat.js";
 import { playerStats } from "./playerManager.js";
+import { socketSendFriendAccept, socketSendFriendCancel, socketSendFriendRefuse } from "./sockets.js";
 import { getTranslation } from "./translate.js";
 
 const friendsBox = document.getElementById('friendsBox');
@@ -176,12 +177,6 @@ export function addBlockedUserDiv(userName)
     blockedList.appendChild(newDiv);
 }
 
-function getPlayerStatus(userName)
-{
-    // on check dans la base de donnees le status du joueur et on retourne 0, 1, 2
-    return (0);
-}
-
 function setPlayerStatusImg(status, divStatus)
 {
     if (status === "offline")
@@ -219,39 +214,57 @@ export function addFriendDiv(userName)
 
 function acceptFriend(friendDiv, playerName)
 {
-    // on enleve la demande dans la bdd
-    // on ajoute l'ami dans la bdd
     askAddFriendFunction(playerName);
+    socketSendFriendAccept(playerName);
+    // on envoie l'acceptation a l'autre joueur
     friendDiv.remove();
 }
 
-function refuseFriend(friendDiv)
+function refuseFriend(friendDiv, userName)
 {
-    // on enleve la demande dans la bdd
+    socketSendFriendRefuse(friendDiv.getAttribute('name'));
+    deleteFriend(userName);
     friendDiv.remove();
 }
 
-export function addOutgoingFriendRequest(userName)
+function cancelRequestFriend(friendDiv, userName)
+{
+    friendDiv.remove();
+    deleteFriend(userName);
+    socketSendFriendCancel(userName);
+}
+
+export function addOutgoingFriendRequest(toUserName)
 {
     const newDiv = document.createElement('div');
-    newDiv.setAttribute('name', userName);
+    newDiv.setAttribute('name', toUserName);
     newDiv.classList.add('friendDiv');
     newDiv.classList.add('outgoingFriendDiv');
     const nameHeader = document.createElement('h3');
-    nameHeader.textContent = getTranslation('requestSent') + userName;
+    nameHeader.textContent = getTranslation('requestSent') + toUserName;
     nameHeader.style.color = playerStats.colors;
     newDiv.appendChild(nameHeader);
+    const buttonRefuse = document.createElement('button');
+    buttonRefuse.classList.add('friendRequestButton');
+    const redCrossImg = document.createElement('img');
+    redCrossImg.src = '../static/icons/realRedCross.webp';
+    redCrossImg.classList.add('redCrossButtonImg');
+    buttonRefuse.appendChild(redCrossImg);
+    buttonRefuse.addEventListener('click', function() {
+        cancelRequestFriend(newDiv, toUserName);
+    });
+    newDiv.appendChild(buttonRefuse);
     friendsList.insertBefore(newDiv, friendsList.firstChild);
 }
 
-export function addFriendRequest(userName)
+export function addFriendRequest(fromUserName)
 {
     const newDiv = document.createElement('div');
-    newDiv.setAttribute('name', userName);
+    newDiv.setAttribute('name', fromUserName);
     newDiv.classList.add('friendDiv');
     newDiv.classList.add('askFriendDiv');
     const nameHeader = document.createElement('h3');
-    nameHeader.textContent = userName + getTranslation('wantsfriend');
+    nameHeader.textContent = fromUserName + getTranslation('wantsfriend');
     nameHeader.style.color = playerStats.colors;
     newDiv.appendChild(nameHeader);
     const buttonsDiv = document.createElement('div');
@@ -263,7 +276,7 @@ export function addFriendRequest(userName)
     acceptImg.classList.add('redCrossButtonImg');
     buttonAccept.appendChild(acceptImg);
     buttonAccept.addEventListener('click', function() {
-        acceptFriend(newDiv, userName);
+        acceptFriend(newDiv, fromUserName);
     });
     buttonsDiv.appendChild(buttonAccept);
     const buttonRefuse = document.createElement('button');
@@ -273,7 +286,7 @@ export function addFriendRequest(userName)
     redCrossImg.classList.add('redCrossButtonImg');
     buttonRefuse.appendChild(redCrossImg);
     buttonRefuse.addEventListener('click', function() {
-        refuseFriend(newDiv);
+        refuseFriend(newDiv, fromUserName);
     });
     buttonsDiv.appendChild(buttonRefuse);
     newDiv.appendChild(buttonsDiv);
@@ -352,10 +365,9 @@ export function blockUser(playerName)
             sendSystemMessage("youBlockedPlayer", playerName, true);
             hideMessagesFrom(playerName);
             addBlockedUserDiv(playerName);
-            // removeFriendFunction(playerName); // seulement s'ils sont amis ??
-
-            // envoyer un signal a l'autre joueur pour lui dire qu'il a un nouvel ami
-            // ensuite on cree le div avec addFriend()
+            // on check s'ils sont amis
+            // si oui, on envoie le signal de suppression d'ami a l'autre joueur
+            // removeFriendFunction(playerName); // et on supprime le div
         }
         else if (response.status == 409)
             sendSystemMessage("youAlreadyBlocked", playerName, true);
@@ -367,7 +379,6 @@ export function blockUser(playerName)
 
 export function unblockUser(playerName)
 {
-
     unblockUserRequest(playerName)
     .then((response) => {
         if (response.status === 200) // unblocked

@@ -56,6 +56,12 @@ class EditFriendView(APIView):
             notification_manager.notify_friend_request_canceled(friend_profile.user, user_profile)
             return Response(_('Friend request cancelled.'))
 
+        incoming_request = user_profile.get_received_friend_request_from(friend_profile)
+        if incoming_request:
+            incoming_request.delete()
+            notification_manager.notify_friend_request_canceled(friend_profile.user, user_profile)
+            return Response(_('Friend request cancelled.'))
+
         if not user_profile.is_friend(friend_profile):
             return Response(_('You are not friend with this user.'), status.HTTP_400_BAD_REQUEST)
 

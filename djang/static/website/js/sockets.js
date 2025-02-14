@@ -2,6 +2,7 @@ import { getBlockedList, getUserById, getUserByName } from "./apiFunctions.js";
 import { setBallPosition } from "./ball.js";
 import { createInvitationDuel, deleteDuelInChat, receiveGameSticker, receiveMessage } from "./chat.js";
 import { closeDuelPanel, matchFound, setPlayersControllers, updateReadyButtons } from "./duelPanel.js";
+import { addFriendDiv, addFriendRequest, checkAndRemoveFriend } from "./friends.js";
 import { addReadyPlayer, doUpdateBallLight, endMatch, getBallPosition, getPlayerSideById, removeReadyPlayers, resetScreenFunction, spawnSparksFunction, startScreenShake } from "./levelLocal.js";
 import { getLevelState, socket, listener } from "./main.js";
 import { getListMatchs, setSelectedMode } from "./modesSelection.js";
@@ -273,7 +274,6 @@ export function socketBoostPaddle(mode = "1v1_classic")
         move: "boost",
         method: "osef"
     };
-    // console.log("Sending boost: " + JSON.stringify(event));
     socket.send(JSON.stringify(event));
 }
 
@@ -335,7 +335,6 @@ export function socketSendPrivMessage(targetMsg, messageContent) {
                 answer: "no",
                 server: "chat"
             };
-
             listener.send(JSON.stringify(event));
         })
         .catch((error) => {
@@ -358,7 +357,6 @@ export function socketSendPrivSticker(targetMsg, stickerName) {
                 answer: "no",
                 server: "chat"
             };
-
             listener.send(JSON.stringify(event));
         })
         .catch((error) => {
@@ -477,7 +475,6 @@ export function socketSendFriendInvite(targetMsg) {
                 answer: "no",
                 server: "chat"
             };
-
             listener.send(JSON.stringify(event));
         })
         .catch((error) => {
@@ -488,7 +485,7 @@ export function socketSendFriendInvite(targetMsg) {
 /**
 Fonction a utiliser pour annuler une demande d'ami
 */
-export function socketSendFriendInvite(targetMsg) {
+export function socketSendFriendCancel(targetMsg) {
     if (!listener || listener.readyState !== WebSocket.OPEN)
         return;
     getUserByName(targetMsg)
@@ -503,7 +500,6 @@ export function socketSendFriendInvite(targetMsg) {
                 answer: "no",
                 server: "chat"
             };
-
             listener.send(JSON.stringify(event));
         })
         .catch((error) => {
@@ -531,7 +527,6 @@ export function socketSendFriendAccept(targetMsg) {
                 answer: "no",
                 server: "chat"
             };
-
             listener.send(JSON.stringify(event));
         })
         .catch((error) => {
@@ -581,30 +576,35 @@ export function addSocketListener()
             console.error("Failed to parse JSON:", error);
             return;
         }
-        if ('id' in event && 'type' in event && event.id === playerStats.id)
-        {
-            return;
-        }
+        // if ('id' in event && 'type' in event && event.id === playerStats.id)
+        // {
+        //     return;
+        // }
         if ('id' in event && 'key' in event && event.id === playerStats.id)
         {
             keySocket = event.key;
             return;
         }
-        switch (event.type) {
-
+        switch (event.type)
+        {
             case "friend": //Gestion d'amis
-                switch (event.method) {
+                console.log(data);
+                if (event.id != playerStats.id)
+                    return;
+                switch (event.method)
+                {
                     case ("demand"):
-                        //Quelqu'un t'as demandé en ami
+                        addFriendRequest(event.sender_name);
                         break;
                     case ("accept"):
-                        //Ta demande d'ami a abouti !
+                        checkAndRemoveFriend(event.sender_name);
+                        addFriendDiv(event.sender_name);
                         break;
                     case ("refuse"):
-                        //Coup dur
+                        checkAndRemoveFriend(event.sender_name);
                         break;
                     case ("cancel"):
-                        //Annulation de la demande d'ami
+                        checkAndRemoveFriend(event.sender_name);
                         break;
                 }
                 break;

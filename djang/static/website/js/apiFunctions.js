@@ -476,7 +476,6 @@ export async function askAddFriend(userName) {
         {
             if (response.status === 400) {
                 sendSystemMessage("youAlreadySentRequest", userName, true);
-                // throw new Error('Bad Request (400): The request was invalid or missing parameters.');
                 return response;
             } else
                 throw new Error(`Network response was not ok. Status: ${response.status}`);
