@@ -632,6 +632,53 @@ export async function sendMatch(name1, name2, score1, score2, timer)
     }
 }
 
+export async function sendMatchMulti(nameTeam1, nameTeam2, score1, nameOpponent1, nameOpponent2, score2, timer)
+{
+    const winners = score1 > score2 ? [nameTeam1, nameTeam2] : [nameOpponent1, nameOpponent2];
+    const data = {
+        finished: true,
+        started: false,
+        status: 1,
+        player_1: nameTeam1,
+        player_2: nameTeam2,
+        team_1_score: score1,
+        player_3: nameOpponent1,
+        player_4: nameOpponent2,
+        team_2_score: score2,
+        start_timestamp: 0,
+        stop_timestamp: timer,
+        winner1: winners[0],
+        winner2: winners[1]
+    };
+
+    console.log(data);
+    try
+    {
+        const response = await fetch('api/matchs/set_match2v2', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken(),
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok)
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        const responseData = await response.json();
+
+        if (responseData.success)
+            return true;
+        else {
+            console.error('Registration error:', responseData.error);
+            return false;
+        }
+    } catch (error) {
+        console.error('Error sending data to backend:', error);
+        return false;
+    }
+}
+
 export async function getMatchsLittleData(userName) {
     try {
       const response = await fetch(`api/matchs/get_matchs_count/${userName}`);

@@ -8,7 +8,7 @@ import { createLights, createPlayers, setVisibilityRightWall, addLightPlayerRead
 import { getLevelState, isAnOnlineMode, setLevelState } from './main.js';
 import { unloadScene } from './unloadScene.js';
 import { addGameStickers, removeGameStickers, setAccessAllDuelsInChat, tryCloseChat } from './chat.js';
-import { addMatchToHistory, getPlayerName, playerStats } from './playerManager.js';
+import { addMatchToHistory, addMatchToHistoryMulti, getPlayerName, playerStats } from './playerManager.js';
 import { getTranslation } from './translate.js';
 import { createSpaceLevel } from './levelSpace.js';
 import { createVolcanoLevel } from './levelVolcano.js';
@@ -966,7 +966,12 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
     if (currentLevelMode === LevelMode.TOURNAMENT)
         setWinner(player1NameText, player2NameText, scoreP1, scoreP2);
     if (!isSpectator())
-        addMatchToHistory(victoryType, scorePlayer, teamName, scoreOpponent, opponentName, getRawMatchTime());
+    {
+        if (currentLevelMode === LevelMode.MULTI)
+            addMatchToHistoryMulti(victoryType, scorePlayer, player1NameText.innerHTML.replace(/<br\s*\/?>/gi, "\n"), scoreOpponent, player2NameText.innerHTML.replace(/<br\s*\/?>/gi, "\n"), getRawMatchTime());
+        else
+            addMatchToHistory(victoryType, scorePlayer, teamName, scoreOpponent, opponentName, getRawMatchTime());
+    }
     pressPlayDiv.style.display = 'none';
     stopStopwatch();
     deathSphereGrew = false;
