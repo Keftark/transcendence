@@ -162,6 +162,8 @@ async def friends_handler(event):
                             await send_server(dumps.accept_friend(targ, user))
                         elif event["method"] == "refuse":
                             await send_server(dumps.refuse_friend(targ, user))
+                        elif event["method"] == "remove":
+                            await send_server(dumps.remove_friend(targ, user))
                         else: #cancel
                             await send_server(dumps.cancel_friend(targ, user))
                         break
