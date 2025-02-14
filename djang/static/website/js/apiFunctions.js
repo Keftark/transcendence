@@ -651,7 +651,7 @@ export async function sendMatchMulti(nameTeam1, nameTeam2, score1, nameOpponent1
         winner2: winners[1]
     };
 
-    console.log(data);
+    // console.log(data);
     try
     {
         const response = await fetch('api/matchs/set_match2v2', {
@@ -687,7 +687,7 @@ export async function getMatchsLittleData(userName) {
         throw new Error('Network response was not ok');
       
       const data = await response.json();
-      console.log(data);
+    //   console.log(data);
       return data;
     } catch (error) {
       console.error('Error:', error);

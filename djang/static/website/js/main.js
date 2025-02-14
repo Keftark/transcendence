@@ -16,6 +16,7 @@ import { getAddress } from './apiFunctions.js';
 import { askBackTournamentView, cancelAddPlayerTournament, cancelBackTournamentView, closeTournamentViewPanel, isAddPlayerTournamentIsOpen, isInAskBackTournamentView, isTournamentViewOpen, quitTournamentLobby } from './tournament.js';
 import { loadBlocks, loadFriends } from './friends.js';
 import { closeMultiPanel } from './multiPanel.js';
+import { startFPSCounter } from './fpsCounter.js';
 
 window.onbeforeunload = function() {
     localStorage.removeItem('currentPath');

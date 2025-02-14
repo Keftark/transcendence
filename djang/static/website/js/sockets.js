@@ -554,7 +554,6 @@ export function socketSendFriendRefuse(targetMsg) {
                 answer: "no",
                 server: "chat"
             };
-
             listener.send(JSON.stringify(event));
         })
         .catch((error) => {
@@ -562,6 +561,27 @@ export function socketSendFriendRefuse(targetMsg) {
         });
 }
 
+export function socketRemoveFriend(targetMsg) {
+    if (!listener || listener.readyState !== WebSocket.OPEN)
+        return;
+    getUserByName(targetMsg)
+        .then((target) => {
+            const event = {
+                key: keySocket,
+                type: "friend",
+                name: playerStats.nickname,
+                target: target.id,
+                id: playerStats.id,
+                method: "remove",
+                answer: "no",
+                server: "chat"
+            };
+            listener.send(JSON.stringify(event));
+        })
+        .catch((error) => {
+            console.error("Failed to get user by name:", error);
+        });
+}
 
 let isInDuel = false;
 export function addSocketListener()
@@ -588,7 +608,7 @@ export function addSocketListener()
         switch (event.type)
         {
             case "friend": //Gestion d'amis
-                console.log(data);
+                // console.log(data);
                 if (event.id != playerStats.id)
                     return;
                 switch (event.method)
@@ -604,6 +624,9 @@ export function addSocketListener()
                         checkAndRemoveFriend(event.sender_name);
                         break;
                     case ("cancel"):
+                        checkAndRemoveFriend(event.sender_name);
+                        break;
+                    case ("remove"):
                         checkAndRemoveFriend(event.sender_name);
                         break;
                 }
@@ -775,7 +798,7 @@ export function addSocketListener()
             case "tick":
                 if (event.room_id != playerStats.room_id)
                     return;
-                console.log(data);
+                // console.log(data);
                 if (isInDuel)
                 {
                     setPlayersPositions(
@@ -812,9 +835,6 @@ export function addSocketListener()
             case "wait_start_invited":
                 // console.log("got an invitation: " + data);
                 break;
-            case "crash":
-                console.log(data);
-                break;
             case "refusal":
                 setSelectedMode(LevelMode.MENU);
                 navigateTo('home');
@@ -822,34 +842,12 @@ export function addSocketListener()
                 break;
             case "ping":
                 break;
+            case "crash":
+                console.log(data);
+                break;
             default:
                 console.log("Undefined event: " + data);
                 // throw new Error(`Unsupported event type: ${event.type}.`);
         }
     });    
 }
-
-// export function chatSocketListener()
-// {
-//     listener.addEventListener("message", ({ data }) => {
-//         // console.log(data);
-//         let event;
-//         try {
-//             event = JSON.parse(data);
-//         } catch (error) {
-//             console.log(data);
-//             console.error("Failed to parse JSON:", error);
-//             return;
-//         }
-//         // console.log(event);
-//         switch (event.type)
-//         {
-//             case "message":
-//                 receiveMessage(event.name, event.content);
-//                 // console.log("Message received from " + event.name + ": " + event.content);
-//                 break;
-//             default:
-//                 throw new Error(`Unsupported event type: ${event.type}.`);
-//         }
-//     });
-// }
