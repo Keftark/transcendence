@@ -21,7 +21,10 @@ COPY requirements.txt  /app/
  
 # run this command to install all dependencies 
 RUN pip install --no-cache-dir -r requirements.txt
- 
+
+# For avatars
+RUN mkdir -p /app/media && chmod -R 777 /app/media
+
 # Copy the Django project to the container
 COPY . /app/
  
