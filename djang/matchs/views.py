@@ -13,6 +13,7 @@ from accounts.models import AccountModel
 from .models import Match, Match2v2, MatchMembers, TournamentMatchModel, TournamentModel
 from .serializers import MatchSerializer, Match2v2Serializer, TournamentSerializer
 from django.db.models import Q
+from datetime import datetime
 
 def create_match(request):
     if request.method == 'POST':
@@ -37,9 +38,10 @@ def create_match(request):
 
             if player_1 and player_2 == 0:
                 return JsonResponse({'success': False, 'error': 'Missing required fields.'}, status=400)
-
+            now = datetime.utcnow()
             # Create match
             match = Match.objects.create(
+                date = now.strftime('%Y-%m-%d %H:%M:%S'),
                 finished = True,
                 started = False,
                 winner = win,
@@ -94,6 +96,7 @@ def create_match2v2(request):
 
             # Create match
             match = Match2v2.objects.create(
+                date = datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                 finished = True,
                 started = False,
                 winner1 = win1,
@@ -203,6 +206,7 @@ class HistoriqueViewSet(ViewSet):
             player_1_name = player_1.username if player_1 else "anonymous"
             player_2_name = player_2.username if player_2 else "anonymous"
             matches_data.append({
+                "date": match.date,
                 "id": match.id,
                 "player_1": player_1_name,
                 "player_2": player_2_name,
@@ -271,6 +275,7 @@ class Historique2v2ViewSet(ViewSet):
             player_3_name = player_3.username if player_3 else "anonymous"
             player_4_name = player_4.username if player_4 else "anonymous"
             matches_data.append({
+                "date": match.date,
                 "id": match.match_id,
                 "player_1": player_1_name,
                 "player_2": player_2_name,

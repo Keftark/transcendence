@@ -99,7 +99,8 @@ function getTotalMatchesText(player = playerStats)
     return (getPlayerVictories(player).total);
 }
 
-// ne prendre que les 10 derniers matches ? La fenetre sera trop grande sinon
+// todo : recuperer aussi la liste des matchs 2v2 et faire une difference entre les deux
+// todo : entrer la date du match (jour mois annee, pas plus). voir pour le format selon la langue
 export function loadScores(player = playerStats)
 {
     getMatchsFullData(player.nickname)
@@ -131,6 +132,22 @@ export function loadScores(player = playerStats)
                 timerContent.style.color = color;
                 timerContent.textContent = formatTime(match.timer);
                 newContainer.appendChild(timerContent);
+                const dateContent = document.createElement('p');
+                dateContent.classList.add('score-timer2');
+                dateContent.style.color = color;
+                const locale = playerStats.language === "en" ? "fr-FR" : "en-GB";
+                const date = new Date(match.date);
+                const formattedDateStr = new Intl.DateTimeFormat(locale, {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false,
+                  }).format(date);
+                dateContent.textContent = formattedDateStr;//.replace('T', ' ').replace('Z', '');;
+                newContainer.appendChild(dateContent);
                 matchListPanel.appendChild(newContainer);
             }
         })

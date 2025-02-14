@@ -711,6 +711,22 @@ export async function getMatchsFullData(userName) {
     }
 }
 
+export async function get2v2MatchsFullData(userName) {
+    try {
+      const response = await fetch(`api/matchs/history/${userName}`);
+      
+      if (!response.ok)
+        throw new Error('Network response was not ok');
+      
+      const data = await response.json();
+    //   console.log(data);
+      return data;
+    } catch (error) {
+      console.error('Error:', error);
+      return null;
+    }
+}
+
 export async function deleteAccount() {
     try {
         const response = await fetch(`/user/del_user`, {

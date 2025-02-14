@@ -17,7 +17,6 @@ import { EmotionType, LevelMode, PlayerStatus } from './variables.js';
 const overlayPanel = document.getElementById('overlay');
 const profilePanel = document.getElementById('profilePanel');
 const settingsPanel = document.getElementById('settingsPanel');
-const matchListPanel = document.getElementById('matchListPanel');
 const mainPlayButton = document.getElementById('mainPlayButton');
 const mainProfileButton = document.getElementById('mainProfileButton');
 const mainSettingsButton = document.getElementById('mainSettingsButton');
@@ -335,7 +334,7 @@ export function openMiniProfile(playerName)
         winsMiniProfileValue.innerHTML = data.wins;
     })
     .catch((error) => {
-        console.error("Failed to get user by name:", error);
+        console.error("Failed to get match list data:", error);
     });
     
     miniProfilePanel.style.display = 'flex';
@@ -397,31 +396,6 @@ export function openProfile(player = playerStats)
     if (getCurrentView() === 'home')
         oldButton = mainProfileButton;
     document.getElementById('closeProfileButton').focus();
-}
-
-function showMatchListProfile()
-{
-    if (profilePanel.classList.contains('toLeft') === false)
-    {
-        matchListPanel.style.display = 'flex';
-        setTimeout(() => {
-            profilePanel.classList.add('toLeft');
-            matchListPanel.classList.add('toRight');
-        }, 10);
-    }
-    else
-    {
-        closeMatchListProfile();
-    }
-}
-
-function closeMatchListProfile()
-{
-    profilePanel.classList.remove('toLeft');
-    matchListPanel.classList.remove('toRight');
-    setTimeout(() => {
-        matchListPanel.style.display = 'none';
-    }, 100);
 }
 
 export function closeProfile()
