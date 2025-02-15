@@ -40,7 +40,7 @@ export function addMatchToHistory(victoryType, playerScore, teamName, opponentSc
 {
     if (!playerStats.isRegistered)
         return;
-    console.trace("Adding match to history:\nplayer score: " + playerScore + "\nOpponent score: " + opponentScore + "\nOpponent name: " + opponentName);
+    console.trace("Adding match to history:\n"+ "Player name: " + teamName + "player score: " + playerScore + "\nOpponent score: " + opponentScore + "\nOpponent name: " + opponentName);
     if (victoryType === VictoryType.VICTORY)
         sendMatch(teamName, opponentName, playerScore, opponentScore, matchTime);
 }

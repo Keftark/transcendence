@@ -711,9 +711,25 @@ export async function getMatchsFullData(userName) {
     }
 }
 
+export async function getMatchs2v2LittleData(userName) {
+    try {
+      const response = await fetch(`api/matchs/get_matchs2v2_count/${userName}`);
+      
+      if (!response.ok)
+        throw new Error('Network response was not ok');
+      
+      const data = await response.json();
+    //   console.log(data);
+      return data;
+    } catch (error) {
+      console.error('Error:', error);
+      return null;
+    }
+}
+
 export async function get2v2MatchsFullData(userName) {
     try {
-      const response = await fetch(`api/matchs/history/${userName}`);
+      const response = await fetch(`api/matchs/history2v2/${userName}`);
       
       if (!response.ok)
         throw new Error('Network response was not ok');

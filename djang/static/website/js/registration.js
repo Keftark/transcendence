@@ -1,4 +1,4 @@
-import { createNewPlayer, editPlayerStats, playerStats, resetPlayerStats } from "./playerManager.js";
+import { addMatchToHistory, addMatchToHistoryMulti, createNewPlayer, editPlayerStats, playerStats, resetPlayerStats } from "./playerManager.js";
 import { removeAllScores } from "./scoreManager.js";
 import { getTranslation } from "./translate.js";
 import { navigateTo } from "./pages.js";
@@ -217,6 +217,13 @@ export function logInUserUI()
     replaceLogInButtons();
     removeDisableButtonEffect(profileButton);
     checkAccessIfRegistered();
+    // setTimeout(() => {
+    //     const divv = document.createElement('div');
+    //     // il faut des  noms de joueurs qui existent !
+    //     divv.innerHTML = "p<br>t";
+    //     addMatchToHistory(0, 2, playerStats.nickname, 3, "t", 5);
+    //     addMatchToHistoryMulti(0, 3, divv.innerHTML.replace(/<br\s*\/?>/gi, "\n"), 1, divv.innerHTML.replace(/<br\s*\/?>/gi, "\n"), 5);
+    // }, 50);
 }
 
 function displayErrors(errors) {

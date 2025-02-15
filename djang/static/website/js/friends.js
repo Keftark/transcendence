@@ -1,7 +1,7 @@
-import { blockUserRequest, deleteFriend, getAllUserStatuses, getBlockedList, getFriendsList, getUserStatus, unblockUserRequest } from "./apiFunctions.js";
+import { blockUserRequest, deleteFriend, getAccountUser, getAllUserStatuses, getBlockedList, getFriendsList, getUserStatus, unblockUserRequest } from "./apiFunctions.js";
 import { askAddFriendFunction, hideMessagesFrom, openNameContextMenu, restoreMessagesFromUser, sendSystemMessage } from "./chat.js";
 import { playerStats } from "./playerManager.js";
-import { socketSendFriendAccept, socketSendFriendCancel, socketSendFriendRefuse } from "./sockets.js";
+import { socketRemoveFriend, socketSendFriendAccept, socketSendFriendCancel, socketSendFriendRefuse } from "./sockets.js";
 import { getTranslation } from "./translate.js";
 
 const friendsBox = document.getElementById('friendsBox');
@@ -358,6 +358,15 @@ export function addFriend(playerName)
 
 export function blockUser(playerName)
 {
+    console.log("blocking");
+    let is_friend = false;
+    getAccountUser(playerName)
+    .then((response) => {
+        is_friend = response.is_friend;
+    })
+    .catch((error) => {
+        console.error("Failed to get the friendship relation:", error);
+    });
     blockUserRequest(playerName)
     .then((response) => {
         if (response.status === 201) // ajout blocked
@@ -365,9 +374,8 @@ export function blockUser(playerName)
             sendSystemMessage("youBlockedPlayer", playerName, true);
             hideMessagesFrom(playerName);
             addBlockedUserDiv(playerName);
-            // on check s'ils sont amis
-            // si oui, on envoie le signal de suppression d'ami a l'autre joueur
-            // removeFriendFunction(playerName); // et on supprime le div
+            if (is_friend)
+                socketRemoveFriend(playerName);
         }
         else if (response.status == 409)
             sendSystemMessage("youAlreadyBlocked", playerName, true);
