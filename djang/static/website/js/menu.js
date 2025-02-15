@@ -1,4 +1,4 @@
-import { deleteAccount, getMatchsLittleData, getUserAvatar, getUserByName, updateFirstnameInDatabase, updateLastnameInDatabase, updatePasswordInDatabase, updateSettingsInDatabase, updateUsernameInDatabase } from './apiFunctions.js';
+import { deleteAccount, getMatchs2v2LittleData, getMatchsLittleData, getUserAvatar, getUserByName, updateFirstnameInDatabase, updateLastnameInDatabase, updatePasswordInDatabase, updateSettingsInDatabase, updateUsernameInDatabase } from './apiFunctions.js';
 import { callGameDialog } from './chat.js';
 import { clickChoosePaddleButton } from './customizeSkins.js';
 import { addMainEvents } from './eventsListener.js';
@@ -328,10 +328,22 @@ export function openMiniProfile(playerName)
             console.error("Failed to get user by name:", error);
     });
 
+    let matchCount = 0;
+    let wins = 0;
     getMatchsLittleData(playerName)
     .then((data) =>{
-        matchsPlayedMiniProfileValue.innerHTML = data.match_count;
-        winsMiniProfileValue.innerHTML = data.wins;
+        matchCount += data.match_count;
+        wins = data.wins;
+        getMatchs2v2LittleData(playerName)
+        .then((data) =>{
+            matchCount += data.match_count;
+            wins += data.wins;
+            matchsPlayedMiniProfileValue.innerHTML = matchCount;
+            winsMiniProfileValue.innerHTML = wins;
+        })
+        .catch((error) => {
+            console.error("Failed to get match list data:", error);
+        });
     })
     .catch((error) => {
         console.error("Failed to get match list data:", error);
