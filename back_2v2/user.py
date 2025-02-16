@@ -7,7 +7,7 @@ class User:
         self._id = _id
         self._blacklist = []
         for user in bl :
-            list.append(user)
+            self._blacklist.append(int(user))
 
     def can_play_with(self, user):
         """Checks wether the user can play with another,
