@@ -1,10 +1,9 @@
 import { get2v2MatchsFullData, getMatchsFullData } from "./apiFunctions.js";
 import { endMatch } from "./levelLocal.js";
 import { getLevelState, isAnOnlineMode } from "./main.js";
-import { getPlayerVictories, playerStats } from "./playerManager.js";
+import { playerStats } from "./playerManager.js";
 import { checkPoints } from "./rules.js";
 import { formatTime } from "./timer.js";
-import { LevelMode } from "./variables.js";
 
 const scores = document.getElementById('scores');
 const scoreRight = document.getElementById('score-right');
@@ -83,28 +82,12 @@ export function removeAllScores()
         matchListPanel.removeChild(matchListPanel.firstChild);
 }
 
-function getVictoriesRatioText(player = playerStats)
-{
-    return (getPlayerVictories(player).victories + "/" + getPlayerVictories(player).total
-        + " (" + getPlayerVictories(player).percentage + "%)");
-}
-
-function getVictoriesText(player = playerStats)
-{
-    return (getPlayerVictories(player).victories);
-}
-
-function getTotalMatchesText(player = playerStats)
-{
-    return (getPlayerVictories(player).total);
-}
-
 function createMatchDiv(data)
 {
     const color = playerStats.colors || "white";
-    let match = data;
     const newContainer = document.createElement('div');
     const className = data.is2v2 ? 'score-container-multi' : 'score-container';
+    const gradientColor = data.is2v2 ? 'rgb(0, 120, 120)' : '#006666';
     newContainer.classList.add(className);
     const leftContent = document.createElement('div');
     leftContent.style.color = color;
@@ -119,9 +102,9 @@ function createMatchDiv(data)
     rightContent.textContent = rightContentText;
     newContainer.appendChild(rightContent);
     if (data.winner === playerStats.nickname || data.winner1 === playerStats.nickname || data.winner2 === playerStats.nickname)
-        newContainer.style.background = 'linear-gradient(to right, #228822 30%, #006666 70%)';
+        newContainer.style.background = `linear-gradient(to right, #228822 30%, ${gradientColor} 70%)`;
     else
-        newContainer.style.background = 'linear-gradient(to right, #882222 30%, #006666 70%)';
+        newContainer.style.background = `linear-gradient(to right, #882222 30%, ${gradientColor} 70%)`;
     const timerContent = document.createElement('p');
     timerContent.classList.add('score-timer');
     timerContent.style.color = color;

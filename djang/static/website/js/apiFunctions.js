@@ -809,7 +809,7 @@ document.getElementById('uploadForm').addEventListener('submit', function(event)
         .then(data => {
             if (data.success)
             {
-                profilePicture.src = "/media/" + data.url;
+                document.getElementById("profilePicture").src = "/media/" + data.url;
             }
         })
         .catch(error => {

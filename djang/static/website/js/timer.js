@@ -4,7 +4,6 @@ const display = document.getElementById('timer');
 let timerId;
 let elapsedTime = 0; // Time in seconds
 let isPaused = false;
-let isReverse = false;
 let baseTimer = 0;
 
 export function setTimeFromServer(timeFromServer)
@@ -96,11 +95,9 @@ export function setStopWatch(timer)
     if (timer > 0)
     {
         elapsedTime = baseTimer = timer;
-        isReverse = true;
     }
     else
     {
-        isReverse = false;
         elapsedTime = baseTimer = 0;
     }
     updateDisplay();

@@ -14,7 +14,6 @@ const askBlockUserText = document.getElementById('askBlockUserText');
 let blockingUser = null;
 
 let isShowingFriends = true;
-let isFriendOpen = false;
 
 document.getElementById('buttonAcceptBlockUser').addEventListener('click', () =>
 {
@@ -91,7 +90,6 @@ function stopCheckingFriendsStatuses()
 
 function showFriends()
 {
-    isFriendOpen = true;
     startCheckingFriendsStatuses();
     friendsHeaderButton.innerText = getTranslation('friendsHeader');
     blockedList.style.display = 'none';
@@ -100,7 +98,6 @@ function showFriends()
 
 function showBlocked()
 {
-    isFriendOpen = false;
     stopCheckingFriendsStatuses();
     friendsHeaderButton.innerText = getTranslation('blocked');
     friendsList.style.display = 'none';
@@ -109,7 +106,6 @@ function showBlocked()
 
 function openFriends()
 {
-    isFriendOpen = true;
     startCheckingFriendsStatuses();
     friendsBox.classList.remove('shrunk');
     friendsBox.classList.remove('hide-elements');
@@ -119,7 +115,6 @@ function openFriends()
 
 function closeFriends()
 {
-    isFriendOpen = false;
     stopCheckingFriendsStatuses();
     friendsBox.classList.remove('expanded');
     friendsBox.classList.add('shrunk');

@@ -29,19 +29,18 @@
 
 .score-left
 {
-    /* position: relative; */
-    /* font-family: 'MyCustomFont', Arial, sans-serif; */
+    width: 50%;
+    overflow: hidden;
     padding-left: 4px;
     white-space: pre-line;
-    /* text-align: start; */
     align-self: center;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
 }
 
 .score-right
 {
-    /* position: relative; */
-    /* font-family: 'MyCustomFont', Arial, sans-serif; */
+    width: 50%;
+    overflow: hidden;
     padding-right: 4px;
     text-align: end;
     white-space: pre-line;
@@ -54,5 +53,4 @@
     position: absolute;
     bottom: 0;
     left: 50%;
-    /* transform: translate(-50%, -100%); */
 }

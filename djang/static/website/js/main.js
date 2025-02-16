@@ -16,7 +16,6 @@ import { getAddress } from './apiFunctions.js';
 import { askBackTournamentView, cancelAddPlayerTournament, cancelBackTournamentView, closeTournamentViewPanel, isAddPlayerTournamentIsOpen, isInAskBackTournamentView, isTournamentViewOpen, quitTournamentLobby } from './tournament.js';
 import { loadBlocks, loadFriends } from './friends.js';
 import { closeMultiPanel } from './multiPanel.js';
-import { startFPSCounter } from './fpsCounter.js';
 
 window.onbeforeunload = function() {
     localStorage.removeItem('currentPath');
@@ -101,7 +100,7 @@ export function checkEscapeKey()
 
 function changeCursors()
 {
-    const buttons = document.querySelectorAll('button, input[type="color"], input[type="checkbox"], .arena, #inputSignInPassword, #showCurrentPasswordButton, #showNewPasswordButton, #showConfirmNewPasswordButton, #showPasswordButton, #showConfirmPasswordButton, #header-title, a, #askSignIn, #askRegister, #friendsHeader, .headerProfileButton');
+    const buttons = document.querySelectorAll('button, input[type="color"], input[type="checkbox"], .arena, #inputSignInPassword, #showCurrentPasswordButton, #showNewPasswordButton, #showConfirmNewPasswordButton, #showPasswordButton, #showConfirmPasswordButton, #header-title, a, #askSignIn, #askRegister, #friendsHeader, .headerProfileButton, .eyeButton');
     buttons.forEach(button => {
         button.style.cursor = "url('./static/icons/cursor-button.webp'), pointer";
     });

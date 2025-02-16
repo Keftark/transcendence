@@ -86,7 +86,6 @@
 
 #friendsHeader
 {
-    /* position: absolute; */
     margin: 0;
     align-self: center;
     margin-top: -8%;
@@ -203,5 +202,6 @@
 #buttonsAskBlockUser button
 {
     position: relative;
+    transform: unset;
     bottom: unset;
 }

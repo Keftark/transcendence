@@ -213,8 +213,6 @@ let currentMatch =
     player2: 1
 };
 let currentTier = 0;
-
-let iteration = 0;
 let playersInTier = 0;
 const tournamentMatchsCanvas = document.getElementById('tournamentMatchsCanvas');
 
@@ -315,7 +313,6 @@ function drawOnCanvases() {
 
 export function openTournamentView(fromGame = false)
 {
-    tournamentViewButtons.style.display = 'flex';
     tournamentMatchsCanvas.style.display = 'flex';
     if (fromGame)
     {

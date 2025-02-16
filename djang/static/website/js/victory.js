@@ -1,6 +1,6 @@
 import { callGameDialog } from "./chat.js";
 import { isSpectator } from "./levelLocal.js";
-import { getLevelState, isAnOnlineMode } from "./main.js";
+import { getLevelState } from "./main.js";
 import { clickBackButtonMenu } from "./modesSelection.js";
 import { getPlayerName } from "./playerManager.js";
 import { getTranslation } from "./translate.js";
@@ -54,10 +54,6 @@ export function callVictoryScreen(victoryType, playerWon = "") {
 
 export function closeVictoryScreen()
 {
-    // if (isAnOnlineMode(getLevelState()))
-    // {
-        
-    // }
     victoryPanel.classList.remove("grow-on-appear");
     clickBackButtonMenu();
     victoryScreen.classList.remove("appearing");

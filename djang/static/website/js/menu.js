@@ -41,8 +41,6 @@ const miniProfilePicture = document.getElementById('miniProfilePicture');
 const firstNameMiniProfile = document.getElementById('firstNameMiniProfile');
 const lastNameMiniProfile = document.getElementById('lastNameMiniProfile');
 const miniProfilePanel = document.getElementById('miniProfilePanel');
-const matchsPlayedMiniProfile = document.getElementById('matchsPlayedMiniProfile');
-const winsMiniProfile = document.getElementById('winsMiniProfile');
 const matchsPlayedMiniProfileValue = document.getElementById('matchsPlayedMiniProfileValue');
 const winsMiniProfileValue = document.getElementById('winsMiniProfileValue');
 const closeMiniProfileButton = document.getElementById('closeMiniProfileButton');
@@ -106,6 +104,7 @@ document.getElementById('showCurrentPasswordButton').addEventListener('click', (
 document.getElementById('editName').addEventListener('click', () => {
     openEditProfileField(0);
 });
+document.getElementById('editFirstName').innerText = "✎"
 document.getElementById('editFirstName').addEventListener('click', () => {
     openEditProfileField(1);
 });
@@ -667,10 +666,10 @@ export function closeChangePassword()
     addDisableButtonEffect(buttonAcceptChangePassword);
 }
 
-inputNewPassword.addEventListener('input', function(event) {
+inputNewPassword.addEventListener('input', () => {
     checkNewPassword();
 });
-inputConfirmNewPassword.addEventListener('input', function(event) {
+inputConfirmNewPassword.addEventListener('input', () => {
     checkNewPassword();
 });
 

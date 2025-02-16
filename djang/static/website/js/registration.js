@@ -1,8 +1,8 @@
-import { addMatchToHistory, addMatchToHistoryMulti, createNewPlayer, editPlayerStats, playerStats, resetPlayerStats } from "./playerManager.js";
+import { createNewPlayer, editPlayerStats, playerStats, resetPlayerStats } from "./playerManager.js";
 import { removeAllScores } from "./scoreManager.js";
 import { getTranslation } from "./translate.js";
 import { navigateTo } from "./pages.js";
-import { addDisableButtonEffect, closeListener, closeSocket, getListener, getSocket, listener, openSocket, removeDisableButtonEffect, socket } from "./main.js";
+import { addDisableButtonEffect, closeListener, closeSocket, openSocket, removeDisableButtonEffect } from "./main.js";
 import { callGameDialog, checkAccessToChat } from "./chat.js";
 import { getLoggedInUser, logoutUser, registerUser, updateSettingsInDatabase } from "./apiFunctions.js";
 import { deleteAllFriendRequests, showFriendsBox } from "./friends.js";

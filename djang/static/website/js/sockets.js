@@ -12,7 +12,7 @@ import { playerStats } from "./playerManager.js";
 import { setPlayersPositions } from "./playerMovement.js";
 import { checkPowerUpState, resetBoostBar, setPowerBarsPlayers } from "./powerUp.js";
 import { setArenaType } from "./rules.js";
-import { endOfMatch, getScoreP1, getScoreP2 } from "./scoreManager.js";
+import { getScoreP1, getScoreP2 } from "./scoreManager.js";
 import { setTimeFromServer } from "./timer.js";
 import { LevelMode, VictoryType } from "./variables.js";
 import { callVictoryScreen } from "./victory.js";
@@ -72,8 +72,8 @@ export function socketConnectToDuel(mode = "1v1_classic")
             type: "join",
             answer: "no",
             id: playerStats.id,
-            // blacklist: results,
-            blacklist: {},
+            blacklist: JSON.stringify(results),
+            // blacklist: {},
             private: "none",
             invited_by: 8,
             payload: {}
@@ -95,8 +95,8 @@ export function socketConnectToDuelInvited(playerId)
             type: "join",
             answer: "no",
             id: playerStats.id,
-            // blacklist: results,
-            blacklist: {},
+            blacklist: JSON.stringify(results),
+            // blacklist: {},
             private: "join",
             invited_by: playerId,
             payload: {}
@@ -724,6 +724,7 @@ export function addSocketListener()
                 }
                 break;
             case "bounce_player":
+            {
                 if (event.room_id != playerStats.room_id)
                     return;
                 const strength = event.ball_boosted ? event.ball_speed * 150 : event.ball_speed * 75;
@@ -732,6 +733,7 @@ export function addSocketListener()
                 if (event.ball_speed > 0.78)
                     spawnSparksFunction(getBallPosition(), event.ball_speed * 20);
                 break;
+            }
             case "victory": // end of match, dans le lobby ou dans le match
                 // console.log("Victory: " + data);
                 if (event.room_id != playerStats.room_id)
@@ -771,6 +773,7 @@ export function addSocketListener()
                 console.log("Got error : " + event.content);
                 break;
             case "point":
+            {
                 // console.log(data);
                 if (event.room_id != playerStats.room_id)
                     return;
@@ -795,6 +798,7 @@ export function addSocketListener()
                 // console.log("Nbr after: " + nbr);
                 resetScreenFunction(nbr, true);
                 break;
+            }
             case "tick":
                 if (event.room_id != playerStats.room_id)
                     return;
@@ -829,7 +833,6 @@ export function addSocketListener()
                     })
                     .catch(error => {
                         console.error("Error fetching user profile:", error);
-                        reject(error); // Reject if an error occurs
                     });
                 break;
             case "wait_start_invited":

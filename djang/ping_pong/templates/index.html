@@ -35,7 +35,6 @@
     <script type="module" src="{% static 'js/pages.js' %}"></script>
     <script type="module" src="{% static 'js/menu.js' %}"></script>
     <script type="module" src="{% static 'js/levelLocal.js' %}"></script>
-    <script type="module" src="{% static 'js/vars.js' %}"></script>
     <script type="module" src="{% static 'js/eventsListener.js' %}"></script>
     <script type="module" src="{% static 'js/chat.js' %}"></script>
     <script type="module" src="{% static 'js/cheats.js' %}"></script>
@@ -435,22 +434,19 @@
                     </form>
                 </div>
                 <div id="nameDiv" class="profileField">
-                    <button id="editName" class="editButtonProfile">
-                        <img src="{% static 'icons/edit.webp' %}" alt="">
+                    <button id="editName" class="editButtonProfile">✎
                     </button>
                     <h2 id="nameProfile"></h2>
                 </div>
             </div>
             <div id="mainProfileInfos">
                 <div id="firstNameDiv" class="profileField">
-                    <button id="editFirstName" class="editButtonProfile">
-                        <img src="{% static 'icons/edit.webp' %}" alt="">
+                    <button id="editFirstName" class="editButtonProfile">✎
                     </button>
                     <p id="firstNameProfile"></p>
                 </div>
                 <div id="lastNameDiv" class="profileField">
-                    <button id="editLastName" class="editButtonProfile">
-                        <img src="{% static 'icons/edit.webp' %}" alt="">
+                    <button id="editLastName" class="editButtonProfile">✎
                     </button>
                     <p id="lastNameProfile"></p>
                 </div>
@@ -490,21 +486,21 @@
             <p id="currentPassword"></p>
             <div id="currentPasswordDiv">
                 <input type="password" class="inputfield" id="inputCurrentPassword" maxlength="20" placeholder="...">
-                <img id="showCurrentPasswordButton" src="{% static 'icons/eyeOpen.webp' %}" alt="">
+                <img id="showCurrentPasswordButton" class="eyeButton" src="{% static 'icons/eyeOpen.webp' %}" alt="">
             </div>
         </div>
         <div id="newPasswordChangeDiv">
             <p id="newPassword"></p>
             <div id="newPasswordDiv">
                 <input type="password" class="inputfield" id="inputNewPassword" maxlength="20" placeholder="...">
-                <img id="showNewPasswordButton" src="{% static 'icons/eyeOpen.webp' %}" alt="">
+                <img id="showNewPasswordButton" class="eyeButton" src="{% static 'icons/eyeOpen.webp' %}" alt="">
             </div>
         </div>
         <div id="confirmNewPasswordChangeDiv">
             <p id="confirmNewPassword"></p>
             <div id="confirmNewPasswordDiv">
                 <input type="password" class="inputfield" id="inputConfirmNewPassword" maxlength="20" placeholder="...">
-                <img id="showConfirmNewPasswordButton" src="{% static 'icons/eyeOpen.webp' %}" alt="">
+                <img id="showConfirmNewPasswordButton" class="eyeButton" src="{% static 'icons/eyeOpen.webp' %}" alt="">
             </div>
         </div>
         <div id="buttonsAskChangePassword">
@@ -526,29 +522,35 @@
     <!------------------------------ Settings Panel ------------------------------>
     <div id="settingsPanel">
         <h2 id="settingsHeader"></h2>
-        <p id="colors"></p>
-        <div id="optionsColors">
-            <img id="colorPickerImage" src="{% static 'icons/colorPicker.webp' %}" alt="">
-            <input type="color" id="colorPicker" name="color" value="#ff0000">
-            <button id="colorPickerReplacer"></button>
+        <div class="settingsDiv">
+            <p id="colors"></p>
+            <div id="optionsColors">
+                <img id="colorPickerImage" src="{% static 'icons/colorPicker.webp' %}" alt="">
+                <input type="color" id="colorPicker" name="color" value="#ff0000">
+                <button id="colorPickerReplacer"></button>
+            </div>
         </div>
-        <p id="language"></p>
-        <div id="optionsLanguages">
-            <button class="language" id="lang1Button" data-language="en" data-lang="0">
-                <img src="{% static 'icons/lang-en.webp' %}" id="lang-icon-en" />
-            </button>
-            <button class="language" id="lang2Button" data-language="fr" data-lang="1">
-                <img src="{% static 'icons/lang-fr.webp' %}" id="lang-icon-fr" />
-            </button>
+        <div class="settingsDiv">
+            <p id="language"></p>
+            <div id="optionsLanguages">
+                <button class="language" id="lang1Button" data-language="en" data-lang="0">
+                    <img src="{% static 'icons/lang-en.webp' %}" id="lang-icon-en" />
+                </button>
+                <button class="language" id="lang2Button" data-language="fr" data-lang="1">
+                    <img src="{% static 'icons/lang-fr.webp' %}" id="lang-icon-fr" />
+                </button>
+            </div>
         </div>
-        <p id="cameraTypeHeader"></p>
-        <div id="cameraType">
-            <button id="perspectiveButton" class="cameraTypeSettings">
-                <img src="{% static 'icons/cameraPerspective.webp' %}" id="perspecImg" alt="">
-            </button>
-            <button id="orthographicButton" class="cameraTypeSettings">
-                <img src="{% static 'icons/cameraOrthographic.webp' %}" id="orthoImg" alt="">
-            </button>
+        <div class="settingsDiv">
+            <p id="cameraTypeHeader"></p>
+            <div id="cameraType">
+                <button id="perspectiveButton" class="cameraTypeSettings">
+                    <img src="{% static 'icons/cameraPerspective.webp' %}" id="perspecImg" alt="">
+                </button>
+                <button id="orthographicButton" class="cameraTypeSettings">
+                    <img src="{% static 'icons/cameraOrthographic.webp' %}" id="orthoImg" alt="">
+                </button>
+            </div>
         </div>
         <button id="closeSettingsButton"></button>
     </div>
@@ -652,7 +654,7 @@
                     <p id="registerPassword"></p>
                     <div id="passwordDiv">
                         <input type="password" class="inputfield" id="inputPassword" maxlength="20" placeholder="...">
-                        <img id="showPasswordButton" src="{% static 'icons/eyeOpen.webp' %}" alt="">
+                        <img id="showPasswordButton" class="eyeButton" src="{% static 'icons/eyeOpen.webp' %}" alt="">
                     </div>
                     <p class="registerErrorMessage" id="registerErrorPassword"></p>
                 </div>
@@ -660,7 +662,7 @@
                     <p id="registerConfirmPassword"></p>
                     <div id="confirmPasswordDiv">
                         <input type="password" class="inputfield" id="inputConfirmPassword" maxlength="20" placeholder="...">
-                        <img id="showConfirmPasswordButton" src="{% static 'icons/eyeOpen.webp' %}" alt="">   
+                        <img id="showConfirmPasswordButton" class="eyeButton" src="{% static 'icons/eyeOpen.webp' %}" alt="">   
                     </div>
                     <p class="registerErrorMessage" id="registerErrorConfirmPassword"></p> 
                 </div>
@@ -697,7 +699,7 @@
                     <p id="signInPassword"></p>
                     <div id="passwordSignInDiv">
                         <input type="password" class="inputfield" id="inputSignInPassword" maxlength="20" placeholder="...">
-                        <img id="showSignInPasswordButton" src="{% static 'icons/eyeOpen.webp' %}" alt="">
+                        <img id="showSignInPasswordButton" class="eyeButton" src="{% static 'icons/eyeOpen.webp' %}" alt="">
                     </div>
                     <p class="registerErrorMessage" id="signInErrorPassword"></p>
                 </div>
