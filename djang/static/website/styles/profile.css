@@ -178,10 +178,15 @@
 
 .editButtonProfile
 {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     border: none;
     background-color: transparent;
+} 
+
+.editButtonProfile:hover
+{
+    filter: saturate(300%) brightness(135%);
 }
 
 .editButtonProfile img

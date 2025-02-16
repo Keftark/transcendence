@@ -194,3 +194,14 @@
     filter: brightness(200%);
     background: none;
 }
+
+#buttonsAskBlockUser
+{
+    display: flex;
+    gap: 2rem;
+}
+#buttonsAskBlockUser button
+{
+    position: relative;
+    bottom: unset;
+}

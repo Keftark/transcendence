@@ -67,8 +67,19 @@
     <div id="header-title">ft_transcendence</div>
     <div id="mainBackground"></div>
     <meta name="csrf-token" content="{{ csrf_token }}">
-    <!------------------------------ Main Menu UI ------------------------------>
+
+    <!------------------------------ Home Page ------------------------------>
     <div id="home" class="page">
+        <!------------------------------ Log In Buttons ------------------------------>
+        <div id="loginbuttons">
+            <button id="buttonSignUp"></button>
+            <button id="buttonLogIn"></button>
+        </div>
+        <div id="logoutbuttons">
+            <button id="buttonProfile"></button>
+            <button id="buttonLogOut"></button>
+        </div>
+        <!------------------------------ Main Menu UI ------------------------------>
         <div class="mainMenuPanel" id="mainMenuPanel">
             <div class="mainPanel" id="mainPanel">
                 <img id="homeImg" src="">
@@ -87,17 +98,9 @@
                 </div>
             </div>
         </div>
-
-        <!------------------------------ Main Menu Log In Buttons ------------------------------>
-        <div id="loginbuttons">
-            <button id="buttonSignUp"></button>
-            <button id="buttonLogIn"></button>
-        </div>
-        <div id="logoutbuttons">
-            <button id="buttonProfile"></button>
-            <button id="buttonLogOut"></button>
-        </div>
+        <button id="bottomGdprDiv"></button>
     </div>
+
     <!------------------------------ Mode Selection ------------------------------>
     <div id="modes" class="page">
         <h2 class="headerText" id="modeSelectionText"></h2>
@@ -283,7 +286,6 @@
     <div id="tournament-lobby" class="page">
         <h2 class="headerText" id="tournamentLobbyHeaderText"></h2>
         <div id="tournamentLobbyPanel">
-            <!-- <button id="viewTournamentHistoryButton"></button> -->
             <div id="listPlayers">
                 <div class="listPlayersTournament" id="listPlayersTournament"></div>
                 <p id="nbrPlayersTournament"></p>
@@ -307,15 +309,6 @@
             <button class="buttonCancel buttonCenter" id="closeTournamentViewButton"></button>
         </div>
     </div>
-    <!-- <div id="tournamentHistorySidePanel">
-        <div id="tournamentHistoryList">
-        </div>
-        <button id="reduceTournamentHistoryButton">
-            <img src="{% static 'icons/reduceArrow.webp' %}" alt="">
-        </button>
-        <button class="buttonCancel" id="closeTournamentHistoryButton">
-        </button>
-    </div> -->
     <div id="tournamentWinVictory">
         <h1 id="tournamentWinVictoryText"></h1>
         <button class="buttonAccept" id="closeTournamentVictoryButton"></button>
@@ -349,7 +342,6 @@
     <div id="waitingMatch">
         <h1 id="waitingMatchText"></h1>
     </div>
-
 
     <!------------------------------ In Game UI ------------------------------>
     <p id="loading"></p>
@@ -724,7 +716,14 @@
         </div>
     </div>
 
-    <div id="askResumeTournament"></div>
+    <div id="askBlockUserDiv">
+        <h2 id="askBlockUserText"></h2>
+        <div id="buttonsAskBlockUser">
+            <button class="buttonAccept" id="buttonAcceptBlockUser"></button>
+            <button class="buttonCancel" id="buttonCancelBlockUser"></button>
+        </div>
+        </div>
+    </div>
 
     <div id="errorPanel">
         <p id="errorText"></p>
@@ -737,6 +736,5 @@
         <div id="dialogText"></div>
     </div>
     <p id="fpsCounter"></p>
-    <button id="bottomGdprDiv"></button>
 </body>
 </html>

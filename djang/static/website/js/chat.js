@@ -1,8 +1,8 @@
 import * as THREE from '../node_modules/.vite/deps/three.js';
 import { askAddFriend, deleteFriend, getAccountUser, getIncomingFriendRequests, getOutgoingFriendRequests } from "./apiFunctions.js";
 import { cheatCodes } from "./cheats.js";
-import { getDuelTargetPlayer, joinDuel, refuseDuel } from "./duelPanel.js";
-import { addFriend, addFriendDiv, addFriendRequest, addOutgoingFriendRequest, blockUser, checkAndRemoveFriend } from "./friends.js";
+import { joinDuel, refuseDuel } from "./duelPanel.js";
+import { addFriend, addFriendDiv, addFriendRequest, addOutgoingFriendRequest, askBlockUser, checkAndRemoveFriend } from "./friends.js";
 import { getCamera, getPlayerPosition, getRenderer, id_players, isInGame } from "./levelLocal.js";
 import { openMiniProfile } from "./menu.js";
 import { getPlayerName, playerStats } from "./playerManager.js";
@@ -222,7 +222,7 @@ export function clickBlockUser(playerName = "")
     if (playerName != "")
         selectedName = playerName;
 
-    blockUser(selectedName);
+    askBlockUser(selectedName);
     closeNameContextMenu();
 }
 

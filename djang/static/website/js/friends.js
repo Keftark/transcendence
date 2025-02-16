@@ -9,11 +9,25 @@ const toggleIconFriends = document.getElementById('toggleIconFriends');
 const friendsHeaderButton = document.getElementById('friendsHeader');
 const friendsList = document.getElementById('friendsList');
 const blockedList = document.getElementById('blockedList');
+const askBlockUserDiv = document.getElementById('askBlockUserDiv');
+const askBlockUserText = document.getElementById('askBlockUserText');
+let blockingUser = null;
 
 let isShowingFriends = true;
 let isFriendOpen = false;
 
-friendsHeaderButton.addEventListener('click', function() {
+document.getElementById('buttonAcceptBlockUser').addEventListener('click', () =>
+{
+    blockUser(blockingUser);
+    closeAskBlockUserPanel();
+});
+document.getElementById('buttonCancelBlockUser').addEventListener('click', () =>
+{
+    closeAskBlockUserPanel();
+});
+
+friendsHeaderButton.addEventListener('click', () =>
+{
     isShowingFriends = !isShowingFriends;
     if (isShowingFriends)
         showFriends();
@@ -22,6 +36,15 @@ friendsHeaderButton.addEventListener('click', function() {
 });
 
 let loopFunction = null;
+
+function closeAskBlockUserPanel()
+{
+    blockingUser = null;
+    askBlockUserDiv.classList.remove("appearing");
+    setTimeout(() => {
+        askBlockUserDiv.style.display = 'none';
+    }, 100);
+}
 
  // should be friends and not all users! 
  // if each player checks all users if the game is big, it will be costly!
@@ -356,9 +379,16 @@ export function addFriend(playerName)
     sendSystemMessage("youAddedPlayer", playerName, true);
 }
 
+export function askBlockUser(playerName)
+{
+    blockingUser = playerName;
+    askBlockUserText.innerText = getTranslation("askBlockUserText") + playerName + getTranslation("?");
+    askBlockUserDiv.classList.add("appearing");
+    askBlockUserDiv.style.display = 'flex';
+}
+
 export function blockUser(playerName)
 {
-    console.log("blocking");
     let is_friend = false;
     getAccountUser(playerName)
     .then((response) => {

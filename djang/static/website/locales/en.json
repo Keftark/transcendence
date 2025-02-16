@@ -55,6 +55,7 @@
     "errIncorrectName": "Error: incorrect nickname.",
     "botName": "Computer",
     ":": ": ",
+    "?": "? ",
     "addFriendButton": "Add friend",
     "sendMessageButton": "Send message",
     "sendStickerButton": "Sticker",
@@ -148,6 +149,7 @@
     "userOffline": "User is offline: ",
     "yourId": "Your id is: ",
     "playerHasQuit": "A player has quit the lobby",
+    "askBlockUserText": "Do you really want to block ",
     
     
     "entityDontLeaveMe": "No... Please... I need you...",
