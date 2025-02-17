@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 #IP address
-echo "HOST_ADDRESS=$(ip addr | awk '/wlp4s0/{f=1} f && /inet/{print $2; exit}' | cut -d'/' -f1)" > .env
+echo "HOST_ADDRESS=$(ip addr | awk '/enp0s3/{f=1} f && /inet/{print $2; exit}' | cut -d'/' -f1)" > .env
 
 #Ports
 echo "PORT_DJANGO=8000" >> .env
