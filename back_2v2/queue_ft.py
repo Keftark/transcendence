@@ -36,7 +36,7 @@ class Queue:
                 self._liste.append(user)
                 return True
         except Exception as e:
-            self._logger.log("", 2, e)
+            self._logger.log("Error while adding user to queue", 2, e)
         return True
 
     def del_from_queue(self, _id):

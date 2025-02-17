@@ -159,6 +159,28 @@ class Match:
             return False
         return True
 
+    def abandon_check(self):
+        """Sets up the abandon message.
+        """
+        if self._abandonned is True :
+            if self._quitter == self._paddle_l1.id:
+                self._message_queue.append(self.dump_abandon(self._paddle_l1.id))
+            elif self._quitter == self._paddle_l2.id:
+                self._message_queue.append(self.dump_abandon(self._paddle_l2.id))
+            elif self._quitter == self._paddle_r1.id:
+                self._message_queue.append(self.dump_abandon(self._paddle_r1.id))
+            elif self._quitter == self._paddle_r2.id:
+                self._message_queue.append(self.dump_abandon(self._paddle_r2.id))
+        elif self._ragequitted is True:
+            if self._quitter == self._paddle_l1.id:
+                self._message_queue.append(self.dump_ragequit(self._paddle_l1.id))
+            elif self._quitter == self._paddle_l2.id:
+                self._message_queue.append(self.dump_ragequit(self._paddle_l2.id))
+            elif self._quitter == self._paddle_r1.id:
+                self._message_queue.append(self.dump_ragequit(self._paddle_r1.id))
+            elif self._quitter == self._paddle_r2.id:
+                self._message_queue.append(self.dump_ragequit(self._paddle_r2.id))
+
     def tick(self):
         """Ticks the match, updating the ball and players positions.
         """
@@ -168,24 +190,7 @@ class Match:
                 return
             if self._ended is True:
                 self._concluded = True
-                if self._abandonned is True :
-                    if self._quitter == self._paddle_l1.id:
-                        self._message_queue.append(self.dump_abandon(self._paddle_l1.id))
-                    elif self._quitter == self._paddle_l2.id:
-                        self._message_queue.append(self.dump_abandon(self._paddle_l2.id))
-                    elif self._quitter == self._paddle_r1.id:
-                        self._message_queue.append(self.dump_abandon(self._paddle_r1.id))
-                    elif self._quitter == self._paddle_r2.id:
-                        self._message_queue.append(self.dump_abandon(self._paddle_r2.id))
-                elif self._ragequitted is True:
-                    if self._quitter == self._paddle_l1.id:
-                        self._message_queue.append(self.dump_ragequit(self._paddle_l1.id))
-                    elif self._quitter == self._paddle_l2.id:
-                        self._message_queue.append(self.dump_ragequit(self._paddle_l2.id))
-                    elif self._quitter == self._paddle_r1.id:
-                        self._message_queue.append(self.dump_ragequit(self._paddle_r1.id))
-                    elif self._quitter == self._paddle_r2.id:
-                        self._message_queue.append(self.dump_ragequit(self._paddle_r2.id))
+                self.abandon_check()
             elif self._initialised is False:
                 self._initialised = True
                 self._message_queue.append(self.dump_init())
@@ -246,6 +251,13 @@ class Match:
             }
             self._formatted_queue.append(data)
         self._message_queue.clear()
+
+    def set_ready(self, value):
+        """_summary_
+
+        Args:
+            value (_type_): _description_
+        """
 
     def input(self, value):
         """_summary_

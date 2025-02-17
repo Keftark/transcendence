@@ -92,6 +92,7 @@
     "sendsInvitationDuel": " cherche à faire un duel !",
     "join": "Rejoindre",
     "ready": "Prêt",
+    "ready_actual": "Prêt !",
     "connectToChat": "Connectez-vous pour discuter !",
     "welcomeMessage": "Bienvenue sur le chat !",
     "typeHelp": "Tapez '/help' pour afficher les commandes",

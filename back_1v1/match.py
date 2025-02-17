@@ -143,6 +143,20 @@ class Match:
                 self._timer_count += (int)(change)
                 self._timer = time.time()
 
+    def abandon_check(self):
+        """Sets up the abandon message.
+        """
+        if self._abandonned is True :
+            if self._quitter == self._paddle_1.id:
+                self._message_queue.append(self.dump_abandon(self._paddle_1.id))
+            elif self._quitter == self._paddle_2.id:
+                self._message_queue.append(self.dump_abandon(self._paddle_2.id))
+        elif self._ragequitted is True:
+            if self._quitter == self._paddle_1.id:
+                self._message_queue.append(self.dump_ragequit(self._paddle_1.id))
+            elif self._quitter == self._paddle_2.id:
+                self._message_queue.append(self.dump_ragequit(self._paddle_2.id))
+
     def tick(self):
         """Ticks the match, updating the ball and players positions.
         """
@@ -152,16 +166,7 @@ class Match:
                 return
             if self._ended is True:
                 self._concluded = True
-                if self._abandonned is True :
-                    if self._quitter == self._paddle_1.id:
-                        self._message_queue.append(self.dump_abandon(self._paddle_1.id))
-                    elif self._quitter == self._paddle_2.id:
-                        self._message_queue.append(self.dump_abandon(self._paddle_2.id))
-                elif self._ragequitted is True:
-                    if self._quitter == self._paddle_1.id:
-                        self._message_queue.append(self.dump_ragequit(self._paddle_1.id))
-                    elif self._quitter == self._paddle_2.id:
-                        self._message_queue.append(self.dump_ragequit(self._paddle_2.id))
+                self.abandon_check()
             elif self._needs_to_wait is True:
                 self._message_queue.append(self.dump_waiting_start2())
             elif self._initialised is False:

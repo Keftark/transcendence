@@ -302,11 +302,11 @@ async def handle_transfer(event):
     """
     _id = (int)(event["id"])
     _server = event["server"]
-    if event["type"] == "join":
-        for user in userList:
-            if user.id == _id:
-                event["blacklist"] = user.blacklist
-                break
+    #if event["type"] == "join":
+    #    for user in userList:
+    #        if user.id == _id:
+    #            event["blacklist"] = user.blacklist
+    #            break
 
     for user in userList:
         if user.id == _id:
