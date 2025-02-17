@@ -18,7 +18,7 @@ class User:
             user (User): second user
 
         Returns:
-            bool: True if the users can play together, False otherwise
+            bool: `True` if the users can play together, `False` otherwise
         """
         for bl in self.blacklist:
             print(f"Looking at id {bl}")
