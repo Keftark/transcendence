@@ -216,12 +216,14 @@ async function displayUIPlayer(player1, player2)
 {
     if (playerStats.id === player1)
     {
+        removeDisableButtonEffect(player1ReadyButton);
         addDisableButtonEffect(player2ReadyButton);
         player1Duel.classList.add('selectedPlayer');
         player1ReadyButton.focus();
     }
     else if (playerStats.id === player2)
     {
+        removeDisableButtonEffect(player2ReadyButton);
         addDisableButtonEffect(player1ReadyButton);
         player2Duel.classList.add('selectedPlayer');
         player2ReadyButton.focus();

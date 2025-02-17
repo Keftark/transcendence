@@ -965,10 +965,10 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
     
     if (currentLevelMode === LevelMode.TOURNAMENT)
         setWinner(player1NameText, player2NameText, scoreP1, scoreP2);
-    if (!isSpectator())
+    if (!isSpectator() && !isAnOnlineMode(currentLevelMode))
     {
         if (currentLevelMode === LevelMode.MULTI)
-            addMatchToHistoryMulti(victoryType, scorePlayer, player1NameText.innerHTML.replace(/<br\s*\/?>/gi, "\n"), scoreOpponent, player2NameText.innerHTML.replace(/<br\s*\/?>/gi, "\n"), getRawMatchTime());
+            addMatchToHistoryMulti(victoryType, scorePlayer, player1NameText.replace(/<br\s*\/?>/gi, "\n"), scoreOpponent, player2NameText.replace(/<br\s*\/?>/gi, "\n"), getRawMatchTime());
         else
             addMatchToHistory(victoryType, scorePlayer, teamName, scoreOpponent, opponentName, getRawMatchTime());
     }
@@ -994,9 +994,7 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
         if (forcedVictory)
             callVictoryScreen(VictoryType.VICTORY);
         else if (currentLevelMode === LevelMode.TOURNAMENT)
-        {
             callVictoryScreen(VictoryType.VICTORY, winner);
-        }
         else if (winner != '')
         {
             if (winner === getPlayerName())
