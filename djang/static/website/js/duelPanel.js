@@ -3,7 +3,7 @@ import { deleteDuelInChat } from "./chat.js";
 import { id_players, passInfosPlayersToLevel } from "./levelLocal.js";
 import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
 import { openDuelPanel, setSelectedMode, showModeChoice } from "./modesSelection.js";
-import { socketConnectToDuelInvited, socketExitLobby, socketNotReadyToDuel, socketReadyToDuel, socketRefuseDuelInvited } from "./sockets.js";
+import { socketConnectToDuelInvited, socketExitLobby, socketExitLobbyNoMatch, socketNotReadyToDuel, socketReadyToDuel, socketRefuseDuelInvited } from "./sockets.js";
 import { getTranslation } from "./translate.js";
 import { clickPlayGame } from "./modesSelection.js";
 import { LevelMode } from "./variables.js";
@@ -96,14 +96,17 @@ function resetVSAnimation()
 
 export function closeDuelPanel(fromSocket = false)
 {
-    if (idP1 === -1)
-        return;
+    console.log("2");
     if (fromSocket)
         showMessage("playerHasQuit");
     resetDuelPanel();
     setSelectedMode(LevelMode.MENU);
     document.getElementById('waitingMatch').style.display = "none";
-    socketExitLobby();
+
+    if (idP1 === -1)  
+        socketExitLobbyNoMatch();
+    else
+        socketExitLobby();
     showModeChoice();
 }
 
