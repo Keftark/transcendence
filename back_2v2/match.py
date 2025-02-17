@@ -7,7 +7,6 @@ import os
 from Game.paddle import Paddle
 from Game.ball import Ball
 from Game.board import Board
-from Game.bricks import BrickTriangleUnbreak, BrickTriangleReverseUnbreak
 
 WALL_OFFSET = 0.75
 

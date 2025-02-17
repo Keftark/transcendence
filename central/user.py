@@ -41,6 +41,19 @@ class User:
         }
         return event
 
+    def update(self, payload):
+        """Update the User's value from the data dict.
+
+        Args:
+            payload (dict): Data to update
+        """
+        for data in payload:
+            match data:
+                case "name":
+                    self._name = payload[data]
+                case "blacklist":
+                    self._blacklist = payload[data]
+
     async def send(self, data):
         """Sends the data to the user's ouput websocket.
 

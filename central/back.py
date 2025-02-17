@@ -302,6 +302,11 @@ async def handle_transfer(event):
     """
     _id = (int)(event["id"])
     _server = event["server"]
+    if event["type"] == "join":
+        for user in userList:
+            if user.id == _id:
+                event["blacklist"] = user.blacklist
+                break
 
     for user in userList:
         if user.id == _id:
@@ -314,6 +319,7 @@ async def handle_transfer(event):
             if user.id == _id:
                 event["room_id"] = int(user.room)
                 event["game"] = user.game
+                break
         try:
             await Sockets.SOCKET_CHAT.send(json.dumps(event))
         except Exception as e:
@@ -429,16 +435,21 @@ async def handle_commands(websocket, event):
         event (List): A list containing the query's data.
     """
     _type = event["type"]
-    _id = event["id"]
+    _id = int(event["id"])
 
     if _type == "status":
-        await websocket.send(json.dumps(dump_player_status((int)(event["id"]))))
+        await websocket.send(json.dumps(dump_player_status(_id)))
     if _type == "all_user":
-        await websocket.send(json.dumps(dump_all_users(int(_id))))
+        await websocket.send(json.dumps(dump_all_users(_id)))
     if _type == "all_friends":
-        await websocket.send(json.dumps(dump_all_friends(int(_id), event["friendlist"])))
+        await websocket.send(json.dumps(dump_all_friends(_id, event["friendlist"])))
     if _type == "all_blacklist":
-        await websocket.send(json.dumps(dump_all_friends(int(_id), event["blacklist"])))
+        await websocket.send(json.dumps(dump_all_friends(_id, event["blacklist"])))
+    if _type == "update":
+        for user in userList:
+            if user.id == _id:
+                user.update(event["data"])
+                break
 
 async def handler(websocket):
     """Handles incomming messages from a websocket
@@ -456,10 +467,8 @@ async def handler(websocket):
             elif event["answer"] == "yes":
                 await handle_answers(event)
             elif event["server"] != "main":
-                #logger.log(event, 3)
                 await handle_transfer(event)
             else : #Commandes de serveur ...
-                #logger.log(event, 3)
                 await handle_commands(websocket, event)
         await websocket.wait_closed()
     except Exception as e:

@@ -74,6 +74,7 @@ class Queue:
     def notify_waiting(self):
         """Generates the message queue.
         """
+        i = 1
         for user in self._liste:
             event = {
                 "server": "1v1_classic",
@@ -82,10 +83,13 @@ class Queue:
                 "type" : "wait",
                 "data": {
                     "type" : "wait",
-                    "id": user.id
+                    "id": user.id,
+                    "position": i, 
+                    "in_queue": len(self._liste)
                 }
             }
             self._message_queue.append(event)
+            i += 1
 
     def dump_refusal(self, _id):
         """Dumps the refusal event.

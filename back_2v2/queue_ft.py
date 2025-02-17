@@ -52,6 +52,7 @@ class Queue:
     async def notify_waiting(self):
         """Generates the message queue.
         """
+        i = 1
         for user in self._liste:
             event = {
                 "server": "2v2_classic",
@@ -61,10 +62,12 @@ class Queue:
                 "data": {
                     "type" : "wait",
                     "id": user.id,
+                    "position": i,
                     "in_queue": len(self._liste)
                 }
             }
             self._message_queue.append(event)
+            i += 1
 
     def check_compat(self, p1, p2, p3, p4):
         """Checks if the 4 players can play with each other.
