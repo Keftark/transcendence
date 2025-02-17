@@ -965,7 +965,7 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
     
     if (currentLevelMode === LevelMode.TOURNAMENT)
         setWinner(player1NameText, player2NameText, scoreP1, scoreP2);
-    if (!isSpectator() && !isAnOnlineMode(currentLevelMode))
+    if (!isSpectator() && isAnOnlineMode(currentLevelMode))
     {
         if (currentLevelMode === LevelMode.MULTI)
             addMatchToHistoryMulti(victoryType, scorePlayer, player1NameText.replace(/<br\s*\/?>/gi, "\n"), scoreOpponent, player2NameText.replace(/<br\s*\/?>/gi, "\n"), getRawMatchTime());

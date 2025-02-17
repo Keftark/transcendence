@@ -53,6 +53,7 @@
     "errBadPassword": "Error: wrong password.",
     "errDifferentPasswords": "Error: the password and password confirm are different.",
     "errIncorrectName": "Error: incorrect nickname.",
+    "errDangerousField": "Error: dangerous text.",
     "botName": "Computer",
     ":": ": ",
     "?": "? ",

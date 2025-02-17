@@ -386,7 +386,6 @@ export function cancelBackTournamentView()
 
 function resetTournamentView()
 {
-    isLastMatch = false;
     currentTier = 0;
     playersInTier = 0
     currentMatch.player1 = 0;
@@ -450,10 +449,8 @@ function goToNextTier()
     storeCurrentMatch();
 }
 
-let isLastMatch = false;
 function callVictory()
 {
-    isLastMatch = true;
     tournamentWinVictoryText.innerText = lastPlayer.getAttribute('data-name') + getTranslation("isVictorious");
     tournamentWinVictory.style.display = 'flex'; 
 }
@@ -476,8 +473,7 @@ function prepareNextMatch()
         currentMatch.player2+=2;
         storeCurrentMatch();
     }
-    if (!isLastMatch)
-        displayNextMatch();
+    displayNextMatch();
 }
 
 let winnerNbr;
