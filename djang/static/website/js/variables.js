@@ -30,8 +30,8 @@ export const VictoryType =
 
 export const BallStats =
 {
-	baseRadius: 0.8,
-	speedLimit: 3,
+	baseRadius: 0.7,
+	speedLimit: 8,
 	maxBounceAngle: 75 * Math.PI / 180,
 	baseSpeed: 0.75,
 	baseIntensityIncrement: 0.005
