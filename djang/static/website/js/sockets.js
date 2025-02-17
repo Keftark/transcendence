@@ -54,7 +54,7 @@ export function connectToServerOutput()
         server: "main",
         type: "log",
         id: playerStats.id,
-        name: playerStats.nickname, // mettre les id au lieu des noms
+        name: playerStats.nickname,
         socket: "output",
         answer: "no"
     };
@@ -65,15 +65,14 @@ export function socketConnectToDuel(mode = "1v1_classic")
 {
     getBlockedList(true)
     .then((results) => {
-        // console.log("Array: " + results);
+        console.log("Array: " + results);
         const event = {
             key: keySocket,
             server: mode,
             type: "join",
             answer: "no",
             id: playerStats.id,
-            blacklist: JSON.stringify(results),
-            // blacklist: {},
+            blacklist: results,
             private: "none",
             invited_by: 8,
             payload: {}
@@ -95,8 +94,7 @@ export function socketConnectToDuelInvited(playerId)
             type: "join",
             answer: "no",
             id: playerStats.id,
-            blacklist: JSON.stringify(results),
-            // blacklist: {},
+            blacklist: results,
             private: "join",
             invited_by: playerId,
             payload: {}
@@ -116,7 +114,7 @@ export function socketRefuseDuelInvited(playerId)
         type: "join",
         answer: "no",
         id: playerStats.id,
-        blacklist: playerStats.blacklist, // mettre les id au lieu des noms
+        blacklist: {},
         private: "refuse",
         invited_by: playerId,
         payload: {}

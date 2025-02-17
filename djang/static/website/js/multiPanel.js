@@ -25,7 +25,7 @@ const player2ReadyButton = document.getElementById('ready2MultiButton');
 const player3ReadyButton = document.getElementById('ready3MultiButton');
 const player4ReadyButton = document.getElementById('ready4MultiButton');
 const animDiv = document.getElementById('vsImgMulti');
-const baseImgPath = "static/icons/playerNoImg.webp";
+const baseImgPath = "static/icons/guestUser.webp";
 
 document.getElementById('leaveMultiButton').addEventListener('click', () => {
     closeMultiPanel();
