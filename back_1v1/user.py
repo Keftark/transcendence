@@ -3,7 +3,7 @@
 class User:
     """Simple user class.
     """
-    def __init__(self, _id, bl):
+    def __init__(self, _id = 0, bl = None):
         self._id = _id
         self._blacklist = []
         for user in bl :

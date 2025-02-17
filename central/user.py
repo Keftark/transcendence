@@ -77,7 +77,7 @@ class User:
             bool: `True` if the user is blacklisted, `False` otherwise.
         """
         for bl in self._blacklist:
-            if bl == int(_id):
+            if bl == _id:
                 return True
         return False
 
