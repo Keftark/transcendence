@@ -2,7 +2,6 @@ import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
 import { clickPlayGame, showModeChoice } from "./modesSelection.js";
 import { navigateTo } from "./pages.js";
 import { playerStats } from "./playerManager.js";
-import { setArenaType } from "./rules.js";
 import { getTranslation } from "./translate.js";
 
 const nbrPlayersTournament = document.getElementById('nbrPlayersTournament');
