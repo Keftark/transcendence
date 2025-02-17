@@ -932,12 +932,14 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
         scorePlayer = scoreP1;
         scoreOpponent = scoreP2;
         opponentName = player2NameText;
+        teamName = player1NameText;
     }
     else
     {
         scorePlayer = scoreP2;
         scoreOpponent = scoreP1;
         opponentName = player1NameText;
+        teamName = player2NameText;
     }
 
     let victoryType;
@@ -968,7 +970,7 @@ export function endMatch(scoreP1, scoreP2, forcedVictory = false)
     if (!isSpectator() && isAnOnlineMode(currentLevelMode))
     {
         if (currentLevelMode === LevelMode.MULTI)
-            addMatchToHistoryMulti(victoryType, scorePlayer, player1NameText.replace(/<br\s*\/?>/gi, "\n"), scoreOpponent, player2NameText.replace(/<br\s*\/?>/gi, "\n"), getRawMatchTime());
+            addMatchToHistoryMulti(victoryType, scorePlayer, teamName.replace(/<br\s*\/?>/gi, "\n"), scoreOpponent, opponentName.replace(/<br\s*\/?>/gi, "\n"), getRawMatchTime());
         else
             addMatchToHistory(victoryType, scorePlayer, teamName, scoreOpponent, opponentName, getRawMatchTime());
     }

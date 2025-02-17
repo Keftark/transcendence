@@ -47,6 +47,7 @@ export function addMatchToHistory(victoryType, playerScore, teamName, opponentSc
 
 export function addMatchToHistoryMulti(victoryType, playerScore, teamName, opponentScore, opponentName, matchTime = '0')
 {
+    // console.log("Trying to add match");
     if (!playerStats.isRegistered)
         return;
     const opponents = opponentName.split(/\r?\n/);
@@ -58,8 +59,12 @@ export function addMatchToHistoryMulti(victoryType, playerScore, teamName, oppon
     // console.log(opponents[1]);
     // console.log("Adding multi match to history:\nplayer score: " + playerScore + "\nOpponent score: " + opponentScore + "\nOpponent name: " + opponents);
     // console.log("Victory: " + victoryType);
+    // console.log("Team: " + team + ", Name: " + playerStats.nickname);
     if (victoryType === VictoryType.VICTORY && team[0] === playerStats.nickname)
+    {
+        // console.log("Adding the match");
         sendMatchMulti(team[0], team[1], playerScore, opponents[0], opponents[1], opponentScore, matchTime);
+    }
 }
 
 export async function createNewPlayer()
