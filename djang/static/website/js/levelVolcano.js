@@ -35,7 +35,7 @@ function createParticleSystem(position) {
 
     // Load a small circular texture for particles
     const textureLoader = new THREE.TextureLoader();
-    const particleTexture = textureLoader.load('static/mat/lava.png'); 
+    const particleTexture = textureLoader.load('static/mat/particle.png'); 
 
     const material = new THREE.PointsMaterial({
         size: 0.5, // Adjust size of particles
@@ -73,7 +73,7 @@ export function animateScene(scene)
                 velocities[i * 3 + 1] -= 0.005; // Slow downward pull
 
                 // If particle moves too far, reset it
-                if (positions[i * 3 + 1] < -5) { // Adjust threshold as needed
+                if (positions[i * 3 + 1] < object.userData.origin.y - 5) { // Adjust threshold as needed
                     resetParticle(i, positions, velocities, object.userData.origin);
                 }
             }
@@ -104,16 +104,19 @@ function addRocks(scene)
             function (gltf) {
                 const model = gltf.scene;
                 scene.add(model);
-                model.position.set(i * 5, BOUNDARY.Y_MAX, 0)
+
+                const position = new THREE.Vector3(i * 5, BOUNDARY.Y_MAX, 0);
+                model.position.copy(position);
+
                 let nbr = getRandomNumberBetween(0.8, 1.25);
                 model.matrixAutoUpdate = false;
                 model.scale.set(nbr, nbr, nbr);
                 model.rotation.x = 90;
                 model.rotation.y = getRandomNumberBetween(0, 360);
                 model.updateMatrix();
-                // Add particles around the rock
-                const particles = createParticleSystem(model.position);
-                particles.userData.origin = new THREE.Vector3(i * 5, BOUNDARY.Y_MAX, 0);
+                
+                const particles = createParticleSystem(position);
+                particles.userData.origin = position.clone();
                 scene.add(particles);
             },
             undefined,
@@ -129,16 +132,18 @@ function addRocks(scene)
             function (gltf) {
                 const model = gltf.scene;
                 scene.add(model);
-                model.position.set(i * 5, BOUNDARY.Y_MIN, 0)
+
+                const position = new THREE.Vector3(i * 5, BOUNDARY.Y_MIN, 0);
+                model.position.copy(position);
                 let nbr = getRandomNumberBetween(0.8, 1.25);
                 model.matrixAutoUpdate = false;
                 model.scale.set(nbr, nbr, nbr);
                 model.rotation.x = 90;
                 model.rotation.y = getRandomNumberBetween(0, 360);
                 model.updateMatrix();
-                // Add particles around the rock
-                const particles = createParticleSystem(model.position);
-                particles.userData.origin = new THREE.Vector3(i * 5, BOUNDARY.Y_MIN, 0);
+                
+                const particles = createParticleSystem(position);
+                particles.userData.origin = position.clone();
                 scene.add(particles);
             },
             undefined,
@@ -176,52 +181,6 @@ function drawBackground(scene, textureLoader)
     
     scene.add(background);
     background.position.set(0, 0, -3);
-}
-
-function createWalls(scene, textureLoader)
-{
-    const wallHeight = 1;
-    const wallVerticalSize = BOUNDARY.Y_MAX * 2;
-    const wallHorizontalSize = BOUNDARY.X_MAX * 2;
-    const wallSizeHorizontal = wallHorizontalSize + 7;
-    const wallSizeVertical = wallVerticalSize - 1;
-    let texturePath = 'static/mat/lava.png';
-
-    const cylinderTextureVertical = textureLoader.load(texturePath);
-
-    cylinderTextureVertical.wrapS = cylinderTextureVertical.wrapT = THREE.RepeatWrapping;
-    cylinderTextureVertical.repeat.set(1, 1);
-    const cylinderGeometryVertical = new THREE.CylinderGeometry(wallHeight, wallHeight, wallSizeVertical, 32);
-    const cylinderMaterialVertical = new THREE.MeshStandardMaterial({
-        map: cylinderTextureVertical,
-        transparent: true,
-        opacity: 1 });
-    const cylinderTextureHorizontal = textureLoader.load(texturePath);
-
-    cylinderTextureHorizontal.wrapS = cylinderTextureHorizontal.wrapT = THREE.RepeatWrapping;
-    cylinderTextureHorizontal.repeat.set(1, wallHorizontalSize / 20);
-    const cylinderGeometryHorizontal = new THREE.CylinderGeometry(wallHeight * 32, wallHeight * 32, wallSizeHorizontal * 8, 32 * 8);
-    const cylinderMaterialHorizontal = new THREE.MeshStandardMaterial({
-        map: cylinderTextureHorizontal,
-        transparent: true,
-        opacity: 1 });
-        
-    //wallTop = new THREE.Mesh(cylinderGeometryHorizontal, cylinderMaterialHorizontal);
-    //scene.add(wallTop);
-    const ninetyDegrees = Math.PI / 2;
-    //wallTop.position.set(0, BOUNDARY.Y_MAX + 32.5, -15);
-    //wallTop.rotation.z = ninetyDegrees;
-    wallBot = new THREE.Mesh(cylinderGeometryHorizontal, cylinderMaterialHorizontal);
-    scene.add(wallBot);
-    wallBot.position.set(0, BOUNDARY.Y_MIN - 32.5, -15);
-    wallBot.rotation.z = ninetyDegrees;
-
-    wallLeft = new THREE.Mesh(cylinderGeometryVertical, cylinderMaterialVertical);
-    scene.add(wallLeft);
-    wallLeft.position.set(BOUNDARY.X_MAX + 2.5, 0, 0);
-    wallRight = new THREE.Mesh(cylinderGeometryVertical, cylinderMaterialVertical);
-    scene.add(wallRight);
-    wallRight.position.set(BOUNDARY.X_MIN - 2.5, 0, 0);
 }
 
 export function createVolcanoLevel(scene, textureLoader)

@@ -198,6 +198,12 @@ export function createLights(scene, arenaType)
         scene.add(ambientLight);
         lightForce = 3;
     }
+    if (arenaType === ArenaType.VOLCANO)
+    {
+        const ambientLight = new THREE.AmbientLight(0xff8624);
+        scene.add(ambientLight);
+        lightForce = 4;
+    }
     const directionalLight = new THREE.DirectionalLight(0xffffff, lightForce);
     directionalLight.position.set(1, 1, 1).normalize();
 
