@@ -95,10 +95,10 @@ class Match:
         """
         self._spectators.remove(spec)
 
-    def reset_board(self):
+    def reset_board(self, side):
         """Reset the board, the ball, and the paddle.
         """
-        self._ball.reset(True)
+        self._ball.reset(side)
         self._paddle_l1.reset()
         self._paddle_l2.reset()
         self._paddle_r1.reset()
@@ -220,11 +220,11 @@ class Match:
                 self._paddle_r2.collide(self._ball)
                 if self._ball.x < self._board.min_x: #point for p2
                     self._side_right_score += 1
-                    self.reset_board()
+                    self.reset_board(False)
                     self._message_queue.append(self.dump_point(self._paddle_l2.id))
                 elif self._ball.x > self._board.max_x: #point for p1
                     self._side_left_score += 1
-                    self.reset_board()
+                    self.reset_board(True)
                     self._message_queue.append(self.dump_point(self._paddle_r1.id))
                 self._message_queue.append(self.dump_variables())
             else:

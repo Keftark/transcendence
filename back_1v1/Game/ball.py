@@ -16,7 +16,7 @@ class Ball:
         self._speed = float(os.environ.get("BALL_SPEED_INITIAL", 0.7))
         self._base_speed = self._speed
         self._velocity_x = self._speed if random.random() < 0.5 else self._speed * -1
-        self._velocity_y = 0
+        self._velocity_y = self._speed if random.random() < 0.5 else self._speed * -1
         self._velocity_boosted_x = 0
         self._velocity_boosted_y = 0
         self._speed_increment = float(os.environ.get("BALL_SPEED_INCREMENT", 1.01))
@@ -54,7 +54,7 @@ class Ball:
         self._y = 0
         self._speed = self._base_speed
         self._velocity_x = self._speed if side else self._speed * -1
-        self._velocity_y = 0
+        self._velocity_y = self._speed if random.random() < 0.5 else self._speed * -1
         self._velocity_boosted_x = self._velocity_x
         self._velocity_boosted_y = 0
         self._is_powered_up = False
