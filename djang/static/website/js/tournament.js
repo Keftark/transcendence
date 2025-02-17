@@ -467,6 +467,7 @@ function prepareNextMatch()
         {
             callVictory();
             removeStorage();
+            return;
         }
     }
     else
@@ -475,7 +476,8 @@ function prepareNextMatch()
         currentMatch.player2+=2;
         storeCurrentMatch();
     }
-    displayNextMatch();
+    if (!isLastMatch)
+        displayNextMatch();
 }
 
 let winnerNbr;
@@ -536,8 +538,7 @@ export function endOfTournamentMatch()
         }
     }
 
-    if (!isLastMatch)
-        prepareNextMatch();
+    prepareNextMatch();
     setTimeout(() => {
         startMatchTournamentButton.focus();
     }, 10);

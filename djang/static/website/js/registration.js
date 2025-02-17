@@ -129,6 +129,11 @@ export function onRegistrationOpen()
     }, 300);
 }
 
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
 function checkFields()
 {
     let inputValue = inputName.value;
@@ -165,7 +170,7 @@ function checkFields()
     }
     else
         registerErrorMail.innerText = "";
-    if (!inputValue.includes('@'))
+    if (!isValidEmail(inputValue))
     {
         registerErrorMail.innerText = getTranslation('errBadMail');
         errors++;

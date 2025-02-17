@@ -91,7 +91,7 @@ function changePaddlesSize(newSize)
     sendSystemMessage("paddleSizeChanged", newSize);
 }
 
-function sendInvitDuel(playerInvit = "")
+export function sendInvitDuel(playerInvit = "")
 {
     const curMode = getSelectedMode();
     if (curMode === LevelMode.ONLINE || curMode === LevelMode.TOURNAMENT || isInGame)
