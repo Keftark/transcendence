@@ -8,6 +8,7 @@ class User:
         self._blacklist = []
         for user in bl :
             self._blacklist.append(int(user))
+        print(f"User {_id} blacklist is {self._blacklist}")
 
     def can_play_with(self, user):
         """Checks wether the user can play with another,
@@ -20,7 +21,9 @@ class User:
             bool: True if the users can play together, False otherwise
         """
         for bl in self.blacklist:
-            if bl == user.id:
+            print(f"Looking at id {bl}")
+            if int(bl) == user.id:
+                print("User is found blacklisted")
                 return False
         return True
 
