@@ -81,6 +81,18 @@ class User:
                 return True
         return False
 
+    async def disconnect(self):
+        """Properly handles disconnection.
+        """
+        try:
+            await self._sock_input.close()
+        except:
+            pass
+        try:
+            await self._sock_output.close()
+        except:
+            pass
+
     @property
     def sock_input(self):
         """Returns the input websocket.
