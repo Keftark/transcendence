@@ -33,7 +33,7 @@ export const BallStats =
 	baseRadius: 0.7,
 	speedLimit: 8,
 	maxBounceAngle: 75 * Math.PI / 180,
-	baseSpeed: 0.75,
+	baseSpeed: 0.65,
 	baseIntensityIncrement: 0.005
 }
 

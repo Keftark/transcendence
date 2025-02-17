@@ -95,10 +95,10 @@ export function selectArena(arenaIndex)
     }
 }
 
-export function setCustomRules()
+export function setCustomRules(rndArena = 0)
 {
     rules.pointsToWin = nbrPointsInput.value === '' ? nbrPointsInput.placeholder : nbrPointsInput.value;
-    rules.arena = selectedArena;
+    rules.arena = rndArena === 0 ? selectedArena : rndArena;
     rules.maxTime = timerInput.value === '' ? timerInput.placeholder : timerInput.value;
     rules.nbrPlayers = nbrOfPlayersInput.value === '' ? nbrOfPlayersInput.placeholder : nbrOfPlayersInput.value;
     rules.isPrivate = isPrivate;

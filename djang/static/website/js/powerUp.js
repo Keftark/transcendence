@@ -202,6 +202,10 @@ export function useBoost(playerNbr = 0)
             resetPowerBarLeft();
         else if (playerNbr === 1)
             resetPowerBarRight();
+        else if (playerNbr === 2)
+            resetPowerBarLeft();
+        else if (playerNbr === 3)
+            resetPowerBarRight();
     }, 20);
     boostPlayer(playerNbr);
 }

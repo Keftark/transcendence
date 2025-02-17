@@ -124,12 +124,16 @@ export function unsetTextures()
 
 export function setTextures(p1, p2, p3 = null, p4 = null)
 {
-    cylinderTexture1 = `static/mat/player${p1.preferredPaddle}.png`;
-    cylinderTexture2 = `static/mat/player${p2.preferredPaddle}.png`;
+    const paddle1 = typeof p1.preferredPaddle === "undefined" ? "0" : p1.preferredPaddle;
+    const paddle2 = typeof p2.preferredPaddle === "undefined" ? "0" : p2.preferredPaddle;
+    cylinderTexture1 = `static/mat/player${paddle1}.png`;
+    cylinderTexture2 = `static/mat/player${paddle2}.png`;
     if (p3 != null)
     {
-        cylinderTexture3 = `static/mat/player${p3.preferredPaddle}.png`;
-        cylinderTexture4 = `static/mat/player${p4.preferredPaddle}.png`;
+        const paddle3 = typeof p3.preferredPaddle === "undefined" ? "0" : p3.preferredPaddle;
+        const paddle4 = typeof p4.preferredPaddle === "undefined" ? "0" : p4.preferredPaddle;
+        cylinderTexture3 = `static/mat/player${paddle3}.png`;
+        cylinderTexture4 = `static/mat/player${paddle4}.png`;
     }
 
 }

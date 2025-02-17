@@ -877,9 +877,19 @@ export function StartLevel(levelMode)
             useBoost(0);
             event.preventDefault();
         }
-        else if ((event.key === 'e' && playerStats.playerController === 2 && isBoostReadyRight()) || (event.code === 'ArrowLeft' && (playerStats.playerController === 2 || currentLevelMode === LevelMode.TOURNAMENT) && isBoostReadyRight()))
+        else if ((event.key === 'e' && playerStats.playerController === 2 || currentLevelMode === LevelMode.TOURNAMENT) && isBoostReadyRight())
         {
             useBoost(1);
+            event.preventDefault();
+        }
+        else if (event.key === 'e' && playerStats.playerController === 3 && isBoostReadyLeft())
+        {
+            useBoost(2);
+            event.preventDefault();
+        }
+        else if (event.key === 'e' && playerStats.playerController === 4 && isBoostReadyRight())
+        {
+            useBoost(3);
             event.preventDefault();
         }
     }

@@ -91,8 +91,9 @@ let addPlayerIsOpen = false;
 
 function startMatchTournament()
 {
+    const rnd = Math.floor(Math.random() * 3);
     closeTournamentViewPanel();
-    clickPlayGame();
+    clickPlayGame(rnd);
 }
 
 export function quitTournamentLobby()
