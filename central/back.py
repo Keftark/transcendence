@@ -489,7 +489,6 @@ async def handler(websocket):
         await websocket.wait_closed()
     except Exception as e:
         logger.log("Error while reading data", 2, e)
-        logger.log("Error data :", 2, message)
     finally:
         await disconnect_user(websocket)
 
