@@ -13,7 +13,7 @@ let background;
 let scenic;
 
 function createParticleSystem(position) {
-    const particleCount = 20; // Number of particles per splash
+    const particleCount = 50; // Number of particles per splash
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
     const velocities = new Float32Array(particleCount * 3); // Store velocities for movement
@@ -26,19 +26,18 @@ function createParticleSystem(position) {
 
         // Random velocities (upward and outward motion)
         velocities[i * 3] = (Math.random() - 0.5) * 0.1;
-        velocities[i * 3 + 1] = Math.random() * 0.2; // Upward motion
+        velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.1; // Upward motion
         velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.1;
     }
 
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     geometry.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
 
-    // Load a small circular texture for particles
     const textureLoader = new THREE.TextureLoader();
     const particleTexture = textureLoader.load('static/mat/particle.png'); 
 
     const material = new THREE.PointsMaterial({
-        size: 0.5, // Adjust size of particles
+        size: 0.5,
         map: particleTexture,
         transparent: true,
         depthWrite: false,
@@ -70,10 +69,14 @@ export function animateScene(scene)
                 positions[i * 3 + 2] += velocities[i * 3 + 2]; // Z
 
                 // Apply gravity
-                velocities[i * 3 + 1] -= 0.005; // Slow downward pull
+                //velocities[i * 3 + 1] -= 0.005; // Slow downward pull
 
                 // If particle moves too far, reset it
-                if (positions[i * 3 + 1] < object.userData.origin.y - 5) { // Adjust threshold as needed
+                const posX = (positions[i * 3] - object.userData.origin.x) ** 2
+                const posY = (positions[i * 3 + 1] - object.userData.origin.y) ** 2
+                const posZ = (positions[i * 3 + 2] - object.userData.origin.z) ** 2
+                const dist = Math.sqrt(posX + posY + posZ)
+                if (dist > 8) { // Adjust threshold as needed
                     resetParticle(i, positions, velocities, object.userData.origin);
                 }
             }
@@ -90,7 +93,7 @@ function resetParticle(index, positions, velocities, origin) {
     positions[index * 3 + 2] = origin.z + (Math.random() - 0.5) * 2; // Random Z near rock
 
     velocities[index * 3] = (Math.random() - 0.5) * 0.1; // Random horizontal movement
-    velocities[index * 3 + 1] = Math.random() * 0.1 + 0.05; // Upward motion
+    velocities[index * 3 + 1] = (Math.random() - 0.5) * 0.1; // Upward motion
     velocities[index * 3 + 2] = (Math.random() - 0.5) * 0.1; // Random depth movement
 }
 
@@ -152,6 +155,27 @@ function addRocks(scene)
             }
         );
     }
+        for (let i = 0; i < 8; i++)
+        {
+            loader.load(
+                getRandomRock(),
+                function (gltf) {
+                    const model = gltf.scene;
+                    scene.add(model);
+                    setObjectRandomPosition(model);
+                    let nbr = getRandomNumberBetween(0.5, 2);
+                    model.matrixAutoUpdate = false;
+                    model.scale.set(nbr, nbr, nbr);
+                    model.rotation.x = 90;
+                    model.rotation.y = getRandomNumberBetween(0, 360);
+                    model.updateMatrix();
+                },
+                undefined,
+                function (error) {
+                    console.error('An error occurred', error);
+                }
+            );
+        }
 }
 
 function getRandomRock()

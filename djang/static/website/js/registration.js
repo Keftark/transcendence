@@ -129,6 +129,15 @@ export function onRegistrationOpen()
     }, 300);
 }
 
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+function hasSQLInjectionChars(str) {
+    return /['"\\;]/.test(str);
+}
+
 function checkFields()
 {
     let inputValue = inputName.value;
@@ -140,6 +149,11 @@ function checkFields()
     }
     else
         registerErrorName.innerText = "";
+    if (hasSQLInjectionChars(inputValue))
+    {
+        registerErrorName.innerText += getTranslation('errDangerousField');
+        errors++;
+    }
     // checks if the name is in the database and returns false if it's in
     inputValue = inputFirstName.value;
     if (inputValue.trim() === "")
@@ -149,6 +163,11 @@ function checkFields()
     }
     else
         registerErrorFirstName.innerText = "";
+    if (hasSQLInjectionChars(inputValue))
+    {
+        registerErrorFirstName.innerText += getTranslation('errDangerousField');
+        errors++;
+    }
     inputValue = inputLastName.value;
     if (inputValue.trim() === "")
     {
@@ -157,6 +176,11 @@ function checkFields()
     }
     else
         registerErrorLastName.innerText = "";
+    if (hasSQLInjectionChars(inputValue))
+    {
+        registerErrorLastName.innerText += getTranslation('errDangerousField');
+        errors++;
+    }
     inputValue = inputMail.value;
     if (inputValue.trim() === "")
     {
@@ -165,13 +189,18 @@ function checkFields()
     }
     else
         registerErrorMail.innerText = "";
-    if (!inputValue.includes('@'))
+    if (!isValidEmail(inputValue))
     {
         registerErrorMail.innerText = getTranslation('errBadMail');
         errors++;
     }
     else
         registerErrorMail.innerText = "";
+    if (hasSQLInjectionChars(inputValue))
+    {
+        registerErrorMail.innerText += getTranslation('errDangerousField');
+        errors++;
+    }
     inputValue = inputPassword.value;
     if (inputValue.trim() === "")
     {
@@ -180,6 +209,11 @@ function checkFields()
     }
     else
         registerErrorPassword.innerText = "";
+    if (hasSQLInjectionChars(inputValue))
+    {
+        registerErrorPassword.innerText += getTranslation('errDangerousField');
+        errors++;
+    }
     inputValue = inputConfirmPassword.value;
     if (inputValue.trim() === "")
     {

@@ -2,6 +2,7 @@ import { callGameDialog } from "./chat.js";
 import { isSpectator } from "./levelLocal.js";
 import { getLevelState } from "./main.js";
 import { clickBackButtonMenu } from "./modesSelection.js";
+import { getCurrentView } from "./pages.js";
 import { getPlayerName } from "./playerManager.js";
 import { getTranslation } from "./translate.js";
 import { EmotionType, LevelMode, VictoryType } from "./variables.js";
@@ -20,6 +21,8 @@ export function callVictoryScreen(victoryType, playerWon = "") {
     let newSrc;
     const isLocal = getLevelState() === LevelMode.LOCAL || getLevelState() === LevelMode.TOURNAMENT;
     const playerName = isSpectator() || LevelMode.TOURNAMENT ? playerWon : getPlayerName();
+
+    document.getElementById('closeVictoryButton').innerText = getCurrentView() === "game-tournament" ? getTranslation("next") : getTranslation("mainButton");
 
     switch (victoryType) {
         case VictoryType.VICTORY:

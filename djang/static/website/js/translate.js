@@ -33,7 +33,7 @@ export function updateHTML(translations)
 	document.getElementById('closeProfileButton').innerText = translations.close;
 	document.getElementById('closeSettingsButton').innerText = translations.close;
 	document.getElementById('language').innerText = translations.language;
-	document.getElementById('mainPlayButton').innerText = translations.play;
+	document.getElementById('mainPlayButton').innerText = translations.playLittle;
 	document.getElementById('modeSelectionText').innerText = translations.modeSelectionText;
 	document.getElementById('1vs1').innerText = translations.oneVsOne;
 	document.getElementById('modeComputer').innerText = translations.modeComputer;
@@ -123,7 +123,7 @@ export function updateHTML(translations)
 	document.getElementById('helpRulesTitle').innerHTML = translations.helpRulesTitle;
 	document.getElementById('helpRulesText').innerHTML = translations.helpRulesText;
 	document.getElementById('buttonSpectate').innerHTML = translations.buttonSpectate;
-	document.getElementById('buttonProfile').innerHTML = translations.profileButton;
+	// document.getElementById('buttonProfile').innerHTML = translations.profileButton;
 	document.getElementById('closeMiniProfileButton').innerHTML = translations.close;
 	document.getElementById('matchsPlayedMiniProfile').innerHTML = translations.gamesPlayed;
 	document.getElementById('matchesPlayed').innerText = translations.gamesPlayed;

@@ -452,7 +452,7 @@ function goToNextTier()
 function callVictory()
 {
     tournamentWinVictoryText.innerText = lastPlayer.getAttribute('data-name') + getTranslation("isVictorious");
-    tournamentWinVictory.style.display = 'flex';
+    tournamentWinVictory.style.display = 'flex'; 
 }
 
 function prepareNextMatch()
@@ -464,6 +464,7 @@ function prepareNextMatch()
         {
             callVictory();
             removeStorage();
+            return;
         }
     }
     else

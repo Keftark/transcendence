@@ -1,6 +1,7 @@
 {
     "pressplay": "Appuyez sur espace pour",
     "play": "JOUER",
+    "playLittle": "Jouer",
     "profileButton": "Profile", 
     "mainCustomizeButton": "Raquettes",
     "mainButton": "Menu principal", 
@@ -53,6 +54,7 @@
     "errEmptyPasswordConfirm": "Erreur: confirmation du mot de passe vide.",
     "errDifferentPasswords": "Erreur: le mot de passe et la confirmation sont différents.",
     "errIncorrectName": "Erreur: pseudonyme incorrect.",
+    "errDangerousField": "Error: texte dangereux.",
     "botName": "Ordinateur",
     ":": " : ",
     "?": " ?",
@@ -151,6 +153,7 @@
     "yourId": "Votre id est : ",
     "playerHasQuit": "Un joueur a quitté le salon",
     "askBlockUserText": "Voulez-vous vraiment bloquer ",
+    "next": "Suivant",
 
     "entityDontLeaveMe": "Non... S'il vous plaît... J'ai besoin de vous...",
     "entityRegister": "Ah ! Un nouveau joueur... C'est délicieux !",

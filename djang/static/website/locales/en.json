@@ -1,6 +1,7 @@
 {
     "pressplay": "Press space to",
     "play": "PLAY",
+    "playLittle": "Play",
     "profileButton": "Profile",
     "mainCustomizeButton": "Paddles",
     "mainButton": "Main menu", 
@@ -53,6 +54,7 @@
     "errBadPassword": "Error: wrong password.",
     "errDifferentPasswords": "Error: the password and password confirm are different.",
     "errIncorrectName": "Error: incorrect nickname.",
+    "errDangerousField": "Error: dangerous text.",
     "botName": "Computer",
     ":": ": ",
     "?": "? ",
@@ -151,6 +153,7 @@
     "yourId": "Your id is: ",
     "playerHasQuit": "A player has quit the lobby",
     "askBlockUserText": "Do you really want to block ",
+    "next": "Next",
     
     
     "entityDontLeaveMe": "No... Please... I need you...",
