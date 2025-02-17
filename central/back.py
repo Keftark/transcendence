@@ -460,6 +460,8 @@ async def handler(websocket):
     try:
         async for message in websocket:
             event = json.loads(message)
+            if event["type"] != "match_data":
+                print(event)
             if event["type"] == "pong":
                 pass
             elif event["type"] == "log":
