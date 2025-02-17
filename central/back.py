@@ -473,8 +473,6 @@ async def handler(websocket):
     try:
         async for message in websocket:
             event = json.loads(message)
-            if event["type"] != "match_data":
-                print(event)
             if event["type"] == "pong":
                 pass
             elif event["type"] == "log":
@@ -488,6 +486,7 @@ async def handler(websocket):
         await websocket.wait_closed()
     except Exception as e:
         logger.log("Error while reading data", 2, e)
+        logger.log("Error data :", 2, message)
     finally:
         await disconnect_user(websocket)
 
