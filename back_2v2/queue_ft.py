@@ -84,9 +84,14 @@ class Queue:
         if p1.can_play_with(p2) is False or p1.can_play_with(p3) is False \
             or p1.can_play_with(p4) is False:
             return False
-        if p2.can_play_with(p3) is False or p2.can_play_with(p4) is False:
+        if p2.can_play_with(p1) is False or p2.can_play_with(p3) is False \
+            or p2.can_play_with(p4) is False:
             return False
-        if p3.can_play_with(p4) is False:
+        if p3.can_play_with(p2) is False or p3.can_play_with(p1) is False \
+            or p3.can_play_with(p4) is False:
+            return False
+        if p4.can_play_with(p2) is False or p4.can_play_with(p3) is False \
+            or p4.can_play_with(p1) is False:
             return False
         return True
 
