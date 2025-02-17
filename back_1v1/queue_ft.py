@@ -117,7 +117,8 @@ class Queue:
             if len(self._liste) >= 2:
                 for p1 in self._liste:
                     for p2 in self._liste:
-                        if (p1.id != p2.id and p1.can_play_with(p2)):
+                        if (p1.id != p2.id and p1.can_play_with(p2) \
+                                        and p2.can_play_with(p1)):
                             self._room_id += 1
                             self.del_from_queue(p1.id)
                             self.del_from_queue(p2.id)
