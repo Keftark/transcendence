@@ -148,6 +148,19 @@ export function socketNotReadyToDuel(mode = "1v1_classic")
     socket.send(JSON.stringify(event));
 }
 
+export function socketExitLobbyNoMatch(mode = "1v1_classic")
+{
+    const event = {
+        key: keySocket,
+        answer: "no",
+        server: mode,
+        type: "quit",
+        room_id: playerStats.room_id,
+        id: playerStats.id
+    };
+    socket.send(JSON.stringify(event));
+}
+
 export function socketExitLobby(mode = "1v1_classic")
 {
     const event = {
