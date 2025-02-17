@@ -14,7 +14,7 @@ let setPlayersPositionsFunction = null;
 let isBoostedLeft = false;
 let isBoostedRight = false;
 let botTargetPosition = 0;
-const botDelay = 500;
+const botDelay = 1000;
 let rotationBoost = 0;
 let mode;
 
@@ -312,7 +312,7 @@ export function setupPlayerMovement(player1, player2, player3, player4)
         if (playerposy > lowerLimit && playerposy < upperLimit)
         {
             const targetPosition = up ? playerposy + adjustedSpeed : playerposy - adjustedSpeed;
-            player2.position.y = lerp(playerposy, targetPosition, 0.2);
+            player2.position.y = lerp(playerposy, targetPosition, 0.1);
     
             const clampedPosition = up
                 ? Math.min(player2.position.y, upperLimit - playerQuarterHeight)
