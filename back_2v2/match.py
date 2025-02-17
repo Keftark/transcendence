@@ -61,7 +61,7 @@ class Match:
         for data in payload:
             match data:
                 case "point":
-                    self._point_to_win = (int)(payload[data])
+                    self._point_to_win = int(payload[data])
                 case "ball_radius":
                     self._ball.radius = (float)(payload[data])
                 case "ball_speed":
@@ -69,21 +69,21 @@ class Match:
                 case "ball_increment":
                     self._ball.speed_increment = (float)(payload[data])
                 case "max_time":
-                    self._max_time_seconds = (int)(payload[data])
+                    self._max_time_seconds = int(payload[data])
                 case "board_x":
-                    self._board.max_x = (int)(payload[data])
-                    self._board.min_x = (int)(payload[data]) * -1
+                    self._board.max_x = int(payload[data])
+                    self._board.min_x = int(payload[data]) * -1
                     self._paddle_l1.x = self._board.min_x + 1
                     self._paddle_l2.x = self._board.max_x - 2
                 case "board_y":
-                    self._board.max_y = (int)(payload[data])
-                    self._board.min_y = (int)(payload[data]) * -1
+                    self._board.max_y = int(payload[data])
+                    self._board.min_y = int(payload[data]) * -1
 
     def add_spectator(self, spec):
         """Adds a spectator to the room.
 
         Args:
-            spec (int): ID of the spectator.
+            spec int: ID of the spectator.
         """
         self._spectators.append(spec)
 
@@ -91,7 +91,7 @@ class Match:
         """Remove the spectator from the room.
 
         Args:
-            spec (int): ID of the spectator.
+            spec int: ID of the spectator.
         """
         self._spectators.remove(spec)
 
@@ -140,7 +140,7 @@ class Match:
         if self._timer_pause is False:
             change = time.time() - self._timer
             if change >= 1:
-                self._timer_count += (int)(change)
+                self._timer_count += int(change)
                 self._timer = time.time()
 
     def ready_check(self):
@@ -268,42 +268,42 @@ class Match:
         try:
             with self._lock:
                 if value["type"] == "input":
-                    if (int)(value["id"]) == self._paddle_l1.id:
+                    if int(value["id"]) == self._paddle_l1.id:
                         self._paddle_l1.input_move(value)
-                    elif (int)(value["id"])== self._paddle_l2.id:
+                    elif int(value["id"])== self._paddle_l2.id:
                         self._paddle_l2.input_move(value)
-                    elif (int)(value["id"])== self._paddle_r1.id:
+                    elif int(value["id"])== self._paddle_r1.id:
                         self._paddle_r1.input_move(value)
-                    elif (int)(value["id"])== self._paddle_r2.id:
+                    elif int(value["id"])== self._paddle_r2.id:
                         self._paddle_r2.input_move(value)
                 elif value["type"] == "quit_lobby":
-                    if (int)(value["id"]) == self._paddle_l1.id \
-                                or (int)(value["id"]) == self._paddle_l2.id \
-                                or (int)(value["id"]) == self._paddle_r1.id \
-                                or (int)(value["id"]) == self._paddle_r2.id:
+                    if int(value["id"]) == self._paddle_l1.id \
+                                or int(value["id"]) == self._paddle_l2.id \
+                                or int(value["id"]) == self._paddle_r1.id \
+                                or int(value["id"]) == self._paddle_r2.id:
                         self._ended = True
-                        self._quitter = (int)(value["id"])
+                        self._quitter = int(value["id"])
                         if self._started is False:
                             self._abandonned = True
                         else:
                             self._ragequitted = True
                 elif value["type"] == "ready":
-                    if (int)(value["id"]) == self._paddle_l1.id:
+                    if int(value["id"]) == self._paddle_l1.id:
                         self._paddle_l1.ready = True
-                    elif (int)(value["id"]) == self._paddle_l2.id:
+                    elif int(value["id"]) == self._paddle_l2.id:
                         self._paddle_l2.ready = True
-                    elif (int)(value["id"]) == self._paddle_r1.id:
+                    elif int(value["id"]) == self._paddle_r1.id:
                         self._paddle_r1.ready = True
-                    elif (int)(value["id"]) == self._paddle_r2.id:
+                    elif int(value["id"]) == self._paddle_r2.id:
                         self._paddle_r2.ready = True
                 elif value["type"] == "pause":
-                    if (int)(value["id"]) == self._paddle_l1.id:
+                    if int(value["id"]) == self._paddle_l1.id:
                         self._paddle_l1.ready = False
-                    elif (int)(value["id"]) == self._paddle_l2.id:
+                    elif int(value["id"]) == self._paddle_l2.id:
                         self._paddle_l2.ready = False
-                    elif (int)(value["id"]) == self._paddle_r1.id:
+                    elif int(value["id"]) == self._paddle_r1.id:
                         self._paddle_r1.ready = False
-                    elif (int)(value["id"]) == self._paddle_r2.id:
+                    elif int(value["id"]) == self._paddle_r2.id:
                         self._paddle_r2.ready = False
         except Exception as e: #unknown JSON case, ignore it
             print(e)
@@ -312,7 +312,7 @@ class Match:
         """Dump for a point scored.
 
         Args:
-            player (int): ID of the player who scored.
+            player int: ID of the player who scored.
 
         Returns:
             dict: dump for the point.
@@ -328,7 +328,7 @@ class Match:
         """Dump for a victory.
 
         Args:
-            player (int): ID of the player who won.
+            player int: ID of the player who won.
             mode (string): type of victory.
 
         Returns:
@@ -346,7 +346,7 @@ class Match:
         """Dump for match abandon.
 
         Args:
-            player (int): ID of the player who abandonned.
+            player int: ID of the player who abandonned.
 
         Returns:
             dict: Dump of abandon.
@@ -363,7 +363,7 @@ class Match:
         """Dump for match ragequit.
 
         Args:
-            player (int): ID of the player who ragequitted.
+            player int: ID of the player who ragequitted.
 
         Returns:
             dict: Dump of ragequit.

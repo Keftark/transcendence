@@ -77,7 +77,11 @@ def dump_exit_queue(_id):
         "server": "2v2_classic",
         "answer": "yes",
         "ids": [_id],
-        "id": _id
+        "id": _id,
+        "data": {
+            "type": "exit_queue",
+            "id": _id
+        }
     }
     return event
 
