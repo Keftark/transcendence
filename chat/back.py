@@ -198,8 +198,6 @@ async def handler(websocket):
     try:
         async for message in websocket:
             event = json.loads(message)
-            if DEBUG is True:
-                logger.log(event, 3)
             if event["type"] == "ping":
                 await send_server(pong())
             elif event["type"] == "join_chat" or event["type"] == "quit_chat":

@@ -35,6 +35,7 @@ class Queue:
                 user = User(_id, bl)
                 if message["private"] == "invite":
                     invited = int(message["invited"])
+                    self._logger.log(f"Player {_id} has defied player {invited}.", 1)
                     self._room_id += 1
                     match = Match(self._room_id, _id, invited)
                     match.needs_to_wait = True
@@ -42,9 +43,10 @@ class Queue:
                     match.generate_invitation()
                     self._private.append(match)
                 elif message["private"] == "join":
-                    _id = (int)(message["invited_by"])
+                    invite = (int)(message["invited_by"])
                     for private in self._private:
-                        if private.paddle_1.id == _id:
+                        if private.paddle_1.id == invite:
+                            self._logger.log(f"Player {_id} has accepted player {invite}'s challenge.", 1)
                             private.join_player()
                             break
                 elif message["private"] == "refuse":
