@@ -793,7 +793,7 @@ export function addSocketListener()
                     else if (nbr === 1)
                         nbr = 2;
                 }
-                // console.log("Nbr after: " + nbr);
+                console.log("Teub: " + event);
                 resetScreenFunction(nbr, true);
                 break;
             }
