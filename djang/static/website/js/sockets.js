@@ -837,6 +837,7 @@ export function addSocketListener()
                 break;
             case "refusal":
                 setSelectedMode(LevelMode.MENU);
+                document.getElementById('waitingMatch').style.display = "none";
                 navigateTo('home');
                 deleteDuelInChat();
                 break;

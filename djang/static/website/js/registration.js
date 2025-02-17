@@ -1,4 +1,4 @@
-import { createNewPlayer, editPlayerStats, playerStats, resetPlayerStats } from "./playerManager.js";
+import { addMatchToHistoryMulti, createNewPlayer, editPlayerStats, playerStats, resetPlayerStats } from "./playerManager.js";
 import { removeAllScores } from "./scoreManager.js";
 import { getTranslation } from "./translate.js";
 import { navigateTo } from "./pages.js";

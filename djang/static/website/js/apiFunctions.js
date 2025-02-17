@@ -651,7 +651,7 @@ export async function sendMatchMulti(nameTeam1, nameTeam2, score1, nameOpponent1
         winner2: winners[1]
     };
 
-    // console.log(data);
+    console.log(data);
     try
     {
         const response = await fetch('api/matchs/set_match2v2', {
@@ -794,7 +794,7 @@ export async function updateSettingsInDatabase() {
 
 document.getElementById('uploadForm').addEventListener('submit', function(event) {
     event.preventDefault();
-    const file = fileInput.files[0];
+    const file = document.getElementById('fileInput').files[0];
     if (file) {
         const formData = new FormData();
         formData.append('image', file);
