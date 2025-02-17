@@ -53,6 +53,7 @@
     "errEmptyPasswordConfirm": "Erreur: confirmation du mot de passe vide.",
     "errDifferentPasswords": "Erreur: le mot de passe et la confirmation sont différents.",
     "errIncorrectName": "Erreur: pseudonyme incorrect.",
+    "errDangerousField": "Error: texte dangereux.",
     "botName": "Ordinateur",
     ":": " : ",
     "?": " ?",
