@@ -86,7 +86,6 @@
 
 #friendsHeader
 {
-    /* position: absolute; */
     margin: 0;
     align-self: center;
     margin-top: -8%;
@@ -127,7 +126,6 @@
     background-color: #3d5053;
     border: 3px solid #6ea5ae;
     height: 1.5rem !important;
-    justify-content: center !important;
 }
 
 .outgoingFriendDiv:hover
@@ -194,4 +192,16 @@
 {
     filter: brightness(200%);
     background: none;
+}
+
+#buttonsAskBlockUser
+{
+    display: flex;
+    gap: 2rem;
+}
+#buttonsAskBlockUser button
+{
+    position: relative;
+    transform: unset;
+    bottom: unset;
 }

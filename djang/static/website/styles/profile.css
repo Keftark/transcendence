@@ -173,14 +173,21 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.3rem;
 }
 
 .editButtonProfile
 {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     border: none;
+    font-size: 1.5rem;
+    background-color: transparent;
+} 
+
+.editButtonProfile:hover
+{
+    filter: hue-rotate(100deg) saturate(200%);
     background-color: transparent;
 }
 
@@ -189,26 +196,6 @@
     width: 20px;
     height: 20px;
 }
-
-
-/* .profilePictureChangeButton
-{
-    background-color: #00302d;
-    border: 1px solid #40977a;
-    height: 3vh;
-    min-height: 24px;
-    border-radius: 4px;
-    color: white;
-    text-align: center;
-    transition: all 0.1s ease-in-out;
-}
-
-.profilePictureChangeButton:hover
-{
-    background-color: #005e57;
-    border-color: rgb(98, 197, 164);
-} */
-
 
 #miniProfilePanel
 {
@@ -222,7 +209,6 @@
     width: calc(20vw + 10vh);
     max-width: 800px;
     min-width: 200px;
-    /* height: 45vh; */
     min-height: 200px;
     padding: 2vh;
     z-index: 3;

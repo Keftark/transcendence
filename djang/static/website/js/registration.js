@@ -2,7 +2,7 @@ import { createNewPlayer, editPlayerStats, playerStats, resetPlayerStats } from 
 import { removeAllScores } from "./scoreManager.js";
 import { getTranslation } from "./translate.js";
 import { navigateTo } from "./pages.js";
-import { addDisableButtonEffect, closeListener, closeSocket, getListener, getSocket, listener, openSocket, removeDisableButtonEffect, socket } from "./main.js";
+import { addDisableButtonEffect, closeListener, closeSocket, openSocket, removeDisableButtonEffect } from "./main.js";
 import { callGameDialog, checkAccessToChat } from "./chat.js";
 import { getLoggedInUser, logoutUser, registerUser, updateSettingsInDatabase } from "./apiFunctions.js";
 import { deleteAllFriendRequests, showFriendsBox } from "./friends.js";
@@ -217,6 +217,13 @@ export function logInUserUI()
     replaceLogInButtons();
     removeDisableButtonEffect(profileButton);
     checkAccessIfRegistered();
+    // setTimeout(() => {
+    //     const divv = document.createElement('div');
+    //     // il faut des  noms de joueurs qui existent !
+    //     divv.innerHTML = "p<br>t";
+    //     addMatchToHistory(0, 2, playerStats.nickname, 3, "t", 5);
+    //     addMatchToHistoryMulti(0, 3, divv.innerHTML.replace(/<br\s*\/?>/gi, "\n"), 1, divv.innerHTML.replace(/<br\s*\/?>/gi, "\n"), 5);
+    // }, 50);
 }
 
 function displayErrors(errors) {

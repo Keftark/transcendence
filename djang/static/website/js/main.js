@@ -100,7 +100,7 @@ export function checkEscapeKey()
 
 function changeCursors()
 {
-    const buttons = document.querySelectorAll('button, input[type="color"], input[type="checkbox"], .arena, #inputSignInPassword, #showCurrentPasswordButton, #showNewPasswordButton, #showConfirmNewPasswordButton, #showPasswordButton, #showConfirmPasswordButton, #header-title, a, #askSignIn, #askRegister, #friendsHeader, .headerProfileButton');
+    const buttons = document.querySelectorAll('button, input[type="color"], input[type="checkbox"], .arena, #inputSignInPassword, #showCurrentPasswordButton, #showNewPasswordButton, #showConfirmNewPasswordButton, #showPasswordButton, #showConfirmPasswordButton, #header-title, a, #askSignIn, #askRegister, #friendsHeader, .headerProfileButton, .eyeButton');
     buttons.forEach(button => {
         button.style.cursor = "url('./static/icons/cursor-button.webp'), pointer";
     });

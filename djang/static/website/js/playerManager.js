@@ -1,4 +1,4 @@
-import { sendMatch } from "./apiFunctions.js";
+import { sendMatch, sendMatchMulti } from "./apiFunctions.js";
 import { changeTextsColor } from "./menu.js";
 import { getRandomNumberBetween } from "./objects.js";
 import { getTranslation } from "./translate.js";
@@ -36,13 +36,30 @@ export function createPlayerStats() {
     };
 }
 
-export function addMatchToHistory(victoryType, playerScore, opponentScore, opponentName, matchTime = '0')
+export function addMatchToHistory(victoryType, playerScore, teamName, opponentScore, opponentName, matchTime = '0')
 {
     if (!playerStats.isRegistered)
         return;
-    console.trace("Adding match to history:\nplayer score: " + playerScore + "\nOpponent score: " + opponentScore + "\nOpponent name: " + opponentName);
+    console.trace("Adding match to history:\n"+ "Player name: " + teamName + "player score: " + playerScore + "\nOpponent score: " + opponentScore + "\nOpponent name: " + opponentName);
     if (victoryType === VictoryType.VICTORY)
-        sendMatch(playerStats.nickname, opponentName, playerScore, opponentScore, matchTime);
+        sendMatch(teamName, opponentName, playerScore, opponentScore, matchTime);
+}
+
+export function addMatchToHistoryMulti(victoryType, playerScore, teamName, opponentScore, opponentName, matchTime = '0')
+{
+    if (!playerStats.isRegistered)
+        return;
+    const opponents = opponentName.split(/\r?\n/);
+    const team = teamName.split(/\r?\n/);
+    // console.log(team[0]);
+    // console.log(team[1]);
+    // console.log("VS");
+    // console.log(opponents[0]);
+    // console.log(opponents[1]);
+    // console.log("Adding multi match to history:\nplayer score: " + playerScore + "\nOpponent score: " + opponentScore + "\nOpponent name: " + opponents);
+    // console.log("Victory: " + victoryType);
+    if (victoryType === VictoryType.VICTORY && team[0] === playerStats.nickname)
+        sendMatchMulti(team[0], team[1], playerScore, opponents[0], opponents[1], opponentScore, matchTime);
 }
 
 export async function createNewPlayer()

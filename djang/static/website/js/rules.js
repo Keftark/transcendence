@@ -70,6 +70,11 @@ let rules =
     isPrivate: false,
 }
 
+export function setArenaType(newType)
+{
+    rules.arena = newType;
+}
+
 export function setDefaultRules()
 {
     rules.pointsToWin = 3;

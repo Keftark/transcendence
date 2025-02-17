@@ -24,6 +24,15 @@
     opacity: 1;
 }
 
+.settingsDiv
+{
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    gap: 4px;
+}
+
 #colorPicker
 {
     display: none;
@@ -32,7 +41,7 @@
     height: 24px;
     padding: 0;
     border-radius: 50%;
-    transform: translateX(3px);
+    transform: translateX(0.5vh);
 }
 
 #colorPickerImage
@@ -40,8 +49,8 @@
     position: absolute;
     border: none;
     background: transparent;
-    width: 30px;
-    height: 30px;
+    width: 5.5vh;
+    height: 5.5vh;
     padding: 0;
     border-radius: 50%;
 }
@@ -49,8 +58,8 @@
 #colorPickerReplacer
 {
     border: none;
-    width: 24px;
-    height: 24px;
+    width: 4.5vh;
+    height: 4.5vh;
     padding: 0;
     border-radius: 50%;
     transform: translateX(3px);
@@ -116,8 +125,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: calc(1.5vh + 1.5vw);
-    height: calc(1.5vh + 1.5vw);
+    width: 4.5vh;
+    height: 4.5vh;
     min-height: 18px;
     min-width: 18px;
     border: none;

@@ -112,7 +112,13 @@
 }
 
 .score-timer{
-    transform: translate(0, 0);
+    transform: translate(-50%, -80%);
+}
+
+.score-timer2{
+    transform: translate(-50%, 0);
+    width: max-content;
+    font-size: 0.8rem;
 }
 
 #playername-left, #playername-right {

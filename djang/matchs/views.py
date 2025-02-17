@@ -5,120 +5,107 @@ from rest_framework import permissions, status
 from rest_framework.authentication import SessionAuthentication
 from django.contrib.auth.models import User
 import json
-from django.http import JsonResponse
-from django.http import HttpRequest
+from django.http import JsonResponse, HttpRequest
 from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
 from accounts.models import AccountModel
 from .models import Match, Match2v2, MatchMembers, TournamentMatchModel, TournamentModel
 from .serializers import MatchSerializer, Match2v2Serializer, TournamentSerializer
-from django.db.models import Q
+from django.db.models import Q, Max
+from datetime import datetime
 
 def create_match(request):
-    if request.method == 'POST':
-        try:
-            # Parse JSON body
-            data = json.loads(request.body)
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
 
-            # Extract data
-            status = data.get('status', '')
-            user_1 = data.get('player_1', '')
-            player_1 = AccountModel.objects.filter(user__username=user_1).first()
-            player_1_score = data.get('player_1_score', '')
-            user_2 = data.get('player_2', '')
-            player_2 = AccountModel.objects.filter(user__username=user_2).first()
-            player_2_score = data.get('player_2_score', '')
-            start_timestamp = data.get('start_timestamp', '')
-            stop_timestamp = data.get('stop_timestamp', '')
-            winner = data.get('winner', '')
-            win = AccountModel.objects.filter(user__username=winner).first()
+    try:
+        data = json.loads(request.body)
 
-            # Validation
+        usernames = [data.get('player_1'), data.get('player_2'), data.get('winner')]
+        accounts = AccountModel.objects.select_related("user").filter(user__username__in=usernames)
 
-            if player_1 and player_2 == 0:
-                return JsonResponse({'success': False, 'error': 'Missing required fields.'}, status=400)
+        account_map = {account.user.username: account for account in accounts}
 
-            # Create match
-            match = Match.objects.create(
-                finished = True,
-                started = False,
-                winner = win,
-                match_id = Match.objects.count(),
-                player_1 = player_1,
-                player_1_score = player_1_score,
-                player_2 = player_2,
-                player_2_score = player_2_score,
-                start_timestamp = start_timestamp,
-                stop_timestamp =  stop_timestamp,
-                status = status
-            )
-            match.save()
-            return JsonResponse({'success': True, 'message': 'Match successfully created.'})
+        player_1 = account_map.get(data.get('player_1'))
+        player_2 = account_map.get(data.get('player_2'))
+        winner = account_map.get(data.get('winner'))
 
-        except json.JSONDecodeError:
-            return JsonResponse({'success': False, 'error': 'Invalid JSON.'}, status=400)
-        except Exception as e:
-            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+        if not player_1 or not player_2:
+            return JsonResponse({'success': False, 'error': 'Missing required player(s).'}, status=400)
 
-    return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
+        match_id = (Match.objects.aggregate(Max("id"))["id__max"] or 0) + 1
+        Match.objects.create(
+            date = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
+            finished=True,
+            started=False,
+            winner=winner,
+            match_id=match_id,
+            player_1=player_1,
+            player_1_score=data.get('player_1_score', 0),
+            player_2=player_2,
+            player_2_score=data.get('player_2_score', 0),
+            start_timestamp=data.get('start_timestamp'),
+            stop_timestamp=data.get('stop_timestamp'),
+            status=data.get('status', '')
+        )
+
+        return JsonResponse({'success': True, 'message': 'Match successfully created.'})
+
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'error': 'Invalid JSON.'}, status=400)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 def create_match2v2(request):
-    if request.method == 'POST':
-        try:
-            # Parse JSON body
-            data = json.loads(request.body)
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
 
-            # Extract data
-            status = data.get('status', '')
-            user_1 = data.get('player_1', '')
-            player_1 = AccountModel.objects.filter(user__username=user_1).first()
-            user_2 = data.get('player_2', '')
-            player_2 = AccountModel.objects.filter(user__username=user_2).first()
-            team_1_score = data.get('team_1_score', '')
-            user_3 = data.get('player_3', '')
-            player_3 = AccountModel.objects.filter(user__username=user_3).first()
-            user_4 = data.get('player_4', '')
-            player_4 = AccountModel.objects.filter(user__username=user_4).first()
-            team_2_score = data.get('team_2_score', '')
-            start_timestamp = data.get('start_timestamp', '')
-            stop_timestamp = data.get('stop_timestamp', '')
-            winner1 = data.get('winner1', '')
-            winner2 = data.get('winner2', '')
-            win1 = AccountModel.objects.filter(user__username=winner1).first()
-            win2 = AccountModel.objects.filter(user__username=winner2).first()
+    try:
+        data = json.loads(request.body)
 
-            # Validation
+        usernames = [data.get('player_1'), data.get('player_2'), data.get('player_3'), data.get('player_4'),
+                     data.get('winner1'), data.get('winner2')]
 
-            if player_1 and player_2 == 0 and player_3 == 0 and player_4 == 0:
-                return JsonResponse({'success': False, 'error': 'Missing required fields.'}, status=400)
+        accounts = AccountModel.objects.select_related("user").filter(user__username__in=usernames)
 
-            # Create match
-            match = Match2v2.objects.create(
-                finished = True,
-                started = False,
-                winner1 = win1,
-                winner2 = win2,
-                match_id = Match.objects.count(),
-                player_1 = player_1,
-                player_2 = player_2,
-                team_1_score = team_1_score,
-                player_3 = player_3,
-                player_4 = player_4,
-                team_2_score = team_2_score,
-                start_timestamp = start_timestamp,
-                stop_timestamp =  stop_timestamp,
-                status = status
-            )
-            match.save()
-            return JsonResponse({'success': True, 'message': 'Match successfully created.'})
+        account_map = {account.user.username: account for account in accounts}
 
-        except json.JSONDecodeError:
-            return JsonResponse({'success': False, 'error': 'Invalid JSON.'}, status=400)
-        except Exception as e:
-            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+        player_1 = account_map.get(data.get('player_1'))
+        player_2 = account_map.get(data.get('player_2'))
+        player_3 = account_map.get(data.get('player_3'))
+        player_4 = account_map.get(data.get('player_4'))
+        winner1 = account_map.get(data.get('winner1'))
+        winner2 = account_map.get(data.get('winner2'))
 
-    return JsonResponse({'success': False, 'error': 'Invalid request method.'}, status=405)
+        if not all([player_1, player_2, player_3, player_4]):
+            return JsonResponse({'success': False, 'error': 'Missing required player(s).'}, status=400)
 
+        match_id = (Match2v2.objects.aggregate(Max("id"))["id__max"] or 0) + 1
+
+        Match2v2.objects.create(
+            date = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
+            finished=True,
+            started=False,
+            winner1=winner1,
+            winner2=winner2,
+            match_id=match_id,
+            player_1=player_1,
+            player_2=player_2,
+            team_1_score=data.get('team_1_score', 0),
+            player_3=player_3,
+            player_4=player_4,
+            team_2_score=data.get('team_2_score', 0),
+            start_timestamp=data.get('start_timestamp'),
+            stop_timestamp=data.get('stop_timestamp'),
+            status=data.get('status', '')
+        )
+
+        return JsonResponse({'success': True, 'message': 'Match successfully created.'})
+
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'error': 'Invalid JSON.'}, status=400)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 # Create your views here.
 class MatchViewSet(viewsets.ModelViewSet):
@@ -203,6 +190,8 @@ class HistoriqueViewSet(ViewSet):
             player_1_name = player_1.username if player_1 else "anonymous"
             player_2_name = player_2.username if player_2 else "anonymous"
             matches_data.append({
+                "is2v2": False,
+                "date": match.date,
                 "id": match.id,
                 "player_1": player_1_name,
                 "player_2": player_2_name,
@@ -210,7 +199,6 @@ class HistoriqueViewSet(ViewSet):
                 "player_1_score": match.player_1_score,
                 "player_2_score": match.player_2_score,
                 "timer": match.stop_timestamp - match.start_timestamp
-                # "date": match.date.isoformat()  # Format the date to ISO format
             })
 
         return Response(matches_data, status=status.HTTP_200_OK)
@@ -236,10 +224,10 @@ class Historique2v2ViewSet(ViewSet):
     def get_matchs2v2_count(self, request: HttpRequest, username):
         
         user = get_object_or_404(User, username=username)
-        matchs2v2 = Match2v2.objects.filter(Q(player_1=user.accountmodel) | Q(player_2=user.accountmodel))
+        matchs2v2 = Match2v2.objects.filter(Q(player_1=user.accountmodel) | Q(player_2=user.accountmodel) | Q(player_3=user.accountmodel) | Q(player_4=user.accountmodel))
 
         match_count = matchs2v2.count()
-        wins = matchs2v2.filter(winner1=user.accountmodel).count()
+        wins = matchs2v2.filter(Q(winner1=user.accountmodel) | Q(winner2=user.accountmodel)).count()
         return Response({
             "match_count": match_count,
             "wins": wins
@@ -252,7 +240,7 @@ class Historique2v2ViewSet(ViewSet):
 
         matches_data = []
         match_count = matchs.count()
-        wins = matchs.filter(winner1=user.accountmodel).count()
+        wins = matchs.filter(Q(winner1=user.accountmodel) | Q(winner2=user.accountmodel)).count()
         matches_data.append({
             "match_count": match_count,
             "wins": wins
@@ -271,6 +259,8 @@ class Historique2v2ViewSet(ViewSet):
             player_3_name = player_3.username if player_3 else "anonymous"
             player_4_name = player_4.username if player_4 else "anonymous"
             matches_data.append({
+                "is2v2": True,
+                "date": match.date,
                 "id": match.match_id,
                 "player_1": player_1_name,
                 "player_2": player_2_name,
@@ -281,7 +271,6 @@ class Historique2v2ViewSet(ViewSet):
                 "team_1_score": match.team_1_score,
                 "team_2_score": match.team_2_score,
                 "timer": match.stop_timestamp - match.start_timestamp
-                # "date": match.date.isoformat()  # Format the date to ISO format
             })
 
         return Response(matches_data, status=status.HTTP_200_OK)

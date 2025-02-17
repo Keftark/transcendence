@@ -399,6 +399,17 @@ async def disconnect_user(websocket):
                 except Exception as e:
                     logger.log("", 2, e)
                     SocketData.SOCKET_1V1 = None
+            if user.game == "2v2_classic":
+                event = {
+                    "type": "quit_lobby",
+                    "id": user.id,
+                    "room_id": user.room
+                }
+                try:
+                    await SocketData.SOCKET_2V2.send(json.dumps(event))
+                except Exception as e:
+                    logger.log("", 2, e)
+                    SocketData.SOCKET_2V2 = None
             event = {
                 "type": "quit_chat",
                 "id": user.id,

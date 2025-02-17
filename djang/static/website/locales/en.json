@@ -55,6 +55,7 @@
     "errIncorrectName": "Error: incorrect nickname.",
     "botName": "Computer",
     ":": ": ",
+    "?": "? ",
     "addFriendButton": "Add friend",
     "sendMessageButton": "Send message",
     "sendStickerButton": "Sticker",
@@ -127,6 +128,7 @@
     "wantsfriend": " wants to be your friend.",
     "youSendRequest": "You send a friend request to ",
     "youAlreadySentRequest": "You already sent a friend request to ",
+    "youCancelledRequest": "You cancelled the friend request to ",
     "youAlreadyBlocked": "You already blocked ",
     "requestSent": "A friend request has been sent to ",
     "deleteProfileAskText": "Do you really want to delete your account?",
@@ -146,6 +148,8 @@
     "duelWrongParameter": "Wrong command syntax: /duel &lt;name&gt;",
     "userOffline": "User is offline: ",
     "yourId": "Your id is: ",
+    "playerHasQuit": "A player has quit the lobby",
+    "askBlockUserText": "Do you really want to block ",
     
     
     "entityDontLeaveMe": "No... Please... I need you...",

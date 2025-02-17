@@ -45,7 +45,7 @@ class Match:
         self._timer = time.time()
         self._lock = threading.Lock()
         self._message_locker = threading.Lock()
-        self._map = random.randint(0, 1)
+        self._map = random.randint(0, 2)
 
     def load_parameters(self, payload):
         """Loads the custom parameters of the match.

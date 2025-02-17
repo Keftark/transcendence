@@ -30,7 +30,7 @@ export function setPlayerController(id_p1, id_p2, id_p3 = null, id_p4 = null)
         playerStats.playerController = 4;
 }
 
-export function setPlayersPositions(p1Pos, p2Pos, p3Pos, p4Pos)
+export function setPlayersPositions(p1Pos, p2Pos, p3Pos = null, p4Pos = null)
 {
     setPlayersPositionsFunction(p1Pos, p2Pos, p3Pos, p4Pos);
 }
@@ -205,7 +205,7 @@ export function setupPlayerMovement(player1, player2, player3, player4)
 
     setPlayersPositionsFunction = function setPlayerPosition(p1Pos, p2Pos, p3Pos = null, p4Pos = null)
     {
-
+        // console.trace("ici");
         player1.position.y = p1Pos;
         player2.position.y = p2Pos;
         if (p3Pos === null)

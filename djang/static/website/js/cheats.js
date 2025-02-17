@@ -1,13 +1,14 @@
-import { getUserByName, getUserStatus } from "./apiFunctions.js";
+import { getUserStatus } from "./apiFunctions.js";
 import { askAddFriendFunction, clickBlockUser, helpFunctionDisplay, receiveMessage, removeFriendFunction, sendPubSticker, sendSystemMessage } from "./chat.js";
 import { setDuelTargetPlayer } from "./duelPanel.js";
+import { startFPSCounter, stopFPSCounter } from "./fpsCounter.js";
 import { removeBlockedUser } from "./friends.js";
 import { changeBallSizeInstance, changeBallSpeedInstance, changePlayersSize, getBallPosition, isInGame } from "./levelLocal.js";
 import { isAnOfflineMode } from "./main.js";
 import { askForDuel, getSelectedMode } from "./modesSelection.js";
 import { getCurrentView } from "./pages.js";
 import { playerStats } from "./playerManager.js";
-import { socketSendPrivMessage, socketSendPrivSticker } from "./sockets.js";
+import { socketSendPrivMessage } from "./sockets.js";
 import { LevelMode } from "./variables.js";
 
 export const cheatCodes =
@@ -18,6 +19,7 @@ export const cheatCodes =
     "/PADDLESIZE" : changePaddlesSize,
     "/GBP" : getBallPos,
     "/ID" : getId,
+    "/FPS" : showFps,
     "/DUEL" : sendInvitDuel,
     "/MSG" : sendPrivateMessage,
     "/BLOCK" : blockPlayer,
@@ -44,6 +46,16 @@ function helpFunction()
 function getId()
 {
     sendSystemMessage("yourId", playerStats.id, true);
+}
+
+let isFpsShown = false;
+function showFps()
+{
+    isFpsShown = !isFpsShown;
+    if (isFpsShown)
+        startFPSCounter();
+    else
+        stopFPSCounter();
 }
 
 function changeBallSize(newSize)
@@ -117,13 +129,6 @@ function sendPrivateMessage(target = "", message = "")
     // console.log("Message to: " + target + ": " + message);
     socketSendPrivMessage(target, message);
     receiveMessage(playerStats.nickname, message, false, true, target);
-}
-
-function sendPrivateSticker(target = "", message = "")
-{
-    // console.log("Message to: " + target + ": " + message);
-    socketSendPrivSticker(target, message);
-    receiveMessage(playerStats.nickname, message, true, true, target);
 }
 
 function blockPlayer(playerName = "")

@@ -28,6 +28,8 @@ services:
       - .env
     networks:
       - app-network
+    volumes:
+      - avatars:/app/media
 
   nginx:
     build: ./nginx/
@@ -102,6 +104,7 @@ services:
 
 volumes:
   postgres_data:
+  avatars:
 
 networks:
   app-network:

@@ -1,13 +1,13 @@
 import * as THREE from '../node_modules/.vite/deps/three.js';
 import { askAddFriend, deleteFriend, getAccountUser, getIncomingFriendRequests, getOutgoingFriendRequests } from "./apiFunctions.js";
 import { cheatCodes } from "./cheats.js";
-import { getDuelTargetPlayer, joinDuel, refuseDuel } from "./duelPanel.js";
-import { addFriend, addFriendDiv, addFriendRequest, addOutgoingFriendRequest, blockUser, checkAndRemoveFriend } from "./friends.js";
+import { joinDuel, refuseDuel } from "./duelPanel.js";
+import { addFriend, addFriendDiv, addFriendRequest, addOutgoingFriendRequest, askBlockUser, checkAndRemoveFriend } from "./friends.js";
 import { getCamera, getPlayerPosition, getRenderer, id_players, isInGame } from "./levelLocal.js";
 import { openMiniProfile } from "./menu.js";
 import { getPlayerName, playerStats } from "./playerManager.js";
 import { getRules, resetInputfieldsRules } from "./rules.js";
-import { socketSendMessage, socketSendPrivSticker, socketSendPublicSticker, socketSendSalonSticker } from "./sockets.js";
+import { socketRemoveFriend, socketSendFriendInvite, socketSendMessage, socketSendPrivSticker, socketSendPublicSticker, socketSendSalonSticker } from "./sockets.js";
 import { getTranslation } from "./translate.js";
 import { ArenaType, EmotionType } from "./variables.js";
 
@@ -222,13 +222,13 @@ export function clickBlockUser(playerName = "")
     if (playerName != "")
         selectedName = playerName;
 
-    blockUser(selectedName);
+    askBlockUser(selectedName);
     closeNameContextMenu();
 }
 
 function clickOpenProfile()
 {
-    console.log("Trying to open the " + selectedName + " profile");
+    // console.log("Trying to open the " + selectedName + " profile");
     openMiniProfile(selectedName);
 }
 
@@ -236,6 +236,7 @@ export function removeFriendFunction(playerName)
 {
     deleteFriend(playerName);
     sendSystemMessage("youDeletedPlayer", playerName, true);
+    socketRemoveFriend(playerName);
     checkAndRemoveFriend(playerName);
 }
 
@@ -249,6 +250,7 @@ export function askAddFriendFunction(playerName)
         {
             sendSystemMessage("youSendRequest", playerName, true);
             addOutgoingFriendRequest(playerName);
+            socketSendFriendInvite(playerName);
         }
         else if (response.status == 201) // ajout ami
         {
@@ -780,6 +782,7 @@ export function addGameStickers()
 
 function sendGameSticker(stickerName)
 {
+    receiveGameSticker(playerStats.id, stickerName);
     socketSendSalonSticker(stickerName);
 }
 

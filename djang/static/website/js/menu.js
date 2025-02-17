@@ -1,4 +1,4 @@
-import { deleteAccount, getMatchsLittleData, getUserAvatar, getUserByName, updateFirstnameInDatabase, updateLastnameInDatabase, updatePasswordInDatabase, updateSettingsInDatabase, updateUsernameInDatabase } from './apiFunctions.js';
+import { deleteAccount, getMatchs2v2LittleData, getMatchsLittleData, getUserAvatar, getUserByName, updateFirstnameInDatabase, updateLastnameInDatabase, updatePasswordInDatabase, updateSettingsInDatabase, updateUsernameInDatabase } from './apiFunctions.js';
 import { callGameDialog } from './chat.js';
 import { clickChoosePaddleButton } from './customizeSkins.js';
 import { addMainEvents } from './eventsListener.js';
@@ -17,7 +17,6 @@ import { EmotionType, LevelMode, PlayerStatus } from './variables.js';
 const overlayPanel = document.getElementById('overlay');
 const profilePanel = document.getElementById('profilePanel');
 const settingsPanel = document.getElementById('settingsPanel');
-const matchListPanel = document.getElementById('matchListPanel');
 const mainPlayButton = document.getElementById('mainPlayButton');
 const mainProfileButton = document.getElementById('mainProfileButton');
 const mainSettingsButton = document.getElementById('mainSettingsButton');
@@ -42,8 +41,6 @@ const miniProfilePicture = document.getElementById('miniProfilePicture');
 const firstNameMiniProfile = document.getElementById('firstNameMiniProfile');
 const lastNameMiniProfile = document.getElementById('lastNameMiniProfile');
 const miniProfilePanel = document.getElementById('miniProfilePanel');
-const matchsPlayedMiniProfile = document.getElementById('matchsPlayedMiniProfile');
-const winsMiniProfile = document.getElementById('winsMiniProfile');
 const matchsPlayedMiniProfileValue = document.getElementById('matchsPlayedMiniProfileValue');
 const winsMiniProfileValue = document.getElementById('winsMiniProfileValue');
 const closeMiniProfileButton = document.getElementById('closeMiniProfileButton');
@@ -107,6 +104,7 @@ document.getElementById('showCurrentPasswordButton').addEventListener('click', (
 document.getElementById('editName').addEventListener('click', () => {
     openEditProfileField(0);
 });
+document.getElementById('editFirstName').innerText = "✎"
 document.getElementById('editFirstName').addEventListener('click', () => {
     openEditProfileField(1);
 });
@@ -329,13 +327,25 @@ export function openMiniProfile(playerName)
             console.error("Failed to get user by name:", error);
     });
 
+    let matchCount = 0;
+    let wins = 0;
     getMatchsLittleData(playerName)
     .then((data) =>{
-        matchsPlayedMiniProfileValue.innerHTML = data.match_count;
-        winsMiniProfileValue.innerHTML = data.wins;
+        matchCount += data.match_count;
+        wins = data.wins;
+        getMatchs2v2LittleData(playerName)
+        .then((data) =>{
+            matchCount += data.match_count;
+            wins += data.wins;
+            matchsPlayedMiniProfileValue.innerHTML = matchCount;
+            winsMiniProfileValue.innerHTML = wins;
+        })
+        .catch((error) => {
+            console.error("Failed to get match list data:", error);
+        });
     })
     .catch((error) => {
-        console.error("Failed to get user by name:", error);
+        console.error("Failed to get match list data:", error);
     });
     
     miniProfilePanel.style.display = 'flex';
@@ -397,31 +407,6 @@ export function openProfile(player = playerStats)
     if (getCurrentView() === 'home')
         oldButton = mainProfileButton;
     document.getElementById('closeProfileButton').focus();
-}
-
-function showMatchListProfile()
-{
-    if (profilePanel.classList.contains('toLeft') === false)
-    {
-        matchListPanel.style.display = 'flex';
-        setTimeout(() => {
-            profilePanel.classList.add('toLeft');
-            matchListPanel.classList.add('toRight');
-        }, 10);
-    }
-    else
-    {
-        closeMatchListProfile();
-    }
-}
-
-function closeMatchListProfile()
-{
-    profilePanel.classList.remove('toLeft');
-    matchListPanel.classList.remove('toRight');
-    setTimeout(() => {
-        matchListPanel.style.display = 'none';
-    }, 100);
 }
 
 export function closeProfile()
@@ -681,10 +666,10 @@ export function closeChangePassword()
     addDisableButtonEffect(buttonAcceptChangePassword);
 }
 
-inputNewPassword.addEventListener('input', function(event) {
+inputNewPassword.addEventListener('input', () => {
     checkNewPassword();
 });
-inputConfirmNewPassword.addEventListener('input', function(event) {
+inputConfirmNewPassword.addEventListener('input', () => {
     checkNewPassword();
 });
 
@@ -874,4 +859,23 @@ function toggleShowCurrentPassword()
     }
 }
 
-// changeFieldProfileConfirm.style.display = 'flex';
+const messagePanel = document.getElementById('messagePanel');
+messagePanel.addEventListener('click', () => {
+    closeMessagePanel();
+});
+function closeMessagePanel()
+{
+    messagePanel.style.display = 'none';
+    messagePanel.classList.remove('fadeInOut');
+    messagePanel.style.opacity = 0;
+}
+
+export function showMessage(message)
+{
+    document.getElementById('messageText').innerHTML = getTranslation(message);
+    messagePanel.style.display = 'grid';
+    messagePanel.classList.add('fadeInOut');
+    setTimeout(() => {
+        closeMessagePanel();
+    }, 3000);
+}

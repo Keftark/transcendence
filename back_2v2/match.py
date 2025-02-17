@@ -29,16 +29,16 @@ class Match:
                             int(os.environ.get("BOARD_WIDTH", 40)))
         self._paddle_l1 = Paddle(p1, self._board.min_x + 1, \
                                     int(os.environ.get("PADDLE_SIZE_SMALL", 8)), \
-                                    self._board.max_y, 2)
+                                    self._board.max_y, 0)
         self._paddle_l2 = Paddle(p2, self._board.min_x + 1, \
                                     int(os.environ.get("PADDLE_SIZE_SMALL", 8)), \
-                                    -2, self._board.min_y)
+                                    0, self._board.min_y)
         self._paddle_r1 = Paddle(p3, self._board.max_x - 2, \
                                     int(os.environ.get("PADDLE_SIZE_SMALL", 8)), \
-                                    self._board.max_y, 2)
+                                    self._board.max_y, 0)
         self._paddle_r2 = Paddle(p4, self._board.max_x - 2, \
                                     int(os.environ.get("PADDLE_SIZE_SMALL", 8)), \
-                                    -2, self._board.min_y)
+                                    0, self._board.min_y)
         self._ball = Ball(self._room_id)
         self._initialised = False
         self._started = False
@@ -51,10 +51,7 @@ class Match:
         self._timer = time.time()
         self._lock = threading.Lock()
         self._message_locker = threading.Lock()
-        self._map = random.randint(0, 1)
-
-        self._board.place(BrickTriangleUnbreak(), 0, 1)
-        self._board.place(BrickTriangleReverseUnbreak(), self._board.max_x - 1, 1)
+        self._map = random.randint(0, 2)
 
     def load_parameters(self, payload):
         """Loads the custom parameters of the match.
@@ -217,8 +214,6 @@ class Match:
                 self._paddle_l2.collide(self._ball)
                 self._paddle_r1.collide(self._ball)
                 self._paddle_r2.collide(self._ball)
-                for brick in self.board.bricks:
-                    brick.tick(self._ball)
                 if self._ball.x < self._board.min_x: #point for p2
                     self._side_right_score += 1
                     self.reset_board()

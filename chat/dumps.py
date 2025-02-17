@@ -132,6 +132,52 @@ def refuse_friend(user, sender):
     }
     return event
 
+def cancel_friend(user, sender):
+    """Dumps a friend invitation cancelation
+    from sender to user.
+
+    Args:
+        user (UserSocket): user data.
+        sender (UserSocket) : sender data.
+
+    Returns:
+        dict: dumped data.
+    """
+    event = {
+        "answer": "yes",
+        "type": "friend",
+        "server": "main",
+        "name": user.name,
+        "id": user.id,
+        "sender": sender.id,
+        "sender_name": sender.name,
+        "method": "cancel"
+    }
+    return event
+
+def remove_friend(user, sender):
+    """Dumps a friend invitation removal
+    from sender to user.
+
+    Args:
+        user (UserSocket): user data.
+        sender (UserSocket) : sender data.
+
+    Returns:
+        dict: dumped data.
+    """
+    event = {
+        "answer": "yes",
+        "type": "friend",
+        "server": "main",
+        "name": user.name,
+        "id": user.id,
+        "sender": sender.id,
+        "sender_name": sender.name,
+        "method": "remove"
+    }
+    return event
+
 def msg_private_sticker(user, sender, img):
     """Dumps a private sticker from sender to user.
     Contains both users data and image content.

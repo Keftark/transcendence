@@ -45,13 +45,13 @@ export class Sparks {
         this.scene.add(sparkSystem);
         this.particleGroups.push(sparkSystem);
     }
-
+ 
     updateSparks() {
         for (let i = this.particleGroups.length - 1; i >= 0; i--)
         {
             const sparkGroup = this.particleGroups[i];
-            const { velocities, lifetime } = sparkGroup.userData;
-
+            // const { velocities, lifetime } = sparkGroup.userData; // is lifetime useless?
+            const { velocities } = sparkGroup.userData;
             const positions = sparkGroup.geometry.attributes.position.array;
             for (let j = 0; j < velocities.length; j++) {
                 const velocity = velocities[j];

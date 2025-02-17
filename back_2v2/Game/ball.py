@@ -58,6 +58,7 @@ class Ball:
         self._velocity_boosted_x = self._velocity_x
         self._velocity_boosted_y = 0
         self._is_powered_up = False
+        self._can_bounce = True
 
     def bounce_vertical(self):
         """Vertical bounce event.
@@ -150,6 +151,7 @@ class Ball:
         else:
             self._x += self._velocity_x
             self._y += self._velocity_y
+        # print(f"Ball is bouncable {self._can_bounce}")
 
     def dump_bounce_player(self):
         """Event of a ball colliding on a player.

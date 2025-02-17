@@ -1,6 +1,7 @@
 import { getUserAvatarById, getUserById } from "./apiFunctions.js";
 import { id_players, passInfosPlayersToLevelMulti } from "./levelLocal.js";
 import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
+import { showMessage } from "./menu.js";
 import { clickPlayGame, setSelectedMode, showModeChoice } from "./modesSelection.js";
 import { playerStats } from "./playerManager.js";
 import { socketExitLobby, socketNotReadyToDuel, socketReadyToDuel } from "./sockets.js";
@@ -54,6 +55,8 @@ let player4IsReady = false;
 
 export function isPlayerSameSide(id)
 {
+    // console.log("Player id: " + playerStats.id + ", winner: " + id);
+    // console.log("Ids: " + idP1 + ", " + idP2 + ", " + idP3 + ", " + idP4);
     if (playerStats.id === id
         || (id === idP1 && playerStats.id === idP3) 
         || (id === idP3 && playerStats.id === idP1)
@@ -63,10 +66,13 @@ export function isPlayerSameSide(id)
     return false;
 }
 
-export function closeMultiPanel()
+export function closeMultiPanel(fromSocket = false)
 {
-    // double chargement de la page de retour pour le joueur qui quitte
-    // mettre un message indiquant que l'autre joueur a quitte
+    if (idP1 === -1)
+        return;
+    if (fromSocket)
+        showMessage("playerHasQuit");
+    resetMultiPanel();
     setSelectedMode(LevelMode.MENU);
     document.getElementById('waitingMatch').style.display = "none";
     socketExitLobby("2v2_classic");
@@ -75,11 +81,12 @@ export function closeMultiPanel()
 
 function resetMultiPanel()
 {
+    idP1 = idP2 = idP3 = idP4 = -1;
+    player4IsReady = player3IsReady = player2IsReady = player1IsReady = false;
     player4Multi.classList.remove('selectedPlayer');
     player3Multi.classList.remove('selectedPlayer');
     player2Multi.classList.remove('selectedPlayer');
     player1Multi.classList.remove('selectedPlayer');
-    player4IsReady = player3IsReady = player2IsReady = player1IsReady = false;
     player1ReadyButton.classList.remove('active');
     player2ReadyButton.classList.remove('active');
     player3ReadyButton.classList.remove('active');
@@ -93,16 +100,10 @@ function resetMultiPanel()
     removeDisableButtonEffect(player2ReadyButton);
     removeDisableButtonEffect(player3ReadyButton);
     removeDisableButtonEffect(player4ReadyButton);
-    // addDisableButtonEffect(startButtonDuel);
-    // reset all the fields/settings
 }
 
 export function onCloseMulti()
 {
-    idP4 = idP3 = idP3 = idP4 = -1;
-    resetMultiPanel();
-
-    // document.getElementById('duelPanel').style.display = 'none'; // inutile ??
     animDiv.classList.remove('vsAnim');
     animDiv.style.display = 'none';
 }
@@ -111,25 +112,20 @@ function fillInfosPlayer(playerNbr, playerInfos) {
     return new Promise((resolve, reject) => {
         getUserById(playerInfos)
             .then(playerProfile => {
-                // This will resolve the promise when playerProfile is retrieved
                 if (playerNbr === 1) {
                     player1NameText.innerText = playerProfile.username;
-                    // mettre la photo de profil
                 } else if (playerNbr === 2) {
                     player2NameText.innerText = playerProfile.username;
-                    // mettre la photo de profil
                 } else if (playerNbr === 3) {
                     player3NameText.innerText = playerProfile.username;
-                    // mettre la photo de profil
                 } else if (playerNbr === 4) {
                     player4NameText.innerText = playerProfile.username;
-                    // mettre la photo de profil
                 }
                 resolve();
             })
             .catch(error => {
                 console.error("Error fetching user profile:", error);
-                reject(error); // Reject if an error occurs
+                reject(error);
             });
     });
 }

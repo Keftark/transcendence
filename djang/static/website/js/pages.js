@@ -3,6 +3,7 @@ import { unloadLevel } from "./levelLocal.js";
 import { isALevelMode } from "./main.js";
 import { onPlayGame, onMainMenuOpen } from "./menu.js";
 import { onModesClose, onModesOpen } from "./modesSelection.js";
+import { onCloseMulti } from "./multiPanel.js";
 import { onRegistrationClose, onRegistrationOpen, welcomeBackUser } from "./registration.js";
 import { onCloseRules, onOpenRules } from "./rules.js";
 import { onSignInClose, onSignInOpen } from "./signIn.js";
@@ -71,6 +72,9 @@ function onClosePage(path) {
             break;
         case 'duel':
             onCloseDuel();
+            break;
+        case 'multi':
+            onCloseMulti();
             break;
         case 'game-tournament':
             unloadLevel();
