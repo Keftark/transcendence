@@ -668,14 +668,16 @@ export function addSocketListener()
                 receiveMessage(event.name, event.content, false);
                 break;
             case "wait":
+            {
                 // console.log("Waiting in queue");
-                const posInQueue = event.position
-                const numInQueue = event.in_queue
+                const posInQueue = event.position;
+                const numInQueue = event.in_queue;
                 if (null != playerStats && playerStats.language == "fr")
                     document.getElementById("waitingMatchText").innerHTML = "En attente ... </br>Vous etes en position " + posInQueue + " sur " + numInQueue
                 else 
                 document.getElementById("waitingMatchText").innerHTML = "Waiting ... </br>You're in position " + posInQueue + " out of " + numInQueue
                 break;
+            }
             case "exit_queue":
                 playerStats.room_id = -1;
                 // le joueur quitte la file d'attente du match ( l'ecran de duel)
