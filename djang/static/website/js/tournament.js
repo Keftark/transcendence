@@ -386,6 +386,7 @@ export function cancelBackTournamentView()
 
 function resetTournamentView()
 {
+    isLastMatch = false;
     currentTier = 0;
     playersInTier = 0
     currentMatch.player1 = 0;
@@ -449,10 +450,12 @@ function goToNextTier()
     storeCurrentMatch();
 }
 
+let isLastMatch = false;
 function callVictory()
 {
+    isLastMatch = true;
     tournamentWinVictoryText.innerText = lastPlayer.getAttribute('data-name') + getTranslation("isVictorious");
-    tournamentWinVictory.style.display = 'flex';
+    tournamentWinVictory.style.display = 'flex'; 
 }
 
 function prepareNextMatch()
@@ -533,7 +536,8 @@ export function endOfTournamentMatch()
         }
     }
 
-    prepareNextMatch();
+    if (!isLastMatch)
+        prepareNextMatch();
     setTimeout(() => {
         startMatchTournamentButton.focus();
     }, 10);

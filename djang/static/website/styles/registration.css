@@ -116,7 +116,7 @@
     flex-direction: row;
 }
 
-#buttonSignUp, #buttonLogIn, #buttonLogOut, #buttonProfile
+#buttonSignUp, #buttonLogIn, #buttonLogOut
 {
     display: flex;
     margin: 5px;
@@ -130,7 +130,7 @@
     transition: text-shadow 0.2s ease;
 }
 
-#buttonSignUp:hover, #buttonLogIn:hover, #buttonLogOut:hover, #buttonProfile:hover {
+#buttonSignUp:hover, #buttonLogIn:hover, #buttonLogOut:hover {
     text-shadow:
      0px 0px 8px rgb(0, 158, 150),
      0px 0px 8px rgb(0, 158, 150);
