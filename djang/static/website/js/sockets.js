@@ -793,7 +793,10 @@ export function addSocketListener()
                     else if (nbr === 1)
                         nbr = 2;
                 }
+<<<<<<< HEAD
                 console.log("Teub: " + event);
+=======
+>>>>>>> ca5d493e9d580f940e7f7fadd536723e07764eed
                 resetScreenFunction(nbr, true);
                 break;
             }
