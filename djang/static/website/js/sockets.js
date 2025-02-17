@@ -163,6 +163,7 @@ export function socketExitLobbyNoMatch(mode = "1v1_classic")
 
 export function socketExitLobby(mode = "1v1_classic")
 {
+    console.log("exiting");
     const event = {
         key: keySocket,
         answer: "no",

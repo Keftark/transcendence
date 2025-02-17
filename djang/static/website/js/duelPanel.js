@@ -96,17 +96,15 @@ function resetVSAnimation()
 
 export function closeDuelPanel(fromSocket = false)
 {
-    console.log("2");
+    if (idP1 === -1)  
+        socketExitLobbyNoMatch();
+    else
+        socketExitLobby();
     if (fromSocket)
         showMessage("playerHasQuit");
     resetDuelPanel();
     setSelectedMode(LevelMode.MENU);
     document.getElementById('waitingMatch').style.display = "none";
-
-    if (idP1 === -1)  
-        socketExitLobbyNoMatch();
-    else
-        socketExitLobby();
     showModeChoice();
 }
 
@@ -117,7 +115,6 @@ export function onOpenDuel()
 
 export function onCloseDuel()
 {
-    // document.getElementById('duelPanel').style.display = 'none'; // inutile ??
     animDiv.classList.remove('vsAnim');
     animDiv.style.display = 'none';
     duelSender = duelTargetPlayer = null;
