@@ -1,6 +1,6 @@
 import * as THREE from '../node_modules/.vite/deps/three.js';
 import { askAddFriend, deleteFriend, getAccountUser, getIncomingFriendRequests, getOutgoingFriendRequests } from "./apiFunctions.js";
-import { cheatCodes } from "./cheats.js";
+import { cheatCodes, sendInvitDuel } from "./cheats.js";
 import { joinDuel, refuseDuel } from "./duelPanel.js";
 import { addFriend, addFriendDiv, addFriendRequest, addOutgoingFriendRequest, askBlockUser, checkAndRemoveFriend } from "./friends.js";
 import { getCamera, getPlayerPosition, getRenderer, id_players, isInGame } from "./levelLocal.js";
@@ -151,6 +151,7 @@ function messageIsACode(message)
 const contextMenuChat = document.getElementById('chatContextMenu');
 const sendMessageButton = document.getElementById('sendMessageButton');
 const sendStickerButton = document.getElementById('sendStickerButton');
+const inviteGameButton = document.getElementById('inviteGameButton');
 const addFriendButton = document.getElementById('addFriendButton');
 const seeProfileButton = document.getElementById('seeProfileButton');
 const blockUserButton = document.getElementById('blockUserButton');
@@ -170,6 +171,10 @@ sendStickerButton.addEventListener('click', () => {
 
 addFriendButton.addEventListener('click', () => {
     clickAddRemoveFriend();
+});
+
+inviteGameButton.addEventListener('click', () => {
+    clickDuel();
 });
 
 seeProfileButton.addEventListener('click', () => {
@@ -270,6 +275,11 @@ export function addFriendFunction(playerName)
 {
     sendSystemMessage("youAddedPlayer", playerName, true);
     addFriendDiv(playerName);
+}
+
+function clickDuel()
+{
+    sendInvitDuel(selectedName);
 }
 
 function clickAddRemoveFriend()

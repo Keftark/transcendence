@@ -35,7 +35,7 @@ const toggleCameraText = document.getElementById('cameraTypeHeader');
 const gameSettingsButton = document.getElementById('settingsButton');
 const profilePicture = document.getElementById('profilePicture');
 const fileInput = document.getElementById('fileInput');
-const profileButton = document.getElementById('buttonProfile');
+// const profileButton = document.getElementById('buttonProfile');
 const miniNicknameText = document.getElementById('nameMiniProfile');
 const miniProfilePicture = document.getElementById('miniProfilePicture');
 const firstNameMiniProfile = document.getElementById('firstNameMiniProfile');
@@ -220,9 +220,9 @@ document.getElementById('orthographicButton').addEventListener('click', () => {
     toggleCameraType(1);
 });
 
-profileButton.addEventListener('click', () => {
-    openMiniProfile(playerStats.nickname);
-});
+// profileButton.addEventListener('click', () => {
+//     openMiniProfile(playerStats.nickname);
+// });
 
 closeMiniProfileButton.addEventListener('click', () => {
     closeMiniProfile();

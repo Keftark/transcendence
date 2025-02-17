@@ -395,22 +395,34 @@ async def disconnect_user(websocket):
             logger.log("User " + str(user.name) + " (ID :" + str(user.id) \
                        +") has disconnected.", 1)
             if user.game == "1v1_classic":
-                event = {
-                    "type": "quit_lobby",
-                    "id": user.id,
-                    "room_id": user.room
-                }
+                event = [{
+                        "type": "quit_lobby",
+                        "id": user.id,
+                        "room_id": user.room
+                    },
+                    {
+                        "type": "quit",
+                        "id": user.id,
+                        "room_id": user.room
+                    }
+                ]
                 try:
                     await SocketData.SOCKET_1V1.send(json.dumps(event))
                 except Exception as e:
                     logger.log("", 2, e)
                     SocketData.SOCKET_1V1 = None
             if user.game == "2v2_classic":
-                event = {
-                    "type": "quit_lobby",
-                    "id": user.id,
-                    "room_id": user.room
-                }
+                event = [{
+                        "type": "quit_lobby",
+                        "id": user.id,
+                        "room_id": user.room
+                    },
+                    {
+                        "type": "quit",
+                        "id": user.id,
+                        "room_id": user.room
+                    }
+                ]
                 try:
                     await SocketData.SOCKET_2V2.send(json.dumps(event))
                 except Exception as e:
@@ -425,6 +437,7 @@ async def disconnect_user(websocket):
             except Exception as e:
                 logger.log("", 2, e)
                 SocketData.SOCKET_CHAT = None
+            user.disconnect()
             userList.remove(user)
 
 async def handle_commands(websocket, event):
@@ -460,6 +473,8 @@ async def handler(websocket):
     try:
         async for message in websocket:
             event = json.loads(message)
+            if event["type"] != "match_data":
+                print(event)
             if event["type"] == "pong":
                 pass
             elif event["type"] == "log":
