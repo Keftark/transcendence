@@ -98,11 +98,11 @@ export function getSelectedMode()
     return parseInt(localStorage.getItem('selectedMode'));
 }
 
-export function clickPlayGame()
+export function clickPlayGame(rndArena = 0)
 {
     const selecMode = getSelectedMode();
     if (!isAnOnlineMode(selecMode))
-        setCustomRules();
+        setCustomRules(rndArena);
     if (selecMode === LevelMode.LOCAL)
         navigateTo('game-local', selecMode);
     else if (selecMode === LevelMode.ADVENTURE)

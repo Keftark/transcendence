@@ -2,6 +2,7 @@ import { addDisableButtonEffect, removeDisableButtonEffect } from "./main.js";
 import { clickPlayGame, showModeChoice } from "./modesSelection.js";
 import { navigateTo } from "./pages.js";
 import { playerStats } from "./playerManager.js";
+import { setArenaType } from "./rules.js";
 import { getTranslation } from "./translate.js";
 
 const nbrPlayersTournament = document.getElementById('nbrPlayersTournament');
@@ -91,8 +92,9 @@ let addPlayerIsOpen = false;
 
 function startMatchTournament()
 {
+    const rnd = Math.floor(Math.random() * 3);
     closeTournamentViewPanel();
-    clickPlayGame();
+    clickPlayGame(rnd);
 }
 
 export function quitTournamentLobby()
