@@ -23,7 +23,7 @@ const player2Img = document.getElementById('player2ImgDuel');
 const player1ReadyButton = document.getElementById('ready1DuelButton');
 const player2ReadyButton = document.getElementById('ready2DuelButton');
 const animDiv = document.getElementById('vsImg');
-const baseImgPath = "static/icons/playerNoImg.webp";
+const baseImgPath = "static/icons/guestUser.webp";
 
 let duelTargetPlayer = "";
 let duelSender = "";
